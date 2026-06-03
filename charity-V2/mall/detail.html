@@ -94,6 +94,29 @@
   .review-item .head .time { font-size: 12px; color: var(--color-text-3); }
   .review-item .stars { color: #F59E0B; font-size: 14px; margin-bottom: 6px; }
   .review-item .text { font-size: 14px; color: var(--color-text-2); line-height: 1.6; }
+
+  /* 赠送给受灾项目 按钮（强制换行，独立占满一行） */
+  .detail-actions { flex-wrap: wrap; }
+  .btn-gift {
+    flex: 0 0 100%;
+    background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+    color: #fff;
+    border: 0;
+    margin-top: 8px;
+  }
+  .btn-gift:hover {
+    background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(20, 184, 166, 0.25);
+  }
+  .gift-hint {
+    flex: 0 0 100%;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--color-text-3, #94A3B8);
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -204,6 +227,8 @@
       <div class="detail-actions">
         <button class="btn btn-ghost btn-lg" onclick="alert('已加入购物车')">🛒 加入购物车</button>
         <button class="btn btn-primary btn-lg" onclick="location.href='checkout.html'">立即购买 →</button>
+        <button class="btn btn-lg btn-gift" onclick="location.href='checkout.html?mode=gift'">🎁 赠送给受灾项目</button>
+        <div class="gift-hint">每单都有温度 · 直接送达受捐人 · 获捐赠证书 + 0.5% 平台配捐</div>
       </div>
 
       <div class="alert alert-info mt-4" style="font-size:13px;">

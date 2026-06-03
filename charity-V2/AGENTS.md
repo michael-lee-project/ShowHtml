@@ -429,3 +429,111 @@ mavis mcp call matrix matrix_generate_image '{"requests":[
 - emoji 已经够用的小图标
 - 需要保持 SVG 矢量缩放的场景
 - 实时数据可视化（图表）
+
+### 5.9 图形流水线 + 动效模式（track.html 沉淀，2026-06-02）
+
+**场景**：用户给"流程/物流/项目流转"等场景要求"图形化的流水线效果"时，不要只画节点时间轴——加**右侧图形流水线**+ **7 项动效**会显著提升视觉。
+
+**布局结构**（双栏）：
+```
+┌─ trace-layout (1.5fr + 1fr) ──────────────────────────┐
+│  timeline-trace（左：垂直时间轴，节点详情）         │
+│  trace-pipeline（右：横向流水线 + 状态统计）       │
+└─────────────────────────────────────────────────────┘
+```
+
+**流水线核心元素**：
+- **传送带**：repeating-linear-gradient 暗灰条纹，**水平流动动效**（beltFlow 1.2s）
+- **节点圆**：44px 圆形 + emoji 标签 + 月日
+  - `.done` = 绿色渐变（#14B8A6 → #0D9488）+ ✓ 角标
+  - `.active` = 橙色渐变（#FF6B35 → #E85D04）+ 橙色光圈脉动
+  - 默认 = 灰色边框（待开始）
+- **进度填充**：belt-fill 宽度 = 完成百分比，**内部高光带从左→右扫**（beltShine 2s）
+- **小光点**：8px 白点带绿边，**沿传送带循环移动**（beltDotMove 2.5s）——"货物感"
+- **当前位置光晕**：当前节点位置叠加径向光晕（pipelinePulse 1.6s）
+- **底部信息条**：
+  - 进行中：橙色 "📍 当前位置：xxx · 进度百分比"
+  - 已完结：绿色 "🎉 已完结 · 受惠人数"
+- **状态统计**：✓ 已完成 N · ● 进行中 N · ○ 待开始 N
+
+**7 项动效清单**（按视觉冲击排）：
+1. `beltFlow` 1.2s — 传送带条纹左移
+2. `beltShine` 2s — 进度条高光带左→右扫
+3. `beltDotMove` 2.5s — 沿传送带循环的小光点
+4. `nodeEmoji` 0.9s — 当前节点 emoji 脉冲缩放
+5. `nodeActive` 1.4s — 当前节点橙色光圈扩散
+6. `pipelinePulse` 1.6s — 当前位置径向光晕
+7. 节点 hover 放大 + 标签变橙（CSS transition）
+
+**视觉差异化**（不同状态用不同颜色）：
+- 进行中：橙色 + 进度条填充到当前位置 + 当前节点脉动
+- 已完结：传送带 100% 绿 + 状态条绿色 + 小光点继续循环但加透明
+
+**适用场景**：
+- 物流轨迹（已在 track.html 用）
+- 项目/任务进度展示
+- 流程审批可视化
+- 数据处理管道
+
+**实现位置**：track.html line 84-160 附近（CSS）+ 每个 flow-panel 末尾插入 trace-pipeline HTML 块。**3 个 panel 各自写一份**（节点数据不同），不公用。
+
+**自检纪律**：
+- 节点数据跟左侧 trace-node 状态类（`.done` / `.active` / 默认）必须一致
+- 进度条宽度 = done 节点数 / 总节点数 × 100%
+- 当前节点 emoji 跟时间轴第一个 active 节点 emoji 对得上
+- 测 3 个 panel 都要点 Tab 切换验证（默认只显示一个）
+
+### 5.10 加新元素破坏现有布局陷阱（同根 bug 2 次，2026-06-02）
+
+**陷阱**：往已有页面**添加新元素**时，不看父容器的布局上下文（flex / grid / overflow），新元素会被**挤压**或**侵入**现有流，导致布局错位。
+
+**本项目同根 bug 已踩 2 次**：
+
+| 现场 | 父容器 | 新元素 | 踩坑表现 |
+|---|---|---|---|
+| `register.html` 第 3 步 | `welcome-card` 用 `overflow:hidden` + 200px emoji 装饰 | 加 progress bar | progress bar 上半部分被裁掉 |
+| `mall/detail.html` 加 gift 按钮 | `.detail-actions` 是 `display: flex`（原 2 按钮横排） | 加 `.btn-gift` + `.gift-hint` | gift 按钮被挤成 1/3 宽，hint 被挤成竖排 |
+
+**根因**：
+
+1. **overflow 容器**：父容器用 `overflow: hidden` 隐藏超出部分（比如防止大 emoji 装饰外溢）—— 任何"应该突出来"的新元素都会被裁
+2. **flex 容器**：父容器用 `display: flex` 让子项按 flex-basis 分配宽度——新增子项**会按比例挤压**现有元素；`width: 100%` / `display: block` **不能**让 flex 子项占满整行（flex 算法优先）
+
+**自检纪律**（**加新元素到已有页面必走**）：
+
+```bash
+# 1. 看新元素要插入的父容器的布局上下文
+grep -A 3 "新元素父选择器" public/css/*.css | grep "display\|overflow"
+# 例：.detail-actions { display: flex; gap: 12px; } ← flex 容器！
+
+# 2. 如果是 flex/grid 容器，新元素加 .flex-wrap: wrap + flex: 0 0 100% 强制换行占满
+# 例：.btn-gift { flex: 0 0 100%; }
+
+# 3. 如果父容器有 overflow: hidden，给新元素一个独立 wrapper（或调整父容器 overflow）
+# 例：.hero { overflow: visible; }  ← 但要保留子元素的 emoji 装饰
+
+# 4. 截屏验证（即使 visual diff AI 说"OK"也要人眼复查新元素是否破坏布局）
+mavis mcp call playwright browser_take_screenshot ...
+```
+
+**错误示范**（detail.html 现场）：
+
+```css
+/* ❌ 以为 display: block + width: 100% 能让按钮占满 */
+.btn-gift {
+  display: block;
+  width: 100%;
+}
+/* 实际：flex 容器里 .detail-actions { display: flex; }，子元素 width 100% 不生效，被挤成 1/3 */
+```
+
+**正确做法**：
+
+```css
+/* ✅ 父容器先开 wrap，子元素用 flex: 0 0 100% 强制换行 */
+.detail-actions { flex-wrap: wrap; }
+.btn-gift { flex: 0 0 100%; }  /* 不放大 + 不缩小 + 基础宽度 100% */
+.gift-hint { flex: 0 0 100%; }
+```
+
+**统一原则**：**加新元素前先看父容器布局上下文**——flex 容器要 wrap + flex-basis、grid 容器要 grid-column、overflow 容器要单独 wrapper。不看就加必踩。

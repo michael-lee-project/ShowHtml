@@ -16,7 +16,7 @@
   .hero {
     position: relative; overflow: hidden;
     background: linear-gradient(135deg, #0E2A3A 0%, #0F4C5C 50%, #0E5A6F 100%);
-    color: #fff; padding: 80px 0 100px;
+    color: #fff; padding: 112px 0 100px;  /* 顶部 +48px 让出 fixed header (64px) + 间距 */
   }
   .hero::before {
     content: ''; position: absolute; inset: 0;
@@ -418,13 +418,94 @@
     .people-stats { grid-template-columns: repeat(2, 1fr); }
     .hero h1 { font-size: 38px; }
   }
+
+  /* ===== 前台首页 header（inline 注入避免外部 stylesheet 解析 bug） ===== */
+  .front-header {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 10000;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .front-header-inner {
+    display: flex; align-items: center; gap: 32px; height: 64px;
+  }
+  .front-logo {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--color-primary, #E85D04);
+    text-decoration: none; flex-shrink: 0;
+  }
+  .front-logo .brand { font-size: 18px; font-weight: 800; color: var(--color-text, #1E293B); line-height: 1.2; }
+  .front-logo .brand-en { font-size: 10px; color: var(--color-text-3, #94A3B8); letter-spacing: 1px; line-height: 1; margin-top: 1px; }
+  .front-nav { display: flex; gap: 28px; flex: 1; margin-left: 16px; }
+  .front-nav a {
+    font-size: 14px; font-weight: 500;
+    color: var(--color-text-2, #475569);
+    text-decoration: none; position: relative; padding: 4px 0;
+  }
+  .front-nav a:hover { color: var(--color-primary, #E85D04); }
+  .front-nav a.active { color: var(--color-primary, #E85D04); font-weight: 600; }
+  .front-nav a.active::after {
+    content: ''; position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px; background: var(--color-primary, #E85D04); border-radius: 1px;
+  }
+  .front-actions { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .front-actions .link-muted {
+    font-size: 14px; color: var(--color-text-2, #475569); text-decoration: none;
+  }
+  .front-actions .link-muted:hover { color: var(--color-primary, #E85D04); }
+  @media (max-width: 900px) {
+    .front-nav { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<div id="site-header"></div>
+<!-- 顶栏导航（前台首页 header，splash 期间也显示 z-index:10000 > splash:9999） -->
+<header class="front-header" id="frontHeader">
+  <div class="container front-header-inner">
+    <a href="index.html" class="front-logo">
+      <svg viewBox="0 0 64 64" width="36" height="36" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <circle cx="32" cy="24" r="8" fill="currentColor"/>
+        <path d="M12 38 V42 a20 20 0 0 0 40 0 V38" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand">慈商联营</div>
+        <div class="brand-en">CISHANG UNION</div>
+      </div>
+    </a>
+    <nav class="front-nav">
+      <a href="index.html" class="active">首页</a>
+      <a href="pages/track.html">物资轨迹</a>
+      <a href="pages/transparency.html">透明公示</a>
+      <a href="pages/annual-report.html">年度报告</a>
+      <a href="mall/index.html">慈善商城</a>
+    </nav>
+    <div class="front-actions">
+      <a href="pages/login.html" class="link-muted">登录</a>
+      <a href="pages/register.html" class="btn btn-primary btn-sm">企业入驻 →</a>
+    </div>
+  </div>
+</header>
 
-<!-- ========== HERO ========== -->
+<!-- 入场动画 splash（GSAP timeline 控制，播完 display:none） -->
+<div class="splash" id="appSplash">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="splash-logo">
+      <svg viewBox="0 0 64 64" width="80" height="80" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <circle cx="32" cy="24" r="8" fill="currentColor"/>
+        <path d="M12 38 V42 a20 20 0 0 0 40 0 V38" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="splash-brand">慈商联营</div>
+    <div class="splash-tagline">CISHANG UNION · 每一份善意都可追溯</div>
+    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  </div>
+</div>
+
 <section class="hero">
   <div class="container">
     <div class="hero-grid">
@@ -433,7 +514,11 @@
           <span class="live-dot"></span>
           <span>实时公益数据 · 2025年1-6月运行报告已发布</span>
         </div>
-        <h1>让每一份善意<br>都<font class="accent">可追溯 · 可看见</font><br>可信任</h1>
+        <h1>
+          <span class="hero-line">让每一份善意</span>
+          <span class="hero-line">都<font class="accent">可追溯 · 可看见</font></span>
+          <span class="hero-line">可信任</span>
+        </h1>
         <p class="lead">
           慈商联营是海南亚洲公益研究院发起的全流程透明化公益平台。<br>
           连接<strong>企业</strong>、<strong>慈善会</strong>、<strong>社会组织</strong>、<strong>志愿者/社工</strong>与<strong>受捐者</strong>五端，
@@ -1038,7 +1123,9 @@
 
 <div id="site-footer"></div>
 
-<script src="public/js/common.js"></script>
+  <script src="public/js/common.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script>
   CS.renderHeader('home');
   CS.renderFooter();
@@ -1053,13 +1140,124 @@
     });
   });
 
-  // 数字滚动
-  setTimeout(() => {
-    document.querySelectorAll('[data-num]:not([data-animated])').forEach(el => {
-      CS.animateNumber(el, parseFloat(el.dataset.num), 1500);
-      el.dataset.animated = '1';
+  // ===== 入场动画 splash（GSAP timeline 接管）=====
+  // 页面打开时先看到这个 splash，播完才显示首页内容
+  // 时序：0.0s logo 缩放进入 → 0.3s 品牌名 → 0.5s 副标 → 进度条 0.4-1.4s → 1.4s splash 缩出 → 1.9s 隐藏
+  const splash = document.getElementById('appSplash');
+  const frontHeader = document.getElementById('frontHeader');
+  // splash 期间：导航栏隐藏（splash 缩出时同步淡入）
+  if (frontHeader) gsap.set(frontHeader, { opacity: 0, y: -20 });
+  const splashEls = {
+    logo:  splash?.querySelector('.splash-logo'),
+    brand: splash?.querySelector('.splash-brand'),
+    tag:   splash?.querySelector('.splash-tagline'),
+    bar:   splash?.querySelector('.splash-loader-bar')
+  };
+  // 隐藏 splash 期间整页 hero（防止 hero CSS 渲染）
+  gsap.set('.hero', { opacity: 0 });
+
+  if (splash) {
+    const splashTl = gsap.timeline();
+    splashTl
+      // logo 缩放进入
+      .fromTo(splashEls.logo, { opacity: 0, scale: 0.3, rotation: -30 },
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 0.0)
+      // 品牌名上滑
+      .fromTo(splashEls.brand, { opacity: 0, y: 40, letterSpacing: '12px' },
+        { opacity: 1, y: 0, letterSpacing: '4px', duration: 0.7, ease: 'power3.out' }, 0.3)
+      // 副标淡入
+      .fromTo(splashEls.tag, { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.6)
+      // 进度条 0 → 100%
+      .fromTo(splashEls.bar, { width: '0%' },
+        { width: '100%', duration: 1.0, ease: 'power1.inOut' }, 0.4)
+      // splash 整段缩出 + 淡出（同时导航栏从上方滑入）
+      .to(splash, { opacity: 0, scale: 0.92, duration: 0.5, ease: 'power2.in' }, 1.4)
+      .to(frontHeader, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.5)
+      .add(() => { splash.style.display = 'none'; }, 1.9);
+  }
+
+  // ===== 首屏 Hero 进入动画（GSAP timeline，splash 播完才启动）=====
+  // 整段 hero 从下方滑入 + 标题分段依次出现 + 右侧 live-board 滑入
+  // 用 gsap.set 预先设初始态（防止 CSS keyframe fade-up 闪烁），再用 timeline 播
+  const heroEls = {
+    badge:  document.querySelector('.hero-badge'),
+    h1Lines: document.querySelectorAll('.hero-line'),
+    accent: document.querySelector('.hero h1 .accent'),
+    lead:   document.querySelector('.hero .lead'),
+    actions: document.querySelectorAll('.hero-actions .btn'),
+    trust:  document.querySelectorAll('.hero-trust .item'),
+    board:  document.querySelector('.live-board')
+  };
+  // 设初始态（避免页面闪一下）
+  if (heroEls.badge)   gsap.set(heroEls.badge,   { opacity: 0, y: 20 });
+  if (heroEls.h1Lines.length) gsap.set(heroEls.h1Lines, { opacity: 0, y: 30 });
+  if (heroEls.accent)  gsap.set(heroEls.accent,  { opacity: 0, scale: 0.7 });
+  if (heroEls.lead)    gsap.set(heroEls.lead,    { opacity: 0, y: 20 });
+  if (heroEls.actions.length) gsap.set(heroEls.actions, { opacity: 0, y: 20 });
+  if (heroEls.trust.length)  gsap.set(heroEls.trust,  { opacity: 0, y: 12 });
+  if (heroEls.board)   gsap.set(heroEls.board,   { opacity: 0, x: 30 });
+  // 隐藏整个 .fade-up（让 GSAP 接管，避免与 CSS keyframe 冲突）
+  if (document.querySelector('.fade-up')) gsap.set('.fade-up', { opacity: 1, y: 0 });
+
+  // Timeline：依次播放，splash 播完才启动（delay 1.95s，timeline 1.0s 内完成）
+  const heroTl = gsap.timeline({ delay: 1.95 });
+  // 先把 .hero 整体恢复显示
+  heroTl.to('.hero', { opacity: 1, duration: 0.01 }, 0);
+  heroTl
+    .to(heroEls.badge, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0)
+    .to(heroEls.h1Lines[0], { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.10)
+    .to(heroEls.h1Lines[1], { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.20)
+    .to(heroEls.accent,  { opacity: 1, scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.5)' }, 0.32)
+    .to(heroEls.h1Lines[2], { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.35)
+    .to(heroEls.lead,   { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.48)
+    .to(heroEls.actions,{ opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'back.out(1.4)' }, 0.62)
+    .to(heroEls.trust,  { opacity: 1, y: 0, duration: 0.3, stagger: 0.06, ease: 'power2.out' }, 0.78)
+    .to(heroEls.board,  { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 0.20);
+
+  // ===== 数字滚动（GSAP + ScrollTrigger）=====
+  // 滚到数字视口时，从 0 跳到目标值（power3.out ease 1.5s），比 setTimeout 触发更"鲜活"
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('[data-num]:not([data-animated])').forEach(el => {
+    const target = parseFloat(el.dataset.num);
+    const isFloat = String(target).indexOf('.') >= 0;
+    const counter = { val: 0 };
+    gsap.to(counter, {
+      val: target, duration: 1.5, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+      onUpdate: () => {
+        el.textContent = isFloat
+          ? counter.val.toFixed(1)
+          : Math.floor(counter.val).toLocaleString();
+      },
+      onComplete: () => { el.dataset.animated = '1'; }
     });
-  }, 200);
+  });
+
+  // ===== 卡片依次出现（GSAP fromTo + ScrollTrigger）=====
+  // 滚到卡片所在 section 时，8 个目标卡片（5 角色 + 3 捐赠方式）依次出现
+  // 用 fromTo 明确 from 状态（不依赖 immediateRender 副作用）
+  if (document.querySelector('.role-card')) {
+    gsap.fromTo('.role-card',
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: '.roles-section', start: 'top 75%', once: true },
+        onStart: () => console.log('role cards stagger start')
+      }
+    );
+  }
+  // 3 种捐赠方式卡片：各自独立 ScrollTrigger（避免长距离 stagger 错位）
+  document.querySelectorAll('.flow-section .card').forEach((card, i) => {
+    gsap.fromTo(card,
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+        scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+        delay: i * 0.1
+      }
+    );
+  });
 </script>
 </body>
 </html>

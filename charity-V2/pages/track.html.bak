@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <title>物资轨迹追踪 — 慈商联营</title>
 <link rel="stylesheet" href="../public/css/style.css">
 <style>
@@ -85,214 +83,6 @@
 
   .flow-panel { display: none; }
   .flow-panel.active { display: block; animation: fadeUp 0.4s var(--ease); }
-
-  /* 流转节点 + 流水线 双栏布局 */
-  .trace-layout {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 20px;
-    align-items: start;
-  }
-  @media (max-width: 980px) {
-    .trace-layout { grid-template-columns: 1fr; }
-  }
-
-  /* ===== 流水线（工业传送带风格） ===== */
-  .trace-pipeline {
-    position: sticky;
-    top: 80px;
-    background: linear-gradient(180deg, #FAFBFC 0%, #fff 100%);
-    border: 1px solid var(--color-border, #EAEAEA);
-    border-radius: var(--radius-md, 12px);
-    padding: 20px;
-  }
-  .pipeline-head {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 16px;
-  }
-  .pipeline-head h4 { font-size: 15px; font-weight: 700; }
-  .pipeline-progress {
-    font-size: 12px; color: var(--color-text-3, #94A3B8);
-    background: var(--color-primary-soft, #FFF1E5);
-    color: var(--color-primary, #E85D04);
-    padding: 2px 8px; border-radius: 8px;
-    font-weight: 600;
-  }
-  .pipeline-canvas {
-    position: relative;
-    padding: 30px 0 24px;
-  }
-  /* 传送带（水平条） */
-  .pipeline-belt {
-    position: absolute;
-    top: 50%; left: 6%; right: 6%;
-    height: 14px;
-    transform: translateY(-50%);
-    background: repeating-linear-gradient(
-      90deg,
-      #E2E8F0 0px, #E2E8F0 14px,
-      #CBD5E1 14px, #CBD5E1 28px
-    );
-    border-radius: 7px;
-    border: 1px solid #94A3B8;
-    overflow: hidden;
-    /* 动态：传送带条纹向左流动（货物视觉） */
-    animation: beltFlow 1.2s linear infinite;
-  }
-  @keyframes beltFlow {
-    from { background-position: 0 0; }
-    to   { background-position: -28px 0; }
-  }
-  /* 进度填充（已完成部分） */
-  .pipeline-belt-fill {
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    background: linear-gradient(90deg, #14B8A6 0%, #0D9488 100%);
-    border-radius: 7px 0 0 7px;
-    transition: width .8s var(--ease);
-    overflow: hidden;
-  }
-  /* 进度条内部高光带（流动） */
-  .pipeline-belt-fill::after {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    left: -40%;
-    width: 40%;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
-    animation: beltShine 2s linear infinite;
-  }
-  @keyframes beltShine {
-    from { left: -40%; }
-    to   { left: 100%; }
-  }
-  /* 沿传送带移动的小光点（GSAP 接管动画，CSS 只保留基础样式） */
-  .pipeline-belt-dot {
-    position: absolute;
-    top: 50%; left: 0;
-    width: 8px; height: 8px;
-    margin: -4px 0 0 -4px;
-    background: #fff;
-    border: 2px solid #0D9488;
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(20, 184, 166, 0.6);
-  }
-  /* 当前节点位置的脉动光晕 */
-  .pipeline-belt-pulse {
-    position: absolute;
-    top: 50%; left: 0;
-    width: 60px; height: 60px;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(232,93,4,0.4) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    animation: pipelinePulse 1.6s ease-in-out infinite;
-  }
-  @keyframes pipelinePulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-    50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.3; }
-  }
-
-  .pipeline-nodes {
-    position: relative;
-    display: flex; justify-content: space-between;
-    z-index: 2;
-  }
-  .pipeline-node {
-    display: flex; flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    flex: 1;
-  }
-  .pipeline-node .node-dot {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    background: #fff;
-    border: 2px solid #CBD5E1;
-    color: #94A3B8;
-    transition: all .3s;
-    position: relative;
-  }
-  .pipeline-node.done .node-dot {
-    background: linear-gradient(135deg, #14B8A6, #0D9488);
-    border-color: #0D9488;
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(20, 184, 166, 0.3);
-  }
-  .pipeline-node.done .node-dot::after {
-    content: '✓'; position: absolute;
-    right: -4px; bottom: -4px;
-    width: 18px; height: 18px;
-    background: #14B8A6; color: #fff;
-    border-radius: 50%;
-    font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid #fff;
-  }
-  .pipeline-node.active .node-dot {
-    background: linear-gradient(135deg, #FF6B35, #E85D04);
-    border-color: #E85D04;
-    color: #fff;
-    box-shadow: 0 0 0 6px rgba(232, 93, 4, 0.2);
-    animation: nodeActive 1.4s ease-in-out infinite;
-  }
-  /* 当前节点 emoji 缓慢脉冲（不旋转，避免文字变形） */
-  .pipeline-node.active .node-dot {
-    animation: nodeActive 1.4s ease-in-out infinite, nodeEmoji 0.9s ease-in-out infinite;
-  }
-  @keyframes nodeActive {
-    0%, 100% { box-shadow: 0 0 0 6px rgba(232, 93, 4, 0.2); }
-    50% { box-shadow: 0 0 0 12px rgba(232, 93, 4, 0.05); }
-  }
-  @keyframes nodeEmoji {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.18); }
-  }
-  /* 节点 hover 放大（GSAP 接管，CSS 不再处理 :hover） */
-  /* 保留 transition 仅作为 transform 兜底，hover 实际由 GSAP 弹跳处理 */
-  .pipeline-node .node-label {
-    font-size: 11px;
-    color: var(--color-text-3, #94A3B8);
-    font-weight: 500;
-    text-align: center;
-    white-space: nowrap;
-  }
-  .pipeline-node.done .node-label,
-  .pipeline-node.active .node-label {
-    color: var(--color-text, #1E293B);
-    font-weight: 600;
-  }
-  .pipeline-node.active .node-label {
-    color: var(--color-primary, #E85D04);
-  }
-  .pipeline-node .node-time {
-    font-size: 10px;
-    color: var(--color-text-3, #94A3B8);
-    font-family: var(--font-mono, monospace);
-  }
-
-  .pipeline-current {
-    margin-top: 16px;
-    padding: 10px 14px;
-    background: linear-gradient(135deg, #FFF1E5 0%, #FFE4D2 100%);
-    border-radius: 8px;
-    font-size: 13px;
-    color: var(--color-text, #1E293B);
-    border-left: 3px solid var(--color-primary, #E85D04);
-  }
-  .pipeline-current strong { color: var(--color-primary, #E85D04); font-weight: 700; }
-
-  .pipeline-status {
-    display: flex; justify-content: space-between;
-    margin-top: 12px;
-    font-size: 11px;
-    color: var(--color-text-3, #94A3B8);
-  }
-  .pipeline-status .ok { color: #14B8A6; font-weight: 600; }
-  .pipeline-status .now { color: var(--color-primary, #E85D04); font-weight: 600; }
-  .pipeline-status .wait { color: var(--color-text-3, #94A3B8); }
 
   /* 节点样式扩展 - 不同状态 */
   .trace-node.warning::before { background: var(--color-warning); border-color: var(--color-warning); }
@@ -644,8 +434,7 @@
           <h3 style="font-size:16px;">🔍 流转节点</h3>
           <span class="text-sm text-muted">6 个节点 · 总历时 5 天</span>
         </div>
-        <div class="trace-layout">
-          <div class="timeline-trace">
+        <div class="timeline-trace">
           <div class="trace-node done">
             <div class="time">2025-05-28 14:30:22</div>
             <div class="title">📦 企业发起捐赠 <span class="tag tag-success">已完成</span></div>
@@ -714,66 +503,7 @@
               剩余 30 户派发完成后，志愿者将提交项目完结报告。系统自动生成物资轨迹完结证书。
             </div>
           </div>
-          </div><!-- /timeline-trace -->
-
-          <div class="trace-pipeline">
-            <div class="pipeline-head">
-              <h4>🚚 流转流水线</h4>
-              <span class="pipeline-progress">4 / 6 节点</span>
-            </div>
-
-            <div class="pipeline-canvas">
-              <div class="pipeline-belt">
-                <div class="pipeline-belt-fill" style="width: 60%;"></div>
-                <div class="pipeline-belt-pulse" style="left: 60%;"></div>
-                <div class="pipeline-belt-dot"></div>
-              </div>
-
-              <div class="pipeline-nodes">
-                <div class="pipeline-node done">
-                  <div class="node-dot">🏭</div>
-                  <div class="node-label">企业发起</div>
-                  <div class="node-time">05-28</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">🚛</div>
-                  <div class="node-label">物流运输</div>
-                  <div class="node-time">05-28</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">📦</div>
-                  <div class="node-label">仓库入库</div>
-                  <div class="node-time">05-29</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">🏛️</div>
-                  <div class="node-label">慈善分拣</div>
-                  <div class="node-time">05-30</div>
-                </div>
-                <div class="pipeline-node active">
-                  <div class="node-dot">👥</div>
-                  <div class="node-label">入户派发</div>
-                  <div class="node-time">06-01~</div>
-                </div>
-                <div class="pipeline-node">
-                  <div class="node-dot">🚪</div>
-                  <div class="node-label">签收确认</div>
-                  <div class="node-time">06-03</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="pipeline-current">
-              📍 当前位置：<strong>入户派发中</strong> · 56/86 户已完成（65%）
-            </div>
-
-            <div class="pipeline-status">
-              <span class="ok">✓ 已完成 4</span>
-              <span class="now">● 进行中 1</span>
-              <span class="wait">○ 待开始 1</span>
-            </div>
-          </div>
-        </div><!-- /trace-layout -->
+        </div>
       </div>
 
       <!-- 流程二：响应项目·派发后发货 -->
@@ -805,8 +535,7 @@
           <h3 style="font-size:16px;">🔍 流转节点</h3>
           <span class="text-sm text-muted">7 个节点 · 总历时 12 天</span>
         </div>
-        <div class="trace-layout">
-          <div class="timeline-trace">
+        <div class="timeline-trace">
           <div class="trace-node done">
             <div class="time">2025-05-25 10:00:00</div>
             <div class="title">📢 慈善会发布受灾项目 <span class="tag tag-success">已完成</span></div>
@@ -887,71 +616,7 @@
               500 户受捐者全部签收第二批礼包后，项目完结。安利可下载物资轨迹完结证书。
             </div>
           </div>
-          </div><!-- /timeline-trace -->
-
-          <div class="trace-pipeline">
-            <div class="pipeline-head">
-              <h4>🚚 流转流水线</h4>
-              <span class="pipeline-progress">5 / 7 节点</span>
-            </div>
-
-            <div class="pipeline-canvas">
-              <div class="pipeline-belt">
-                <div class="pipeline-belt-fill" style="width: 71%;"></div>
-                <div class="pipeline-belt-pulse" style="left: 71%;"></div>
-                <div class="pipeline-belt-dot"></div>
-              </div>
-
-              <div class="pipeline-nodes">
-                <div class="pipeline-node done">
-                  <div class="node-dot">📢</div>
-                  <div class="node-label">发布项目</div>
-                  <div class="node-time">05-25</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">🤝</div>
-                  <div class="node-label">企业响应</div>
-                  <div class="node-time">05-26</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">📦</div>
-                  <div class="node-label">备货完成</div>
-                  <div class="node-time">05-28</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">🚚</div>
-                  <div class="node-label">发往灾区</div>
-                  <div class="node-time">05-30</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">🏛️</div>
-                  <div class="node-label">慈善接收</div>
-                  <div class="node-time">06-01</div>
-                </div>
-                <div class="pipeline-node active">
-                  <div class="node-dot">👥</div>
-                  <div class="node-label">入户派发</div>
-                  <div class="node-time">06-05~</div>
-                </div>
-                <div class="pipeline-node">
-                  <div class="node-dot">🚪</div>
-                  <div class="node-label">全部签收</div>
-                  <div class="node-time">06-12</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="pipeline-current">
-              📍 当前位置：<strong>入户派发中</strong> · 286/500 户已签收（57%）
-            </div>
-
-            <div class="pipeline-status">
-              <span class="ok">✓ 已完成 5</span>
-              <span class="now">● 进行中 1</span>
-              <span class="wait">○ 待开始 1</span>
-            </div>
-          </div>
-        </div><!-- /trace-layout -->
+        </div>
       </div>
 
       <!-- 流程三：响应项目·寄送+登记 -->
@@ -983,8 +648,7 @@
           <h3 style="font-size:16px;">🔍 流转节点</h3>
           <span class="text-sm text-muted">6 个节点 · 总历时 18 天</span>
         </div>
-        <div class="trace-layout">
-          <div class="timeline-trace">
+        <div class="timeline-trace">
           <div class="trace-node done">
             <div class="time">2025-04-05 14:00:00</div>
             <div class="title">📢 慈善会发布项目 <span class="tag tag-success">已完成</span></div>
@@ -1058,65 +722,7 @@
               <strong>受惠人数：</strong>1,500 户 / 3,200 儿童
             </div>
           </div>
-          </div><!-- /timeline-trace -->
-
-          <div class="trace-pipeline">
-            <div class="pipeline-head">
-              <h4>🚚 流转流水线</h4>
-              <span class="pipeline-progress">6 / 6 节点 · 已完结</span>
-            </div>
-
-            <div class="pipeline-canvas">
-              <div class="pipeline-belt">
-                <div class="pipeline-belt-fill" style="width: 100%;"></div>
-                <div class="pipeline-belt-pulse" style="left: 100%; opacity: 0.4;"></div>
-                <div class="pipeline-belt-dot"></div>
-              </div>
-
-              <div class="pipeline-nodes">
-                <div class="pipeline-node done">
-                  <div class="node-dot">📢</div>
-                  <div class="node-label">发布项目</div>
-                  <div class="node-time">04-05</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">🤝</div>
-                  <div class="node-label">企业响应</div>
-                  <div class="node-time">04-08</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">📦</div>
-                  <div class="node-label">企业发货</div>
-                  <div class="node-time">04-12</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">🏛️</div>
-                  <div class="node-label">受捐登记</div>
-                  <div class="node-time">04-16</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">👥</div>
-                  <div class="node-label">志愿者派发</div>
-                  <div class="node-time">04-18~22</div>
-                </div>
-                <div class="pipeline-node done">
-                  <div class="node-dot">✅</div>
-                  <div class="node-label">项目完结</div>
-                  <div class="node-time">04-23</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="pipeline-current" style="background:linear-gradient(135deg,#E0F7F4 0%,#CCFBF1 100%);border-left-color:#14B8A6;">
-              🎉 项目已完结 · <strong>1,500 户 / 3,200 儿童</strong> 已受惠
-            </div>
-
-            <div class="pipeline-status">
-              <span class="ok">✓ 全部完成 6 / 6</span>
-              <span class="ok">🏆 完结证书已生成</span>
-            </div>
-          </div>
-        </div><!-- /trace-layout -->
+        </div>
       </div>
     </div>
 
@@ -1176,58 +782,6 @@
       document.querySelectorAll('.flow-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(btn.dataset.target).classList.add('active');
-    });
-  });
-
-  // ===== GSAP 接管"小光点沿传送带移动"动画 =====
-  // 替代原 CSS @keyframes beltDotMove，提供更精细控制 + ScrollTrigger 联动
-  gsap.registerPlugin(ScrollTrigger);
-
-  const dotTweens = [];
-
-  // 每个 panel 的小光点启动 GSAP 循环动画
-  document.querySelectorAll('.pipeline-belt-dot').forEach(dot => {
-    // fromTo：6% → 94%，淡入淡出，无限循环
-    const t = gsap.fromTo(dot,
-      { left: '6%',  opacity: 0 },
-      { left: '94%', opacity: 1, duration: 2.5, ease: 'none', repeat: -1, repeatDelay: 0.3,
-        onRepeat: () => { gsap.set(dot, { left: '6%', opacity: 0 }); }
-      }
-    );
-    dotTweens.push(t);
-  });
-
-  // ScrollTrigger 联动：滚动到 trace-pipeline 视口时，光点动画 timeScale 加速
-  // 用户主动滚动到这里 → 小光点跑得更快（视觉反馈"这里有东西"）
-  // 滚出视口 → 恢复 1x
-  document.querySelectorAll('.flow-panel').forEach(panel => {
-    const pipeline = panel.querySelector('.trace-pipeline');
-    if (!pipeline) return;
-    ScrollTrigger.create({
-      trigger: pipeline,
-      start: 'top 80%',
-      end: 'bottom 20%',
-      onToggle: (self) => {
-        const scale = self.isActive ? 2 : 1;
-        dotTweens.forEach(t => t.timeScale(scale));
-      }
-    });
-  });
-
-  // ===== 流水线节点 hover GSAP 弹性放大 =====
-  // 替代原 CSS :hover { transform: scale(1.15) }，用 back.out 弹性曲线
-  document.querySelectorAll('.pipeline-node').forEach(node => {
-    const dot = node.querySelector('.node-dot');
-    const label = node.querySelector('.node-label');
-    if (!dot) return;
-    node.addEventListener('mouseenter', () => {
-      gsap.killTweensOf(dot); // 清掉 active 节点的脉冲 tween，避免冲突
-      gsap.to(dot, { scale: 1.18, duration: 0.3, ease: 'back.out(1.7)' });
-      if (label) gsap.to(label, { color: '#E85D04', duration: 0.2 });
-    });
-    node.addEventListener('mouseleave', () => {
-      gsap.to(dot, { scale: 1, duration: 0.3, ease: 'power2.out' });
-      if (label) gsap.to(label, { color: '', duration: 0.2 });
     });
   });
 </script>

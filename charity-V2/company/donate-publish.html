@@ -6,6 +6,7 @@
 <title>发起捐赠 — 美心食品集团 | 慈商联营</title>
 <link rel="stylesheet" href="../public/css/style.css">
 <link rel="stylesheet" href="../public/css/dashboard.css">
+<link rel="stylesheet" href="../public/css/product-picker.css">
 <style>
   .flow-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
   .flow-pick {
@@ -50,6 +51,150 @@
   .matched-charity .body { flex: 1; }
   .matched-charity .name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
   .matched-charity .meta { font-size: 13px; color: var(--color-text-2); }
+
+  /* ===== 第三步：前 3 名慈善会推荐卡片 ===== */
+  .charity-recommend {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 900px) {
+    .charity-recommend { grid-template-columns: 1fr; }
+  }
+  .charity-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 52px 1fr 28px;
+    gap: 12px;
+    align-items: start;
+    padding: 16px;
+    background: #fff;
+    border: 2px solid var(--color-border, #EAEAEA);
+    border-radius: var(--radius-md, 12px);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .charity-card:hover {
+    border-color: var(--color-primary-soft, #FFD9C0);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(232, 93, 4, 0.08);
+  }
+  .charity-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .charity-card.is-selected {
+    border-color: var(--color-primary, #E85D04);
+    background: linear-gradient(135deg, #FFFAF5 0%, #fff 60%);
+    box-shadow: 0 0 0 4px rgba(232, 93, 4, 0.08);
+  }
+  .charity-rank {
+    position: absolute;
+    top: -10px; left: 14px;
+    background: linear-gradient(135deg, #E85D04 0%, #C44569 100%);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 10px 10px 10px 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(232, 93, 4, 0.3);
+  }
+  .charity-logo {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .charity-body { min-width: 0; }
+  .charity-name { font-size: 15px; font-weight: 700; color: var(--color-text, #1E293B); margin-bottom: 4px; }
+  .charity-meta { font-size: 12px; color: var(--color-text-2, #475569); line-height: 1.5; margin-bottom: 8px; }
+  .charity-stats { display: flex; flex-wrap: wrap; gap: 4px; }
+  .stat-pill {
+    display: inline-block;
+    padding: 2px 7px;
+    background: var(--color-bg, #F5F5F5);
+    color: var(--color-text-2, #475569);
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .charity-card.is-selected .stat-pill {
+    background: #FFE4D2;
+    color: var(--color-primary, #E85D04);
+  }
+  .charity-tick {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border, #EAEAEA);
+    background: #fff;
+    color: transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    transition: all .2s;
+    flex-shrink: 0;
+    margin-top: 12px;
+  }
+  .charity-card.is-selected .charity-tick {
+    background: var(--color-primary, #E85D04);
+    border-color: var(--color-primary, #E85D04);
+    color: #fff;
+  }
+
+  /* ===== 暂不指定卡片 ===== */
+  .charity-skip {
+    display: grid;
+    grid-template-columns: 52px 1fr 28px;
+    gap: 12px;
+    align-items: start;
+    padding: 16px;
+    background: repeating-linear-gradient(
+      45deg,
+      #F8FAFC 0px, #F8FAFC 8px,
+      #fff 8px, #fff 16px
+    );
+    border: 2px dashed var(--color-border, #EAEAEA);
+    border-radius: var(--radius-md, 12px);
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+  }
+  .charity-skip:hover {
+    border-color: var(--color-text-3, #94A3B8);
+    transform: translateY(-2px);
+  }
+  .charity-skip input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .charity-skip:has(input:checked) {
+    border-style: solid;
+    border-color: var(--color-info, #3B82F6);
+    background: #EFF6FF;
+  }
+  .skip-ico {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+    color: var(--color-info, #2563EB);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .skip-body { min-width: 0; }
+  .skip-title { font-size: 15px; font-weight: 700; color: var(--color-text, #1E293B); margin-bottom: 4px; }
+  .skip-desc { font-size: 12px; color: var(--color-text-2, #475569); line-height: 1.6; }
+  .charity-skip:has(input:checked) .charity-tick {
+    background: var(--color-info, #3B82F6);
+    border-color: var(--color-info, #3B82F6);
+    color: #fff;
+  }
 </style>
 </head>
 <body>
@@ -133,25 +278,26 @@
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">物资名称 <span class="req">*</span></label>
-          <input type="text" class="form-control" value="美心临期面包礼盒 1.2kg · 8 种口味" placeholder="例：临期面包礼盒 1.2kg">
+          <div id="material-picker"></div>
+          <div class="form-hint" id="product-meta-hint">📦 数据来自 <a href="products.html" class="text-primary">商品管理</a>，新增商品后需在商品管理页先发布</div>
         </div>
         <div class="form-group">
           <label class="form-label">保质期至 <span class="req">*</span></label>
-          <input type="date" class="form-control" value="2025-07-15">
+          <input type="date" class="form-control" id="expiryDate" value="2025-07-15">
         </div>
       </div>
 
       <div class="form-row-3">
         <div class="form-group">
           <label class="form-label">数量 <span class="req">*</span></label>
-          <input type="number" class="form-control" value="1200" placeholder="件 / 盒">
+          <input type="number" class="form-control" id="materialQty" value="1200" placeholder="件 / 盒">
           <div class="form-hint">单位：件</div>
         </div>
         <div class="form-group">
           <label class="form-label">评估总价值 <span class="req">*</span></label>
           <div class="input-with-icon">
             <span class="ic">¥</span>
-            <input type="number" class="form-control" value="18600" placeholder="0.00">
+            <input type="number" class="form-control" id="materialValue" value="18600" placeholder="0.00">
           </div>
           <div class="form-hint">平台将根据市场价 + 临期系数评估</div>
         </div>
@@ -193,36 +339,73 @@
 
     <!-- 慈善会匹配 -->
     <div class="dash-card mt-6">
-      <h3 class="mb-4" style="font-size:18px;">🏛️ 第三步：系统智能匹配慈善会</h3>
-      <p class="text-muted mb-3">基于您填写的"物资所在地（广东东莞）"，系统已为您匹配以下属地慈善会：</p>
+      <div class="flex-between mb-4">
+        <h3 style="font-size:18px;">🏛️ 第三步：系统智能匹配慈善会</h3>
+        <span class="tag tag-info">已为您匹配 <strong>12</strong> 家属地慈善会</span>
+      </div>
+      <p class="text-muted mb-3" style="font-size:13px;">基于您填写的"物资所在地（广东东莞）"，系统按<strong>属地匹配度 + 资源规模 + 历史响应速度</strong>推荐前 3 名。点击卡片即可切换。</p>
 
-      <div class="matched-charity">
-        <div class="logo">粤</div>
-        <div class="body">
-          <div class="name">✓ 广东省慈善总会</div>
-          <div class="meta">属地匹配 · 拥有下属 32 个慈善会分支、186 家合作社会组织、1,260 名注册志愿者</div>
-        </div>
-        <button class="btn btn-ghost btn-sm">切换</button>
+      <!-- 前 3 名推荐 -->
+      <div class="charity-recommend">
+        <label class="charity-card is-selected" data-rank="1">
+          <input type="radio" name="charity-pick" value="guangdong" checked>
+          <div class="charity-rank">推荐 1</div>
+          <div class="charity-logo" style="background:linear-gradient(135deg,#E85D04,#C44569);">粤</div>
+          <div class="charity-body">
+            <div class="charity-name">广东省慈善总会</div>
+            <div class="charity-meta">属地匹配 · 32 个分支 · 186 家社会组织 · 1,260 名志愿者</div>
+            <div class="charity-stats">
+              <span class="stat-pill">⭐ 4.9 响应</span>
+              <span class="stat-pill">📦 1,860 吨/年</span>
+              <span class="stat-pill">⏱ 4.2 小时</span>
+            </div>
+          </div>
+          <div class="charity-tick">✓</div>
+        </label>
+
+        <label class="charity-card" data-rank="2">
+          <input type="radio" name="charity-pick" value="dongguan">
+          <div class="charity-rank">推荐 2</div>
+          <div class="charity-logo" style="background:linear-gradient(135deg,#0E5A6F,#0D9488);">东</div>
+          <div class="charity-body">
+            <div class="charity-name">东莞市慈善会</div>
+            <div class="charity-meta">属地匹配 · 18 个分支 · 86 家社会组织 · 520 名志愿者</div>
+            <div class="charity-stats">
+              <span class="stat-pill">⭐ 4.7 响应</span>
+              <span class="stat-pill">📦 580 吨/年</span>
+              <span class="stat-pill">⏱ 3.8 小时</span>
+            </div>
+          </div>
+          <div class="charity-tick">✓</div>
+        </label>
+
+        <label class="charity-card" data-rank="3">
+          <input type="radio" name="charity-pick" value="shenzhen">
+          <div class="charity-rank">推荐 3</div>
+          <div class="charity-logo" style="background:linear-gradient(135deg,#C4842A,#B45309);">深</div>
+          <div class="charity-body">
+            <div class="charity-name">深圳市慈善会</div>
+            <div class="charity-meta">异地匹配 · 24 个分支 · 132 家社会组织 · 880 名志愿者</div>
+            <div class="charity-stats">
+              <span class="stat-pill">⭐ 4.6 响应</span>
+              <span class="stat-pill">📦 720 吨/年</span>
+              <span class="stat-pill">⏱ 5.1 小时</span>
+            </div>
+          </div>
+          <div class="charity-tick">✓</div>
+        </label>
       </div>
 
-      <div class="dash-list mt-4">
-        <div class="dash-list-item">
-          <div class="icon" style="background:var(--color-secondary-soft);color:var(--color-secondary);">🏛️</div>
-          <div class="body">
-            <div class="title">东莞市慈善会</div>
-            <div class="meta">属地匹配 · 备选方案</div>
-          </div>
-          <span class="text-sm text-muted">备选</span>
+      <!-- 暂不指定 -->
+      <label class="charity-skip" data-rank="skip">
+        <input type="radio" name="charity-pick" value="__skip__">
+        <div class="skip-ico">🌐</div>
+        <div class="skip-body">
+          <div class="skip-title">暂不指定，等属地慈善会自己领取</div>
+          <div class="skip-desc">提交后系统将向广东东莞周边 12 家慈善会同时推送，<strong>谁先响应谁领取</strong>。适用于不指定合作方的开放性捐赠。系统会记录响应时间作为慈善会考核。</div>
         </div>
-        <div class="dash-list-item">
-          <div class="icon" style="background:var(--color-gold-soft);color:var(--color-gold);">🏛️</div>
-          <div class="body">
-            <div class="title">深圳市慈善会</div>
-            <div class="meta">异地匹配 · 备选方案</div>
-          </div>
-          <span class="text-sm text-muted">备选</span>
-        </div>
-      </div>
+        <div class="charity-tick">✓</div>
+      </label>
     </div>
 
     <!-- 提交 -->
@@ -261,6 +444,41 @@
     document.querySelectorAll('.flow-pick').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
   }
+
+  // 第三步：慈善会推荐卡片点击切换
+  document.querySelectorAll('.charity-card, .charity-skip').forEach(card => {
+    card.addEventListener('click', () => {
+      const radio = card.querySelector('input[type=radio]');
+      if (radio) {
+        radio.checked = true;
+        // 同步视觉（CSS :has() 兼容性兜底）
+        document.querySelectorAll('.charity-card').forEach(c => c.classList.remove('is-selected'));
+        if (card.classList.contains('charity-card')) card.classList.add('is-selected');
+      }
+    });
+  });
+
+  // 第一步：商品选择器（带搜索） + 联动填字段
+  CS.renderProductPicker('material-picker', '美心临期面包礼盒 1.2kg · 8 种口味', (p) => {
+    document.getElementById('expiryDate').value = CS.calcExpiryDate(p.expiryDays);
+    document.getElementById('product-meta-hint').innerHTML =
+      '📦 <strong>' + p.category + '</strong> · 原价 ¥' + p.originalPrice + ' · 库存 ' + p.stock.toLocaleString() + ' 件 · 月销 ' + p.monthlySales.toLocaleString() +
+      ' · <a href="products.html" class="text-primary">商品管理</a>';
+    // 联动评估总价值：数量 × 售价（如果数量已填）
+    const qty = parseInt(document.getElementById('materialQty').value) || 0;
+    if (qty) {
+      document.getElementById('materialValue').value = qty * p.salePrice;
+    }
+  });
+
+  // 数量变更时联动重算总价值（基于当前选中商品）
+  document.getElementById('materialQty').addEventListener('input', e => {
+    const qty = parseInt(e.target.value) || 0;
+    const p = CS.findProduct(document.getElementById('material-picker-input').value);
+    if (p && qty) {
+      document.getElementById('materialValue').value = qty * p.salePrice;
+    }
+  });
 </script>
 </body>
 </html>

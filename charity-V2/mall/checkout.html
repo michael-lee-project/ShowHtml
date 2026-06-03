@@ -25,10 +25,32 @@
     display: flex; align-items: center; gap: 12px; padding: 12px 16px;
     border: 1px solid var(--color-border); border-radius: var(--radius);
     cursor: pointer;
+    transition: all .15s;
   }
+  .shipping-option:hover { border-color: var(--color-primary-soft, #FFD9C0); }
   .shipping-option.active { border-color: var(--color-primary); background: var(--color-primary-soft); }
   .shipping-option .name { flex: 1; }
   .shipping-option .price { font-weight: 700; color: var(--color-primary); }
+  /* 企业统一发货 特色样式 */
+  .shipping-option.shipping-company {
+    background: linear-gradient(135deg, #FFF8F2 0%, #FAEFD9 100%);
+    border-color: #FFD9C0;
+  }
+  .shipping-option.shipping-company:hover {
+    background: linear-gradient(135deg, #FFE4D2 0%, #FAEFD9 100%);
+  }
+  .shipping-option.shipping-company .price { color: var(--color-trust, #0D9488); }
+  .ship-tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .ship-tag {
+    display: inline-block;
+    padding: 2px 7px;
+    background: #fff;
+    border: 1px solid #FFD9C0;
+    color: var(--color-primary, #E85D04);
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+  }
 
   .order-summary { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px; position: sticky; top: 96px; }
   .summary-items { max-height: 240px; overflow-y: auto; margin-bottom: 16px; }
@@ -49,15 +71,187 @@
   .donate-highlight .t { font-size: 13px; color: var(--color-text-2); }
   .donate-highlight .v { font-size: 24px; font-weight: 800; color: var(--color-trust); }
 
-  .coupon-row {
-    display: flex; align-items: center; gap: 12px; padding: 12px;
-    background: var(--color-bg); border-radius: var(--radius); margin-bottom: 8px;
-    cursor: pointer;
+  /* ===== 购买模式：自用 / 赠送给受灾项目 ===== */
+  .checkout-mode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
   }
-  .coupon-row .ico { width: 40px; height: 40px; background: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; border-radius: 8px; font-size: 12px; }
-  .coupon-row .info { flex: 1; }
-  .coupon-row .name { font-size: 14px; font-weight: 600; }
-  .coupon-row .meta { font-size: 12px; color: var(--color-text-3); }
+  @media (max-width: 720px) {
+    .checkout-mode { grid-template-columns: 1fr; }
+  }
+  .mode-card {
+    display: grid;
+    grid-template-columns: 52px 1fr 28px;
+    gap: 12px;
+    align-items: center;
+    padding: 16px 18px;
+    background: #fff;
+    border: 2px solid var(--color-border, #EAEAEA);
+    border-radius: var(--radius-md, 12px);
+    cursor: pointer;
+    transition: all .2s;
+    text-align: left;
+    font-family: inherit;
+    position: relative;
+  }
+  .mode-card:hover {
+    border-color: var(--color-primary-soft, #FFD9C0);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(232, 93, 4, 0.08);
+  }
+  .mode-card.is-active {
+    border-color: var(--color-primary, #E85D04);
+    background: linear-gradient(135deg, #FFFAF5 0%, #fff 60%);
+    box-shadow: 0 0 0 4px rgba(232, 93, 4, 0.08);
+  }
+  .mode-card.mode-gift.is-active {
+    border-color: var(--color-trust, #0D9488);
+    background: linear-gradient(135deg, #E0FAF5 0%, #fff 60%);
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+  }
+  .mode-ico {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: var(--color-primary-soft, #FFF1E5);
+    color: var(--color-primary, #E85D04);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .mode-card.mode-gift .mode-ico {
+    background: #CCFBF1; color: var(--color-trust, #0D9488);
+  }
+  .mode-title { font-size: 15px; font-weight: 700; color: var(--color-text, #1E293B); margin-bottom: 2px; }
+  .mode-desc { font-size: 12px; color: var(--color-text-2, #475569); }
+  .mode-tag {
+    position: absolute;
+    top: -8px; right: 14px;
+    background: linear-gradient(135deg, #E85D04 0%, #C44569 100%);
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .mode-tick {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border, #EAEAEA);
+    background: #fff; color: transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    transition: all .2s;
+  }
+  .mode-card.is-active .mode-tick {
+    background: var(--color-primary, #E85D04);
+    border-color: var(--color-primary, #E85D04);
+    color: #fff;
+  }
+  .mode-card.mode-gift.is-active .mode-tick {
+    background: var(--color-trust, #0D9488);
+    border-color: var(--color-trust, #0D9488);
+    color: #fff;
+  }
+
+  /* ===== 项目选择列表 ===== */
+  .project-list {
+    display: flex; flex-direction: column;
+    gap: 10px;
+  }
+  .project-card {
+    display: grid;
+    grid-template-columns: 56px 1fr 24px;
+    gap: 14px;
+    align-items: start;
+    padding: 14px;
+    background: #fff;
+    border: 2px solid var(--color-border, #EAEAEA);
+    border-radius: var(--radius-md, 12px);
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+  }
+  .project-card:hover {
+    border-color: var(--color-trust-soft, #CCFBF1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.1);
+  }
+  .project-card.is-selected {
+    border-color: var(--color-trust, #0D9488);
+    background: linear-gradient(135deg, #E0FAF5 0%, #fff 60%);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.08);
+  }
+  .project-cover {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .project-body { min-width: 0; }
+  .project-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .project-name { font-size: 14px; font-weight: 700; color: var(--color-text, #1E293B); }
+  .project-tag-urgent { background: #FEE2E2; color: #DC2626; }
+  .project-tag-high   { background: #FEF3C7; color: #B45309; }
+  .project-tag-normal { background: #DBEAFE; color: #2563EB; }
+  .project-tag {
+    padding: 1px 7px; border-radius: 6px;
+    font-size: 10px; font-weight: 600;
+  }
+  .project-meta {
+    font-size: 12px; color: var(--color-text-2, #475569);
+    line-height: 1.6;
+  }
+  .project-progress {
+    margin-top: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .project-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #F1F5F9;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .project-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #14B8A6, #0D9488);
+  }
+  .project-progress-text {
+    font-size: 11px; color: var(--color-text-3, #94A3B8);
+    white-space: nowrap;
+  }
+  .project-tick {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border, #EAEAEA);
+    background: #fff; color: transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    margin-top: 16px;
+  }
+  .project-card.is-selected .project-tick {
+    background: var(--color-trust, #0D9488);
+    border-color: var(--color-trust, #0D9488);
+    color: #fff;
+  }
+
+  /* 配送方式文案随模式变 */
+  #deliveryNote { font-size: 12px; color: var(--color-text-3, #94A3B8); margin-top: 8px; }
+  #submitNote {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #CCFBF1;
+    color: #0D9488;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -74,10 +268,32 @@
 
   <h1 class="mb-6" style="font-size:28px;">📝 订单结算</h1>
 
+  <!-- 购买模式：自用 / 赠送给受灾项目 -->
+  <div class="checkout-mode" id="checkoutMode">
+    <button class="mode-card is-active" data-mode="self">
+      <div class="mode-ico">📦</div>
+      <div class="mode-body">
+        <div class="mode-title">自用购买</div>
+        <div class="mode-desc">商品送到您的收货地址，常规订单流程</div>
+      </div>
+      <div class="mode-tick">✓</div>
+    </button>
+    <button class="mode-card mode-gift" data-mode="gift">
+      <div class="mode-ico">🎁</div>
+      <div class="mode-body">
+        <div class="mode-title">赠送给受灾项目</div>
+        <div class="mode-desc">商品直接送到项目受捐人，您将获得捐赠证书 + 0.5% 平台配捐</div>
+      </div>
+      <span class="mode-tag">每单都有温度</span>
+      <div class="mode-tick">✓</div>
+    </button>
+  </div>
+
   <div class="checkout-grid">
     <div>
-      <!-- 收货地址 -->
-      <div class="checkout-section">
+      <!-- 收货地址（mode=self 显示） -->
+      <div class="checkout-section" id="sectionAddress">
+        <h3>📍 收货地址</h3>
         <h3>📍 收货地址</h3>
         <div class="address-card">
           <input type="radio" checked>
@@ -91,6 +307,13 @@
           <button class="btn btn-ghost btn-sm">修改</button>
         </div>
         <button class="btn btn-ghost mt-3" style="width:100%;">+ 使用新地址</button>
+      </div>
+
+      <!-- 赠送给受灾项目（mode=gift 显示） -->
+      <div class="checkout-section" id="sectionProject" style="display:none;">
+        <h3>🎁 选择受灾项目</h3>
+        <p class="text-muted text-sm mb-3">选择您要捐赠到的项目，您购买的商品将直接送达受捐人手中。</p>
+        <div class="project-list" id="projectList"></div>
       </div>
 
       <!-- 商品清单 -->
@@ -140,7 +363,21 @@
             <div class="text-sm text-muted">预计 4 小时内送达</div>
             <div class="price">¥ 12</div>
           </div>
+          <div class="shipping-option shipping-company">
+            <input type="radio" name="ship">
+            <div class="name">
+              <div>🏭 企业统一发货 · <strong style="color:var(--color-primary);">美心食品集团</strong></div>
+              <div class="text-sm text-muted" style="margin-top:2px;">由商品所属企业批量发货，<strong>您只需付款</strong>，物流由企业全程负责</div>
+              <div class="ship-tag-row">
+                <span class="ship-tag">📦 适合批量</span>
+                <span class="ship-tag">🛡️ 厂家直发</span>
+                <span class="ship-tag">⏱ 5-7 天</span>
+              </div>
+            </div>
+            <div class="price">免邮</div>
+          </div>
         </div>
+        <div id="deliveryNote"></div>
       </div>
 
       <!-- 支付方式 -->
@@ -165,27 +402,6 @@
             <div class="text-sm text-muted">企业用户专享</div>
             <div class="price"></div>
           </div>
-        </div>
-      </div>
-
-      <!-- 优惠券 -->
-      <div class="checkout-section">
-        <h3>🎟️ 优惠券</h3>
-        <div class="coupon-row">
-          <div class="ico">¥ 10</div>
-          <div class="info">
-            <div class="name">满 200 减 10 优惠券</div>
-            <div class="meta">有效期至 2025-12-31</div>
-          </div>
-          <button class="btn btn-ghost btn-sm">使用</button>
-        </div>
-        <div class="coupon-row">
-          <div class="ico" style="background:var(--color-trust);">🎁</div>
-          <div class="info">
-            <div class="name">新用户专享 · 满 100 减 20</div>
-            <div class="meta">已使用</div>
-          </div>
-          <span class="text-muted text-sm">已使用</span>
         </div>
       </div>
 
@@ -240,10 +456,6 @@
           <span class="text-muted">会员折扣</span>
           <span class="text-success">- ¥ 5.0</span>
         </div>
-        <div class="flex-between mb-2 text-sm">
-          <span class="text-muted">优惠券</span>
-          <span class="text-success">- ¥ 10</span>
-        </div>
 
         <div class="donate-highlight">
           <div class="row">
@@ -261,6 +473,8 @@
           <span style="font-size:26px;font-weight:800;color:var(--color-primary);">¥ 148.7</span>
         </div>
 
+        <div id="submitNote"></div>
+
         <button class="btn btn-primary btn-block btn-lg mt-4" onclick="CS.toast('订单提交成功！'); setTimeout(() => location.href='orders.html', 1500);">立即支付 ¥ 148.7</button>
 
         <div class="text-center text-xs text-muted mt-3">
@@ -274,6 +488,81 @@
 <div id="site-footer"></div>
 
 <script src="../public/js/common.js"></script>
-<script>CS.renderHeader('mall'); CS.renderFooter();</script>
+<script>
+  CS.renderHeader('mall'); CS.renderFooter();
+
+  // 渲染受灾项目列表
+  function renderProjectList() {
+    const list = document.getElementById('projectList');
+    if (!list) return;
+    list.innerHTML = CS.DISASTER_PROJECTS.map(p => `
+      <label class="project-card" data-id="${p.id}">
+        <input type="radio" name="project-pick" value="${p.id}" style="display:none;">
+        <div class="project-cover" style="background:${p.coverBg};">${p.cover}</div>
+        <div class="project-body">
+          <div class="project-head">
+            <span class="project-name">${p.name}</span>
+            <span class="project-tag project-tag-${p.level}">${p.tag}</span>
+          </div>
+          <div class="project-meta">
+            🏛️ ${p.org} · 📍 ${p.region} · 👥 ${p.beneficiaries.toLocaleString()} 人<br>
+            📦 需求物资：${p.need}
+          </div>
+          <div class="project-progress">
+            <div class="project-progress-bar"><div class="project-progress-fill" style="width:${p.received};"></div></div>
+            <div class="project-progress-text">已接收 ${p.received}</div>
+          </div>
+        </div>
+        <div class="project-tick">✓</div>
+      </label>
+    `).join('');
+
+    list.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const radio = card.querySelector('input[type=radio]');
+        if (radio) radio.checked = true;
+        list.querySelectorAll('.project-card').forEach(c => c.classList.remove('is-selected'));
+        card.classList.add('is-selected');
+      });
+    });
+  }
+
+  // 切换模式
+  function setMode(mode) {
+    const sectionAddr = document.getElementById('sectionAddress');
+    const sectionProj = document.getElementById('sectionProject');
+    const deliveryNote = document.getElementById('deliveryNote');
+    const submitNote = document.getElementById('submitNote');
+
+    document.querySelectorAll('.mode-card').forEach(c => {
+      c.classList.toggle('is-active', c.dataset.mode === mode);
+    });
+
+    if (mode === 'gift') {
+      sectionAddr.style.display = 'none';
+      sectionProj.style.display = '';
+      if (deliveryNote) deliveryNote.textContent = '由属地慈善会 + 志愿者直接派发到受捐人，无需您收件';
+      if (submitNote) {
+        submitNote.style.display = '';
+        submitNote.innerHTML = '🎁 <strong>赠送给受灾项目</strong>订单提交后：<br>· 商品直接送达项目受捐人，不经过您的地址<br>· 您将获得 <strong>捐赠证书</strong> + <strong>0.5% 平台配捐额度</strong>（可下次抵用）<br>· 物流轨迹实时同步到项目页，可追踪';
+      }
+    } else {
+      sectionAddr.style.display = '';
+      sectionProj.style.display = 'none';
+      if (deliveryNote) deliveryNote.textContent = '';
+      if (submitNote) submitNote.style.display = 'none';
+    }
+  }
+
+  document.querySelectorAll('.mode-card').forEach(c => {
+    c.addEventListener('click', () => setMode(c.dataset.mode));
+  });
+
+  // 初始化：URL ?mode=gift 自动切到赠送模式
+  renderProjectList();
+  const urlMode = new URLSearchParams(location.search).get('mode');
+  if (urlMode === 'gift') setMode('gift');
+  else setMode('self');
+</script>
 </body>
 </html>

@@ -448,11 +448,160 @@ hr { border: 0; height: 1px; background: var(--color-border); margin: 24px 0; }
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.2); }
 }
-.fade-up { animation: fadeUp 0.6s var(--ease) both; }
+.fade-up { animation: none; }
 .fade-up-1 { animation-delay: 0.05s; }
 .fade-up-2 { animation-delay: 0.1s; }
 .fade-up-3 { animation-delay: 0.15s; }
 .fade-up-4 { animation-delay: 0.2s; }
+
+/* H1 拆分三段：让 3 个 span 各自换行 */
+.hero-line { display: block; }
+
+/* ============================================
+   入场动画 splash（全屏覆盖层，GSAP 接管）
+   ============================================ */
+
+/* ============================================
+   首页前台 header（fixed 顶部，splash 期间也显示）
+   ============================================ */
+.front-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 10000; /* 高于 splash 9999 */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background .2s;
+}
+.front-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 64px;
+}
+.front-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-primary, #E85D04);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.front-logo .brand {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text, #1E293B);
+  line-height: 1.2;
+}
+.front-logo .brand-en {
+  font-size: 10px;
+  color: var(--color-text-3, #94A3B8);
+  letter-spacing: 1px;
+  line-height: 1;
+  margin-top: 1px;
+}
+.front-nav {
+  display: flex;
+  gap: 28px;
+  flex: 1;
+  margin-left: 16px;
+}
+.front-nav a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-2, #475569);
+  text-decoration: none;
+  position: relative;
+  padding: 4px 0;
+  transition: color .15s;
+}
+.front-nav a:hover { color: var(--color-primary, #E85D04); }
+.front-nav a.active { color: var(--color-primary, #E85D04); font-weight: 600; }
+.front-nav a.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--color-primary, #E85D04);
+  border-radius: 1px;
+}
+.front-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.front-actions .link-muted {
+  font-size: 14px;
+  color: var(--color-text-2, #475569);
+  text-decoration: none;
+}
+.front-actions .link-muted:hover { color: var(--color-primary, #E85D04); }
+@media (max-width: 900px) {
+  .front-nav { display: none; }
+}
+
+.splash {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.splash-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #FFF1E5 0%, #FAEFD9 50%, #FFE4D2 100%);
+  z-index: 1;
+}
+.splash-bg::after {
+  content: '📬'; position: absolute;
+  right: 100px; top: -40px;
+  font-size: 280px; opacity: 0.08;
+  pointer-events: none;
+}
+.splash-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  color: var(--color-primary, #E85D04);
+  padding: 40px;
+}
+.splash-logo {
+  margin-bottom: 24px;
+  color: var(--color-primary, #E85D04);
+  filter: drop-shadow(0 8px 16px rgba(232, 93, 4, 0.2));
+}
+.splash-brand {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+  color: var(--color-text, #1E293B);
+  font-family: var(--font-serif, "PingFang SC", "Microsoft YaHei", serif);
+}
+.splash-tagline {
+  font-size: 14px;
+  color: var(--color-text-2, #475569);
+  letter-spacing: 2px;
+  margin-bottom: 36px;
+}
+.splash-loader {
+  width: 200px;
+  height: 3px;
+  background: rgba(232, 93, 4, 0.15);
+  border-radius: 2px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.splash-loader-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #E85D04 0%, #C44569 100%);
+  border-radius: 2px;
+  /* 进度条动画由 GSAP 控制（不用 CSS keyframe） */
+}
 .live-dot {
   display: inline-block; width: 8px; height: 8px;
   background: var(--color-success); border-radius: 50%;

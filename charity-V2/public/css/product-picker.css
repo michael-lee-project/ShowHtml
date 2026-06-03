@@ -1,0 +1,95 @@
+/* ============================================
+   商品选择器（带搜索的下拉）
+   用法：<div id="picker"></div> + CS.renderProductPicker('picker', defaultName, onChange)
+   ============================================ */
+
+.picker-wrap {
+  position: relative;
+}
+.picker-input {
+  cursor: pointer;
+  padding-right: 36px;
+}
+.picker-input:focus { cursor: text; }
+.picker-chevron {
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: #94A3B8;
+  font-size: 12px;
+  pointer-events: none;
+  transition: transform .2s;
+}
+.picker-wrap.is-open .picker-chevron { transform: translateY(-50%) rotate(180deg); }
+
+.picker-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0; right: 0;
+  z-index: 50;
+  background: #fff;
+  border: 1px solid var(--color-border, #EAEAEA);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  max-height: 320px;
+  overflow-y: auto;
+  display: none;
+  animation: pickerOpen .15s ease-out;
+}
+.picker-dropdown.is-open { display: block; }
+@keyframes pickerOpen {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.picker-group { padding: 6px 0; }
+.picker-group + .picker-group { border-top: 1px solid var(--color-border-light, #F0F0F0); }
+.picker-group-label {
+  padding: 8px 14px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-3, #94A3B8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.picker-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background .1s;
+}
+.picker-option:hover,
+.picker-option.is-active {
+  background: var(--color-primary-soft, #FFF1E5);
+}
+.picker-emoji {
+  font-size: 22px;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-bg, #F5F5F5);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.picker-info { flex: 1; min-width: 0; }
+.picker-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #1E293B);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.picker-meta {
+  font-size: 11px;
+  color: var(--color-text-3, #94A3B8);
+  margin-top: 2px;
+}
+.picker-tag { flex-shrink: 0; }
+.picker-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--color-text-3, #94A3B8);
+  font-size: 13px;
+}

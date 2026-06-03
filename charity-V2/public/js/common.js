@@ -131,6 +131,142 @@
     return data.filter(m => m.unread).length;
   }
 
+  // ============================================
+  // 受灾项目数据（慈善会发布、消费者可"购买赠送"）
+  // ============================================
+  const DISASTER_PROJECTS = [
+    { id: 'd01', name: '云南昭通 6.2 级地震救援',         org: '云南省慈善总会',     level: 'urgent', tag: '🚨 紧急', beneficiaries: 1820, region: '云南昭通 · 鲁甸县', need: '洗护用品、应急食品、保暖衣物', received: '12%', cover: '🏔️', coverBg: '#FEE2E2' },
+    { id: 'd02', name: '粤北山区助学计划',                org: '广东省慈善总会',     level: 'high',   tag: '📚 助学', beneficiaries: 3200, region: '广东清远 · 阳山县', need: '书包、文具、运动鞋',           received: '45%', cover: '📚', coverBg: '#DBEAFE' },
+    { id: 'd03', name: '西部留守儿童关怀',                org: '中国扶贫基金会',     level: 'normal', tag: '❤️ 关怀', beneficiaries: 5800, region: '甘肃陇南 · 礼县',   need: '食品礼盒、保暖内衣',           received: '68%', cover: '🧒', coverBg: '#FEF3C7' },
+    { id: 'd04', name: '广东 7 月洪灾应急救援',           org: '广东省慈善总会',     level: 'urgent', tag: '🚨 紧急', beneficiaries: 2400, region: '广东韶关 · 翁源县', need: '饮用水、毛巾被、消毒用品',     received: '32%', cover: '🌊', coverBg: '#CCFBF1' },
+    { id: 'd05', name: '云南偏远山区送温暖',              org: '深圳市壹基金',       level: 'normal', tag: '🧥 寒冬', beneficiaries: 1200, region: '云南怒江 · 福贡县', need: '羽绒服、围巾、手套',           received: '78%', cover: '🧥', coverBg: '#E0E7FF' }
+  ];
+
+  function findDisasterProject(key) {
+    return DISASTER_PROJECTS.find(p => p.id === key || p.name === key) || null;
+  }
+
+  // ============================================
+  // 商品数据（公司维度，products.html + donate-publish.html 共用）
+  // ============================================
+  const PRODUCTS_DATA = [
+    { id: 'p001', name: '美心临期面包礼盒 1.2kg · 8 种口味', category: '临期食品', group: 'exp',   originalPrice: 89,   salePrice: 39.9, stock: 1260, monthlySales: 12000, expiryDays: 23, cover: '🍞', tags: ['爆款'] },
+    { id: 'p002', name: '美心丹麦酥 礼盒装 480g',            category: '临期食品', group: 'exp',   originalPrice: 48,   salePrice: 24.9, stock: 860,  monthlySales: 6820,  expiryDays: 28, cover: '🥐', tags: [] },
+    { id: 'p003', name: '美心鲜奶蛋糕 6 寸 · 生日款',        category: '新鲜烘焙', group: 'new',   originalPrice: 168,  salePrice: 128,  stock: 320,  monthlySales: 1860,  expiryDays: 3,  cover: '🍰', tags: ['新品'] },
+    { id: 'p004', name: '美心曲奇饼干礼盒 680g',             category: '临期食品', group: 'exp',   originalPrice: 78,   salePrice: 39.9, stock: 1560, monthlySales: 3260,  expiryDays: 45, cover: '🍪', tags: [] },
+    { id: 'p005', name: '美心蛋挞 12 个装 · 家庭分享装',     category: '临期食品', group: 'exp',   originalPrice: 56,   salePrice: 28.8, stock: 2260, monthlySales: 2860,  expiryDays: 5,  cover: '🥧', tags: [] },
+    { id: 'p006', name: '美心甜甜圈 6 个装 · 卡通造型',     category: '临期食品', group: 'exp',   originalPrice: 38,   salePrice: 19.9, stock: 3860, monthlySales: 4200,  expiryDays: 4,  cover: '🍩', tags: ['临期'] }
+  ];
+
+  // 计算保质期至日期（基于今天 + expiryDays）
+  function calcExpiryDate(days) {
+    const d = new Date();
+    d.setDate(d.getDate() + (days || 0));
+    return d.toISOString().slice(0, 10);
+  }
+
+  // 按 ID / name 找商品
+  function findProduct(key) {
+    return PRODUCTS_DATA.find(p => p.id === key || p.name === key) || null;
+  }
+
+  // 渲染"商品选择器"（带搜索的下拉）
+  // targetId: 容器 id；onChange: 选中后回调（参数是 product 对象）
+  function renderProductPicker(targetId, defaultName, onChange) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    const groups = [
+      { key: 'exp', label: '🍞 临期食品（推荐）' },
+      { key: 'new', label: '🍰 新品食品' }
+    ];
+
+    function buildOptions(filter) {
+      const f = (filter || '').trim().toLowerCase();
+      return groups.map(g => {
+        const items = PRODUCTS_DATA.filter(p => p.group === g.key &&
+          (!f || p.name.toLowerCase().includes(f) || p.category.toLowerCase().includes(f)));
+        if (!items.length) return '';
+        return `<div class="picker-group">
+          <div class="picker-group-label">${g.label}</div>
+          ${items.map(p => `
+            <div class="picker-option" data-id="${p.id}" data-name="${p.name}">
+              <div class="picker-emoji">${p.cover}</div>
+              <div class="picker-info">
+                <div class="picker-name">${p.name}</div>
+                <div class="picker-meta">¥ ${p.salePrice} · 库存 ${p.stock.toLocaleString()}</div>
+              </div>
+              ${p.tags.length ? `<span class="picker-tag ${p.tags[0]==='爆款'?'tag-primary':p.tags[0]==='新品'?'tag-gold':'tag-warning'}">${p.tags[0]}</span>` : ''}
+            </div>
+          `).join('')}
+        </div>`;
+      }).join('') || '<div class="picker-empty">无匹配商品</div>';
+    }
+
+    function formatDate(d) {
+      return d;
+    }
+
+    container.innerHTML = `
+      <div class="picker-wrap">
+        <input type="text" class="picker-input form-control" id="${targetId}-input" placeholder="搜索或选择商品..." value="${defaultName || ''}" autocomplete="off">
+        <span class="picker-chevron">▾</span>
+        <div class="picker-dropdown" id="${targetId}-dropdown">
+          <div class="picker-options">${buildOptions('')}</div>
+        </div>
+      </div>
+    `;
+
+    const input = document.getElementById(`${targetId}-input`);
+    const dropdown = document.getElementById(`${targetId}-dropdown`);
+
+    function open() { dropdown.classList.add('is-open'); }
+    function close() { dropdown.classList.remove('is-open'); }
+    function isOpen() { return dropdown.classList.contains('is-open'); }
+
+    // 聚焦时打开 + 选中已有文本
+    input.addEventListener('focus', () => { open(); input.select(); });
+    // 边输入边过滤
+    input.addEventListener('input', () => {
+      dropdown.querySelector('.picker-options').innerHTML = buildOptions(input.value);
+      open();
+      bindOptions();
+    });
+    // 点击外部关闭
+    document.addEventListener('click', e => {
+      if (!container.contains(e.target)) close();
+    });
+    // Esc 关闭
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { close(); input.blur(); }
+      if (e.key === 'Enter') {
+        const first = dropdown.querySelector('.picker-option');
+        if (first) first.click();
+      }
+    });
+
+    function bindOptions() {
+      dropdown.querySelectorAll('.picker-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          const p = findProduct(opt.dataset.id);
+          if (!p) return;
+          input.value = p.name;
+          close();
+          if (typeof onChange === 'function') onChange(p);
+        });
+      });
+    }
+    bindOptions();
+
+    // 触发默认值的 onChange（让联动字段填好）
+    if (defaultName) {
+      const p = findProduct(defaultName);
+      if (p && typeof onChange === 'function') onChange(p);
+    }
+
+    return { input, open, close };
+  }
+
   // Dashboard 上"消息中心快捷入口"banner 的描述文案（按角色）
   const DASH_MSG_DESC = {
     company:   '您发起的"临期面包糕点 1,200 件"已全部签收 / 受捐者反馈已上传 / 注册审核已通过',
@@ -508,16 +644,45 @@
     if (readBtn) readBtn.textContent = '已读';
   });
 
-  // 全部已读
+  // 全部已读（GSAP：数字滚动 + 卡片依次消失）
   document.getElementById('msg-readAll').addEventListener('click', () => {
-    list.querySelectorAll('.msg-item.is-unread').forEach(li => {
-      li.classList.remove('is-unread');
-      li.querySelector('.msg-dot')?.remove();
-      const op = li.querySelector('[data-act="read"]');
-      if (op) op.textContent = '已读';
+    const unreadItems = Array.from(list.querySelectorAll('.msg-item.is-unread'));
+    const statEl = document.querySelector('.msg-section-stat strong');
+    const statBig = document.querySelectorAll('.msg-stat-card .value')[0];
+    const startVal = statEl ? parseInt(statEl.textContent) || unreadItems.length : unreadItems.length;
+
+    // 1) 数字滚动到 0（GSAP tween 数字对象）
+    if (statEl) {
+      const counter = { val: startVal };
+      gsap.to(counter, {
+        val: 0, duration: 0.8, ease: 'power2.out',
+        onUpdate: () => { statEl.textContent = Math.round(counter.val); },
+        onComplete: () => { statEl.textContent = '0'; }
+      });
+    }
+    if (statBig) {
+      const counter = { val: parseInt(statBig.textContent) || startVal };
+      gsap.to(counter, {
+        val: 0, duration: 0.9, ease: 'power2.out',
+        onUpdate: () => { statBig.firstChild.nodeValue = Math.round(counter.val); }
+      });
+    }
+
+    // 2) 卡片依次消失（stagger 上移 + 渐隐 + 内部元素逐个变化）
+    unreadItems.forEach((li, i) => {
+      const dot = li.querySelector('.msg-dot');
+      const readBtn = li.querySelector('[data-act="read"]');
+      const tl = gsap.timeline({ delay: i * 0.08 });
+      // 2a) 红色 dot 缩小消失
+      if (dot) tl.to(dot, { scale: 0, opacity: 0, duration: 0.25, ease: 'back.in(1.7)' }, 0);
+      // 2b) 卡片左边的暖色背景渐淡（去掉 is-unread 类）
+      tl.add(() => li.classList.remove('is-unread'), 0.15);
+      // 2c) 按钮文字变 "已读"
+      tl.add(() => { if (readBtn) readBtn.textContent = '已读'; }, 0.2);
     });
-    const stat = document.querySelector('.msg-section-stat strong');
-    if (stat) stat.textContent = '0';
+
+    // 3) 全部卡片轻微"打卡"反馈（整个列表往右轻推一下再回弹）
+    gsap.fromTo(list, { x: -4 }, { x: 0, duration: 0.4, ease: 'elastic.out(1, 0.5)' });
   });
 
   // 详情弹窗
@@ -747,6 +912,14 @@
       return getMessagesModal();
     },
     MESSAGES_SCRIPT: MESSAGES_SCRIPT,
+    // 商品选择器（共用数据源）
+    PRODUCTS_DATA: PRODUCTS_DATA,
+    findProduct: findProduct,
+    calcExpiryDate: calcExpiryDate,
+    renderProductPicker: renderProductPicker,
+    // 受灾项目（消费者可购买赠送）
+    DISASTER_PROJECTS: DISASTER_PROJECTS,
+    findDisasterProject: findDisasterProject,
     path: getPathPrefix
   };
 

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <title>注册 — 慈商联营</title>
 <link rel="stylesheet" href="../public/css/style.css">
 <style>
@@ -50,7 +51,7 @@
 
   .reg-content { max-width: 960px; margin: 0 auto; padding-bottom: 60px; }
   .reg-panel { display: none; }
-  .reg-panel.active { display: block; animation: fadeUp 0.4s var(--ease); }
+  .reg-panel.active { display: block; } /* 切换动画由 GSAP 接管（gotoStep 函数）*/
 
   /* 角色卡片 */
   .role-pick {
@@ -411,15 +412,48 @@
       if (!sel) { CS.toast('请选择身份', 'error'); return; }
     }
 
-    document.querySelectorAll('.reg-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('reg-step-' + n).classList.add('active');
+    const oldPanel = document.querySelector('.reg-panel.active');
+    const newPanel = document.getElementById('reg-step-' + n);
+    if (oldPanel === newPanel) return;
 
+    // 1) 进度条 step 切换（GSAP 接管动画）
     document.querySelectorAll('.reg-step').forEach(s => {
       const sn = parseInt(s.dataset.step);
+      const num = s.querySelector('.num');
       s.classList.remove('active', 'done');
-      if (sn < n) s.classList.add('done');
-      if (sn === n) s.classList.add('active');
+      if (sn < n) {
+        s.classList.add('done');
+        // 已完成 step：数字 ✓ 弹跳出现
+        gsap.fromTo(num,
+          { scale: 0.4, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' }
+        );
+      } else if (sn === n) {
+        s.classList.add('active');
+        // 当前激活 step：弹性放大
+        gsap.fromTo(num,
+          { scale: 0.5 },
+          { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.5)' }
+        );
+      } else {
+        // 未到达 step：缩回原状
+        gsap.set(num, { scale: 1, opacity: 1 });
+      }
     });
+
+    // 2) panel 切换：旧渐出 + 新渐入（双向过渡）
+    gsap.timeline()
+      .to(oldPanel, {
+        opacity: 0, y: -10, duration: 0.2, ease: 'power2.in',
+        onComplete: () => oldPanel.classList.remove('active')
+      })
+      .add(() => {
+        newPanel.classList.add('active');
+        gsap.fromTo(newPanel,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }
+        );
+      });
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
