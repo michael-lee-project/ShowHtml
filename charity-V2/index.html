@@ -589,48 +589,7 @@
 <div class="splash" id="appSplash">
   <div class="splash-bg"></div>
 
-  <!-- 30 张真实慈善场景图：沿螺旋 path 飞入中心（MotionPath plugin） -->
-  <!-- 隐藏 SVG 螺旋 path（仅供 MotionPathPlugin 引用）—— viewBox 中心 0,0 -->
-  <svg class="splash-spiral" viewBox="-900 -900 1800 1800" xmlns="http://www.w3.org/2000/svg">
-    <path id="spiralPath" d="M 800,0 C 800,-450 450,-800 0,-600 C -450,-400 -700,100 -350,500 C 0,750 500,500 250,150 C 80,-50 -80,-50 0,0" fill="none" />
-  </svg>
-  <div class="splash-images">
-    <div class="splash-img" data-ix="600" data-iy="0"><img src="public/images/splash/s01_s.jpg" alt="食品发放"></div>
-    <div class="splash-img" data-ix="606" data-iy="129"><img src="public/images/splash/s02_s.jpg" alt="医疗援助"></div>
-    <div class="splash-img" data-ix="530" data-iy="236"><img src="public/images/splash/s03_s.jpg" alt="书本捐赠"></div>
-    <div class="splash-img" data-ix="526" data-iy="382"><img src="public/images/splash/s04_s.jpg" alt="冬衣捐赠"></div>
-    <div class="splash-img" data-ix="381" data-iy="423"><img src="public/images/splash/s05_s.jpg" alt="住房重建"></div>
-    <div class="splash-img" data-ix="320" data-iy="554"><img src="public/images/splash/s06_s.jpg" alt="书包捐赠"></div>
-    <div class="splash-img" data-ix="182" data-iy="561"><img src="public/images/splash/s07_s.jpg" alt="志愿团队"></div>
-    <div class="splash-img" data-ix="64" data-iy="606"><img src="public/images/splash/s08_s.jpg" alt="医院探视"></div>
-    <div class="splash-img" data-ix="-58" data-iy="577"><img src="public/images/splash/s09_s.jpg" alt="山区助学"></div>
-    <div class="splash-img" data-ix="-201" data-iy="619"><img src="public/images/splash/s10_s.jpg" alt="物流运输"></div>
-    <div class="splash-img" data-ix="-285" data-iy="494"><img src="public/images/splash/s11_s.jpg" alt="动物救助"></div>
-    <div class="splash-img" data-ix="-424" data-iy="467"><img src="public/images/splash/s12_s.jpg" alt="老人关爱"></div>
-    <div class="splash-img" data-ix="-469" data-iy="338"><img src="public/images/splash/s13_s.jpg" alt="校园公益"></div>
-    <div class="splash-img" data-ix="-565" data-iy="247"><img src="public/images/splash/s14_s.jpg" alt="抢险救援"></div>
-    <div class="splash-img" data-ix="-575" data-iy="138"><img src="public/images/splash/s15_s.jpg" alt="海外慈善"></div>
-    <div class="splash-img" data-ix="-650" data-iy="0"><img src="public/images/splash/s16_s.jpg" alt="助残"></div>
-    <div class="splash-img" data-ix="-575" data-iy="-138"><img src="public/images/splash/s17_s.jpg" alt="义诊"></div>
-    <div class="splash-img" data-ix="-565" data-iy="-247"><img src="public/images/splash/s18_s.jpg" alt="环保"></div>
-    <div class="splash-img" data-ix="-523" data-iy="-380"><img src="public/images/splash/s19_s.jpg" alt="文化保护"></div>
-    <div class="splash-img" data-ix="-401" data-iy="-438"><img src="public/images/splash/s20_s.jpg" alt="体育公益"></div>
-    <div class="splash-img" data-ix="-305" data-iy="-528"><img src="public/images/splash/s21_s.jpg" alt="农村扶贫"></div>
-    <div class="splash-img" data-ix="-203" data-iy="-610"><img src="public/images/splash/s22_s.jpg" alt="留守儿童"></div>
-    <div class="splash-img" data-ix="-58" data-iy="-577"><img src="public/images/splash/s23_s.jpg" alt="妇女关爱"></div>
-    <div class="splash-img" data-ix="68" data-iy="-647"><img src="public/images/splash/s24_s.jpg" alt="应急物资"></div>
-    <div class="splash-img" data-ix="183" data-iy="-561"><img src="public/images/splash/s25_s.jpg" alt="灾后心理辅导"></div>
-    <div class="splash-img" data-ix="310" data-iy="-537"><img src="public/images/splash/s26_s.jpg" alt="社区义诊"></div>
-    <div class="splash-img" data-ix="382" data-iy="-430"><img src="public/images/splash/s27_s.jpg" alt="抗疫"></div>
-    <div class="splash-img" data-ix="535" data-iy="-349"><img src="public/images/splash/s28_s.jpg" alt="抗洪"></div>
-    <div class="splash-img" data-ix="557" data-iy="-243"><img src="public/images/splash/s29_s.jpg" alt="火灾救援"></div>
-    <div class="splash-img" data-ix="630" data-iy="-135"><img src="public/images/splash/s30_s.jpg" alt="助学金"></div>
-  </div>
-
-  <!-- 光晕（图片聚合后扩散的"光"） -->
-  <div class="splash-flash"></div>
-
-  <!-- 品牌名（图片聚合 → 光扩散 → 品牌从光中浮现） -->
+  <!-- 简单 splash：暖橙渐变 + logo 弹性 + 品牌名 + 进度条 + 缩出 -->
   <div class="splash-content">
     <div class="splash-logo">
       <svg viewBox="0 0 64 64" width="80" height="80" xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -640,6 +599,7 @@
     </div>
     <div class="splash-brand">慈商联营</div>
     <div class="splash-tagline">CISHANG UNION · 每一份善意都可追溯</div>
+    <div class="splash-loader"><div class="splash-loader-bar" id="splashBar"></div></div>
   </div>
 </div>
 
@@ -1357,70 +1317,46 @@
   });
 
   // ===== 入场动画 splash（GSAP timeline 接管）=====
-  // 方案 3：30 张图从中心点向外爆开（0-1.5s）→ 光晕扩散（1.5-1.9s）→ 品牌名浮现（1.9-2.4s）→ splash 缩出（2.4-2.9s）→ display:none
+  // 简单版：暖橙渐变 + logo 弹性 + 品牌名 + 进度条 + 缩出
+  // 时序：0s logo 弹性进入 → 0.3s 品牌名 → 0.4s 进度条 0→100% → 0.6s 副标 → 1.4s splash 缩出 + 导航栏淡入 → 1.9s display:none
   const splash = document.getElementById('appSplash');
   const frontHeader = document.getElementById('frontHeader');
   if (frontHeader) gsap.set(frontHeader, { opacity: 0, y: -20 });
   gsap.set('.hero', { opacity: 0 });
 
   if (splash) {
-    const splashImgs = splash.querySelectorAll('.splash-img');
-    const splashFlash = splash.querySelector('.splash-flash');
     const splashLogo  = splash.querySelector('.splash-logo');
     const splashBrand = splash.querySelector('.splash-brand');
     const splashTag   = splash.querySelector('.splash-tagline');
-
-    // Phase 0: 30 张图设初始状态——**中心小图 + 可见**（准备爆开）
-    // 起点：x: 0, y: 0（中心）+ scale 0.5（小图）+ opacity 1（可见）
-    // 终点：x: ix, y: iy（散开到 30 个位置）+ scale 2.0（大图）+ opacity 0（淡出）
-    // 用 data-ix/data-iy 标记 30 个等分极坐标位置（之前设的）
-    splashImgs.forEach((img) => {
-      gsap.set(img, { x: 0, y: 0, scale: 0.5, opacity: 1, rotation: 0 });
-    });
-    gsap.set(splashFlash, { scale: 0, opacity: 0 });
-    gsap.set([splashLogo, splashBrand, splashTag], { opacity: 0 });
+    const splashBar   = splash.querySelector('.splash-loader-bar');
+    // 初始：logo/品牌名/副标隐藏，进度条 0%
+    gsap.set(splashLogo, { opacity: 0, scale: 0.3, rotation: -30 });
+    gsap.set(splashBrand, { opacity: 0, y: 40, letterSpacing: '12px' });
+    gsap.set(splashTag, { opacity: 0, y: 20 });
+    gsap.set(splashBar, { width: '0%' });
 
     const splashTl = gsap.timeline();
 
-    // Phase 1 (0.0-1.5s): 30 张图从中心点**向外爆开**（scale 0.5→2.0, x/y 0→ix/iy × 1.5）
-    // duration 1.2s + stagger 0.04s × 29 = 1.2 + 1.16 = 2.36s
-    // ease: power3.out（爆开快、然后减速到散开位置）
-    // rotation 旋转幅度再减（之前 90+8i = 90°→314°，现在 30+4i = 30°→142°）
-    // 散开距离 × 1.5（之前 ix/iy 550-700，现在 825-1050，贴边爆开）
-    // 配合 opacity 1→0（爆开过程中淡出，最后散开时已不可见）
-    splashTl.to(splashImgs, {
-      x: (i, el) => (parseFloat(el.dataset.ix) || 0) * 1.5,
-      y: (i, el) => (parseFloat(el.dataset.iy) || 0) * 1.5,
-      rotation: (i) => (i % 2 === 0 ? 1 : -1) * (30 + i * 4),  // 旋转再减：30°→142°
-      scale: 2.0, opacity: 0,
-      duration: 1.2, ease: 'power3.out', stagger: 0.04
-    }, 0.0);
+    // Phase 1: logo 弹性进入（elastic.out 0.8s）
+    splashTl.to(splashLogo,
+      { scale: 1, opacity: 1, rotation: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 0.0);
 
-    // Phase 2 (1.5-1.9s): 光晕从中心扩散（scale 0→5 + opacity 0→1→0）
-    splashTl.fromTo(splashFlash,
-      { scale: 0, opacity: 0 },
-      { scale: 5, opacity: 1, duration: 0.5, ease: 'power2.out' }, 1.5
-    );
-    splashTl.to(splashFlash, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 1.8);
+    // Phase 2: 品牌名上滑（power3.out 0.7s）
+    splashTl.to(splashBrand,
+      { y: 0, opacity: 1, letterSpacing: '4px', duration: 0.7, ease: 'power3.out' }, 0.3);
 
-    // Phase 3 (1.9-2.4s): 品牌名从光中弹性出现
-    splashTl.fromTo(splashLogo,
-      { scale: 0, opacity: 0, rotation: -30 },
-      { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' }, 1.9
-    );
-    splashTl.fromTo(splashBrand,
-      { y: 30, opacity: 0, letterSpacing: '12px' },
-      { y: 0, opacity: 1, letterSpacing: '4px', duration: 0.5, ease: 'power3.out' }, 2.05
-    );
-    splashTl.fromTo(splashTag,
-      { y: 15, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' }, 2.2
-    );
+    // Phase 3: 进度条 0% → 100%（power1.inOut 1.0s）
+    splashTl.to(splashBar,
+      { width: '100%', duration: 1.0, ease: 'power1.inOut' }, 0.4);
 
-    // Phase 4 (2.4-2.9s): splash 整段缩出 + 导航栏淡入
-    splashTl.to(splash, { opacity: 0, scale: 0.94, duration: 0.5, ease: 'power2.in' }, 2.4);
-    splashTl.to(frontHeader, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 2.4);
-    splashTl.add(() => { splash.style.display = 'none'; }, 2.9);
+    // Phase 4: 副标淡入（power2.out 0.5s）
+    splashTl.to(splashTag,
+      { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }, 0.6);
+
+    // Phase 5 (1.4s): splash 缩出 + 导航栏淡入
+    splashTl.to(splash, { opacity: 0, scale: 0.92, duration: 0.5, ease: 'power2.in' }, 1.4);
+    splashTl.to(frontHeader, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.5);
+    splashTl.add(() => { splash.style.display = 'none'; }, 1.9);
   }
 
   // ===== 首屏 Hero 进入动画（GSAP timeline，splash 播完才启动）=====
