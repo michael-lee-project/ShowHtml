@@ -6,70 +6,198 @@
 <title>2024 年度报告 — 慈商联营</title>
 <link rel="stylesheet" href="../public/css/style.css">
 <style>
+  /* ===== Cover ===== */
   .report-cover {
     position: relative; overflow: hidden;
     background: linear-gradient(135deg, #0E2A3A 0%, #0F4C5C 50%, #0E5A6F 100%);
-    color: #fff; padding: 80px 0 100px;
+    color: #fff; padding: 100px 0 120px;
+  }
+  .report-cover::before, .report-cover::after {
+    content: ''; position: absolute; border-radius: 50%;
+    pointer-events: none;
   }
   .report-cover::before {
-    content: ''; position: absolute; inset: 0;
+    inset: 0;
     background:
       radial-gradient(circle at 85% 25%, rgba(232,93,4,0.4), transparent 50%),
       radial-gradient(circle at 15% 80%, rgba(196,132,42,0.3), transparent 50%);
   }
+  .report-cover::after {
+    content: '📊'; font-size: 280px; opacity: 0.06;
+    right: 5%; top: 10%; line-height: 1;
+    transform: rotate(var(--after-rot, 0deg));
+    transform-origin: center;
+  }
   .report-cover .container { position: relative; text-align: center; }
   .report-cover .year-tag {
-    display: inline-block; padding: 6px 20px;
+    display: inline-block; padding: 8px 24px;
     background: rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 999px; font-size: 13px;
-    margin-bottom: 24px; backdrop-filter: blur(10px);
+    border-radius: 999px; font-size: 13px; font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 32px; backdrop-filter: blur(10px);
   }
-  .report-cover h1 { font-size: 56px; margin-bottom: 16px; }
-  .report-cover .lead { font-size: 18px; color: rgba(255,255,255,0.85); max-width: 700px; margin: 0 auto 40px; }
+  .report-cover h1 { font-size: 64px; margin-bottom: 20px; line-height: 1.1; }
+  .report-cover .lead { font-size: 18px; color: rgba(255,255,255,0.85); max-width: 720px; margin: 0 auto 48px; line-height: 1.7; }
   .report-cover .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-  .toc-section { background: #fff; padding: 60px 0; }
-  .toc-list { max-width: 720px; margin: 0 auto; }
-  .toc-item {
-    display: flex; align-items: center; gap: 20px;
-    padding: 18px 0; border-bottom: 1px dashed var(--color-border);
+  /* ===== 2024 里程碑时间轴 ===== */
+  .toc-section { background: linear-gradient(180deg, #fff 0%, #FAF8F4 100%); padding: 80px 0; }
+  .timeline {
+    position: relative;
+    max-width: 920px; margin: 0 auto;
+    padding: 40px 0;
   }
-  .toc-item .num {
-    width: 40px; height: 40px; border-radius: 50%;
+  .tl-line {
+    position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 3px; background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    transform: translateX(-50%);
+    border-radius: 2px;
+  }
+  .tl-item {
+    position: relative;
+    display: flex; align-items: center;
+    margin-bottom: 56px;
+    min-height: 120px;
+  }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-left  { justify-content: flex-start; }
+  .tl-right { justify-content: flex-end; }
+  .tl-content {
+    width: 42%;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .tl-content::before {
+    content: ''; position: absolute; top: 50%;
+    width: 16px; height: 16px;
+    background: #fff; border: 2px solid var(--color-primary);
+    border-radius: 50%; transform: translateY(-50%) rotate(45deg);
+  }
+  .tl-left .tl-content::before { right: -8px; }
+  .tl-right .tl-content::before { left: -8px; }
+  .tl-date {
+    display: inline-block; padding: 2px 10px;
     background: var(--color-primary-soft); color: var(--color-primary);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; flex-shrink: 0;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    margin-bottom: 8px;
   }
-  .toc-item .t { flex: 1; font-size: 16px; font-weight: 600; }
-  .toc-item .p { font-size: 13px; color: var(--color-text-3); }
+  .tl-icon { font-size: 28px; margin-bottom: 4px; }
+  .tl-content h4 {
+    font-size: 16px; font-weight: 700; margin: 0 0 8px;
+    color: var(--color-text-1);
+  }
+  .tl-content p {
+    font-size: 13px; line-height: 1.6;
+    color: var(--color-text-2); margin: 0;
+  }
+  .tl-dot {
+    position: absolute; left: 50%;
+    width: 18px; height: 18px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-gold) 100%);
+    border: 3px solid #fff;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(232,93,4,0.3);
+  }
+  @media (max-width: 768px) {
+    .tl-line { left: 24px; }
+    .tl-item, .tl-left, .tl-right { justify-content: flex-start; padding-left: 60px; }
+    .tl-content { width: 100%; }
+    .tl-content::before { left: -8px !important; right: auto !important; }
+    .tl-dot { left: 24px; }
+  }
 
+  /* ===== 章节标题统一风格 ===== */
+  .section-title { text-align: center; margin-bottom: 48px; }
+  .section-title .eyebrow {
+    display: inline-block; padding: 4px 14px; border-radius: 999px;
+    background: var(--color-primary-soft); color: var(--color-primary);
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .section-title h2 { font-size: 36px; margin-bottom: 8px; }
+  .section-title p { color: var(--color-text-3); font-size: 15px; }
+
+  /* ===== 核心数据 ===== */
   .year-stat {
     background: linear-gradient(135deg, #0E5A6F 0%, #164E63 100%);
-    color: #fff; border-radius: var(--radius-lg); padding: 48px;
-    margin-bottom: 40px;
+    color: #fff; border-radius: var(--radius-lg);
+    padding: 56px 48px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
   }
-  .year-stat .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .year-stat::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 100%, rgba(255,163,94,0.15), transparent 50%);
+    pointer-events: none;
+  }
+  .year-stat .row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+    position: relative;
+  }
   .year-stat .item { text-align: center; }
   .year-stat .item .num {
-    font-size: 48px; font-weight: 800;
+    font-size: 56px; font-weight: 800;
     background: linear-gradient(135deg, #FFA35E 0%, #FFD480 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
-    line-height: 1.1; margin-bottom: 8px;
+    line-height: 1.1; margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
   }
   .year-stat .item .lbl { font-size: 14px; color: rgba(255,255,255,0.85); }
 
-  .chapter { background: #fff; padding: 60px 0; }
+  /* ===== 财务表格 ===== */
+  .finance-table {
+    width: 100%; border-collapse: collapse;
+  }
+  .finance-table td {
+    padding: 12px 8px; border-bottom: 1px solid var(--color-border-light);
+    font-size: 14px;
+  }
+  .finance-table td.text-right { text-align: right; font-variant-numeric: tabular-nums; }
+  .finance-table tr.total-row td { background: var(--color-bg-2); font-weight: 700; }
+  .finance-table tr.final-row td {
+    background: linear-gradient(135deg, #E0FAF5 0%, #D1F4E0 100%);
+    font-weight: 700;
+  }
+
+  /* ===== 审计勾选列表 ===== */
+  .audit-list { display: flex; flex-direction: column; gap: 10px; }
+  .audit-list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 8px;
+    background: var(--color-bg-2);
+    font-size: 14px; font-weight: 500;
+  }
+  .audit-list .check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, #14B8A6 0%, #0E7490 100%);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+  }
+
+  /* ===== 章节 padding 统一 ===== */
+  .section { padding: 80px 0; }
+  .section:nth-of-type(odd) { background: #fff; }
+  .section:nth-of-type(even) { background: var(--color-bg); }
+
+  .chapter { background: #fff; padding: 80px 0; }
   .chapter-title { font-size: 30px; margin-bottom: 8px; }
   .chapter-sub { color: var(--color-text-3); margin-bottom: 32px; }
+
   .highlight-box {
     background: linear-gradient(135deg, #FAF8F4 0%, #FFF1E5 100%);
     border-left: 4px solid var(--color-primary);
-    padding: 24px; border-radius: var(--radius); margin: 24px 0;
+    padding: 28px; border-radius: var(--radius); margin: 24px 0;
   }
-  .highlight-box .t { font-weight: 700; margin-bottom: 8px; font-size: 16px; }
-  .highlight-box p { line-height: 1.8; color: var(--color-text-2); }
+  .highlight-box .t { font-weight: 700; margin-bottom: 12px; font-size: 18px; color: var(--color-text-1); }
+  .highlight-box p { line-height: 1.8; color: var(--color-text-2); font-size: 15px; }
 
   .download-bar {
     position: sticky; bottom: 24px;
@@ -82,6 +210,13 @@
   .download-bar .ic { font-size: 24px; }
   .download-bar .t { font-size: 14px; font-weight: 600; }
   .download-bar .s { font-size: 12px; color: var(--color-text-3); }
+
+  @media (max-width: 768px) {
+    .year-stat .row { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .report-cover h1 { font-size: 40px; }
+    .toc-item { gap: 16px; }
+    .toc-item .num { width: 40px; height: 40px; font-size: 14px; }
+  }
 </style>
 </head>
 <body>
@@ -100,58 +235,87 @@
   </div>
 </section>
 
-<!-- 目录 -->
+<!-- 2024 里程碑时间轴（替代原目录） -->
 <section class="toc-section" id="toc">
   <div class="container">
     <div class="section-title">
-      <div class="eyebrow">CONTENTS</div>
-      <h2>报告目录</h2>
+      <div class="eyebrow">MILESTONES</div>
+      <h2>2024 里程碑时刻</h2>
+      <p>回顾一年来慈商联营走过的 8 个关键节点</p>
     </div>
-    <div class="toc-list">
-      <div class="toc-item">
-        <div class="num">01</div>
-        <div class="t">致所有同行者的一封信</div>
-        <div class="p">P.04</div>
+    <div class="timeline">
+      <div class="tl-line"></div>
+      <div class="tl-item tl-left">
+        <div class="tl-content">
+          <div class="tl-date">2024.01</div>
+          <div class="tl-icon">🎊</div>
+          <h4>平台年度数据突破</h4>
+          <p>累计捐赠物资价值突破 ¥ 1.5 亿大关，受惠人次突破 60 万人次</p>
+        </div>
+        <div class="tl-dot"></div>
       </div>
-      <div class="toc-item">
-        <div class="num">02</div>
-        <div class="t">2024 年度核心数据</div>
-        <div class="p">P.08</div>
+      <div class="tl-item tl-right">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-date">2024.03</div>
+          <div class="tl-icon">🤝</div>
+          <h4>"一书一希望" 启动</h4>
+          <p>联合 86 家出版/教育企业，为贵州、云南、四川 56 所山区学校建设标准化图书角</p>
+        </div>
       </div>
-      <div class="toc-item">
-        <div class="num">03</div>
-        <div class="t">物资流转全流程解析</div>
-        <div class="p">P.18</div>
+      <div class="tl-item tl-left">
+        <div class="tl-content">
+          <div class="tl-date">2024.04.19</div>
+          <div class="tl-icon">🚨</div>
+          <h4>甘肃临夏 6.2 级地震救援</h4>
+          <p>震后 6 小时内启动响应，72 小时内将首批救援物资送达 1.6 万受灾群众</p>
+        </div>
+        <div class="tl-dot"></div>
       </div>
-      <div class="toc-item">
-        <div class="num">04</div>
-        <div class="t">标杆项目集锦</div>
-        <div class="p">P.32</div>
+      <div class="tl-item tl-right">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-date">2024.06</div>
+          <div class="tl-icon">🏥</div>
+          <h4>"健康乡村" 医疗设备捐赠</h4>
+          <p>迈瑞、联影、鱼跃等 12 家医疗企业联合发起，覆盖 86 个乡镇卫生院</p>
+        </div>
       </div>
-      <div class="toc-item">
-        <div class="num">05</div>
-        <div class="t">爱心企业致敬榜</div>
-        <div class="p">P.48</div>
+      <div class="tl-item tl-left">
+        <div class="tl-content">
+          <div class="tl-date">2024.08</div>
+          <div class="tl-icon">🍞</div>
+          <h4>"临期 0 浪费" 食品捐赠升级</h4>
+          <p>与 126 家食品企业合作，覆盖 32 城，全年减碳 1,260 吨</p>
+        </div>
+        <div class="tl-dot"></div>
       </div>
-      <div class="toc-item">
-        <div class="num">06</div>
-        <div class="t">志愿者/社工表彰</div>
-        <div class="p">P.62</div>
+      <div class="tl-item tl-right">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-date">2024.10</div>
+          <div class="tl-icon">🏆</div>
+          <h4>毕马威独立审计通过</h4>
+          <p>连续三年获毕马威出具标准无保留意见审计报告，平台合规度行业领先</p>
+        </div>
       </div>
-      <div class="toc-item">
-        <div class="num">07</div>
-        <div class="t">受捐者真实反馈</div>
-        <div class="p">P.76</div>
+      <div class="tl-item tl-left">
+        <div class="tl-content">
+          <div class="tl-date">2024.11</div>
+          <div class="tl-icon">🧥</div>
+          <h4>"暖冬" 西北留守儿童过冬</h4>
+          <p>波司登、森马、巴拉巴拉联合发起，为甘肃宁夏 8 县留守儿童送去过冬物资</p>
+        </div>
+        <div class="tl-dot"></div>
       </div>
-      <div class="toc-item">
-        <div class="num">08</div>
-        <div class="t">财务报告与第三方审计</div>
-        <div class="p">P.92</div>
-      </div>
-      <div class="toc-item">
-        <div class="num">09</div>
-        <div class="t">2025 年规划与展望</div>
-        <div class="p">P.108</div>
+      <div class="tl-item tl-right">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-date">2024.12</div>
+          <div class="tl-icon">📈</div>
+          <h4>年度捐赠额突破 ¥ 2 亿</h4>
+          <p>全年累计捐赠物资价值 ¥ 2.06 亿，受惠人次 86.2 万，再创历史新高</p>
+        </div>
       </div>
     </div>
   </div>
@@ -168,19 +332,19 @@
     <div class="year-stat">
       <div class="row">
         <div class="item">
-          <div class="num">¥ 2.06<span style="font-size:24px;">亿</span></div>
+          <div class="num" data-target="2.06" data-suffix="亿" data-prefix="¥">¥ 2.06亿</div>
           <div class="lbl">全年捐赠物资价值</div>
         </div>
         <div class="item">
-          <div class="num">86.2<span style="font-size:24px;">万</span></div>
+          <div class="num" data-target="86.2" data-suffix="万">86.2万</div>
           <div class="lbl">受惠人次</div>
         </div>
         <div class="item">
-          <div class="num">2,486</div>
+          <div class="num" data-target="2486" data-suffix="">2,486</div>
           <div class="lbl">入驻爱心企业</div>
         </div>
         <div class="item">
-          <div class="num">98.6%</div>
+          <div class="num" data-target="98.6" data-suffix="%">98.6%</div>
           <div class="lbl">物资到户率</div>
         </div>
       </div>
@@ -317,16 +481,16 @@
     <div class="grid grid-2">
       <div class="dash-card">
         <h3 class="mb-4">2024 年度收支概览</h3>
-        <table class="table">
+        <table class="finance-table">
           <tr><td>捐赠物资价值（评估）</td><td class="text-right fw-600">¥ 20,628 万元</td></tr>
           <tr><td>企业入驻费 / 年费</td><td class="text-right fw-600">¥ 1,860 万元</td></tr>
           <tr><td>慈善商城捐赠（订单 0.5%）</td><td class="text-right fw-600">¥ 41.3 万元</td></tr>
-          <tr style="background:var(--color-bg);"><td class="fw-600">总收入</td><td class="text-right fw-700 text-primary">¥ 22,529.3 万元</td></tr>
+          <tr class="total-row"><td>总收入</td><td class="text-right text-primary">¥ 22,529.3 万元</td></tr>
           <tr><td>物资采购 / 物流 / 仓储</td><td class="text-right fw-600">¥ 1,260 万元</td></tr>
           <tr><td>技术研发 / 平台运营</td><td class="text-right fw-600">¥ 860 万元</td></tr>
           <tr><td>第三方审计 / 合规</td><td class="text-right fw-600">¥ 86 万元</td></tr>
-          <tr style="background:var(--color-bg);"><td class="fw-600">总支出</td><td class="text-right fw-700 text-warning">¥ 2,206 万元</td></tr>
-          <tr style="background:var(--color-trust-soft);"><td class="fw-700">用于慈善的物资比例</td><td class="text-right fw-700 text-trust">99.4%</td></tr>
+          <tr class="total-row"><td>总支出</td><td class="text-right text-warning">¥ 2,206 万元</td></tr>
+          <tr class="final-row"><td>用于慈善的物资比例</td><td class="text-right text-trust">99.4%</td></tr>
         </table>
       </div>
 
@@ -339,12 +503,12 @@
             "我们认为，慈商联营平台 2024 年度财务报表在所有重大方面公允反映了平台运营状况，符合《慈善法》《会计法》及相关法规要求。"
           </div>
         </div>
-        <ul class="flex-col gap-2 text-sm">
-          <li class="flex gap-2"><span class="text-success">✓</span> 财务报表公允性 — 通过</li>
-          <li class="flex gap-2"><span class="text-success">✓</span> 内部控制有效性 — 通过</li>
-          <li class="flex gap-2"><span class="text-success">✓</span> 物资追溯完整性 — 通过</li>
-          <li class="flex gap-2"><span class="text-success">✓</span> 关联方交易合规性 — 通过</li>
-          <li class="flex gap-2"><span class="text-success">✓</span> 信息披露及时性 — 通过</li>
+        <ul class="audit-list">
+          <li><span class="check">✓</span> 财务报表公允性 — 通过</li>
+          <li><span class="check">✓</span> 内部控制有效性 — 通过</li>
+          <li><span class="check">✓</span> 物资追溯完整性 — 通过</li>
+          <li><span class="check">✓</span> 关联方交易合规性 — 通过</li>
+          <li><span class="check">✓</span> 信息披露及时性 — 通过</li>
         </ul>
         <a href="#" class="btn btn-primary mt-4">下载完整审计报告 PDF →</a>
       </div>
@@ -354,7 +518,155 @@
 
 <div id="site-footer"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="../public/js/common.js"></script>
 <script>CS.renderHeader('report'); CS.renderFooter();</script>
+<script>
+  // ===== 年报 8 段 GSAP 动效 =====
+  (function waitGsap() {
+    if (typeof gsap === 'undefined') return setTimeout(waitGsap, 30);
+    if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+
+    // 1) Cover 区：year-tag 下落弹入 + h1 缩放进入 + lead 上滑 + CTA 弹性
+    const coverTag = document.querySelector('.report-cover .year-tag');
+    const coverH1  = document.querySelector('.report-cover h1');
+    const coverLead = document.querySelector('.report-cover .lead');
+    const coverActions = document.querySelectorAll('.report-cover .actions .btn');
+    if (coverH1) {
+      gsap.set(coverTag, { opacity: 0, y: -20 });
+      gsap.set(coverH1, { opacity: 0, scale: 0.85 });
+      gsap.set(coverLead, { opacity: 0, y: 20 });
+      gsap.set(coverActions, { opacity: 0, y: 15 });
+      gsap.to(coverTag, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' });
+      gsap.to(coverH1, { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.2)', delay: 0.1 });
+      gsap.to(coverLead, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', delay: 0.3 });
+      gsap.to(coverActions, { opacity: 1, y: 0, duration: 0.4, stagger: 0.1, ease: 'back.out(1.4)', delay: 0.5 });
+    }
+
+    // 2) Cover 装饰：📊 emoji 持续轻微旋转
+    const reportCover = document.querySelector('.report-cover');
+    if (reportCover) {
+      gsap.to(reportCover, {
+        '--after-rot': '15deg',
+        duration: 4, ease: 'sine.inOut', yoyo: true, repeat: -1
+      });
+    }
+
+    // 3) 2024 里程碑时间轴：8 个事件 stagger 错开 + 圆点 scale 0→1
+    const tlItems = document.querySelectorAll('.tl-item');
+    const tlDots = document.querySelectorAll('.tl-dot');
+    if (tlItems.length) {
+      // 左侧卡片从左滑入，右侧从右
+      tlItems.forEach((item) => {
+        const isLeft = item.classList.contains('tl-left');
+        gsap.set(item.querySelector('.tl-content'), { opacity: 0, x: isLeft ? -30 : 30 });
+        gsap.set(item.querySelector('.tl-dot'), { scale: 0 });
+      });
+      // 时间线主轴从 height 0 长到全高
+      const tlLine = document.querySelector('.tl-line');
+      if (tlLine) {
+        gsap.set(tlLine, { scaleY: 0, transformOrigin: 'top center' });
+        gsap.to(tlLine, { scaleY: 1, duration: 1.2, ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.toc-section', start: 'top 75%', once: true } });
+      }
+      // 8 个事件错开 0.15s
+      tlItems.forEach((item, i) => {
+        gsap.to(item.querySelector('.tl-content'), {
+          opacity: 1, x: 0, duration: 0.5, ease: 'back.out(1.2)',
+          scrollTrigger: { trigger: '.toc-section', start: 'top 75%', once: true },
+          delay: 0.2 + i * 0.12
+        });
+        gsap.to(item.querySelector('.tl-dot'), {
+          scale: 1, duration: 0.4, ease: 'back.out(2)',
+          scrollTrigger: { trigger: '.toc-section', start: 'top 75%', once: true },
+          delay: 0.3 + i * 0.12
+        });
+      });
+    }
+
+    // 4) 核心数据 4 个数字滚动 0→目标值
+    const statNums = document.querySelectorAll('.year-stat .item .num');
+    statNums.forEach((el, i) => {
+      const target = parseFloat(el.dataset.target);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const counter = { val: 0 };
+      const isFloat = target < 100;  // 2.06 / 86.2 / 98.6 是小数
+      gsap.set(el, { opacity: 0, y: 20 });
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.1 * i });
+      gsap.to(counter, {
+        val: target, duration: 1.5, ease: 'power3.out', delay: 0.3 + i * 0.12,
+        scrollTrigger: { trigger: '.year-stat', start: 'top 80%', once: true },
+        onUpdate: () => {
+          if (isFloat) {
+            el.textContent = prefix + counter.val.toFixed(2).replace(/\.?0+$/, '') + suffix;
+          } else {
+            el.textContent = prefix + Math.round(counter.val).toLocaleString() + suffix;
+          }
+        }
+      });
+    });
+
+    // 5) 6 个 progress bar fill（0→目标%）
+    const progressBars = document.querySelectorAll('.dash-card .progress-bar');
+    if (progressBars.length) {
+      progressBars.forEach((bar, i) => {
+        const targetPct = parseFloat(bar.style.width) || 0;
+        bar.style.width = '0%';
+        gsap.to(bar, {
+          width: targetPct + '%', duration: 1.2, ease: 'power3.out', delay: i * 0.08,
+          scrollTrigger: { trigger: bar, start: 'top 90%', once: true }
+        });
+      });
+    }
+
+    // 6) 4 个 dash-card（品类/地域/人群等）stagger 进入
+    const reportCards = document.querySelectorAll('.section .dash-card');
+    if (reportCards.length) {
+      gsap.set(reportCards, { opacity: 0, y: 30 });
+      gsap.to(reportCards, {
+        opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.4)', stagger: 0.1,
+        scrollTrigger: { trigger: reportCards[0], start: 'top 85%', once: true }
+      });
+    }
+
+    // 7) 标杆项目（highlight-box + 4 dash-card）stagger
+    const highlightBox = document.querySelector('.highlight-box');
+    const projectCards = document.querySelectorAll('.chapter .dash-card');
+    if (highlightBox) {
+      gsap.set(highlightBox, { opacity: 0, x: -30 });
+      gsap.to(highlightBox, {
+        opacity: 1, x: 0, duration: 0.6, ease: 'power3.out',
+        scrollTrigger: { trigger: highlightBox, start: 'top 85%', once: true }
+      });
+    }
+    if (projectCards.length) {
+      gsap.set(projectCards, { opacity: 0, y: 30, scale: 0.95 });
+      gsap.to(projectCards, {
+        opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.4)', stagger: 0.1,
+        scrollTrigger: { trigger: projectCards[0], start: 'top 85%', once: true }
+      });
+    }
+
+    // 8) 财务表格行 + 审计勾选列表 stagger
+    const finRows = document.querySelectorAll('.finance-table tr');
+    if (finRows.length) {
+      gsap.set(finRows, { opacity: 0, x: -15 });
+      gsap.to(finRows, {
+        opacity: 1, x: 0, duration: 0.35, ease: 'power2.out', stagger: 0.05,
+        scrollTrigger: { trigger: '.finance-table', start: 'top 85%', once: true }
+      });
+    }
+    const auditItems = document.querySelectorAll('.audit-list li');
+    if (auditItems.length) {
+      gsap.set(auditItems, { opacity: 0, x: 20 });
+      gsap.to(auditItems, {
+        opacity: 1, x: 0, duration: 0.4, ease: 'power2.out', stagger: 0.08,
+        scrollTrigger: { trigger: '.audit-list', start: 'top 85%', once: true }
+      });
+    }
+  })();
+</script>
 </body>
 </html>

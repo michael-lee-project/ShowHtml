@@ -19,6 +19,8 @@
   .companies-hero::after {
     content: '🏆'; position: absolute; right: 40px; top: -10px;
     font-size: 240px; opacity: 0.1;
+    transform: rotate(var(--trophy-rot, 0deg));
+    transform-origin: center;
   }
   .companies-hero h1 { font-size: 32px; margin-bottom: 12px; }
   .companies-hero p { font-size: 15px; color: var(--color-text-2); line-height: 1.7; margin-bottom: 16px; }
@@ -108,15 +110,15 @@
             <p>基于捐赠额、覆盖人数、反馈及时度、项目持续性等维度的综合排名。每一家上榜企业都经过 3 个月以上观察期，确保数据真实、捐赠持续。</p>
             <div class="stats">
               <div class="stat">
-                <div class="num">3,680</div>
+                <div class="num" data-target="3680" data-suffix="">0</div>
                 <div class="lbl">入驻爱心企业</div>
               </div>
               <div class="stat">
-                <div class="num">¥ 2.86 亿</div>
+                <div class="num" data-target="2.86" data-suffix=" 亿" data-prefix="¥ ">0</div>
                 <div class="lbl">累计捐赠物资价值</div>
               </div>
               <div class="stat">
-                <div class="num">126.8 万</div>
+                <div class="num" data-target="126.8" data-suffix=" 万">0</div>
                 <div class="lbl">覆盖受惠人次</div>
               </div>
             </div>
@@ -376,12 +378,87 @@
   (function waitGsap() {
     if (typeof gsap === 'undefined') return setTimeout(waitGsap, 30);
     if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+
+    // 1) Hero 区 🏆 装饰持续轻微摆动
+    const trophy = document.querySelector('.companies-hero::after');
+    if (trophy) {
+      gsap.to('.companies-hero', {
+        '--after-rot': '8deg',  // CSS 变量控制装饰旋转
+        duration: 3, ease: 'sine.inOut', yoyo: true, repeat: -1
+      });
+    }
+
+    // 2) Hero h1 + 描述 + stats 从下方 stagger 淡入
+    const heroH1 = document.querySelector('.companies-hero h1');
+    const heroP  = document.querySelector('.companies-hero p');
+    const heroStats = document.querySelectorAll('.companies-hero .stat');
+    if (heroH1) {
+      gsap.set(heroH1, { opacity: 0, y: 20 });
+      gsap.set(heroP,  { opacity: 0, y: 15 });
+      gsap.set(heroStats, { opacity: 0, y: 20, scale: 0.9 });
+      gsap.to(heroH1, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+      gsap.to(heroP,  { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.15 });
+      gsap.to(heroStats, {
+        opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.4)', stagger: 0.1, delay: 0.3
+      });
+    }
+
+    // 3) Hero 3 个统计数字滚动（0 → 目标值，power3.out 1.5s，stagger 错开）
+    const numEls = document.querySelectorAll('.companies-hero .stat .num');
+    numEls.forEach((el, i) => {
+      const target = parseFloat(el.dataset.target);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: target, duration: 1.5, ease: 'power3.out', delay: 0.5 + i * 0.15,
+        onUpdate: () => {
+          // ¥ 2.86 亿 / 126.8 万 保留 1 位小数；3,680 不保留
+          if (target < 100) {
+            el.textContent = prefix + counter.val.toFixed(1) + suffix;
+          } else {
+            el.textContent = prefix + Math.round(counter.val).toLocaleString() + suffix;
+          }
+        }
+      });
+    });
+
+    // 4) 10 张企业卡 stagger 进入（原有）+ 排名徽章弹性旋转 + tags 错开
     const cards = document.querySelectorAll('.company-detail-card');
     if (cards.length) {
+      // 卡片整体从下方进入
       gsap.set(cards, { opacity: 0, y: 30 });
       gsap.to(cards, {
         opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.4)', stagger: 0.08,
         scrollTrigger: { trigger: '#companyList', start: 'top 85%', once: true }
+      });
+      // 排名徽章 scale 0 + 旋转 180° 弹性出现（错开 0.1s）
+      const badges = document.querySelectorAll('.company-detail-card .rank-badge');
+      gsap.set(badges, { scale: 0, rotation: 180 });
+      gsap.to(badges, {
+        scale: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.8)', stagger: 0.1,
+        scrollTrigger: { trigger: '#companyList', start: 'top 85%', once: true }
+      });
+      // 标签 tags 错开 0.05s 淡入
+      const tagLists = document.querySelectorAll('.company-detail-card .tags');
+      gsap.set(tagLists, { opacity: 0 });
+      gsap.to(tagLists, {
+        opacity: 1, duration: 0.3, stagger: 0.1, delay: 0.3,
+        scrollTrigger: { trigger: '#companyList', start: 'top 85%', once: true }
+      });
+    }
+
+    // 5) 筛选标签 active 切换：被选中的标签弹性放大 + 重渲企业卡 fadeIn
+    //    替换之前的 display 切换为 opacity 淡入
+    const filterBar = document.getElementById('filterBar');
+    if (filterBar) {
+      const originalHandler = filterBar.onclick;  // 保留原 handler
+      filterBar.addEventListener('click', (e) => {
+        const tag = e.target.closest('.filter-tag');
+        if (!tag) return;
+        // 当前被点击的标签弹性放大（已 CSS transition，这里加 GSAP 缩放）
+        gsap.fromTo(tag, { scale: 0.85 },
+          { scale: 1, duration: 0.4, ease: 'back.out(2.4)' });
       });
     }
   })();
