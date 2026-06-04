@@ -45,11 +45,11 @@
     return './';
   }
 
-  // header 模板
+  // header 模板（含移动端汉堡按钮 + drawer）
   function getHeader(active) {
     const p = getPathPrefix();
     return `
-<header class="site-header">
+<header class="site-header" id="siteHeader">
   <div class="container">
     <a href="${p}index.html" class="logo">
       <div class="logo-mark">${LOGO_ICON}</div>
@@ -58,7 +58,12 @@
         <span class="en">CISHANG UNION</span>
       </div>
     </a>
-    <nav class="nav">
+    <button class="nav-toggle" id="navToggle" aria-label="菜单" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+    <nav class="nav" id="siteNav">
       <a href="${p}index.html" ${active==='home'?'class="active"':''}>首页</a>
       <a href="${p}pages/track.html" ${active==='track'?'class="active"':''}>物资轨迹</a>
       <a href="${p}pages/companies.html" ${active==='companies'?'class="active"':''}>标杆企业</a>
@@ -72,7 +77,47 @@
       <a href="${p}pages/register.html" class="btn btn-primary btn-sm">免费入驻</a>
     </div>
   </div>
+  <!-- 移动端遮罩（点空白关闭 drawer） -->
+  <div class="nav-backdrop" id="navBackdrop"></div>
 </header>`;
+  }
+
+  // 移动端汉堡菜单切换（在 DOMContentLoaded 绑定一次）
+  function initMobileNav() {
+    if (window.__mobileNavInited) return;
+    window.__mobileNavInited = true;
+    document.addEventListener('click', (e) => {
+      const toggle = e.target.closest('#navToggle');
+      if (toggle) {
+        const header = document.getElementById('siteHeader');
+        if (header) {
+          const open = header.classList.toggle('nav-open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          // 锁定 body 滚动
+          document.body.style.overflow = open ? 'hidden' : '';
+        }
+        return;
+      }
+      const backdrop = e.target.closest('#navBackdrop');
+      if (backdrop) {
+        const header = document.getElementById('siteHeader');
+        if (header) {
+          header.classList.remove('nav-open');
+          document.getElementById('navToggle').setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        }
+        return;
+      }
+      // 点击 nav 内的链接自动关闭 drawer
+      if (e.target.closest('#siteNav a')) {
+        const header = document.getElementById('siteHeader');
+        if (header && header.classList.contains('nav-open')) {
+          header.classList.remove('nav-open');
+          document.getElementById('navToggle').setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        }
+      }
+    });
   }
 
   // 角色中文 → URL key
@@ -111,6 +156,11 @@
       </div>
     </a>
     <div class="flex-1"></div>
+    <button class="nav-toggle" id="dashSideToggle" aria-label="侧边栏" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
     <div class="header-actions">
       <a href="${back.href}" class="text-sm text-muted">${back.label}</a>
       <a href="messages.html" class="msg-bell" aria-label="消息中心" title="消息中心">
@@ -123,7 +173,27 @@
       </div>
     </div>
   </div>
+  <div class="nav-backdrop" id="dashSideBackdrop"></div>
 </header>`;
+  }
+
+  // 工作台侧边栏移动端 drawer 切换
+  function initDashSide() {
+    if (window.__dashSideInited) return;
+    window.__dashSideInited = true;
+    document.addEventListener('click', (e) => {
+      const toggle = e.target.closest('#dashSideToggle');
+      const backdrop = e.target.closest('#dashSideBackdrop');
+      if (toggle || backdrop) {
+        const wrap = document.querySelector('.dash-wrap');
+        const side = document.getElementById('dash-side');
+        if (wrap && side) {
+          const open = wrap.classList.toggle('side-open');
+          toggle && toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          document.body.style.overflow = open ? 'hidden' : '';
+        }
+      }
+    });
   }
 
   // 消息未读数：从 MESSAGES_DATA 实时计算，避免维护两份数据
@@ -891,13 +961,30 @@
   window.CS = {
     renderHeader: function(active) {
       loadPartial('site-header', getHeader(active));
+      // 移动端汉堡菜单（header 注入后绑定一次）
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMobileNav);
+      } else {
+        setTimeout(initMobileNav, 0);
+      }
     },
     renderDashHeader: function(role, userName, activePage, backTo) {
       loadPartial('site-header', getDashHeader(role, userName, activePage, backTo));
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMobileNav);
+        document.addEventListener('DOMContentLoaded', initDashSide);
+      } else {
+        setTimeout(initMobileNav, 0);
+        setTimeout(initDashSide, 0);
+      }
     },
     renderFooter: function() {
       loadPartial('site-footer', getFooter());
     },
+    // 暴露 initMobileNav 供 index.html 自己的 front-header 复用
+    initMobileNav: initMobileNav,
+    // 暴露 initDashSide 供各 dashboard.html 调用（绑定 drawer 切换）
+    initDashSide: initDashSide,
     renderSidebar: function(role, active) {
       loadPartial('dash-side', window.DASH_SIDEBAR[role](active));
     },

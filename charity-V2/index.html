@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>慈商联营 — 让每一份善意都可追溯 | 海南亚洲公益研究院</title>
 <meta name="description" content="慈商联营是海南亚洲公益研究院发起的全流程透明化公益平台，连接企业、慈善会、社会组织、志愿者与受捐者，让慈善最后一公里完全可见。">
-<link rel="stylesheet" href="public/css/style.css">
+<link rel="stylesheet" href="public/css/style.css?v=hamb1">
 <style>
   /* ============================================
      首页专属样式
@@ -554,13 +554,88 @@
   }
 
   /* ===== 前台首页 header（inline 注入避免外部 stylesheet 解析 bug） ===== */
-  .front-header {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 10000;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: saturate(180%) blur(12px);
-    -webkit-backdrop-filter: saturate(180%) blur(12px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  .front-header, .front-header.site-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10000;
+    background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+  .front-header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; gap: 20px;
+  }
+  .front-logo {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    color: var(--color-text, #1E293B);
+  }
+  .front-logo .brand { font-size: 18px; font-weight: 800; color: var(--color-text, #1E293B); line-height: 1.2; }
+  .front-logo .brand-en { font-size: 10px; color: var(--color-text-3, #94A3B8); letter-spacing: 1px; line-height: 1; margin-top: 1px; }
+  .front-nav, .front-header .nav {
+    display: flex; gap: 28px; flex: 1; margin-left: 16px;
+  }
+  .front-nav a, .front-header .nav a {
+    color: var(--color-text-2, #475569); font-size: 14px; font-weight: 500;
+    position: relative; padding: 4px 0; transition: color 0.2s ease;
+  }
+  .front-nav a:hover, .front-header .nav a:hover { color: var(--color-primary, #E85D04); }
+  .front-nav a.active, .front-header .nav a.active { color: var(--color-primary, #E85D04); font-weight: 600; }
+  .front-nav a.active::after, .front-header .nav a.active::after {
+    content: ''; position: absolute; bottom: -22px; left: 0; right: 0;
+    height: 2px; background: var(--color-primary, #E85D04); border-radius: 1px;
+  }
+  .front-actions, .front-header .header-actions {
+    display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+  }
+  .front-actions .link-muted {
+    color: var(--color-text-3, #94A3B8); font-size: 13px;
+    text-decoration: none;
+  }
+  .front-actions .link-muted:hover { color: var(--color-primary, #E85D04); }
+  /* front-header 移动端响应式（inline 后定义胜外链，单独处理） */
+  @media (max-width: 768px) {
+    /* 移动端禁用 header 的 backdrop-filter —— 否则它会创建 fixed 定位上下文，
+       导致内部 .front-actions { position: fixed; bottom: 16px } 相对 header 定位而非 viewport */
+    .front-header, .site-header { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+    /* 桌面隐藏的 brand 文字 */
+    .front-logo .brand, .front-logo .brand-en { display: none; }
+    .front-logo { gap: 0; }
+    /* 头部 action 按钮（登录/企业入驻）移到 drawer 内部，桌面顶部隐藏 */
+    .front-actions, .front-header .header-actions { display: none; }
+    /* front-nav 抽屉（display 保留 flex，靠 transform 滑出） */
+    .front-nav, .front-header .nav {
+      position: fixed;
+      top: 60px; right: 0;
+      width: 280px; height: calc(100vh - 60px);
+      background: #fff;
+      box-shadow: -8px 0 24px rgba(0,0,0,0.15);
+      padding: 24px 20px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      margin-left: 0;  /* 重置默认 margin-left:16px 避免抽屉起始偏移 */
+      transform: translateX(100vw);  /* 用 vw 而不是 %，保证完全滑出屏幕外 */
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    .site-header.nav-open .front-nav, .site-header.nav-open .nav {
+      transform: translateX(0) !important;
+    }
+    .front-nav a, .front-header .nav a {
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    .front-nav a:hover, .front-header .nav a:hover {
+      background: var(--color-primary-soft, #FFF1E6);
+    }
+    .front-nav a.active::after, .front-header .nav a.active::after { display: none; }
+    /* drawer 打开时在 drawer 底部显示 */
+    .front-header.nav-open .front-actions {
+      display: flex !important;
+      position: fixed; bottom: 16px; left: 16px; right: 16px;
+      gap: 8px; z-index: 1001;
+    }
+    .front-header.nav-open .front-actions a { flex: 1; text-align: center; }
   }
   .front-header-inner {
     display: flex; align-items: center; gap: 32px; height: 64px;
@@ -585,20 +660,24 @@
     left: 0; right: 0; bottom: -2px;
     height: 2px; background: var(--color-primary, #E85D04); border-radius: 1px;
   }
-  .front-actions { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  /* front-actions 默认 display 由 @media 块控制（桌面 flex / 移动 none），
+     避免同特异度后定义覆盖 @media 隐藏规则 */
   .front-actions .link-muted {
     font-size: 14px; color: var(--color-text-2, #475569); text-decoration: none;
   }
   .front-actions .link-muted:hover { color: var(--color-primary, #E85D04); }
-  @media (max-width: 900px) {
-    .front-nav { display: none; }
+  @media (min-width: 769px) {
+    /* 桌面：恢复 .front-actions 显示（避免被 @media (max-width: 768px) 隐藏） */
+    .front-actions { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
   }
+  /* 移动端 nav 汉堡 drawer 由 public/css/style.css 全局 ≤768 @media 接管，
+     inline 不写同名 .front-nav { display: none }（否则会覆盖 drawer 的 transform 滑出逻辑） */
 </style>
 </head>
 <body>
 
 <!-- 顶栏导航（前台首页 header，splash 期间也显示 z-index:10000 > splash:9999） -->
-<header class="front-header" id="frontHeader">
+<header class="front-header site-header" id="siteHeader">
   <div class="container front-header-inner">
     <a href="index.html" class="front-logo">
       <svg viewBox="0 0 64 64" width="36" height="36" xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -610,7 +689,12 @@
         <div class="brand-en">CISHANG UNION</div>
       </div>
     </a>
-    <nav class="front-nav">
+    <button class="nav-toggle" id="navToggle" aria-label="菜单" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+    <nav class="front-nav nav" id="siteNav">
       <a href="index.html" class="active">首页</a>
       <a href="pages/track.html">物资轨迹</a>
       <a href="pages/companies.html">标杆企业</a>
@@ -624,6 +708,7 @@
       <a href="pages/register.html" class="btn btn-primary btn-sm">企业入驻 →</a>
     </div>
   </div>
+  <div class="nav-backdrop" id="navBackdrop"></div>
 </header>
 
 <!-- 入场动画 splash：6 张慈善图 → 聚合 → 光晕 → 品牌名 → 缩出 → 首页 -->
@@ -1388,13 +1473,13 @@
 
 <div id="site-footer"></div>
 
-  <script src="public/js/common.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="public/js/common.js"></script>
 <!-- MotionPathPlugin 是 ESM，用 +esm 路径自动转换 + module 异步加载；内部自动 registerPlugin 到 window.gsap -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/MotionPathPlugin/+esm"></script>
 <script>
-  CS.renderHeader('home');
+  CS.initMobileNav();  // 移动端汉堡菜单（front-header 自己渲染时复用 drawer 逻辑）
   CS.renderFooter();
 
   // ===== "关于我们" section 入场动效（滚动到视口时）=====
@@ -1427,8 +1512,8 @@
   // 简单版：暖橙渐变 + logo 弹性 + 品牌名 + 进度条 + 缩出
   // 时序：0s logo 弹性进入 → 0.3s 品牌名 → 0.4s 进度条 0→100% → 0.6s 副标 → 1.4s splash 缩出 + 导航栏淡入 → 1.9s display:none
   const splash = document.getElementById('appSplash');
-  const frontHeader = document.getElementById('frontHeader');
-  if (frontHeader) gsap.set(frontHeader, { opacity: 0, y: -20 });
+  const frontHeader = document.getElementById('siteHeader');
+  if (frontHeader) gsap.set(frontHeader, { opacity: 0, y: -20, pointerEvents: 'none' });
   gsap.set('.hero', { opacity: 0 });
 
   if (splash) {
@@ -1462,7 +1547,7 @@
 
     // Phase 5 (1.4s): splash 缩出 + 导航栏淡入
     splashTl.to(splash, { opacity: 0, scale: 0.92, duration: 0.5, ease: 'power2.in' }, 1.4);
-    splashTl.to(frontHeader, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.5);
+    splashTl.to(frontHeader, { opacity: 1, y: 0, pointerEvents: 'auto', duration: 0.5, ease: 'power2.out' }, 1.5);
     splashTl.add(() => { splash.style.display = 'none'; }, 1.9);
   }
 

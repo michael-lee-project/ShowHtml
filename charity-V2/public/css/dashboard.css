@@ -6,6 +6,8 @@
 .dash-wrap {
   display: grid;
   grid-template-columns: 240px 1fr;
+  max-width: var(--container);  /* 与首页 .container 宽度一致（1240px） */
+  margin: 0 auto;                /* 居中 */
   min-height: calc(100vh - var(--header-h));
   background: var(--color-bg);
 }
@@ -210,24 +212,76 @@
 .tabs .tab.active .count { background: var(--color-primary-soft); color: var(--color-primary); }
 
 /* 工作台列表项 */
-.dash-list { display: flex; flex-direction: column; gap: 12px; }
+.dash-list { display: flex; flex-direction: column; gap: 14px; }
 .dash-list-item {
-  display: flex; align-items: center; gap: 16px;
-  padding: 16px;
+  display: flex; align-items: center; gap: 18px;
+  padding: 18px;
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius);
   transition: all var(--t) var(--ease);
+  position: relative;
+  background: #fff;
 }
-.dash-list-item:hover { border-color: rgba(232,93,4,0.2); box-shadow: var(--shadow-sm); }
+.dash-list-item::before {
+  content: "";
+  position: absolute;
+  left: -1px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 0;
+  background: var(--color-primary);
+  border-radius: 0 3px 3px 0;
+  transition: height 0.2s ease;
+}
+.dash-list-item:hover {
+  border-color: rgba(232,93,4,0.2);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-primary-soft);
+}
+.dash-list-item:hover::before { height: 60%; }
 .dash-list-item .icon {
-  width: 44px; height: 44px; border-radius: 10px;
+  width: 48px; height: 48px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+  font-size: 22px;
   background: var(--color-primary-soft);
   color: var(--color-primary);
   flex-shrink: 0;
 }
-.dash-list-item .body { flex: 1; min-width: 0; }
-.dash-list-item .title { font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 4px; }
-.dash-list-item .meta { font-size: 12px; color: var(--color-text-3); display: flex; gap: 12px; flex-wrap: wrap; }
+.dash-list-item .body { flex: 1; min-width: 0; overflow: hidden; }
+.dash-list-item .title {
+  font-size: 15px; font-weight: 600; color: var(--color-text); margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dash-list-item .meta {
+  font-size: 13px; color: var(--color-text-3);
+  display: flex; gap: 14px;
+  white-space: nowrap; overflow: hidden;
+}
+.dash-list-item .meta > * { white-space: nowrap; flex-shrink: 0; }
 .dash-list-item .actions { display: flex; gap: 8px; flex-shrink: 0; }
+.dash-list-item > .tag { white-space: nowrap; flex-shrink: 0; }
+
+/* ===== 工作台 sidebar 移动端 drawer（≤768） ===== */
+@media (max-width: 768px) {
+  .dash-wrap {
+    grid-template-columns: 1fr !important;
+  }
+  .dash-side {
+    position: fixed !important;
+    top: 60px; left: 0;
+    width: 280px; height: calc(100vh - 60px) !important;
+    z-index: 998;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+  .dash-wrap.side-open .dash-side {
+    transform: translateX(0);
+  }
+  /* 汉按钮 X 形（在 ≤768 显示） */
+  .dash-wrap.side-open #dashSideToggle .nav-toggle-bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .dash-wrap.side-open #dashSideToggle .nav-toggle-bar:nth-child(2) { opacity: 0; }
+  .dash-wrap.side-open #dashSideToggle .nav-toggle-bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+  /* 主内容全宽 */
+  .dash-main { min-width: 0; }
+  .dash-body { min-width: 0; }
+}

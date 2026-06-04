@@ -6,6 +6,27 @@
 <title>项目管理 — 广东省慈善总会 | 慈商联营</title>
 <link rel="stylesheet" href="../public/css/style.css">
 <link rel="stylesheet" href="../public/css/dashboard.css">
+<style>
+  /* 表格列宽与换行控制（1240px 主体宽 1000px 适配） */
+  .table { table-layout: fixed; width: 100%; }
+  .table th, .table td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .table .col-id     { width: 170px; }
+  .table .col-name   { width: 180px; }
+  .table .col-name .title-cell { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .table .col-type   { width: 84px; }
+  .table .col-type .tag { white-space: nowrap; padding: 2px 8px; display: inline-block; }
+  .table .col-region { width: 90px; }
+  .table .col-progress { width: 130px; }
+  .table .col-progress .progress { width: 80px; }
+  .table .col-progress .amount { white-space: nowrap; }
+  .table .col-status { width: 88px; }
+  .table .col-status .tag { white-space: nowrap; padding: 2px 8px; display: inline-block; }
+  .table .col-deadline { width: 90px; }
+  .table .col-action { width: 56px; text-align: right; }
+  .table .col-action a { white-space: nowrap; }
+  .table-wrap { overflow-x: auto; }
+  .tabs .tab { white-space: nowrap; }
+</style>
 </head>
 <body>
 
@@ -57,109 +78,122 @@
       <div class="tab">草稿箱 <span class="count">6</span></div>
     </div>
 
-    <div class="dash-card" style="padding:0;overflow:hidden;">
+    <div class="dash-card table-wrap" style="padding:0;overflow-x:auto;">
       <table class="table" style="border:none;border-radius:0;">
         <thead>
           <tr>
-            <th>项目编号</th>
-            <th>项目名称</th>
-            <th>类型</th>
-            <th>地区</th>
-            <th>进度</th>
-            <th>参与企业</th>
-            <th>状态</th>
-            <th>截止</th>
-            <th>操作</th>
+            <th class="col-id">项目编号</th>
+            <th class="col-name">项目名称</th>
+            <th class="col-type">类型</th>
+            <th class="col-region">地区</th>
+            <th class="col-progress">进度</th>
+            <th class="col-status">状态</th>
+            <th class="col-deadline">截止</th>
+            <th class="col-action">操作</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>CC-PRJ-2025-0682</strong></td>
-            <td>云南昭通 6.2 级地震救援</td>
-            <td><span class="tag tag-danger">🚨 紧急</span></td>
-            <td>云南昭通</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar" style="width:60%"></div></div><div class="text-xs text-muted mt-1">¥ 482k / ¥ 800k</div></td>
-            <td>12 家</td>
-            <td><span class="tag tag-primary">进行中</span></td>
-            <td>2025-06-25</td>
-            <td><a href="#" class="btn-link">管理</a></td>
+            <td class="col-id"><strong>CC-PRJ-2025-0682</strong></td>
+            <td class="col-name"><div class="title-cell">云南昭通 6.2 级地震救援</div></td>
+            <td class="col-type"><span class="tag tag-danger">🚨 紧急</span></td>
+            <td class="col-region">云南昭通</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar" style="width:60%"></div></div>
+              <div class="text-xs text-muted mt-1 amount">¥ 482k / ¥ 800k</div>
+            </td>
+            <td class="col-status"><span class="tag tag-primary">进行中</span></td>
+            <td class="col-deadline">2025-06-25</td>
+            <td class="col-action"><a href="#" class="btn-link">管理</a></td>
           </tr>
           <tr>
-            <td><strong>CC-PRJ-2025-0420</strong></td>
-            <td>"一书一希望" 山区图书角</td>
-            <td><span class="tag tag-warning">📚 教育</span></td>
-            <td>贵州黔东南</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar success" style="width:57%"></div></div><div class="text-xs text-muted mt-1">¥ 286k / ¥ 500k</div></td>
-            <td>23 家</td>
-            <td><span class="tag tag-warning">进行中</span></td>
-            <td>2025-07-15</td>
-            <td><a href="#" class="btn-link">管理</a></td>
+            <td class="col-id"><strong>CC-PRJ-2025-0420</strong></td>
+            <td class="col-name"><div class="title-cell">"一书一希望" 山区图书角</div></td>
+            <td class="col-type"><span class="tag tag-warning">📚 教育</span></td>
+            <td class="col-region">贵州黔东南</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar success" style="width:57%"></div></div>
+              <div class="text-xs text-muted mt-1 amount">¥ 286k / ¥ 500k</div>
+            </td>
+            <td class="col-status"><span class="tag tag-warning">进行中</span></td>
+            <td class="col-deadline">2025-07-15</td>
+            <td class="col-action"><a href="#" class="btn-link">管理</a></td>
           </tr>
           <tr>
-            <td><strong>CC-PRJ-2025-0310</strong></td>
-            <td>"暖冬" 西北留守儿童过冬</td>
-            <td><span class="tag tag-trust">🌾 乡村</span></td>
-            <td>甘肃临夏</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar gold" style="width:56%"></div></div><div class="text-xs text-muted mt-1">¥ 168k / ¥ 300k</div></td>
-            <td>8 家</td>
-            <td><span class="tag tag-trust">进行中</span></td>
-            <td>2025-08-20</td>
-            <td><a href="#" class="btn-link">管理</a></td>
+            <td class="col-id"><strong>CC-PRJ-2025-0310</strong></td>
+            <td class="col-name"><div class="title-cell">"暖冬" 西北留守儿童过冬</div></td>
+            <td class="col-type"><span class="tag tag-trust">🌾 乡村</span></td>
+            <td class="col-region">甘肃临夏</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar gold" style="width:56%"></div></div>
+              <div class="text-xs text-muted mt-1 amount">¥ 168k / ¥ 300k</div>
+            </td>
+            <td class="col-status"><span class="tag tag-trust">进行中</span></td>
+            <td class="col-deadline">2025-08-20</td>
+            <td class="col-action"><a href="#" class="btn-link">管理</a></td>
           </tr>
           <tr>
-            <td><strong>CC-PRJ-2025-0208</strong></td>
-            <td>"健康乡村" 基层医疗设备</td>
-            <td><span class="tag tag-info">🏥 医疗</span></td>
-            <td>青海玉树</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar success" style="width:85%"></div></div><div class="text-xs text-muted mt-1">¥ 425k / ¥ 500k</div></td>
-            <td>6 家</td>
-            <td><span class="tag tag-success">即将完成</span></td>
-            <td>2025-06-12</td>
-            <td><a href="#" class="btn-link">管理</a></td>
+            <td class="col-id"><strong>CC-PRJ-2025-0208</strong></td>
+            <td class="col-name"><div class="title-cell">"健康乡村" 基层医疗设备</div></td>
+            <td class="col-type"><span class="tag tag-info">🏥 医疗</span></td>
+            <td class="col-region">青海玉树</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar success" style="width:85%"></div></div>
+              <div class="text-xs text-muted mt-1 amount">¥ 425k / ¥ 500k</div>
+            </td>
+            <td class="col-status"><span class="tag tag-success">即将完成</span></td>
+            <td class="col-deadline">2025-06-12</td>
+            <td class="col-action"><a href="#" class="btn-link">管理</a></td>
           </tr>
           <tr>
-            <td><strong>CC-PRJ-2024-0601</strong></td>
-            <td>"临期 0 浪费" 食品专项</td>
-            <td><span class="tag tag-primary">🍞 持续</span></td>
-            <td>全国 32 城</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar" style="width:78%"></div></div><div class="text-xs text-muted mt-1">¥ 1,860万</div></td>
-            <td>126 家</td>
-            <td><span class="tag tag-primary">持续</span></td>
-            <td>持续</td>
-            <td><a href="#" class="btn-link">管理</a></td>
+            <td class="col-id"><strong>CC-PRJ-2024-0601</strong></td>
+            <td class="col-name"><div class="title-cell">"临期 0 浪费" 食品专项</div></td>
+            <td class="col-type"><span class="tag tag-primary">🍞 持续</span></td>
+            <td class="col-region">全国 32 城</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar" style="width:78%"></div></div>
+              <div class="text-xs text-muted mt-1 amount">¥ 1,860万</div>
+            </td>
+            <td class="col-status"><span class="tag tag-primary">持续</span></td>
+            <td class="col-deadline">持续</td>
+            <td class="col-action"><a href="#" class="btn-link">管理</a></td>
           </tr>
           <tr>
-            <td><strong>CC-PRJ-2025-0115</strong></td>
-            <td>春节暖心包</td>
-            <td><span class="tag tag-warning">🎁 关爱</span></td>
-            <td>广东全省</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar success" style="width:100%"></div></div><div class="text-xs text-muted mt-1">¥ 1,260k / ¥ 1,260k</div></td>
-            <td>32 家</td>
-            <td><span class="tag tag-success">已完成</span></td>
-            <td>2025-02-15</td>
-            <td><a href="#" class="btn-link">查看</a></td>
+            <td class="col-id"><strong>CC-PRJ-2025-0115</strong></td>
+            <td class="col-name"><div class="title-cell">春节暖心包</div></td>
+            <td class="col-type"><span class="tag tag-warning">🎁 关爱</span></td>
+            <td class="col-region">广东全省</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar success" style="width:100%"></div></div>
+              <div class="text-xs text-muted mt-1 amount">¥ 1,260k / ¥ 1,260k</div>
+            </td>
+            <td class="col-status"><span class="tag tag-success">已完成</span></td>
+            <td class="col-deadline">2025-02-15</td>
+            <td class="col-action"><a href="#" class="btn-link">查看</a></td>
           </tr>
           <tr>
-            <td><strong>CC-PRJ-2024-1208</strong></td>
-            <td>"暖冬助困" 城市低保户</td>
-            <td><span class="tag tag-trust">🤝 济困</span></td>
-            <td>广东深圳</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar success" style="width:100%"></div></div></td>
-            <td>16 家</td>
-            <td><span class="tag tag-success">已完成</span></td>
-            <td>2024-12-31</td>
-            <td><a href="#" class="btn-link">查看</a></td>
+            <td class="col-id"><strong>CC-PRJ-2024-1208</strong></td>
+            <td class="col-name"><div class="title-cell">"暖冬助困" 城市低保户</div></td>
+            <td class="col-type"><span class="tag tag-trust">🤝 济困</span></td>
+            <td class="col-region">广东深圳</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar success" style="width:100%"></div></div>
+            </td>
+            <td class="col-status"><span class="tag tag-success">已完成</span></td>
+            <td class="col-deadline">2024-12-31</td>
+            <td class="col-action"><a href="#" class="btn-link">查看</a></td>
           </tr>
           <tr>
-            <td><strong>CC-PRJ-2024-0901</strong></td>
-            <td>"开学第一课" 校园物资</td>
-            <td><span class="tag tag-warning">📚 教育</span></td>
-            <td>广东清远</td>
-            <td><div class="progress" style="width:120px;"><div class="progress-bar success" style="width:100%"></div></div></td>
-            <td>22 家</td>
-            <td><span class="tag tag-success">已完成</span></td>
-            <td>2024-09-30</td>
-            <td><a href="#" class="btn-link">查看</a></td>
+            <td class="col-id"><strong>CC-PRJ-2024-0901</strong></td>
+            <td class="col-name"><div class="title-cell">"开学第一课" 校园物资</div></td>
+            <td class="col-type"><span class="tag tag-warning">📚 教育</span></td>
+            <td class="col-region">广东清远</td>
+            <td class="col-progress">
+              <div class="progress"><div class="progress-bar success" style="width:100%"></div></div>
+            </td>
+            <td class="col-status"><span class="tag tag-success">已完成</span></td>
+            <td class="col-deadline">2024-09-30</td>
+            <td class="col-action"><a href="#" class="btn-link">查看</a></td>
           </tr>
         </tbody>
       </table>

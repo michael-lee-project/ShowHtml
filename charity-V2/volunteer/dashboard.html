@@ -23,6 +23,282 @@
     width: fit-content;
   }
   .cert-badge .ic { font-size: 24px; }
+
+  /* ===== 评分与信用体系 ===== */
+  /* 顶部双卡：贡献分 + 爱心足迹 */
+  .credit-cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    margin-bottom: 24px;
+  }
+  .credit-card {
+    border-radius: var(--radius-md); padding: 28px 28px 24px;
+    position: relative; overflow: hidden;
+    color: #fff; min-height: 168px;
+    display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start;
+  }
+  .credit-card.score { background: linear-gradient(135deg, #14B8A6 0%, #0E8F80 50%, #0B6B5E 100%); }
+  .credit-card.footprint { background: linear-gradient(135deg, #F59E0B 0%, #E85D04 50%, #C44A00 100%); }
+  .credit-card .label {
+    font-size: 14px; opacity: 0.92; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .credit-card .value {
+    font-size: 56px; font-weight: 900; line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+  }
+  .credit-card .value .unit { font-size: 20px; font-weight: 600; margin-left: 6px; opacity: 0.85; }
+  .credit-card .trend {
+    margin-top: 12px; font-size: 13px; opacity: 0.95;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .credit-card .trend .arrow { font-size: 12px; }
+  .credit-card .trend .delta { font-weight: 700; }
+  .credit-card .compare {
+    margin-top: 6px; font-size: 12px; opacity: 0.78;
+  }
+  .credit-card .ic-deco {
+    font-size: 72px; opacity: 0.18; line-height: 1;
+    align-self: center;
+  }
+  /* 进度环：贡献分相对满分 1000 */
+  .credit-card .ring {
+    width: 90px; height: 90px;
+    position: relative; flex-shrink: 0;
+  }
+  .credit-card .ring svg { transform: rotate(-90deg); }
+  .credit-card .ring .pct {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums;
+  }
+  /* 进度条 */
+  .credit-card .bar {
+    margin-top: 14px;
+    height: 6px; background: rgba(255,255,255,0.22);
+    border-radius: 3px; overflow: hidden;
+  }
+  .credit-card .bar-fill {
+    height: 100%; width: 0%; border-radius: 3px;
+    background: rgba(255,255,255,0.95);
+    transition: width 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .credit-card.footprint .bar-fill { background: rgba(255,255,255,0.95); }
+
+  /* 评分维度明细 5 卡 */
+  .dim-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+  }
+  .dim-card {
+    background: var(--color-bg);
+    border-radius: var(--radius);
+    padding: 18px 16px; cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+    position: relative;
+  }
+  .dim-card:hover {
+    background: #fff;
+    border-color: var(--color-trust);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(20, 184, 166, 0.12);
+  }
+  .dim-card .dim-ic {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 12px;
+    background: var(--color-trust-soft); color: var(--color-trust);
+  }
+  .dim-card .dim-name { font-size: 13px; color: var(--color-text-2); margin-bottom: 4px; font-weight: 500; }
+  .dim-card .dim-score { font-size: 28px; font-weight: 800; color: var(--color-text); line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .dim-card .dim-score .max { font-size: 13px; font-weight: 500; color: var(--color-text-3); }
+  .dim-card .dim-bar { height: 4px; background: rgba(20, 184, 166, 0.15); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+  .dim-card .dim-bar-fill {
+    height: 100%; width: 0%; background: linear-gradient(90deg, #14B8A6, #0E8F80);
+    border-radius: 2px; transition: width 1.0s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .dim-card .dim-tip {
+    font-size: 11px; color: var(--color-text-3);
+    margin-top: 8px; display: flex; align-items: center; gap: 4px;
+  }
+
+  /* 评分模态：得分依据 */
+  .dim-modal {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(15, 23, 42, 0.5);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .dim-modal.open { display: flex; }
+  .dim-modal .modal-card {
+    background: #fff; border-radius: var(--radius-md);
+    max-width: 480px; width: 100%; padding: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .dim-modal .modal-head {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+  }
+  .dim-modal .modal-head .ic {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; background: var(--color-trust-soft); color: var(--color-trust);
+  }
+  .dim-modal .modal-head h3 { margin: 0; font-size: 18px; }
+  .dim-modal .modal-head .close {
+    margin-left: auto; cursor: pointer; color: var(--color-text-3);
+    font-size: 24px; line-height: 1; background: none; border: none;
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; transition: background 0.2s;
+  }
+  .dim-modal .modal-head .close:hover { background: var(--color-bg); }
+  .dim-modal .rule-list { list-style: none; padding: 0; margin: 0 0 20px; }
+  .dim-modal .rule-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px dashed var(--color-border-light);
+    font-size: 14px; line-height: 1.6;
+  }
+  .dim-modal .rule-list li:last-child { border-bottom: none; }
+  .dim-modal .rule-list .ic { color: var(--color-trust); font-size: 16px; flex-shrink: 0; }
+  .dim-modal .evidence {
+    background: var(--color-bg); border-radius: var(--radius);
+    padding: 14px 16px; font-size: 13px; line-height: 1.7;
+    color: var(--color-text-2);
+  }
+  .dim-modal .evidence strong { color: var(--color-text); }
+
+  /* 贡献分体系 + 爱心足迹体系（双列说明卡） */
+  .system-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .system-card {
+    border-radius: var(--radius-md); padding: 24px;
+    color: #fff; position: relative; overflow: hidden;
+  }
+  .system-card.exchange { background: linear-gradient(135deg, #14B8A6 0%, #0E8F80 100%); }
+  .system-card.donation { background: linear-gradient(135deg, #F59E0B 0%, #C44A00 100%); }
+  .system-card h3 {
+    font-size: 20px; margin: 0 0 4px; display: flex; align-items: center; gap: 10px;
+  }
+  .system-card .sub {
+    font-size: 13px; opacity: 0.9; margin-bottom: 20px;
+  }
+  .system-card .progress-block {
+    background: rgba(255,255,255,0.15); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px;
+  }
+  .system-card .pb-label { font-size: 12px; opacity: 0.9; margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .system-card .pb-value { font-size: 26px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .system-card .pb-value .unit { font-size: 14px; font-weight: 500; opacity: 0.85; margin-left: 4px; }
+  .system-card .pb-bar { height: 5px; background: rgba(255,255,255,0.22); border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .system-card .pb-bar-fill {
+    height: 100%; background: rgba(255,255,255,0.95); border-radius: 3px;
+    width: 0%; transition: width 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .system-card .redeem-list {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px;
+  }
+  .system-card .redeem-item {
+    background: rgba(255,255,255,0.16); border-radius: 10px;
+    padding: 10px 6px; text-align: center;
+    transition: all 0.2s ease; cursor: pointer;
+  }
+  .system-card .redeem-item:hover { background: rgba(255,255,255,0.26); transform: translateY(-1px); }
+  .system-card .redeem-item .ic { font-size: 22px; display: block; margin-bottom: 4px; }
+  .system-card .redeem-item .name { font-size: 12px; font-weight: 600; }
+  .system-card .redeem-item .cost { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  .system-card .donation-list {
+    background: rgba(255,255,255,0.15); border-radius: var(--radius);
+    padding: 16px; margin-top: 12px;
+  }
+  .system-card .donation-list .row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 14px;
+  }
+  .system-card .donation-list .row .label { opacity: 0.92; }
+  .system-card .donation-list .row .num { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .system-card .donation-list .rule {
+    margin-top: 8px; padding-top: 10px;
+    border-top: 1px dashed rgba(255,255,255,0.3);
+    font-size: 12px; line-height: 1.6; opacity: 0.85;
+  }
+
+  /* 服务荣誉墙 */
+  .honor-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+  }
+  .honor-card {
+    background: linear-gradient(135deg, #FFF8E8 0%, #FFEFD2 100%);
+    border: 2px solid #E8B85C;
+    border-radius: var(--radius-md);
+    padding: 22px 16px; text-align: center;
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .honor-card:hover { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 8px 20px rgba(232, 184, 92, 0.3); }
+  .honor-card.locked {
+    background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+    border-color: #CBD5E1;
+    opacity: 0.55;
+  }
+  .honor-card.locked:hover { transform: translateY(-1px); box-shadow: none; }
+  .honor-card .medal {
+    width: 64px; height: 64px; border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    background: linear-gradient(135deg, #F59E0B 0%, #C44A00 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4), inset 0 -3px 6px rgba(0,0,0,0.15);
+    color: #fff;
+    position: relative;
+  }
+  .honor-card.locked .medal {
+    background: linear-gradient(135deg, #94A3B8 0%, #475569 100%);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1), inset 0 -2px 4px rgba(0,0,0,0.2);
+  }
+  .honor-card .medal::after {
+    content: ''; position: absolute; top: 6px; left: 6px; right: 6px; height: 16px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%);
+    border-radius: 50%;
+  }
+  .honor-card .name { font-size: 14px; font-weight: 700; color: var(--color-text); margin-bottom: 4px; }
+  .honor-card .desc { font-size: 12px; color: var(--color-text-2); line-height: 1.5; }
+  .honor-card.locked .name { color: var(--color-text-3); }
+  .honor-card.locked .desc { color: var(--color-text-3); }
+  .honor-card .condition {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px dashed rgba(232, 184, 92, 0.4);
+    font-size: 11px; color: var(--color-text-3);
+  }
+  .honor-card.locked .condition { border-top-color: rgba(203, 213, 225, 0.4); }
+
+  /* 评分依据 modal trigger */
+  .dim-card[data-key] { cursor: pointer; }
+
+  /* 移动端 */
+  @media (max-width: 1024px) {
+    .dim-grid { grid-template-columns: repeat(3, 1fr); }
+    .honor-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    /* welcome-card 移动端改为单列（避免文字被 1fr auto 挤压竖排） */
+    .welcome-card { grid-template-columns: 1fr; padding: 24px; }
+    .welcome-card h1 { font-size: 24px; }
+    .cert-badge { padding: 10px 16px; }
+    .cert-badge .ic { font-size: 20px; }
+    .welcome-card > div:last-child { display: flex; }
+    .welcome-card > div:last-child .btn { width: 100%; justify-content: center; }
+    .credit-cards { grid-template-columns: 1fr; }
+    .dim-grid { grid-template-columns: repeat(2, 1fr); }
+    .honor-grid { grid-template-columns: repeat(2, 1fr); }
+    .system-grid { grid-template-columns: 1fr; }
+    .credit-card .value { font-size: 42px; }
+    .credit-card .ic-deco { font-size: 48px; }
+    .credit-card .ring { width: 72px; height: 72px; }
+  }
+  @media (max-width: 480px) {
+    .dim-grid { grid-template-columns: 1fr; }
+    /* honor-grid 仍保持 2 列（更紧凑，避免单列太长） */
+  }
 </style>
 </head>
 <body>
@@ -79,6 +355,99 @@
       </div>
     </div>
 
+    <!-- ===== 评分与信用体系：顶部双卡（贡献分 + 爱心足迹） ===== -->
+    <div class="dash-card">
+      <div class="card-head">
+        <h3>🌟 志愿者评分与信用体系</h3>
+        <a href="profile.html" class="more">查看详情 →</a>
+      </div>
+
+      <div class="credit-cards">
+        <!-- 贡献分卡 -->
+        <div class="credit-card score" data-anim="credit-score">
+          <div>
+            <div class="label">⭐ 综合贡献分</div>
+            <div class="value"><span class="num" data-target="850">0</span><span class="unit">/ 1000</span></div>
+            <div class="trend">
+              <span class="arrow">📈</span>
+              较上周 <span class="delta">+25</span> · 较上月 <span class="delta">+108</span>
+            </div>
+            <div class="compare">在平台志愿者中排名前 <strong>12%</strong></div>
+            <div class="bar"><div class="bar-fill" data-fill="85"></div></div>
+          </div>
+          <div class="ring" aria-label="贡献分 850 / 1000">
+            <svg viewBox="0 0 36 36" width="90" height="90">
+              <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+              <circle cx="18" cy="18" r="15" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="85, 100" class="ring-progress"/>
+            </svg>
+            <div class="pct"><span data-target="85">0</span>%</div>
+          </div>
+        </div>
+
+        <!-- 爱心足迹卡 -->
+        <div class="credit-card footprint" data-anim="credit-foot">
+          <div>
+            <div class="label">👣 爱心足迹</div>
+            <div class="value"><span class="num" data-target="13033">0</span><span class="unit">步</span></div>
+            <div class="trend">
+              <span class="arrow">📈</span>
+              较上周 <span class="delta">+1,820</span> 步 · 较上月 <span class="delta">+6,540</span> 步
+            </div>
+            <div class="compare">已折算 <strong>8.7 公里</strong> · 平台已捐赠 <strong>¥0.87</strong></div>
+            <div class="bar"><div class="bar-fill" data-fill="65"></div></div>
+          </div>
+          <div class="ic-deco">👣</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 评分维度明细 ===== -->
+    <div class="dash-card">
+      <div class="card-head">
+        <h3>📊 评分维度明细</h3>
+        <span class="text-sm text-muted">点击任意维度查看得分依据</span>
+      </div>
+      <div class="dim-grid">
+        <div class="dim-card" data-key="hours">
+          <div class="dim-ic">⏰</div>
+          <div class="dim-name">服务时长</div>
+          <div class="dim-score"><span data-target="92">0</span><span class="max">/100</span></div>
+          <div class="dim-bar"><div class="dim-bar-fill" data-fill="92"></div></div>
+          <div class="dim-tip">📌 已累计 156h</div>
+        </div>
+        <div class="dim-card" data-key="count">
+          <div class="dim-ic">📋</div>
+          <div class="dim-name">服务次数</div>
+          <div class="dim-score"><span data-target="88">0</span><span class="max">/100</span></div>
+          <div class="dim-bar"><div class="dim-bar-fill" data-fill="88"></div></div>
+          <div class="dim-tip">📌 本年 28 次任务</div>
+        </div>
+        <div class="dim-card" data-key="rating">
+          <div class="dim-ic">⭐</div>
+          <div class="dim-name">服务评价</div>
+          <div class="dim-score"><span data-target="95">0</span><span class="max">/100</span></div>
+          <div class="dim-bar"><div class="dim-bar-fill" data-fill="95"></div></div>
+          <div class="dim-tip">📌 26 条 5★ · 2 条 4★</div>
+        </div>
+        <div class="dim-card" data-key="training">
+          <div class="dim-ic">📚</div>
+          <div class="dim-name">培训完成率</div>
+          <div class="dim-score"><span data-target="100">0</span><span class="max">/100</span></div>
+          <div class="dim-bar"><div class="dim-bar-fill" data-fill="100"></div></div>
+          <div class="dim-tip">📌 8/8 课程已结业</div>
+        </div>
+        <div class="dim-card" data-key="trust">
+          <div class="dim-ic">🛡️</div>
+          <div class="dim-name">守信行为</div>
+          <div class="dim-score"><span data-target="90">0</span><span class="max">/100</span></div>
+          <div class="dim-bar"><div class="dim-bar-fill" data-fill="90"></div></div>
+          <div class="dim-tip">📌 无故缺勤 0 次</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 当前任务 + 我的数据（保留） -->
     <div class="dash-grid-2 mt-6">
       <div class="dash-card">
         <div class="card-head">
@@ -142,6 +511,145 @@
       </div>
     </div>
 
+    <!-- ===== 贡献分体系 + 爱心足迹体系 ===== -->
+    <div class="dash-card">
+      <div class="card-head">
+        <h3>🎁 激励体系</h3>
+        <span class="text-sm text-muted">每份善意都会被记录、被激励</span>
+      </div>
+      <div class="system-grid">
+        <!-- 贡献分兑换 -->
+        <div class="system-card exchange" data-anim="system-exchange">
+          <h3>💎 贡献分兑换体系</h3>
+          <div class="sub">贡献分可用于兑换平台纪念品、优惠券、免费培训课程</div>
+          <div class="progress-block">
+            <div class="pb-label"><span>当前可用</span><span>有效期内</span></div>
+            <div class="pb-value"><span data-target="850">0</span><span class="unit">分</span></div>
+            <div class="pb-bar"><div class="pb-bar-fill" data-fill="68"></div></div>
+            <div class="text-xs" style="margin-top:6px;opacity:0.85;">距下一档"金牌志愿者"还差 150 分（兑换 12 项权益）</div>
+          </div>
+          <div class="redeem-list">
+            <div class="redeem-item">
+              <span class="ic">🎒</span>
+              <div class="name">纪念帆布袋</div>
+              <div class="cost">200 分</div>
+            </div>
+            <div class="redeem-item">
+              <span class="ic">☕</span>
+              <div class="name">品牌咖啡券</div>
+              <div class="cost">150 分</div>
+            </div>
+            <div class="redeem-item">
+              <span class="ic">📚</span>
+              <div class="name">免费培训课</div>
+              <div class="cost">300 分</div>
+            </div>
+            <div class="redeem-item">
+              <span class="ic">🎟️</span>
+              <div class="name">5 元商城券</div>
+              <div class="cost">500 分</div>
+            </div>
+            <div class="redeem-item">
+              <span class="ic">👕</span>
+              <div class="name">纪念 T 恤</div>
+              <div class="cost">800 分</div>
+            </div>
+            <div class="redeem-item">
+              <span class="ic">🏆</span>
+              <div class="name">年度盛典席位</div>
+              <div class="cost">1,000 分</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 爱心足迹捐赠 -->
+        <div class="system-card donation" data-anim="system-donation">
+          <h3>👣 爱心足迹捐赠体系</h3>
+          <div class="sub">每 1 万步 / 10 公里，平台即向基金会捐赠 1 毛钱</div>
+          <div class="donation-list">
+            <div class="row">
+              <span class="label">累计步数</span>
+              <span class="num"><span data-target="13033">0</span> 步</span>
+            </div>
+            <div class="row">
+              <span class="label">累计公里数</span>
+              <span class="num"><span data-target="8.7">0</span> km</span>
+            </div>
+            <div class="row">
+              <span class="label">已折算捐赠</span>
+              <span class="num">¥<span data-target="0.87">0</span></span>
+            </div>
+            <div class="row">
+              <span class="label">本年累计</span>
+              <span class="num">¥<span data-target="12.4">0</span></span>
+            </div>
+            <div class="rule">
+              📌 步数由平台打卡 + 任务签到自动折算（每万步 = ¥0.1；每 10 公里 = ¥0.1，两种规则取高）
+              <br>📌 捐赠资金进入"慈商联营志愿者公益基金"，由第三方审计每季度公示
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 服务荣誉墙 ===== -->
+    <div class="dash-card">
+      <div class="card-head">
+        <h3>🏆 服务荣誉墙</h3>
+        <span class="text-sm text-muted">已解锁 3 / 8 枚奖章</span>
+      </div>
+      <div class="honor-grid">
+        <div class="honor-card" data-anim="honor">
+          <div class="medal">⭐</div>
+          <div class="name">服务先锋</div>
+          <div class="desc">完成首次志愿者服务</div>
+          <div class="condition">2024-11-15 获得</div>
+        </div>
+        <div class="honor-card" data-anim="honor">
+          <div class="medal">🥇</div>
+          <div class="name">百里领航先锋</div>
+          <div class="desc">累计服务时长突破 100 小时</div>
+          <div class="condition">2025-02-08 获得</div>
+        </div>
+        <div class="honor-card" data-anim="honor">
+          <div class="medal">👣</div>
+          <div class="name">万步传播先锋</div>
+          <div class="desc">爱心足迹累计突破 1 万步</div>
+          <div class="condition">2025-04-22 获得</div>
+        </div>
+        <div class="honor-card locked" data-anim="honor">
+          <div class="medal">🚨</div>
+          <div class="name">应急救援先锋</div>
+          <div class="desc">参与 1 次重大灾害救援任务</div>
+          <div class="condition">需完成 1 次紧急任务</div>
+        </div>
+        <div class="honor-card locked" data-anim="honor">
+          <div class="medal">📚</div>
+          <div class="name">培训大师</div>
+          <div class="desc">完成全部 12 项专业培训</div>
+          <div class="condition">还差 4 项培训</div>
+        </div>
+        <div class="honor-card locked" data-anim="honor">
+          <div class="medal">🌟</div>
+          <div class="name">五星好评官</div>
+          <div class="desc">累计 50 次 5★ 评价</div>
+          <div class="condition">还差 24 次 5★</div>
+        </div>
+        <div class="honor-card locked" data-anim="honor">
+          <div class="medal">🏅</div>
+          <div class="name">年度优秀志愿者</div>
+          <div class="desc">年度评分进入前 5%</div>
+          <div class="condition">需综合分 950+</div>
+        </div>
+        <div class="honor-card locked" data-anim="honor">
+          <div class="medal">🤝</div>
+          <div class="name">守信标兵</div>
+          <div class="desc">连续 365 天无任何失信记录</div>
+          <div class="condition">还差 179 天</div>
+        </div>
+      </div>
+    </div>
+
     <div class="dash-card mt-6">
       <div class="card-head">
         <h3>📰 最新通知</h3>
@@ -168,11 +676,227 @@
   </main>
 </div>
 
+<!-- 评分维度得分依据 modal（点击 dim-card 触发） -->
+<div class="dim-modal" id="dimModal" onclick="if(event.target===this) closeDimModal()">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div class="ic" id="dmIc">⏰</div>
+      <h3 id="dmTitle">服务时长</h3>
+      <button class="close" onclick="closeDimModal()" aria-label="关闭">×</button>
+    </div>
+    <ul class="rule-list" id="dmRules"></ul>
+    <div class="evidence" id="dmEvidence"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="../public/js/common.js"></script>
 <script>
   CS.renderDashHeader('志愿者', '张伟');
   CS.renderSidebar('volunteer', 'dashboard');
   CS.renderDashMsgBanner('volunteer');
+
+  // ===== GSAP 入场动效 =====
+  gsap.registerPlugin(ScrollTrigger);
+
+  // 1) 数字滚动（贡献分、爱心足迹、5 维度、3 体系、捐赠金额）
+  // 数字滚动辅助：整数 toLocaleString、浮点 toFixed(2)
+  function fmtNum(v, target) {
+    if (Number.isInteger(target)) return Math.round(v).toLocaleString();
+    return v.toFixed(2);
+  }
+  const numTweens = [];
+  document.querySelectorAll('[data-target]').forEach(el => {
+    const target = parseFloat(el.getAttribute('data-target'));
+    const obj = { v: 0 };
+    numTweens.push(gsap.to(obj, {
+      v: target, duration: 1.6, ease: 'power2.out',
+      onUpdate() { el.textContent = fmtNum(obj.v, target); }
+    }));
+  });
+  // ScrollTrigger 触发数字滚动（页面进入视口时跑一次）
+  ScrollTrigger.create({
+    trigger: '.credit-cards',
+    start: 'top 85%',
+    onEnter: () => numTweens.filter((_, i) => {
+      const el = document.querySelectorAll('[data-target]')[i];
+      return el.closest('.credit-cards') || el.closest('.system-grid');
+    }).forEach(t => t.restart(true)),
+    once: true
+  });
+  // 评分维度数字（视口进入时跑）
+  const dimTweens = [];
+  document.querySelectorAll('.dim-card [data-target]').forEach(el => {
+    const target = parseFloat(el.getAttribute('data-target'));
+    const obj = { v: 0 };
+    dimTweens.push(gsap.to(obj, {
+      v: target, duration: 1.2, ease: 'power2.out',
+      onUpdate() { el.textContent = Math.round(obj.v); }
+    }));
+  });
+  ScrollTrigger.create({
+    trigger: '.dim-grid',
+    start: 'top 85%',
+    onEnter: () => dimTweens.forEach(t => t.restart(true)),
+    once: true
+  });
+
+  // 2) 进度条入场（视口进入时填充）
+  ScrollTrigger.create({
+    trigger: '.credit-cards',
+    start: 'top 85%',
+    onEnter: () => {
+      document.querySelectorAll('.credit-card .bar-fill').forEach(el => {
+        el.style.width = el.getAttribute('data-fill') + '%';
+      });
+    },
+    once: true
+  });
+  ScrollTrigger.create({
+    trigger: '.dim-grid',
+    start: 'top 85%',
+    onEnter: () => {
+      document.querySelectorAll('.dim-bar-fill').forEach(el => {
+        el.style.width = el.getAttribute('data-fill') + '%';
+      });
+    },
+    once: true
+  });
+  ScrollTrigger.create({
+    trigger: '.system-grid',
+    start: 'top 85%',
+    onEnter: () => {
+      document.querySelectorAll('.pb-bar-fill').forEach(el => {
+        el.style.width = el.getAttribute('data-fill') + '%';
+      });
+    },
+    once: true
+  });
+
+  // 3) 评分维度卡片弹性入（视口进入时）
+  gsap.set('.dim-card', { opacity: 0, y: 20 });
+  ScrollTrigger.create({
+    trigger: '.dim-grid',
+    start: 'top 85%',
+    onEnter: () => {
+      gsap.to('.dim-card', { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.4)', stagger: 0.08 });
+    },
+    once: true
+  });
+
+  // 4) 荣誉墙弹性入
+  gsap.set('.honor-card', { opacity: 0, scale: 0.6 });
+  ScrollTrigger.create({
+    trigger: '.honor-grid',
+    start: 'top 85%',
+    onEnter: () => {
+      gsap.to('.honor-card', { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)', stagger: 0.06 });
+    },
+    once: true
+  });
+
+  // 5) 贡献分卡 + 爱心足迹卡上滑入场
+  gsap.set('.credit-card', { opacity: 0, y: 30 });
+  ScrollTrigger.create({
+    trigger: '.credit-cards',
+    start: 'top 85%',
+    onEnter: () => {
+      gsap.to('.credit-card', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.12 });
+    },
+    once: true
+  });
+
+  // 6) 体系模块左滑入
+  gsap.set('.system-card', { opacity: 0, x: -30 });
+  ScrollTrigger.create({
+    trigger: '.system-grid',
+    start: 'top 85%',
+    onEnter: () => {
+      gsap.to('.system-card', { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12 });
+    },
+    once: true
+  });
+
+  // 7) 贡献分进度环 stroke-dasharray
+  ScrollTrigger.create({
+    trigger: '.credit-cards',
+    start: 'top 85%',
+    onEnter: () => {
+      const ring = document.querySelector('.ring-progress');
+      if (ring) {
+        const fill = ring.parentElement.parentElement.querySelector('.pct span');
+        // 已经有 data-target 数字滚动，这里不再重复
+      }
+    },
+    once: true
+  });
+
+  // ===== 评分维度模态 =====
+  const DIM_RULES = {
+    hours: {
+      ic: '⏰', name: '服务时长',
+      rules: [
+        { ic: '✅', text: '每完成 1 小时志愿服务，贡献分 +1 分' },
+        { ic: '🎯', text: '每月服务满 20 小时可获得额外 10 分奖励' },
+        { ic: '🏆', text: '累计 100/300/500/1000 小时解锁"百里/三百/五百/千里"称号 + 50/150/300/600 分' }
+      ],
+      evidence: '<strong>张伟</strong> · 累计 <strong>156 小时</strong><br>其中 100h 节点奖励 +50 分 · 当前月时长 32h · 月度满勤奖励 +10 分<br>本项得分构成：基础 156 + 节点奖励 50 + 月度满勤 10 = <strong>92 / 100</strong>'
+    },
+    count: {
+      ic: '📋', name: '服务次数',
+      rules: [
+        { ic: '✅', text: '每完成 1 次任务，贡献分 +3 分' },
+        { ic: '🚨', text: '紧急救援任务额外 +5 分' },
+        { ic: '🎓', text: '培训类助教任务额外 +4 分' }
+      ],
+      evidence: '<strong>张伟</strong> · 本年完成 <strong>28 次任务</strong><br>其中 22 次普通任务（66 分）+ 4 次紧急任务（12+20=32 分）+ 2 次助教任务（6+8=14 分）<br>任务活跃度在平台排名前 18%，本项得分 <strong>88 / 100</strong>'
+    },
+    rating: {
+      ic: '⭐', name: '服务评价',
+      rules: [
+        { ic: '⭐', text: '5★ 评价：贡献分 +1 分 / 次' },
+        { ic: '⭐', text: '4★ 评价：不加分不扣分' },
+        { ic: '⚠️', text: '3★ 及以下：贡献分 -3 分 / 次' }
+      ],
+      evidence: '<strong>张伟</strong> · 累计 <strong>28 条评价</strong><br>26 条 5★（26 分）+ 2 条 4★（0 分）+ 0 条 3★ 及以下<br>好评率 100%，在平台排名前 5%，本项得分 <strong>95 / 100</strong>'
+    },
+    training: {
+      ic: '📚', name: '培训完成率',
+      rules: [
+        { ic: '📖', text: '完成 1 项必修课：贡献分 +12.5 分' },
+        { ic: '🎓', text: '获得"应急救援/心理疏导/儿童陪伴"专项证书：额外 +20 分' },
+        { ic: '📅', text: '12 项专业培训全部完成可获"培训大师"勋章 + 50 分' }
+      ],
+      evidence: '<strong>张伟</strong> · 已完成 <strong>8 / 8 必修课</strong><br>含应急救援 + 心理疏导 + 儿童陪伴 3 项专项证书（60 分）<br>完成率 100%，本项得分 <strong>100 / 100</strong>'
+    },
+    trust: {
+      ic: '🛡️', name: '守信行为',
+      rules: [
+        { ic: '✅', text: '按时签到签退，无迟到早退：保持满分' },
+        { ic: '⚠️', text: '任务无故缺勤 1 次：扣 10 分' },
+        { ic: '🚫', text: '恶意爽约 / 失信举报：扣 30 分 / 次' },
+        { ic: '🎁', text: '连续 90 天无失信记录：奖励 15 分' }
+      ],
+      evidence: '<strong>张伟</strong> · 累计 <strong>0 次无故缺勤</strong><br>连续守信 186 天（奖励 15 分）· 历史曾有 1 次迟到（扣 5 分）<br>综合计算：基础 80 + 守信奖励 15 - 迟到扣 5 = <strong>90 / 100</strong>'
+    }
+  };
+
+  function openDimModal(key) {
+    const cfg = DIM_RULES[key];
+    if (!cfg) return;
+    document.getElementById('dmIc').textContent = cfg.ic;
+    document.getElementById('dmTitle').textContent = cfg.name + ' · 得分依据';
+    const ul = document.getElementById('dmRules');
+    ul.innerHTML = cfg.rules.map(r => `<li><span class="ic">${r.ic}</span><span>${r.text}</span></li>`).join('');
+    document.getElementById('dmEvidence').innerHTML = cfg.evidence;
+    document.getElementById('dimModal').classList.add('open');
+  }
+  function closeDimModal() { document.getElementById('dimModal').classList.remove('open'); }
+  document.querySelectorAll('.dim-card').forEach(card => {
+    card.addEventListener('click', () => openDimModal(card.getAttribute('data-key')));
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDimModal(); });
 </script>
 </body>
 </html>

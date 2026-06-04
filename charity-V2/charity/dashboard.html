@@ -444,6 +444,14 @@
 <script>
   CS.renderDashHeader('慈善会', '王主任');
   CS.renderSidebar('charity', 'dashboard');
+  // 移动端 sidebar 汉堡 drawer
+  if (typeof CS.initDashSide === 'function') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', CS.initDashSide);
+    } else {
+      setTimeout(CS.initDashSide, 0);
+    }
+  }
   CS.renderDashMsgBanner('charity');
 
   // ===== 慈善会工作台 GSAP 动效 =====
