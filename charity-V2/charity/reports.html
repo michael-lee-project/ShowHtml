@@ -20,6 +20,103 @@
     line-height: 1.1;
   }
   .year-stat-card .item .lbl { font-size: 14px; color: rgba(255,255,255,0.8); }
+
+  /* ===== 地区分布 · 地图热力图 ===== */
+  .heatmap {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: linear-gradient(135deg, #E0F2F1 0%, #FAF8F4 100%);
+    aspect-ratio: 16 / 9;
+    margin-top: 16px;
+  }
+  .heatmap-bg {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+    opacity: 0.95;
+  }
+  .hotspot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 2;
+    /* GSAP 接管入场，初始 opacity 0 */
+  }
+  .hotspot .ripple {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 40px; height: 40px;
+    margin: -20px 0 0 -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,93,4,0.45) 0%, rgba(232,93,4,0) 70%);
+    /* GSAP 控制 scale 1→2.5 + opacity 0.6→0，repeat -1 */
+  }
+  .hotspot .core {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 14px; height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.7);
+  }
+  .hotspot .hotspot-val {
+    position: absolute;
+    top: -8px; left: 50%;
+    transform: translate(-50%, -100%);
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(232,93,4,0.4);
+  }
+  .hotspot .hotspot-val::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 6px; height: 6px;
+    background: var(--color-primary);
+  }
+  .hotspot .hotspot-label {
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translate(-50%, 4px);
+    font-size: 11px;
+    color: var(--color-text-2);
+    font-weight: 600;
+    white-space: nowrap;
+    background: rgba(255,255,255,0.85);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  /* 圆大小/颜色深度按 data-val 比例（68.6% 最大，3.2% 最小） */
+  .hotspot[data-val="68.6"] .core { width: 22px; height: 22px; margin: -11px 0 0 -11px; background: linear-gradient(135deg, #E85D04 0%, #C44569 100%); }
+  .hotspot[data-val="68.6"] .ripple { width: 60px; height: 60px; margin: -30px 0 0 -30px; background: radial-gradient(circle, rgba(232,93,4,0.55) 0%, rgba(232,93,4,0) 70%); }
+  .hotspot[data-val="68.6"] .hotspot-val { background: linear-gradient(135deg, #E85D04 0%, #C44569 100%); font-size: 13px; padding: 3px 8px; }
+  .hotspot[data-val="68.6"] .hotspot-val::after { background: #C44569; }
+
+  .hotspot[data-val="12.8"] .core { width: 18px; height: 18px; margin: -9px 0 0 -9px; background: #F47A1F; }
+  .hotspot[data-val="12.8"] .ripple { width: 50px; height: 50px; margin: -25px 0 0 -25px; background: radial-gradient(circle, rgba(244,122,31,0.5) 0%, rgba(244,122,31,0) 70%); }
+
+  .hotspot[data-val="6.4"] .core { width: 15px; height: 15px; margin: -7.5px 0 0 -7.5px; background: #F8A055; }
+  .hotspot[data-val="6.4"] .ripple { width: 44px; height: 44px; margin: -22px 0 0 -22px; background: radial-gradient(circle, rgba(248,160,85,0.45) 0%, rgba(248,160,85,0) 70%); }
+
+  .hotspot[data-val="4.8"] .core { width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; background: #FBBF77; }
+  .hotspot[data-val="4.8"] .ripple { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: radial-gradient(circle, rgba(251,191,119,0.4) 0%, rgba(251,191,119,0) 70%); }
+
+  .hotspot[data-val="4.2"] .core { width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; background: #FBBF77; }
+  .hotspot[data-val="4.2"] .ripple { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: radial-gradient(circle, rgba(251,191,119,0.4) 0%, rgba(251,191,119,0) 70%); }
+
+  .hotspot[data-val="3.2"] .core { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; background: #FCD9A8; }
+  .hotspot[data-val="3.2"] .ripple { width: 36px; height: 36px; margin: -18px 0 0 -18px; background: radial-gradient(circle, rgba(252,217,168,0.35) 0%, rgba(252,217,168,0) 70%); }
+
+  .hotspot:hover { z-index: 3; }
+  .hotspot:hover .core { box-shadow: 0 0 0 5px rgba(232,93,4,0.3); }
 </style>
 </head>
 <body>
@@ -94,19 +191,51 @@
 
       <div class="dash-card">
         <div class="card-head">
-          <h3>🌍 地区分布</h3>
+          <h3>🌍 地区分布 · 地图热力</h3>
         </div>
-        <div class="flex-col gap-2 mt-4 text-sm">
-          <div class="flex-between"><span>📍 广东省内</span><span class="fw-600">68.6%</span></div>
-          <div class="flex-between"><span>📍 云南</span><span class="fw-600">12.8%</span></div>
-          <div class="flex-between"><span>📍 贵州</span><span class="fw-600">6.4%</span></div>
-          <div class="flex-between"><span>📍 甘肃</span><span class="fw-600">4.2%</span></div>
-          <div class="flex-between"><span>📍 广西</span><span class="fw-600">3.2%</span></div>
-          <div class="flex-between"><span>📍 其他</span><span class="fw-600">4.8%</span></div>
+        <div class="heatmap" id="heatmap">
+          <img src="../public/images/map/china-map.jpg" alt="中国地图热力分布" class="heatmap-bg">
+          <!-- 6 个热点（位置匹配地图，圆大小/颜色深度反映占比） -->
+          <div class="hotspot" data-val="68.6" data-region="广东" style="top:80%;left:65%;">
+            <div class="ripple"></div>
+            <div class="core"></div>
+            <div class="hotspot-val">68.6%</div>
+            <div class="hotspot-label">广东省内</div>
+          </div>
+          <div class="hotspot" data-val="12.8" data-region="云南" style="top:70%;left:42%;">
+            <div class="ripple"></div>
+            <div class="core"></div>
+            <div class="hotspot-val">12.8%</div>
+            <div class="hotspot-label">云南</div>
+          </div>
+          <div class="hotspot" data-val="6.4" data-region="贵州" style="top:65%;left:50%;">
+            <div class="ripple"></div>
+            <div class="core"></div>
+            <div class="hotspot-val">6.4%</div>
+            <div class="hotspot-label">贵州</div>
+          </div>
+          <div class="hotspot" data-val="4.2" data-region="甘肃" style="top:40%;left:42%;">
+            <div class="ripple"></div>
+            <div class="core"></div>
+            <div class="hotspot-val">4.2%</div>
+            <div class="hotspot-label">甘肃</div>
+          </div>
+          <div class="hotspot" data-val="3.2" data-region="广西" style="top:75%;left:52%;">
+            <div class="ripple"></div>
+            <div class="core"></div>
+            <div class="hotspot-val">3.2%</div>
+            <div class="hotspot-label">广西</div>
+          </div>
+          <div class="hotspot" data-val="4.8" data-region="其他" style="top:50%;left:50%;">
+            <div class="ripple"></div>
+            <div class="core"></div>
+            <div class="hotspot-val">4.8%</div>
+            <div class="hotspot-label">其他</div>
+          </div>
         </div>
         <div class="alert alert-info mt-4" style="font-size:12px;">
           <span class="ic">📍</span>
-          <div>本年覆盖 21 个地级市、86 个县区</div>
+          <div>本年覆盖 21 个地级市、86 个县区 · 圆越大/越深 = 占比越高</div>
         </div>
       </div>
     </div>
@@ -171,10 +300,69 @@
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="../public/js/common.js"></script>
 <script>
   CS.renderDashHeader('慈善会', '王主任');
   CS.renderSidebar('charity', 'reports');
+
+  // ===== 地图热力图 GSAP 动效 =====
+  if (typeof gsap !== 'undefined' && document.getElementById('heatmap')) {
+    gsap.registerPlugin(ScrollTrigger);
+    const hotspots = document.querySelectorAll('.hotspot');
+
+    // 初始隐藏（CSS transform 用 translate(-50%, -50%)，GSAP 用 xPercent/yPercent 接管）
+    gsap.set(hotspots, { xPercent: -50, yPercent: -50, scale: 0, opacity: 0 });
+
+    // 滚动到热力图时，6 个热点 stagger 飞入（按占比从大到小）
+    const sortedByVal = Array.from(hotspots).sort((a, b) => parseFloat(b.dataset.val) - parseFloat(a.dataset.val));
+    sortedByVal.forEach((hs, i) => {
+      gsap.to(hs, {
+        scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.6)', delay: i * 0.08,
+        scrollTrigger: { trigger: '#heatmap', start: 'top 80%', once: true }
+      });
+    });
+
+    // 每个热点的涟漪持续动画（scale 1→2.5 + opacity 0.5→0，repeat -1）
+    hotspots.forEach((hs, i) => {
+      const ripple = hs.querySelector('.ripple');
+      if (ripple) {
+        gsap.set(ripple, { scale: 0.6, opacity: 0 });
+        gsap.to(ripple, {
+          scale: 2.5, opacity: 0, duration: 2, ease: 'power1.out', repeat: -1,
+          delay: i * 0.3  // 错开启动时间，避免同步
+        });
+      }
+    });
+
+    // 数字滚动（hotspot-val 内的百分比从 0 → 目标值）
+    hotspots.forEach((hs) => {
+      const valEl = hs.querySelector('.hotspot-val');
+      if (!valEl) return;
+      const target = parseFloat(hs.dataset.val);
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: target, duration: 1.2, delay: 0.3, ease: 'power2.out',
+        scrollTrigger: { trigger: '#heatmap', start: 'top 80%', once: true },
+        onUpdate: () => { valEl.textContent = counter.val.toFixed(1) + '%'; }
+      });
+    });
+
+    // hover 放大（核心圆 + 数字）
+    hotspots.forEach((hs) => {
+      const core = hs.querySelector('.core');
+      const val = hs.querySelector('.hotspot-val');
+      hs.addEventListener('mouseenter', () => {
+        gsap.to(core, { scale: 1.4, duration: 0.3, ease: 'back.out(2)' });
+        gsap.to(val, { scale: 1.15, y: -3, duration: 0.3, ease: 'back.out(2)' });
+      });
+      hs.addEventListener('mouseleave', () => {
+        gsap.to(core, { scale: 1, duration: 0.2 });
+        gsap.to(val, { scale: 1, y: 0, duration: 0.2 });
+      });
+    });
+  }
 </script>
 </body>
 </html>

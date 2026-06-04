@@ -236,40 +236,135 @@
     position: relative; overflow: hidden;
   }
   .map-canvas {
-    background: linear-gradient(135deg, #E0F2F1 0%, #FAF8F4 100%);
-    border-radius: var(--radius); position: relative; min-height: 480px;
+    background: url('public/images/map/china-map.jpg') center/contain no-repeat, linear-gradient(135deg, #E0F2F1 0%, #FAF8F4 100%);
+    background-blend-mode: normal;
+    border-radius: var(--radius); position: relative; min-height: 540px;
     overflow: hidden;
   }
   .map-canvas::before {
     content: ''; position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(14,90,111,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(14,90,111,0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(232,93,4,0.04), transparent 50%);
+    pointer-events: none;
   }
+  /* 12 个地区 pin（升级版：圆点 + 数字徽章 + pulse 涟漪） */
   .map-pin {
     position: absolute; transform: translate(-50%, -50%);
+    display: inline-flex; align-items: center; gap: 6px;
     background: #fff; border: 2px solid var(--color-primary);
-    border-radius: var(--radius); padding: 8px 12px;
-    font-size: 12px; box-shadow: var(--shadow-md);
+    border-radius: 999px; padding: 4px 10px 4px 6px;
+    font-size: 12px; font-weight: 700; color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(232,93,4,0.25);
     cursor: pointer; transition: all var(--t) var(--ease);
     z-index: 2; white-space: nowrap;
+    opacity: 0; /* GSAP 接管入场 */
   }
-  .map-pin::before {
-    content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%) rotate(45deg);
-    width: 8px; height: 8px; background: #fff; border-right: 2px solid var(--color-primary); border-bottom: 2px solid var(--color-primary);
-  }
-  .map-pin .count { color: var(--color-primary); font-weight: 700; }
-  .map-pin.pulse::after {
-    content: ''; position: absolute; top: 50%; left: 50%;
+  .map-pin .dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: var(--color-primary);
-    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 0 rgba(232,93,4,0.6);
+  }
+  .map-pin .num { color: var(--color-primary); font-weight: 800; }
+  .map-pin.pulse .dot {
     animation: pulse-dot 1.4s ease-in-out infinite;
   }
-  .map-pin:hover { transform: translate(-50%, -50%) scale(1.08); z-index: 3; }
-  .map-pin.pulse { padding-left: 28px; }
-  .map-pin.pulse::after { left: 12px; }
+  .map-pin:hover { transform: translate(-50%, -50%) scale(1.12); z-index: 4; box-shadow: 0 8px 20px rgba(232,93,4,0.35); }
+  .map-pin.active { background: var(--color-primary); border-color: var(--color-primary); }
+  .map-pin.active .dot { background: #fff; }
+  .map-pin.active .num { color: #fff; }
+
+  /* ===== 右侧详情 panel ===== */
+  .map-panel {
+    position: absolute; top: 24px; right: 24px;
+    width: 360px; max-height: calc(100% - 80px);
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    overflow-y: auto;
+    transform: translateX(120%); opacity: 0;
+    z-index: 10;
+    /* GSAP 接管入场：x 120%→0 + opacity 0→1 */
+  }
+  .map-panel::-webkit-scrollbar { width: 6px; }
+  .map-panel::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+  .panel-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 32px; height: 32px; border-radius: 50%;
+    border: none; background: var(--color-bg-2);
+    font-size: 20px; line-height: 1; color: var(--color-text-2);
+    cursor: pointer; transition: all var(--t) var(--ease);
+  }
+  .panel-close:hover { background: var(--color-primary); color: #fff; }
+  .panel-region {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px; padding-right: 30px;
+  }
+  .panel-region-emoji {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: linear-gradient(135deg, #FFF1E5 0%, #FFE4D2 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .panel-region h3 { font-size: 18px; font-weight: 700; margin: 0; }
+  .panel-region-sub { font-size: 12px; color: var(--color-text-3); margin-top: 2px; }
+  .panel-total {
+    background: linear-gradient(135deg, #FFF1E5 0%, #FFE4D2 100%);
+    border-radius: var(--radius); padding: 16px;
+    text-align: center; margin-bottom: 20px;
+  }
+  .panel-total-num {
+    font-size: 32px; font-weight: 800;
+    background: linear-gradient(135deg, #E85D04 0%, #C44569 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+  }
+  .panel-total-lbl { font-size: 12px; color: var(--color-text-2); margin-top: 4px; }
+  .panel-section { margin-bottom: 20px; }
+  .panel-section h4 {
+    font-size: 14px; font-weight: 700; margin: 0 0 12px;
+    color: var(--color-text-1);
+  }
+  .logistics { display: flex; flex-direction: column; gap: 10px; }
+  .logi-step {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius);
+    background: var(--color-bg-2);
+    transition: all var(--t) var(--ease);
+  }
+  .logi-step.done { background: #E0FAF5; }
+  .logi-step.active { background: #FFF1E5; }
+  .logi-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-border);
+    flex-shrink: 0;
+    transition: all var(--t) var(--ease);
+  }
+  .logi-step.done .logi-dot { background: #14B8A6; }
+  .logi-step.active .logi-dot { background: var(--color-primary); box-shadow: 0 0 0 4px rgba(232,93,4,0.2); }
+  .logi-info { flex: 1; }
+  .logi-title { font-size: 13px; font-weight: 700; color: var(--color-text-1); }
+  .logi-meta { font-size: 11px; color: var(--color-text-3); margin-top: 1px; }
+  .logi-pct { font-size: 13px; font-weight: 700; color: var(--color-text-2); min-width: 42px; text-align: right; }
+  .logi-step.done .logi-pct { color: #14B8A6; }
+  .logi-step.active .logi-pct { color: var(--color-primary); }
+
+  .beneficiaries { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .bene-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px; border-radius: var(--radius);
+    background: var(--color-bg-2);
+  }
+  .bene-ico {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .bene-info { flex: 1; }
+  .bene-num { font-size: 14px; font-weight: 800; color: var(--color-text-1); line-height: 1.1; }
+  .bene-lbl { font-size: 10px; color: var(--color-text-3); margin-top: 1px; }
+  .btn-block { display: block; text-align: center; width: 100%; }
 
   .map-legend {
     display: flex; gap: 20px; flex-wrap: wrap;
@@ -490,9 +585,52 @@
   </div>
 </header>
 
-<!-- 入场动画 splash（GSAP timeline 控制，播完 display:none） -->
+<!-- 入场动画 splash：6 张慈善图 → 聚合 → 光晕 → 品牌名 → 缩出 → 首页 -->
 <div class="splash" id="appSplash">
   <div class="splash-bg"></div>
+
+  <!-- 30 张真实慈善场景图：沿螺旋 path 飞入中心（MotionPath plugin） -->
+  <!-- 隐藏 SVG 螺旋 path（仅供 MotionPathPlugin 引用）—— viewBox 中心 0,0 -->
+  <svg class="splash-spiral" viewBox="-900 -900 1800 1800" xmlns="http://www.w3.org/2000/svg">
+    <path id="spiralPath" d="M 800,0 C 800,-450 450,-800 0,-600 C -450,-400 -700,100 -350,500 C 0,750 500,500 250,150 C 80,-50 -80,-50 0,0" fill="none" />
+  </svg>
+  <div class="splash-images">
+    <div class="splash-img" data-ix="600" data-iy="0"><img src="public/images/splash/s01_s.jpg" alt="食品发放"></div>
+    <div class="splash-img" data-ix="606" data-iy="129"><img src="public/images/splash/s02_s.jpg" alt="医疗援助"></div>
+    <div class="splash-img" data-ix="530" data-iy="236"><img src="public/images/splash/s03_s.jpg" alt="书本捐赠"></div>
+    <div class="splash-img" data-ix="526" data-iy="382"><img src="public/images/splash/s04_s.jpg" alt="冬衣捐赠"></div>
+    <div class="splash-img" data-ix="381" data-iy="423"><img src="public/images/splash/s05_s.jpg" alt="住房重建"></div>
+    <div class="splash-img" data-ix="320" data-iy="554"><img src="public/images/splash/s06_s.jpg" alt="书包捐赠"></div>
+    <div class="splash-img" data-ix="182" data-iy="561"><img src="public/images/splash/s07_s.jpg" alt="志愿团队"></div>
+    <div class="splash-img" data-ix="64" data-iy="606"><img src="public/images/splash/s08_s.jpg" alt="医院探视"></div>
+    <div class="splash-img" data-ix="-58" data-iy="577"><img src="public/images/splash/s09_s.jpg" alt="山区助学"></div>
+    <div class="splash-img" data-ix="-201" data-iy="619"><img src="public/images/splash/s10_s.jpg" alt="物流运输"></div>
+    <div class="splash-img" data-ix="-285" data-iy="494"><img src="public/images/splash/s11_s.jpg" alt="动物救助"></div>
+    <div class="splash-img" data-ix="-424" data-iy="467"><img src="public/images/splash/s12_s.jpg" alt="老人关爱"></div>
+    <div class="splash-img" data-ix="-469" data-iy="338"><img src="public/images/splash/s13_s.jpg" alt="校园公益"></div>
+    <div class="splash-img" data-ix="-565" data-iy="247"><img src="public/images/splash/s14_s.jpg" alt="抢险救援"></div>
+    <div class="splash-img" data-ix="-575" data-iy="138"><img src="public/images/splash/s15_s.jpg" alt="海外慈善"></div>
+    <div class="splash-img" data-ix="-650" data-iy="0"><img src="public/images/splash/s16_s.jpg" alt="助残"></div>
+    <div class="splash-img" data-ix="-575" data-iy="-138"><img src="public/images/splash/s17_s.jpg" alt="义诊"></div>
+    <div class="splash-img" data-ix="-565" data-iy="-247"><img src="public/images/splash/s18_s.jpg" alt="环保"></div>
+    <div class="splash-img" data-ix="-523" data-iy="-380"><img src="public/images/splash/s19_s.jpg" alt="文化保护"></div>
+    <div class="splash-img" data-ix="-401" data-iy="-438"><img src="public/images/splash/s20_s.jpg" alt="体育公益"></div>
+    <div class="splash-img" data-ix="-305" data-iy="-528"><img src="public/images/splash/s21_s.jpg" alt="农村扶贫"></div>
+    <div class="splash-img" data-ix="-203" data-iy="-610"><img src="public/images/splash/s22_s.jpg" alt="留守儿童"></div>
+    <div class="splash-img" data-ix="-58" data-iy="-577"><img src="public/images/splash/s23_s.jpg" alt="妇女关爱"></div>
+    <div class="splash-img" data-ix="68" data-iy="-647"><img src="public/images/splash/s24_s.jpg" alt="应急物资"></div>
+    <div class="splash-img" data-ix="183" data-iy="-561"><img src="public/images/splash/s25_s.jpg" alt="灾后心理辅导"></div>
+    <div class="splash-img" data-ix="310" data-iy="-537"><img src="public/images/splash/s26_s.jpg" alt="社区义诊"></div>
+    <div class="splash-img" data-ix="382" data-iy="-430"><img src="public/images/splash/s27_s.jpg" alt="抗疫"></div>
+    <div class="splash-img" data-ix="535" data-iy="-349"><img src="public/images/splash/s28_s.jpg" alt="抗洪"></div>
+    <div class="splash-img" data-ix="557" data-iy="-243"><img src="public/images/splash/s29_s.jpg" alt="火灾救援"></div>
+    <div class="splash-img" data-ix="630" data-iy="-135"><img src="public/images/splash/s30_s.jpg" alt="助学金"></div>
+  </div>
+
+  <!-- 光晕（图片聚合后扩散的"光"） -->
+  <div class="splash-flash"></div>
+
+  <!-- 品牌名（图片聚合 → 光扩散 → 品牌从光中浮现） -->
   <div class="splash-content">
     <div class="splash-logo">
       <svg viewBox="0 0 64 64" width="80" height="80" xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -502,7 +640,6 @@
     </div>
     <div class="splash-brand">慈商联营</div>
     <div class="splash-tagline">CISHANG UNION · 每一份善意都可追溯</div>
-    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
   </div>
 </div>
 
@@ -786,50 +923,127 @@
     <div class="section-head">
       <div>
         <h2 style="font-size:32px;margin-bottom:6px;">物资流转 · 实时可视化</h2>
-        <p class="text-muted text-sm">平台所有捐赠物资流转轨迹实时可查。点开地图上的任意标记，查看该地区/项目/受捐者的详细情况</p>
+        <p class="text-muted text-sm">平台所有捐赠物资轨迹实时可查。点开地图上的任意标记，查看该地区/项目/受捐者的详细情况</p>
       </div>
       <a href="pages/track.html" class="btn btn-primary">查看完整轨迹 →</a>
     </div>
 
     <div class="map-wrap">
-      <div class="map-canvas">
-        <div class="map-pin pulse" style="top:18%;left:62%;">
-          <strong>新疆喀什</strong> · <span class="count">486</span> 件
+      <div class="map-canvas" id="mapCanvas">
+        <!-- 12 个 pin（新位置匹配 minimax 中国地图） -->
+        <div class="map-pin pulse" data-region="xjk" style="top:48%;left:18%;">
+          <span class="dot"></span><span class="num">486</span>
         </div>
-        <div class="map-pin" style="top:24%;left:38%;">
-          <strong>甘肃临夏</strong> · <span class="count">1,236</span> 件
+        <div class="map-pin" data-region="gslx" style="top:40%;left:42%;">
+          <span class="dot"></span><span class="num">1,236</span>
         </div>
-        <div class="map-pin pulse" style="top:30%;left:55%;">
-          <strong>青海玉树</strong> · <span class="count">892</span> 件
+        <div class="map-pin pulse" data-region="qhys" style="top:48%;left:35%;">
+          <span class="dot"></span><span class="num">892</span>
         </div>
-        <div class="map-pin" style="top:42%;left:48%;">
-          <strong>陕西汉中</strong> · <span class="count">2,108</span> 件
+        <div class="map-pin" data-region="sxhz" style="top:48%;left:55%;">
+          <span class="dot"></span><span class="num">2,108</span>
         </div>
-        <div class="map-pin pulse" style="top:46%;left:62%;">
-          <strong>河南郑州</strong> · <span class="count">3,486</span> 件
+        <div class="map-pin pulse" data-region="hnzz" style="top:42%;left:60%;">
+          <span class="dot"></span><span class="num">3,486</span>
         </div>
-        <div class="map-pin" style="top:55%;left:55%;">
-          <strong>湖北恩施</strong> · <span class="count">1,560</span> 件
+        <div class="map-pin" data-region="hbes" style="top:58%;left:55%;">
+          <span class="dot"></span><span class="num">1,560</span>
         </div>
-        <div class="map-pin pulse" style="top:62%;left:48%;">
-          <strong>贵州黔东南</strong> · <span class="count">2,840</span> 件
+        <div class="map-pin pulse" data-region="gzqdn" style="top:65%;left:50%;">
+          <span class="dot"></span><span class="num">2,840</span>
         </div>
-        <div class="map-pin" style="top:65%;left:60%;">
-          <strong>湖南湘西</strong> · <span class="count">1,920</span> 件
+        <div class="map-pin" data-region="hnxx" style="top:62%;left:60%;">
+          <span class="dot"></span><span class="num">1,920</span>
         </div>
-        <div class="map-pin pulse" style="top:72%;left:55%;">
-          <strong>云南怒江</strong> · <span class="count">1,468</span> 件
+        <div class="map-pin pulse" data-region="ynnj" style="top:70%;left:42%;">
+          <span class="dot"></span><span class="num">1,468</span>
         </div>
-        <div class="map-pin" style="top:78%;left:50%;">
-          <strong>广西河池</strong> · <span class="count">986</span> 件
+        <div class="map-pin" data-region="gxhc" style="top:75%;left:52%;">
+          <span class="dot"></span><span class="num">986</span>
         </div>
-        <div class="map-pin" style="top:80%;left:65%;">
-          <strong>广东梅州</strong> · <span class="count">720</span> 件
+        <div class="map-pin pulse" data-region="gdmz" style="top:78%;left:65%;">
+          <span class="dot"></span><span class="num">720</span>
         </div>
-        <div class="map-pin pulse" style="top:88%;left:62%;">
-          <strong>海南五指山</strong> · <span class="count">546</span> 件
+        <div class="map-pin pulse" data-region="hnwzs" style="top:90%;left:62%;">
+          <span class="dot"></span><span class="num">546</span>
         </div>
       </div>
+
+      <!-- 右侧详情 panel（点击 pin 滑出） -->
+      <aside class="map-panel" id="mapPanel">
+        <button class="panel-close" id="panelClose" aria-label="关闭">×</button>
+        <div class="panel-region">
+          <div class="panel-region-emoji" id="panelEmoji">📍</div>
+          <div>
+            <h3 id="panelName">—</h3>
+            <div class="panel-region-sub" id="panelSub">—</div>
+          </div>
+        </div>
+        <div class="panel-total">
+          <div class="panel-total-num" id="panelTotal">0</div>
+          <div class="panel-total-lbl">累计到达物资（件）</div>
+        </div>
+        <div class="panel-section">
+          <h4>🚚 物流进度</h4>
+          <div class="logistics" id="panelLogistics">
+            <div class="logi-step" data-step="1">
+              <div class="logi-dot"></div>
+              <div class="logi-info">
+                <div class="logi-title">已发货</div>
+                <div class="logi-meta">企业 → 区域仓</div>
+              </div>
+              <div class="logi-pct" data-pct="100">100%</div>
+            </div>
+            <div class="logi-step" data-step="2">
+              <div class="logi-dot"></div>
+              <div class="logi-info">
+                <div class="logi-title">运输中</div>
+                <div class="logi-meta">区域仓 → 当地分发点</div>
+              </div>
+              <div class="logi-pct" data-pct="0">0%</div>
+            </div>
+            <div class="logi-step" data-step="3">
+              <div class="logi-dot"></div>
+              <div class="logi-info">
+                <div class="logi-title">已到达</div>
+                <div class="logi-meta">当地分发点 → 受捐人</div>
+              </div>
+              <div class="logi-pct" data-pct="0">0%</div>
+            </div>
+            <div class="logi-step" data-step="4">
+              <div class="logi-dot"></div>
+              <div class="logi-info">
+                <div class="logi-title">已派发</div>
+                <div class="logi-meta">现场发放完成</div>
+              </div>
+              <div class="logi-pct" data-pct="0">0%</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <h4>👥 受益人群</h4>
+          <div class="beneficiaries" id="panelBeneficiaries">
+            <div class="bene-row">
+              <div class="bene-ico" style="background:#FFF1E5;color:#E85D04">👨‍👩‍👧</div>
+              <div class="bene-info"><div class="bene-num" data-target="0">0</div><div class="bene-lbl">受惠家庭</div></div>
+            </div>
+            <div class="bene-row">
+              <div class="bene-ico" style="background:#E0FAF5;color:#14B8A6">👴</div>
+              <div class="bene-info"><div class="bene-num" data-target="0">0</div><div class="bene-lbl">受惠老人</div></div>
+            </div>
+            <div class="bene-row">
+              <div class="bene-ico" style="background:#FAEFD9;color:#C4842A">🧒</div>
+              <div class="bene-info"><div class="bene-num" data-target="0">0</div><div class="bene-lbl">受惠儿童</div></div>
+            </div>
+            <div class="bene-row">
+              <div class="bene-ico" style="background:#E5F0F4;color:#0E5A6F">🤝</div>
+              <div class="bene-info"><div class="bene-num" data-target="0">0</div><div class="bene-lbl">志愿者</div></div>
+            </div>
+          </div>
+        </div>
+        <a href="pages/track.html" class="btn btn-primary btn-block">查看完整轨迹 →</a>
+      </aside>
+
       <div class="map-legend">
         <div class="item"><span class="dot" style="background:#E85D04"></span>正在派发（实时）</div>
         <div class="item"><span class="dot" style="background:#14B8A6"></span>已完成</div>
@@ -1124,8 +1338,10 @@
 <div id="site-footer"></div>
 
   <script src="public/js/common.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<!-- MotionPathPlugin 是 ESM，用 +esm 路径自动转换 + module 异步加载；内部自动 registerPlugin 到 window.gsap -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/MotionPathPlugin/+esm"></script>
 <script>
   CS.renderHeader('home');
   CS.renderFooter();
@@ -1141,40 +1357,70 @@
   });
 
   // ===== 入场动画 splash（GSAP timeline 接管）=====
-  // 页面打开时先看到这个 splash，播完才显示首页内容
-  // 时序：0.0s logo 缩放进入 → 0.3s 品牌名 → 0.5s 副标 → 进度条 0.4-1.4s → 1.4s splash 缩出 → 1.9s 隐藏
+  // 方案 3：30 张图从中心点向外爆开（0-1.5s）→ 光晕扩散（1.5-1.9s）→ 品牌名浮现（1.9-2.4s）→ splash 缩出（2.4-2.9s）→ display:none
   const splash = document.getElementById('appSplash');
   const frontHeader = document.getElementById('frontHeader');
-  // splash 期间：导航栏隐藏（splash 缩出时同步淡入）
   if (frontHeader) gsap.set(frontHeader, { opacity: 0, y: -20 });
-  const splashEls = {
-    logo:  splash?.querySelector('.splash-logo'),
-    brand: splash?.querySelector('.splash-brand'),
-    tag:   splash?.querySelector('.splash-tagline'),
-    bar:   splash?.querySelector('.splash-loader-bar')
-  };
-  // 隐藏 splash 期间整页 hero（防止 hero CSS 渲染）
   gsap.set('.hero', { opacity: 0 });
 
   if (splash) {
+    const splashImgs = splash.querySelectorAll('.splash-img');
+    const splashFlash = splash.querySelector('.splash-flash');
+    const splashLogo  = splash.querySelector('.splash-logo');
+    const splashBrand = splash.querySelector('.splash-brand');
+    const splashTag   = splash.querySelector('.splash-tagline');
+
+    // Phase 0: 30 张图设初始状态——**中心小图 + 可见**（准备爆开）
+    // 起点：x: 0, y: 0（中心）+ scale 0.5（小图）+ opacity 1（可见）
+    // 终点：x: ix, y: iy（散开到 30 个位置）+ scale 2.0（大图）+ opacity 0（淡出）
+    // 用 data-ix/data-iy 标记 30 个等分极坐标位置（之前设的）
+    splashImgs.forEach((img) => {
+      gsap.set(img, { x: 0, y: 0, scale: 0.5, opacity: 1, rotation: 0 });
+    });
+    gsap.set(splashFlash, { scale: 0, opacity: 0 });
+    gsap.set([splashLogo, splashBrand, splashTag], { opacity: 0 });
+
     const splashTl = gsap.timeline();
-    splashTl
-      // logo 缩放进入
-      .fromTo(splashEls.logo, { opacity: 0, scale: 0.3, rotation: -30 },
-        { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, 0.0)
-      // 品牌名上滑
-      .fromTo(splashEls.brand, { opacity: 0, y: 40, letterSpacing: '12px' },
-        { opacity: 1, y: 0, letterSpacing: '4px', duration: 0.7, ease: 'power3.out' }, 0.3)
-      // 副标淡入
-      .fromTo(splashEls.tag, { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.6)
-      // 进度条 0 → 100%
-      .fromTo(splashEls.bar, { width: '0%' },
-        { width: '100%', duration: 1.0, ease: 'power1.inOut' }, 0.4)
-      // splash 整段缩出 + 淡出（同时导航栏从上方滑入）
-      .to(splash, { opacity: 0, scale: 0.92, duration: 0.5, ease: 'power2.in' }, 1.4)
-      .to(frontHeader, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.5)
-      .add(() => { splash.style.display = 'none'; }, 1.9);
+
+    // Phase 1 (0.0-1.5s): 30 张图从中心点**向外爆开**（scale 0.5→2.0, x/y 0→ix/iy × 1.5）
+    // duration 1.2s + stagger 0.04s × 29 = 1.2 + 1.16 = 2.36s
+    // ease: power3.out（爆开快、然后减速到散开位置）
+    // rotation 旋转幅度再减（之前 90+8i = 90°→314°，现在 30+4i = 30°→142°）
+    // 散开距离 × 1.5（之前 ix/iy 550-700，现在 825-1050，贴边爆开）
+    // 配合 opacity 1→0（爆开过程中淡出，最后散开时已不可见）
+    splashTl.to(splashImgs, {
+      x: (i, el) => (parseFloat(el.dataset.ix) || 0) * 1.5,
+      y: (i, el) => (parseFloat(el.dataset.iy) || 0) * 1.5,
+      rotation: (i) => (i % 2 === 0 ? 1 : -1) * (30 + i * 4),  // 旋转再减：30°→142°
+      scale: 2.0, opacity: 0,
+      duration: 1.2, ease: 'power3.out', stagger: 0.04
+    }, 0.0);
+
+    // Phase 2 (1.5-1.9s): 光晕从中心扩散（scale 0→5 + opacity 0→1→0）
+    splashTl.fromTo(splashFlash,
+      { scale: 0, opacity: 0 },
+      { scale: 5, opacity: 1, duration: 0.5, ease: 'power2.out' }, 1.5
+    );
+    splashTl.to(splashFlash, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 1.8);
+
+    // Phase 3 (1.9-2.4s): 品牌名从光中弹性出现
+    splashTl.fromTo(splashLogo,
+      { scale: 0, opacity: 0, rotation: -30 },
+      { scale: 1, opacity: 1, rotation: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' }, 1.9
+    );
+    splashTl.fromTo(splashBrand,
+      { y: 30, opacity: 0, letterSpacing: '12px' },
+      { y: 0, opacity: 1, letterSpacing: '4px', duration: 0.5, ease: 'power3.out' }, 2.05
+    );
+    splashTl.fromTo(splashTag,
+      { y: 15, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' }, 2.2
+    );
+
+    // Phase 4 (2.4-2.9s): splash 整段缩出 + 导航栏淡入
+    splashTl.to(splash, { opacity: 0, scale: 0.94, duration: 0.5, ease: 'power2.in' }, 2.4);
+    splashTl.to(frontHeader, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 2.4);
+    splashTl.add(() => { splash.style.display = 'none'; }, 2.9);
   }
 
   // ===== 首屏 Hero 进入动画（GSAP timeline，splash 播完才启动）=====
@@ -1217,6 +1463,7 @@
 
   // ===== 数字滚动（GSAP + ScrollTrigger）=====
   // 滚到数字视口时，从 0 跳到目标值（power3.out ease 1.5s），比 setTimeout 触发更"鲜活"
+  // 注：MotionPathPlugin 通过 ESM module 自动注册到 window.gsap（不需要这里手动 register）
   gsap.registerPlugin(ScrollTrigger);
   document.querySelectorAll('[data-num]:not([data-animated])').forEach(el => {
     const target = parseFloat(el.dataset.num);
@@ -1258,6 +1505,117 @@
       }
     );
   });
+
+  // ===== 物资流转地图 ===== 12 个地区数据 + pin 飞入 + 点击交互
+  const REGION_DATA = {
+    xjk:   { name: '新疆喀什',   emoji: '🌾', sub: '西部 · 扶贫助困',    total: 486,   logi: [100, 78, 62, 35], bene: [86,  23,  142, 28]  },
+    gslx:  { name: '甘肃临夏',   emoji: '🏔️', sub: '西北 · 山区助学',    total: 1236,  logi: [100, 95, 88, 76], bene: [234, 56,  389, 72]  },
+    qhys:  { name: '青海玉树',   emoji: '⛰️', sub: '高原 · 灾后重建',    total: 892,   logi: [100,100, 84, 60], bene: [156, 38,  268, 45]  },
+    sxhz:  { name: '陕西汉中',   emoji: '🌳', sub: '秦岭 · 生态扶贫',    total: 2108,  logi: [100,100, 92, 81], bene: [412, 98,  524, 118] },
+    hnzz:  { name: '河南郑州',   emoji: '🏙️', sub: '中原 · 城市助医',    total: 3486,  logi: [100,100,100, 92], bene: [678, 186, 412, 245] },
+    hbes:  { name: '湖北恩施',   emoji: '🍃', sub: '鄂西 · 山区助学',    total: 1560,  logi: [100,100, 95, 88], bene: [298, 72,  386, 95]  },
+    gzqdn: { name: '贵州黔东南', emoji: '🌲', sub: '黔东南 · 民族文化',  total: 2840,  logi: [100,100,100, 96], bene: [524, 142, 686, 168] },
+    hnxx:  { name: '湖南湘西',   emoji: '🌶️', sub: '湘西 · 留守儿童',    total: 1920,  logi: [100,100, 98, 89], bene: [386, 95,  528, 112] },
+    ynnj:  { name: '云南怒江',   emoji: '🪷', sub: '滇西 · 边境扶贫',    total: 1468,  logi: [100,100, 86, 68], bene: [268, 58,  412, 78]  },
+    gxhc:  { name: '广西河池',   emoji: '🌾', sub: '桂西 · 石漠化治理',  total: 986,   logi: [100,100, 90, 75], bene: [192, 46,  286, 58]  },
+    gdmz:  { name: '广东梅州',   emoji: '🍊', sub: '粤东 · 客家助学',    total: 720,   logi: [100,100,100,100], bene: [142, 38,  198, 42]  },
+    hnwzs: { name: '海南五指山', emoji: '🌴', sub: '琼中 · 黎苗文化',    total: 546,   logi: [100,100,100, 94], bene: [98,  28,  168, 32]  }
+  };
+  const mapPins   = document.querySelectorAll('.map-pin');
+  const mapPanel  = document.getElementById('mapPanel');
+  const panelEmoji= document.getElementById('panelEmoji');
+  const panelName = document.getElementById('panelName');
+  const panelSub  = document.getElementById('panelSub');
+  const panelTotal= document.getElementById('panelTotal');
+  const logiSteps = mapPanel?.querySelectorAll('.logi-step') || [];
+  const beneNums  = mapPanel?.querySelectorAll('.bene-num') || [];
+  const panelClose= document.getElementById('panelClose');
+
+  // Pin 飞入（GSAP xPercent/yPercent 接管 transform，避开 CSS translate 冲突）
+  if (mapPins.length) {
+    gsap.set(mapPins, { xPercent: -50, yPercent: -50, scale: 0.3, opacity: 0 });
+    gsap.to(mapPins, {
+      opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.6)', stagger: 0.05,
+      scrollTrigger: { trigger: '#mapCanvas', start: 'top 80%', once: true }
+    });
+  }
+
+  // 点击 pin → panel 滑出 + 数据填充
+  // state 跟踪（避开 style.transform 不可靠的判断）
+  let panelOpen = false;
+  let currentRegion = null;
+
+  function showPanel(key) {
+    const data = REGION_DATA[key];
+    if (!data) return;
+
+    // 切换 pin active 样式
+    mapPins.forEach(p => p.classList.remove('active'));
+    document.querySelector(`.map-pin[data-region="${key}"]`)?.classList.add('active');
+
+    panelEmoji.textContent = data.emoji;
+    panelName.textContent  = data.name;
+    panelSub.textContent   = data.sub;
+    panelTotal.textContent = '0';
+
+    // panel 滑入（仅在关闭态时执行；同一 pin 重复点击不重做滑入，但重跑数字让用户再看一次）
+    if (!panelOpen) {
+      gsap.fromTo(mapPanel,
+        { x: 360, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out',
+          onStart: () => { panelOpen = true; }
+        }
+      );
+    } else {
+      panelOpen = true; // 已是开态，确保状态正确
+    }
+    currentRegion = key;
+
+    // 1) 总数滚动
+    const totalC = { val: 0 };
+    gsap.to(totalC, {
+      val: data.total, duration: 1.2, ease: 'power2.out',
+      onUpdate: () => { panelTotal.textContent = Math.round(totalC.val).toLocaleString(); }
+    });
+
+    // 2) 4 段物流进度（0%→目标%）
+    logiSteps.forEach((step, i) => {
+      const pct = data.logi[i];
+      step.classList.remove('done', 'active');
+      if (pct === 100) step.classList.add('done');
+      else if (pct > 0) step.classList.add('active');
+      const c = { val: 0 };
+      gsap.to(c, {
+        val: pct, duration: 1.0, delay: 0.3 + i * 0.15, ease: 'power2.out',
+        onUpdate: () => { step.querySelector('.logi-pct').textContent = Math.round(c.val) + '%'; }
+      });
+    });
+
+    // 3) 4 类受益人群数字滚动
+    beneNums.forEach((el, i) => {
+      const target = data.bene[i] || 0;
+      const c = { val: 0 };
+      gsap.to(c, {
+        val: target, duration: 0.9, delay: 0.2 + i * 0.1, ease: 'power2.out',
+        onUpdate: () => { el.textContent = Math.round(c.val).toLocaleString(); }
+      });
+    });
+  }
+
+  // 点击事件
+  mapPins.forEach(pin => {
+    pin.addEventListener('click', () => showPanel(pin.dataset.region));
+  });
+
+  // 关闭 panel
+  if (panelClose) {
+    panelClose.addEventListener('click', () => {
+      gsap.to(mapPanel, { x: 360, opacity: 0, duration: 0.3, ease: 'power2.in',
+        onComplete: () => { panelOpen = false; currentRegion = null; }
+      });
+      mapPins.forEach(p => p.classList.remove('active'));
+    });
+  }
 </script>
 </body>
 </html>

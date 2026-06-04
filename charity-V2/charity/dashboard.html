@@ -18,21 +18,191 @@
   .welcome-card h1 { font-size: 28px; margin-bottom: 8px; }
   .welcome-card .sub { color: var(--color-text-2); font-size: 15px; margin-bottom: 16px; }
 
+  /* ===== 广东地区受捐分布（真实地图 + 8 pin） ===== */
   .map-mini {
-    background: linear-gradient(135deg, #E0F2F1, #FAF8F4);
-    border-radius: var(--radius); padding: 20px; min-height: 280px; position: relative; overflow: hidden;
+    border-radius: var(--radius); padding: 0; min-height: 320px; position: relative; overflow: hidden;
   }
-  .map-mini::before {
-    content: ''; position: absolute; inset: 0;
-    background-image: linear-gradient(rgba(14,90,111,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(14,90,111,0.08) 1px, transparent 1px);
-    background-size: 30px 30px;
+  .gd-map-bg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
   }
-  .map-mini .pin {
+  .gd-pin {
     position: absolute; transform: translate(-50%, -50%);
+    display: inline-flex; align-items: center; gap: 4px;
     background: #fff; border: 2px solid var(--color-secondary);
-    border-radius: var(--radius); padding: 4px 8px;
-    font-size: 11px; box-shadow: var(--shadow);
+    border-radius: 999px; padding: 3px 8px 3px 5px;
+    font-size: 11px; font-weight: 700; color: var(--color-secondary);
+    box-shadow: 0 2px 8px rgba(14,90,111,0.2);
+    cursor: pointer; transition: all 0.25s ease;
     z-index: 2; white-space: nowrap;
+  }
+  .gd-pin .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--color-secondary);
+  }
+  .gd-pin .num { color: var(--color-secondary); font-weight: 800; }
+  .gd-pin.pulse .dot {
+    animation: pulse-dot 1.4s ease-in-out infinite;
+  }
+  .gd-pin:hover { transform: translate(-50%, -50%) scale(1.1); z-index: 4; box-shadow: 0 4px 12px rgba(14,90,111,0.35); }
+  .gd-pin.active { background: var(--color-secondary); border-color: var(--color-secondary); }
+  .gd-pin.active .dot { background: #fff; }
+  .gd-pin.active .num { color: #fff; }
+  @keyframes pulse-dot {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14,90,111,0.5); }
+    50% { transform: scale(1.3); box-shadow: 0 0 0 6px rgba(14,90,111,0); }
+  }
+
+  /* ===== 受灾群众领取 modal（点击地图 pin 居中弹出） ===== */
+  .receiving-mask {
+    position: fixed; inset: 0;
+    background: rgba(14, 90, 111, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+    /* GSAP 控制 opacity */
+  }
+  .receiving-modal {
+    background: linear-gradient(135deg, #E5F0F4 0%, #FAEFD9 100%);
+    border-radius: var(--radius-md);
+    padding: 28px 32px;
+    width: 720px; max-width: 92vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+    /* GSAP 控制 opacity + scale */
+  }
+  .receiving-modal::-webkit-scrollbar { width: 6px; }
+  .receiving-modal::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+  .panel-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.85);
+    font-size: 22px; line-height: 1; color: var(--color-text-2);
+    cursor: pointer; transition: all 0.2s ease;
+    z-index: 2;
+  }
+  .panel-close:hover { background: var(--color-secondary); color: #fff; transform: rotate(90deg); }
+  .panel-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px; padding-right: 30px;
+  }
+  .panel-head-ico {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: linear-gradient(135deg, #0E5A6F 0%, #14B8A6 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #fff;
+    flex-shrink: 0;
+  }
+  .panel-head-name { font-size: 18px; font-weight: 700; color: var(--color-text-1); }
+  .panel-head-sub { font-size: 12px; color: var(--color-text-3); margin-top: 2px; }
+  .panel-summary {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .panel-summary-item {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+  .panel-summary-num {
+    font-size: 26px; font-weight: 800;
+    color: var(--color-secondary);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .panel-summary-lbl { font-size: 11px; color: var(--color-text-3); margin-top: 4px; }
+  .panel-section h4 {
+    font-size: 14px; font-weight: 700; margin: 0 0 12px;
+    color: var(--color-text-1);
+  }
+  .receive-list {
+    display: flex; flex-direction: column; gap: 8px;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 8px;
+  }
+  .receive-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1.2fr 80px 100px 80px;
+    gap: 12px; align-items: center;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease;
+    font-size: 13px;
+  }
+  .receive-row:hover { background: var(--color-bg-2); }
+  .receive-row .name { font-weight: 600; color: var(--color-text-1); }
+  .receive-row .goods { color: var(--color-text-2); }
+  .receive-row .qty { font-weight: 700; color: var(--color-secondary); text-align: right; }
+  .receive-row .time { font-size: 11px; color: var(--color-text-3); }
+  .receive-row .status {
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; font-weight: 700; text-align: center;
+  }
+  .receive-row .status.done { background: #E0FAF5; color: #0E7490; }
+  .receive-row .status.pending { background: #FFF1E5; color: #C2410C; }
+  .btn-secondary {
+    background: var(--color-secondary); color: #fff;
+  }
+  .btn-secondary:hover { background: #0E5A6F; }
+
+  /* ===== 本月关键指标（4 个 KPI 卡片 4×1，数字不溢出） ===== */
+  .kpi-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px 0;
+  }
+  .kpi-card {
+    background: var(--color-bg-2);
+    border-radius: var(--radius-md);
+    padding: 14px 12px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+  }
+  .kpi-card:hover {
+    background: #fff;
+    border-color: var(--color-border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .kpi-card-label {
+    font-size: 11px; color: var(--color-text-3);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .kpi-card-num {
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .kpi-card-num .num {
+    font-size: 24px; font-weight: 800;
+    color: var(--color-text-1);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;  /* 等宽数字，避免滚动时抖动 */
+  }
+  .kpi-card-num .trend {
+    font-size: 11px; font-weight: 700;
+    padding: 2px 6px; border-radius: 4px;
+    background: rgba(20, 184, 166, 0.12); color: #0E7490;
+  }
+  .kpi-card-num .trend:has-text("↓") {
+    background: rgba(232, 93, 4, 0.12); color: #C2410C;
+  }
+  .kpi-card-bar {
+    height: 6px;
+    background: var(--color-border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .kpi-card-fill {
+    height: 100%;
+    background: var(--kpi-color, var(--color-primary));
+    border-radius: 3px;
+    /* GSAP 动画 width 0% → 目标% */
   }
 </style>
 </head>
@@ -137,20 +307,69 @@
           <h3>🗺️ 广东地区受捐分布</h3>
           <a href="#" class="more">详情 →</a>
         </div>
-        <div class="map-mini">
-          <div class="pin pulse" style="top:25%;left:55%;">📍 广州 · 2.6万</div>
-          <div class="pin" style="top:30%;left:65%;">📍 深圳 · 8.6万</div>
-          <div class="pin pulse" style="top:35%;left:48%;">📍 佛山 · 1.2万</div>
-          <div class="pin" style="top:50%;left:55%;">📍 东莞 · 1.8万</div>
-          <div class="pin pulse" style="top:65%;left:60%;">📍 梅州 · 8,600</div>
-          <div class="pin" style="top:55%;left:45%;">📍 肇庆 · 4,200</div>
-          <div class="pin pulse" style="top:75%;left:50%;">📍 茂名 · 3,800</div>
-          <div class="pin" style="top:85%;left:42%;">📍 湛江 · 5,600</div>
+        <div class="map-mini gd-map" id="gdMap">
+          <img src="../public/images/map/guangdong-map.jpg" alt="广东地图" class="gd-map-bg">
+          <!-- 8 个地级市 pin（位置匹配 minimax 广东地图） -->
+          <div class="gd-pin pulse" data-region="广州" data-val="26000" style="top:30%;left:42%;">
+            <span class="dot"></span><span class="num">2.6万</span>
+          </div>
+          <div class="gd-pin pulse" data-region="深圳" data-val="86000" style="top:62%;left:58%;">
+            <span class="dot"></span><span class="num">8.6万</span>
+          </div>
+          <div class="gd-pin" data-region="佛山" data-val="12000" style="top:40%;left:42%;">
+            <span class="dot"></span><span class="num">1.2万</span>
+          </div>
+          <div class="gd-pin" data-region="东莞" data-val="18000" style="top:48%;left:48%;">
+            <span class="dot"></span><span class="num">1.8万</span>
+          </div>
+          <div class="gd-pin" data-region="梅州" data-val="8600" style="top:18%;left:62%;">
+            <span class="dot"></span><span class="num">8,600</span>
+          </div>
+          <div class="gd-pin" data-region="肇庆" data-val="4200" style="top:25%;left:38%;">
+            <span class="dot"></span><span class="num">4,200</span>
+          </div>
+          <div class="gd-pin" data-region="茂名" data-val="3800" style="top:58%;left:32%;">
+            <span class="dot"></span><span class="num">3,800</span>
+          </div>
+          <div class="gd-pin" data-region="湛江" data-val="5600" style="top:75%;left:30%;">
+            <span class="dot"></span><span class="num">5,600</span>
+          </div>
         </div>
         <div class="flex-between text-xs text-muted mt-2">
           <span><span class="live-dot" style="display:inline-block;width:8px;height:8px;background:var(--color-primary);border-radius:50%;margin-right:4px;"></span> 正在派发</span>
           <span>共 21 个地级市 · 86 个县区</span>
         </div>
+      </div>
+
+      <!-- 受灾群众领取 modal（点击地图 pin 居中弹出） -->
+      <div class="receiving-mask" id="receivingMask">
+        <aside class="receiving-modal" id="receivingPanel">
+          <button class="panel-close" id="panelClose" aria-label="关闭">×</button>
+          <div class="panel-head">
+            <div class="panel-head-ico">📦</div>
+            <div>
+              <div class="panel-head-name" id="panelName">—</div>
+              <div class="panel-head-sub" id="panelSub">—</div>
+            </div>
+          </div>
+          <div class="panel-summary">
+            <div class="panel-summary-item">
+              <div class="panel-summary-num" id="panelTotal">0</div>
+              <div class="panel-summary-lbl">累计到达物资（件）</div>
+            </div>
+            <div class="panel-summary-item">
+              <div class="panel-summary-num" id="panelBenefit">0</div>
+              <div class="panel-summary-lbl">受惠群众（人）</div>
+            </div>
+          </div>
+          <div class="panel-section">
+            <h4>👥 受灾群众领取明细</h4>
+            <div class="receive-list" id="panelList">
+              <!-- JS 动态填充 -->
+            </div>
+          </div>
+          <a href="#" class="btn btn-secondary btn-block">查看完整领取记录 →</a>
+        </aside>
       </div>
     </div>
 
@@ -192,22 +411,26 @@
         <div class="card-head">
           <h3>📊 本月关键指标</h3>
         </div>
-        <div class="flex-col gap-3">
-          <div>
-            <div class="flex-between text-sm mb-1"><span>物资派发率</span><span class="fw-600 text-trust">96.8%</span></div>
-            <div class="progress"><div class="progress-bar success" style="width:96.8%"></div></div>
+        <div class="kpi-cards">
+          <div class="kpi-card" data-pct="96.8" data-color="#14B8A6">
+            <div class="kpi-card-label">物资派发率</div>
+            <div class="kpi-card-num"><span class="num" data-target="96.8" data-suffix="%">0%</span><span class="trend">↑ 2.1%</span></div>
+            <div class="kpi-card-bar"><div class="kpi-card-fill" style="width:0%"></div></div>
           </div>
-          <div>
-            <div class="flex-between text-sm mb-1"><span>反馈及时率</span><span class="fw-600 text-trust">98.2%</span></div>
-            <div class="progress"><div class="progress-bar success" style="width:98.2%"></div></div>
+          <div class="kpi-card" data-pct="98.2" data-color="#14B8A6">
+            <div class="kpi-card-label">反馈及时率</div>
+            <div class="kpi-card-num"><span class="num" data-target="98.2" data-suffix="%">0%</span><span class="trend">↑ 0.8%</span></div>
+            <div class="kpi-card-bar"><div class="kpi-card-fill" style="width:0%"></div></div>
           </div>
-          <div>
-            <div class="flex-between text-sm mb-1"><span>志愿者出勤率</span><span class="fw-600 text-primary">92.5%</span></div>
-            <div class="progress"><div class="progress-bar" style="width:92.5%"></div></div>
+          <div class="kpi-card" data-pct="92.5" data-color="#E85D04">
+            <div class="kpi-card-label">志愿者出勤率</div>
+            <div class="kpi-card-num"><span class="num" data-target="92.5" data-suffix="%">0%</span><span class="trend">↓ 1.2%</span></div>
+            <div class="kpi-card-bar"><div class="kpi-card-fill" style="width:0%"></div></div>
           </div>
-          <div>
-            <div class="flex-between text-sm mb-1"><span>受捐者满意度</span><span class="fw-600 text-primary">98.6 / 100</span></div>
-            <div class="progress"><div class="progress-bar gold" style="width:98.6%"></div></div>
+          <div class="kpi-card" data-pct="98.6" data-color="#C4842A">
+            <div class="kpi-card-label">受捐者满意度</div>
+            <div class="kpi-card-num"><span class="num" data-target="98.6" data-suffix="">0</span><span class="trend">↑ 1.5%</span></div>
+            <div class="kpi-card-bar"><div class="kpi-card-fill" style="width:0%"></div></div>
           </div>
         </div>
       </div>
@@ -215,11 +438,234 @@
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="../public/js/common.js"></script>
 <script>
   CS.renderDashHeader('慈善会', '王主任');
   CS.renderSidebar('charity', 'dashboard');
   CS.renderDashMsgBanner('charity');
+
+  // ===== 慈善会工作台 GSAP 动效 =====
+  if (typeof gsap !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1) 广东地图 8 个 pin 飞入（按数据量从大到小 stagger 错开）
+    const gdPins = document.querySelectorAll('.gd-pin');
+    if (gdPins.length) {
+      gsap.set(gdPins, { xPercent: -50, yPercent: -50, scale: 0, opacity: 0 });
+      const sortedPins = Array.from(gdPins).sort((a, b) => parseFloat(b.dataset.val) - parseFloat(a.dataset.val));
+      sortedPins.forEach((pin, i) => {
+        gsap.to(pin, {
+          scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.6)', delay: i * 0.08,
+          scrollTrigger: { trigger: '#gdMap', start: 'top 80%', once: true }
+        });
+      });
+    }
+
+    // 2) 4 个 KPI 卡片：横向 progress bar fill + 数字滚动 + 趋势动画
+    const kpiCards = document.querySelectorAll('.kpi-card');
+    if (kpiCards.length) {
+      kpiCards.forEach((card, i) => {
+        const fill = card.querySelector('.kpi-card-fill');
+        const numEl = card.querySelector('.num');
+        const trend = card.querySelector('.trend');
+        const target = parseFloat(card.dataset.pct);
+        const color = card.dataset.color;
+        const suffix = numEl.dataset.suffix || '';
+        card.style.setProperty('--kpi-color', color);
+
+        // 进度条 fill（width 0% → target%）
+        gsap.to(fill, {
+          width: target + '%', duration: 1.4, ease: 'power3.out',
+          delay: 0.1 * i,  // 4 张卡片 stagger 错开
+          scrollTrigger: { trigger: card, start: 'top 85%', once: true }
+        });
+        // 数字滚动
+        const counter = { val: 0 };
+        gsap.to(counter, {
+          val: target, duration: 1.2, delay: 0.1 * i, ease: 'power2.out',
+          scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+          onUpdate: () => { numEl.textContent = counter.val.toFixed(1) + suffix; }
+        });
+        // 趋势徽章从下方淡入
+        gsap.fromTo(trend, { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, duration: 0.4, delay: 0.1 * i + 0.5, ease: 'power2.out',
+            scrollTrigger: { trigger: card, start: 'top 85%', once: true } });
+      });
+    }
+
+    // ===== 广东地图点击 pin → 展示受灾群众领取 panel =====
+    // 8 地区受灾群众数据
+    const GD_REGIONS = {
+      '深圳': { total: 86000, benefit: 4280, rows: [
+        { name: '张伟', goods: '食品礼盒',   qty: 30, time: '2025-06-01', status: 'done' },
+        { name: '李娜', goods: '冬季衣物',   qty: 50, time: '2025-06-01', status: 'done' },
+        { name: '王强', goods: '医疗包',     qty: 20, time: '2025-05-31', status: 'done' },
+        { name: '陈芳', goods: '学习文具',   qty: 80, time: '2025-05-31', status: 'pending' },
+        { name: '刘洋', goods: '粮油米面',   qty: 25, time: '2025-05-30', status: 'done' }
+      ]},
+      '广州': { total: 26000, benefit: 1380, rows: [
+        { name: '赵敏', goods: '家庭食品',   qty: 40, time: '2025-06-02', status: 'done' },
+        { name: '黄强', goods: '儿童衣物',   qty: 60, time: '2025-06-01', status: 'done' },
+        { name: '周丽', goods: '医疗用品',   qty: 15, time: '2025-06-01', status: 'done' },
+        { name: '吴军', goods: '学习用品',   qty: 90, time: '2025-05-30', status: 'pending' },
+        { name: '郑爽', goods: '粮油米面',   qty: 35, time: '2025-05-29', status: 'done' }
+      ]},
+      '东莞': { total: 18000, benefit: 920, rows: [
+        { name: '林涛', goods: '食品礼盒',   qty: 25, time: '2025-06-01', status: 'done' },
+        { name: '徐丽', goods: '冬季衣物',   qty: 45, time: '2025-05-31', status: 'done' },
+        { name: '孙杨', goods: '医疗包',     qty: 18, time: '2025-05-31', status: 'done' },
+        { name: '马超', goods: '学习文具',   qty: 70, time: '2025-05-30', status: 'pending' },
+        { name: '朱琳', goods: '粮油米面',   qty: 20, time: '2025-05-29', status: 'done' }
+      ]},
+      '佛山': { total: 12000, benefit: 640, rows: [
+        { name: '胡军', goods: '家庭食品',   qty: 32, time: '2025-05-30', status: 'done' },
+        { name: '罗静', goods: '儿童衣物',   qty: 55, time: '2025-05-30', status: 'done' },
+        { name: '梁辉', goods: '医疗用品',   qty: 12, time: '2025-05-29', status: 'done' },
+        { name: '宋佳', goods: '学习用品',   qty: 80, time: '2025-05-28', status: 'pending' },
+        { name: '韩雪', goods: '粮油米面',   qty: 28, time: '2025-05-27', status: 'done' }
+      ]},
+      '梅州': { total: 8600, benefit: 460, rows: [
+        { name: '杨柳', goods: '粮油米面',   qty: 22, time: '2025-05-30', status: 'done' },
+        { name: '邓超', goods: '儿童衣物',   qty: 48, time: '2025-05-29', status: 'done' },
+        { name: '彭于', goods: '医疗包',     qty: 14, time: '2025-05-29', status: 'done' },
+        { name: '曾志', goods: '学习文具',   qty: 65, time: '2025-05-28', status: 'pending' },
+        { name: '蒋勤', goods: '食品礼盒',   qty: 18, time: '2025-05-27', status: 'done' }
+      ]},
+      '湛江': { total: 5600, benefit: 320, rows: [
+        { name: '蔡明', goods: '家庭食品',   qty: 28, time: '2025-05-29', status: 'done' },
+        { name: '余男', goods: '冬季衣物',   qty: 42, time: '2025-05-29', status: 'done' },
+        { name: '潘虹', goods: '医疗用品',   qty: 10, time: '2025-05-28', status: 'pending' },
+        { name: '杜淳', goods: '学习用品',   qty: 58, time: '2025-05-27', status: 'done' },
+        { name: '夏雨', goods: '粮油米面',   qty: 24, time: '2025-05-26', status: 'done' }
+      ]},
+      '肇庆': { total: 4200, benefit: 240, rows: [
+        { name: '金莎', goods: '粮油米面',   qty: 20, time: '2025-05-28', status: 'done' },
+        { name: '汪峰', goods: '儿童衣物',   qty: 38, time: '2025-05-28', status: 'done' },
+        { name: '田亮', goods: '医疗包',     qty: 8,  time: '2025-05-27', status: 'pending' },
+        { name: '万茜', goods: '学习文具',   qty: 50, time: '2025-05-26', status: 'done' },
+        { name: '江珊', goods: '食品礼盒',   qty: 15, time: '2025-05-25', status: 'done' }
+      ]},
+      '茂名': { total: 3800, benefit: 210, rows: [
+        { name: '温峥', goods: '家庭食品',   qty: 24, time: '2025-05-28', status: 'done' },
+        { name: '秦岚', goods: '冬季衣物',   qty: 35, time: '2025-05-27', status: 'done' },
+        { name: '郝建', goods: '医疗用品',   qty: 9,  time: '2025-05-27', status: 'pending' },
+        { name: '高虎', goods: '学习用品',   qty: 48, time: '2025-05-26', status: 'done' },
+        { name: '叶青', goods: '粮油米面',   qty: 18, time: '2025-05-25', status: 'done' }
+      ]}
+    };
+
+    const receivingMask = document.getElementById('receivingMask');
+    const receivingPanel = document.getElementById('receivingPanel');
+    const panelName      = document.getElementById('panelName');
+    const panelSub       = document.getElementById('panelSub');
+    const panelTotal     = document.getElementById('panelTotal');
+    const panelBenefit   = document.getElementById('panelBenefit');
+    const panelList      = document.getElementById('panelList');
+    const panelCloseBtn  = document.getElementById('panelClose');
+
+    // state 跟踪（避开 GSAP 写回 inline style 不可靠）
+    let panelOpen = false;
+    let currentRegion = null;
+
+    // Modal 初始隐藏（mask 全透 + panel 缩放 0.85）
+    gsap.set(receivingMask, { opacity: 0, pointerEvents: 'none' });
+    gsap.set(receivingPanel, { scale: 0.85, opacity: 0 });
+
+    function showPanel(region) {
+      const data = GD_REGIONS[region];
+      if (!data) return;
+
+      // 切换 pin active
+      document.querySelectorAll('.gd-pin').forEach(p => p.classList.remove('active'));
+      document.querySelector(`.gd-pin[data-region="${region}"]`)?.classList.add('active');
+
+      // 填充数据
+      panelName.textContent = region;
+      panelSub.textContent   = `广东省 · 受捐地区 · ${data.total.toLocaleString()} 件物资已到达`;
+      panelTotal.textContent = '0';
+      panelBenefit.textContent = '0';
+
+      // 5 行受灾群众
+      panelList.innerHTML = data.rows.map(row => `
+        <div class="receive-row">
+          <span class="name">${row.name}</span>
+          <span class="goods">${row.goods}</span>
+          <span class="qty">${row.qty} 件</span>
+          <span class="time">${row.time}</span>
+          <span class="status ${row.status}">${row.status === 'done' ? '✓ 已领取' : '⏳ 待领取'}</span>
+        </div>
+      `).join('');
+
+      // Modal 弹出（mask 淡入 + panel 缩放进入）
+      if (!panelOpen) {
+        // 打开（mask + panel 同时动）
+        gsap.to(receivingMask, {
+          opacity: 1, duration: 0.3, ease: 'power2.out',
+          onStart: () => { receivingMask.style.pointerEvents = 'auto'; }
+        });
+        gsap.fromTo(receivingPanel,
+          { scale: 0.85, opacity: 0, y: 20 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.4)',
+            onStart: () => { panelOpen = true; }
+          }
+        );
+      } else {
+        // 已是开态：刷新数据（panel 已在 DOM，重置滚动 + 重跑数字）
+        receivingPanel.scrollTop = 0;
+      }
+      currentRegion = region;
+
+      // 数字滚动（总数 + 受益）
+      const totalC = { val: 0 };
+      gsap.to(totalC, {
+        val: data.total, duration: 1.2, ease: 'power2.out',
+        onUpdate: () => { panelTotal.textContent = Math.round(totalC.val).toLocaleString(); }
+      });
+      const benefitC = { val: 0 };
+      gsap.to(benefitC, {
+        val: data.benefit, duration: 1.2, ease: 'power2.out',
+        onUpdate: () => { panelBenefit.textContent = Math.round(benefitC.val).toLocaleString(); }
+      });
+
+      // 5 行受灾群众 stagger 滑入
+      panelList.querySelectorAll('.receive-row').forEach((row, i) => {
+        gsap.fromTo(row, { opacity: 0, x: -20 },
+          { opacity: 1, x: 0, duration: 0.4, delay: 0.3 + i * 0.08, ease: 'power2.out' });
+      });
+    }
+
+    function closePanel() {
+      gsap.to(receivingPanel, { scale: 0.9, opacity: 0, y: 10, duration: 0.3, ease: 'power2.in' });
+      gsap.to(receivingMask, {
+        opacity: 0, duration: 0.3, ease: 'power2.in',
+        onComplete: () => {
+          panelOpen = false; currentRegion = null;
+          receivingMask.style.pointerEvents = 'none';
+        }
+      });
+      document.querySelectorAll('.gd-pin').forEach(p => p.classList.remove('active'));
+    }
+
+    // 绑定 8 个 pin 点击
+    document.querySelectorAll('.gd-pin').forEach(pin => {
+      pin.addEventListener('click', () => showPanel(pin.dataset.region));
+    });
+
+    // 关闭 modal（按钮 + 点击 mask 背景）
+    if (panelCloseBtn) {
+      panelCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closePanel();
+      });
+    }
+    if (receivingMask) {
+      receivingMask.addEventListener('click', (e) => {
+        if (e.target === receivingMask) closePanel();  // 点 mask 背景关闭
+      });
+    }
+  }
 </script>
 </body>
 </html>

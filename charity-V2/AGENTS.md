@@ -537,3 +537,50 @@ mavis mcp call playwright browser_take_screenshot ...
 ```
 
 **统一原则**：**加新元素前先看父容器布局上下文**——flex 容器要 wrap + flex-basis、grid 容器要 grid-column、overflow 容器要单独 wrapper。不看就加必踩。
+
+## 首页 splash 入场动画 — 方案 3（最终采纳）
+
+**位置**：`index.html` `.splash` + `.splash-img` 区域
+
+**决策**：从中心点向外爆开（30 张真实慈善图 12° 等分极坐标散开）
+
+**参数**（累计 3 轮微调后的最终版）：
+- **CSS** `.splash-img`：150×150px, border-radius 20, margin -75 -75, transform-style preserve-3d, backface-visibility hidden
+- **GSAP Phase 0 起点**：`gsap.set(img, { x: 0, y: 0, scale: 0.5, opacity: 1, rotation: 0 })` —— 30 张小图聚在中心点可见
+- **GSAP Phase 1 爆开**：
+  ```js
+  splashTl.to(splashImgs, {
+    x: (i, el) => (parseFloat(el.dataset.ix) || 0) * 1.5,   // 散开距离 ×1.5（贴边爆开）
+    y: (i, el) => (parseFloat(el.dataset.iy) || 0) * 1.5,
+    rotation: (i) => (i % 2 === 0 ? 1 : -1) * (30 + i * 4),  // 旋转 30°→142°（慢）
+    scale: 2.0, opacity: 0,                                   // 边散开边淡出
+    duration: 1.2, ease: 'power3.out', stagger: 0.04
+  }, 0.0);
+  ```
+- **Phase 2-4**：光晕扩散 + 品牌名"慈商联营"弹性出现 + splash 缩出 + 导航栏淡入
+- **整段时长**：2.9s（比方案 2 的 4.3s 更紧凑更戏剧）
+
+**3 轮微调历程**：
+1. 初版：rotation 180+12i = 180°→528°，scale 终点 1.5
+2. 第 1 轮：rotation 90+8i = 90°→314°，scale 终点 2.0，CSS 130×130
+3. 第 2 轮（最终）：rotation 30+4i = 30°→142°，散开 × 1.5，CSS 150×150
+
+**方案对比**（用户决策依据）：
+| 方案 | 节奏 | 视觉 | 状态 |
+|---|---|---|---|
+| 方案 1 3D 翻牌 | 4.0s | 翻牌飞入 | 未采纳 |
+| 方案 2 沿螺旋 path 飞入 | 4.3s | 远方飞来的卡片 | 备选 |
+| **方案 3 中心点爆开（最终）** | **2.9s** | **中心能量爆炸** | **✅ 采纳** |
+
+**复用模板**（跨页面可参考的 GSAP 中心爆开模式）：
+```js
+// 1. 30 张图聚合在中心（小图可见）
+gsap.set(splashImgs, { x: 0, y: 0, scale: 0.5, opacity: 1 });
+// 2. 散开到极坐标位置 + 边散开边淡出
+gsap.to(splashImgs, {
+  x: (i, el) => (parseFloat(el.dataset.ix) || 0) * 1.5,
+  y: (i, el) => (parseFloat(el.dataset.iy) || 0) * 1.5,
+  scale: 2.0, opacity: 0,
+  duration: 1.2, ease: 'power3.out', stagger: 0.04
+}, 0.0);
+```

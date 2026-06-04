@@ -562,6 +562,57 @@ hr { border: 0; height: 1px; background: var(--color-border); margin: 24px 0; }
   font-size: 280px; opacity: 0.08;
   pointer-events: none;
 }
+
+/* ===== 30 张真实慈善图（沿螺旋 path 飞入中心 + 从大变小） ===== */
+.splash-spiral {
+  position: absolute; top: 50%; left: 50%;
+  width: 1600px; height: 1600px;
+  margin: -800px 0 0 -800px;
+  pointer-events: none;
+  visibility: hidden; /* SVG 仅供 MotionPathPlugin 引用，不显示 */
+  z-index: 0;
+}
+.splash-images {
+  position: absolute;
+  inset: 0;
+  z-index: 1; /* 在 .splash-bg 之上、.splash-content 之下 */
+  /* 3D 透视 —— 关键！让 rotationY/z 有空间感 */
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+.splash-img {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 150px; height: 150px;
+  margin: -75px 0 0 -75px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18), 0 0 0 3px rgba(255, 255, 255, 0.5);
+  /* 3D 子元素保留 */
+  transform-style: preserve-3d;
+  backface-visibility: hidden; /* rotationY 180° 时背面不可见 */
+  will-change: transform, opacity;
+  /* 初始位置由 GSAP set data-ix / data-iy */
+}
+.splash-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===== 光晕（图片聚合后扩散的"光"） ===== */
+.splash-flash {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 120px; height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFFFFF 0%, #FFF1E5 30%, #FFE4D2 60%, rgba(255, 228, 210, 0) 80%);
+  z-index: 3; /* 在图之上、品牌之下 */
+  pointer-events: none;
+  /* GSAP 控制 scale 0→5 + opacity 0→1→0 */
+}
 .splash-content {
   position: relative; z-index: 2;
   text-align: center;
