@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>志愿者工作台 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 评分核心卡（双卡并排：贡献分 + 爱心足迹）*/
+  .h5-score-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: -32px 16px 0;
+    position: relative;
+    z-index: 5;
+  }
+  .h5-score-card {
+    border-radius: 16px;
+    padding: 16px 14px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .h5-score-card.score {
+    background: linear-gradient(135deg, #14B8A6 0%, #0D8A7E 100%);
+  }
+  .h5-score-card.footprint {
+    background: linear-gradient(135deg, #FF8B3D 0%, #E85D04 100%);
+  }
+  .h5-score-card .head {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 500;
+    opacity: 0.92;
+    margin-bottom: 8px;
+  }
+  .h5-score-card .head .ic { font-size: 14px; }
+  .h5-score-card .big {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .h5-score-card .big .unit { font-size: 13px; font-weight: 400; opacity: 0.85; margin-left: 2px; }
+  .h5-score-card .sub {
+    font-size: 11px; opacity: 0.88;
+  }
+  /* 圆环进度（透明 svg 在右侧）*/
+  .h5-score-card .ring {
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 56px; height: 56px;
+  }
+
+  /* 5 维度评分 — 横滑 */
+  .h5-dim-scroll {
+    display: flex; gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -16px;
+    padding: 0 16px 4px;
+    scroll-snap-type: x mandatory;
+  }
+  .h5-dim-scroll::-webkit-scrollbar { display: none; }
+  .h5-dim {
+    flex-shrink: 0;
+    width: 110px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+    scroll-snap-align: start;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .h5-dim .ic {
+    width: 36px; height: 36px;
+    margin: 0 auto 6px;
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .h5-dim .ic.trust { background: rgba(20,184,166,0.1); color: #14B8A6; }
+  .h5-dim .ic.gold { background: rgba(196,132,42,0.12); color: #C4842A; }
+  .h5-dim .ic.danger { background: rgba(220,38,38,0.1); color: #DC2626; }
+  .h5-dim .ic.primary { background: rgba(232,93,4,0.1); color: #E85D04; }
+  .h5-dim .ic.info { background: rgba(14,165,233,0.1); color: #0EA5E9; }
+  .h5-dim .label { font-size: 12px; color: var(--h5-text-3); margin-bottom: 4px; }
+  .h5-dim .value {
+    font-size: 22px; font-weight: 700; color: var(--h5-text);
+    font-family: -apple-system, sans-serif;
+  }
+  .h5-dim .value .max { font-size: 11px; color: var(--h5-text-3); font-weight: 400; }
+  .h5-dim .meta { font-size: 10px; color: var(--h5-text-3); margin-top: 4px; }
+
+  /* 兑换卡 2×3 */
+  .h5-exchange-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .h5-exchange {
+    background: linear-gradient(135deg, #FFF8E7 0%, #FFEFD5 100%);
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid #F5D78E;
+    position: relative;
+  }
+  .h5-exchange .pts {
+    font-size: 18px; font-weight: 700; color: #C44503;
+    font-family: -apple-system, sans-serif;
+  }
+  .h5-exchange .name {
+    font-size: 12px; color: var(--h5-text);
+    margin: 2px 0 4px;
+  }
+  .h5-exchange .btn {
+    display: inline-block;
+    padding: 2px 10px;
+    background: #C44503;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .h5-exchange.locked {
+    background: var(--h5-bg);
+    border-color: var(--h5-border);
+    opacity: 0.6;
+  }
+  .h5-exchange.locked .pts { color: var(--h5-text-3); }
+  .h5-exchange.locked .btn { background: var(--h5-text-3); }
+
+  /* 奖章横滑 */
+  .h5-medal-scroll {
+    display: flex; gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -16px;
+    padding: 0 16px 4px;
+  }
+  .h5-medal-scroll::-webkit-scrollbar { display: none; }
+  .h5-medal {
+    flex-shrink: 0;
+    width: 80px;
+    text-align: center;
+  }
+  .h5-medal .ic {
+    width: 64px; height: 64px;
+    margin: 0 auto 6px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    position: relative;
+  }
+  .h5-medal.unlocked .ic {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    box-shadow: 0 4px 12px rgba(255,165,0,0.4);
+  }
+  .h5-medal.unlocked .ic::after {
+    content: "✓";
+    position: absolute;
+    bottom: -2px; right: -2px;
+    width: 20px; height: 20px;
+    background: #16A34A;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid #fff;
+  }
+  .h5-medal.locked .ic {
+    background: var(--h5-divider);
+    color: var(--h5-text-3);
+    filter: grayscale(0.8);
+  }
+  .h5-medal .name {
+    font-size: 12px; font-weight: 600;
+    color: var(--h5-text);
+  }
+  .h5-medal.locked .name { color: var(--h5-text-3); }
+  .h5-medal .date { font-size: 10px; color: var(--h5-text-3); margin-top: 2px; }
+
+  /* 任务列表 */
+  .h5-task-list { display: flex; flex-direction: column; }
+  .h5-task-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-task-item:last-child { border-bottom: 0; }
+  .h5-task-item .ic {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .h5-task-item .body { flex: 1; min-width: 0; }
+  .h5-task-item .title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .h5-task-item .meta { font-size: 12px; color: var(--h5-text-3); }
+  .h5-task-item .right { display: flex; align-items: center; gap: 8px; }
+  .h5-task-item .progress-mini {
+    width: 50px; height: 4px; background: var(--h5-divider); border-radius: 2px; overflow: hidden;
+  }
+  .h5-task-item .progress-mini > div { height: 100%; background: var(--h5-trust); }
+
+  /* 进度（爱心足迹卡内）*/
+  .h5-footprint-progress {
+    height: 6px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .h5-footprint-progress > div {
+    height: 100%;
+    background: #fff;
+    border-radius: 3px;
+    width: 0%;
+  }
+  .h5-footprint-bar {
+    display: flex; justify-content: space-between;
+    font-size: 10px;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+
+  /* 维度 modal 规则列表 */
+  .h5-rule-list {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .h5-rule-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 10px 12px;
+    background: var(--h5-bg);
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .h5-rule-item .badge {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    background: var(--h5-primary);
+    color: #fff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .h5-dim-modal-stat {
+    background: var(--h5-primary-soft);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .h5-dim-modal-stat .v {
+    font-size: 28px; font-weight: 700; color: var(--h5-primary);
+  }
+  .h5-dim-modal-stat .l { font-size: 12px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-modal-section-title {
+    font-size: 13px; font-weight: 600; color: var(--h5-text);
+    margin: 12px 0 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .h5-modal-section-title::before {
+    content: ""; width: 3px; height: 12px;
+    background: var(--h5-primary); border-radius: 2px;
+  }
+</style>
+</head>
+<body data-role="volunteer" class="has-tabbar">
+
+<!-- 顶部透明 nav -->
+<div class="h5-nav transparent">
+  <div class="h5-nav-back" onclick="location.href='../index.html'">‹</div>
+  <div class="h5-nav-title">志愿者工作台</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openMsg()">🔔<span class="badge">5</span></div>
+  </div>
+</div>
+
+<div class="h5-page">
+
+  <!-- Hero 欢迎区 -->
+  <div class="h5-hero" style="padding-bottom: 56px;">
+    <div class="h5-hero-content">
+      <div class="h5-hero-greet">
+        <span class="wave">👋</span> 你好，<span id="userName">张伟</span>
+      </div>
+      <div class="h5-hero-desc">
+        欢迎回到志愿者工作台。今天是您加入慈商联营的 <b>第 186 天</b>，累计服务 <b>156 小时</b>。
+      </div>
+      <div class="h5-hero-tags">
+        <span class="h5-hero-tag">🏅 注册志愿者</span>
+        <span class="h5-hero-tag">✓ 资质已认证</span>
+        <span class="h5-hero-tag">📍 深圳鹏星社工</span>
+      </div>
+    </div>
+    <div class="h5-hero-cta" onclick="openTask()">📋 查看任务</div>
+  </div>
+
+  <!-- 评分双卡 -->
+  <div class="h5-score-row">
+    <div class="h5-score-card score">
+      <div class="head"><span class="ic">⭐</span> 综合贡献分</div>
+      <div class="big"><span class="counter" data-target="850">0</span><span class="unit"> / 1000</span></div>
+      <div class="sub">📈 较上周 +28</div>
+    </div>
+    <div class="h5-score-card footprint">
+      <div class="head"><span class="ic">👣</span> 爱心足迹</div>
+      <div class="big"><span class="counter" data-target="13033">0</span><span class="unit"> 步</span></div>
+      <div class="sub">8.70 km · ¥0.87 已捐赠</div>
+      <div class="h5-footprint-progress"><div data-width="70%"></div></div>
+      <div class="h5-footprint-bar"><span>0</span><span>目标 18,000 步</span></div>
+    </div>
+  </div>
+
+  <!-- KPI 横滑 4 张卡 -->
+  <div class="h5-section" style="padding-top: 16px;">
+    <div class="h5-card-title">
+      <div class="title">📊 我的数据</div>
+      <a class="more">全部 →</a>
+    </div>
+    <div class="h5-kpi-grid">
+      <div class="h5-kpi">
+        <div class="ic-deco">⏰</div>
+        <div class="label">待执行</div>
+        <div class="value"><span class="counter" data-target="3">0</span></div>
+        <div class="trend">含 1 紧急</div>
+      </div>
+      <div class="h5-kpi theme-trust">
+        <div class="ic-deco">✅</div>
+        <div class="label">已完成</div>
+        <div class="value"><span class="counter" data-target="28">0</span></div>
+        <div class="trend up">本年</div>
+      </div>
+      <div class="h5-kpi theme-gold">
+        <div class="ic-deco">🕐</div>
+        <div class="label">服务时长</div>
+        <div class="value"><span class="counter" data-target="156">0</span><span class="unit">h</span></div>
+        <div class="trend">本年</div>
+      </div>
+      <div class="h5-kpi theme-info">
+        <div class="ic-deco">👥</div>
+        <div class="label">受惠人次</div>
+        <div class="value"><span class="counter" data-target="286">0</span></div>
+        <div class="trend">经您 2 手</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 维度评分 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card-title">
+      <div class="title">🎯 评分维度</div>
+      <a class="more" onclick="openDimModal('服务时长')">详情 →</a>
+    </div>
+    <div class="h5-dim-scroll">
+      <div class="h5-dim" onclick="openDimModal('服务时长')">
+        <div class="ic trust">⏰</div>
+        <div class="label">服务时长</div>
+        <div class="value"><span class="counter" data-target="92">0</span><span class="max">/100</span></div>
+        <div class="meta">📌 已累计 156h</div>
+      </div>
+      <div class="h5-dim" onclick="openDimModal('服务次数')">
+        <div class="ic gold">📋</div>
+        <div class="label">服务次数</div>
+        <div class="value"><span class="counter" data-target="88">0</span><span class="max">/100</span></div>
+        <div class="meta">📌 本年 28 次</div>
+      </div>
+      <div class="h5-dim" onclick="openDimModal('服务评价')">
+        <div class="ic danger">⭐</div>
+        <div class="label">服务评价</div>
+        <div class="value"><span class="counter" data-target="95">0</span><span class="max">/100</span></div>
+        <div class="meta">📌 26 条 5★</div>
+      </div>
+      <div class="h5-dim" onclick="openDimModal('培训完成率')">
+        <div class="ic primary">🎓</div>
+        <div class="label">培训完成率</div>
+        <div class="value"><span class="counter" data-target="100">0</span><span class="max">/100</span></div>
+        <div class="meta">📌 8/8 已结业</div>
+      </div>
+      <div class="h5-dim" onclick="openDimModal('守信行为')">
+        <div class="ic info">🤝</div>
+        <div class="label">守信行为</div>
+        <div class="value"><span class="counter" data-target="90">0</span><span class="max">/100</span></div>
+        <div class="meta">📌 无失约 0 次</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 当前任务 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card-title">
+      <div class="title">📋 当前任务</div>
+      <a class="more">全部 →</a>
+    </div>
+    <div class="h5-card">
+      <div class="h5-task-list">
+        <div class="h5-task-item">
+          <div class="ic" style="background:linear-gradient(135deg,#FFE4D2,#FAEFD9);">🍞</div>
+          <div class="body">
+            <div class="title">美心临期面包 · 五华县派发</div>
+            <div class="meta">1,200 件 · 已派发 720 · 受惠 56/86 户</div>
+          </div>
+          <div class="right">
+            <div class="progress-mini"><div style="width:65%"></div></div>
+            <span class="h5-tag primary">派发中</span>
+          </div>
+        </div>
+        <div class="h5-task-item">
+          <div class="ic" style="background:linear-gradient(135deg,#DC2626,#F59E0B);">🚨</div>
+          <div class="body">
+            <div class="title">云南昭通地震救援</div>
+            <div class="meta">协助派发帐篷棉被</div>
+          </div>
+          <div class="right">
+            <span class="h5-tag danger">🚨 紧急</span>
+          </div>
+        </div>
+        <div class="h5-task-item">
+          <div class="ic" style="background:linear-gradient(135deg,#E0FAF5,#E5F0F4);">🥛</div>
+          <div class="body">
+            <div class="title">伊利儿童牛奶 · 河源派发</div>
+            <div class="meta">600 盒 · 18/60 户</div>
+          </div>
+          <div class="right">
+            <div class="progress-mini"><div style="width:30%"></div></div>
+            <span class="h5-tag primary">派发中</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 贡献分兑换 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card-title">
+      <div class="title">🎁 贡献分兑换</div>
+      <a class="more" style="color:#C44503;">余额 850 分 →</a>
+    </div>
+    <div class="h5-card">
+      <div class="h5-exchange-grid">
+        <div class="h5-exchange">
+          <div class="pts">200</div>
+          <div class="name">保温杯</div>
+          <div class="btn">兑换</div>
+        </div>
+        <div class="h5-exchange">
+          <div class="pts">300</div>
+          <div class="name">爱心 T 恤</div>
+          <div class="btn">兑换</div>
+        </div>
+        <div class="h5-exchange">
+          <div class="pts">500</div>
+          <div class="name">体检套餐</div>
+          <div class="btn">兑换</div>
+        </div>
+        <div class="h5-exchange">
+          <div class="pts">600</div>
+          <div class="name">公益书籍</div>
+          <div class="btn">兑换</div>
+        </div>
+        <div class="h5-exchange">
+          <div class="pts">800</div>
+          <div class="name">志愿勋章</div>
+          <div class="btn">兑换</div>
+        </div>
+        <div class="h5-exchange locked">
+          <div class="pts">1000</div>
+          <div class="name">年度盛典门票</div>
+          <div class="btn">还差 150</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 服务荣誉墙 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card-title">
+      <div class="title">🏅 服务荣誉墙</div>
+      <a class="more">3/8 已解锁</a>
+    </div>
+    <div class="h5-medal-scroll">
+      <div class="h5-medal unlocked">
+        <div class="ic">🏅</div>
+        <div class="name">注册志愿者</div>
+        <div class="date">2024-12-08</div>
+      </div>
+      <div class="h5-medal unlocked">
+        <div class="ic">⭐</div>
+        <div class="name">百小时之星</div>
+        <div class="date">2025-04-15</div>
+      </div>
+      <div class="h5-medal unlocked">
+        <div class="ic">💎</div>
+        <div class="name">年度优秀</div>
+        <div class="date">2025-05-30</div>
+      </div>
+      <div class="h5-medal locked">
+        <div class="ic">👑</div>
+        <div class="name">千小时荣誉</div>
+        <div class="date">还差 844h</div>
+      </div>
+      <div class="h5-medal locked">
+        <div class="ic">🎖️</div>
+        <div class="name">资深导师</div>
+        <div class="date">需带教 5 人</div>
+      </div>
+      <div class="h5-medal locked">
+        <div class="ic">🌟</div>
+        <div class="name">全国百强</div>
+        <div class="date">需进入 Top 100</div>
+      </div>
+      <div class="h5-medal locked">
+        <div class="ic">🛡️</div>
+        <div class="name">应急先锋</div>
+        <div class="date">需参与 3 次应急</div>
+      </div>
+      <div class="h5-medal locked">
+        <div class="ic">❤️</div>
+        <div class="name">爱心大使</div>
+        <div class="date">需 10 次五星评价</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 爱心足迹捐赠规则 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card-title">
+      <div class="title">👣 爱心足迹捐赠</div>
+    </div>
+    <div class="h5-card" style="font-size: 13px; line-height: 1.7; color: var(--h5-text-2);">
+      <div>· 每累计 <b style="color:var(--h5-primary);">1 万步</b>，平台自动捐赠 <b style="color:var(--h5-primary);">¥1.00</b></div>
+      <div>· 每累计 <b style="color:var(--h5-primary);">10 公里</b>，额外捐赠 <b style="color:var(--h5-primary);">¥2.00</b></div>
+      <div>· 您已累计 <b>13,033 步 · 8.70 km</b></div>
+      <div>· 已自动捐赠 <b style="color:var(--h5-primary);">¥0.87</b>（含本周 ¥0.50）</div>
+    </div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab active"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="openTask()"><div class="tab-ic">📋</div><div class="tab-label">任务</div></div>
+  <div class="h5-tab" onclick="openMsg()"><div class="tab-ic" style="position:relative;">🔔<span class="badge" style="position:absolute;top:-4px;right:-8px;min-width:16px;height:16px;background:var(--h5-danger);color:#fff;font-size:10px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;padding:0 4px;">5</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="openProfile()"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<!-- 5 维度详情 modal -->
+<div class="h5-modal-mask" id="dimModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="dimModalTitle">服务时长</div>
+      <div class="close" onclick="H5.closeModal('dimModal')">✕</div>
+    </div>
+    <div class="h5-modal-body">
+      <div class="h5-dim-modal-stat">
+        <div class="v"><span id="dimModalScore">92</span><span style="font-size:14px;color:var(--h5-text-3);">/100</span></div>
+        <div class="l" id="dimModalBase">已累计 156h</div>
+      </div>
+
+      <div class="h5-modal-section-title">得分依据</div>
+      <div class="h5-rule-list" id="dimModalRules">
+        <!-- JS 注入 -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 通用提示 modal（消息中心、任务等） -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center;padding:32px 20px;">
+      <!-- 内容 -->
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  // 设置角色色（顶部 hero 用 volunteer 主色）
+  H5.setRole('volunteer');
+
+  // 通用提示
+  function openMsg() {
+    document.getElementById('tipTitle').textContent = '消息中心';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px;margin-bottom:16px;">🔔</div>' +
+      '<div style="font-size:18px;font-weight:600;margin-bottom:8px;">5 条未读消息</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">' +
+      '新派发任务待领取<br>物资已到达区域仓<br>志愿者培训通知<br>新协同任务派发<br>5 月运营月报已生成' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">查看全部</button>';
+    H5.openModal('tipModal');
+  }
+  function openTask() {
+    document.getElementById('tipTitle').textContent = '任务列表';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:left;font-size:14px;line-height:1.8;">' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🍞 美心面包派发 <span class="h5-tag primary" style="float:right;">派发中</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🚨 云南昭通地震 <span class="h5-tag danger" style="float:right;">紧急</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🥛 伊利牛奶派发 <span class="h5-tag primary" style="float:right;">派发中</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">📚 山区图书角 <span class="h5-tag gold" style="float:right;">待开始</span></div>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+  function openProfile() {
+    document.getElementById('tipTitle').textContent = '我的';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="width:72px;height:72px;border-radius:36px;background:linear-gradient(135deg,#14B8A6,#0D8A7E);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:8px auto 12px;">张</div>' +
+      '<div style="font-size:18px;font-weight:600;">张伟</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);margin-bottom:20px;">注册志愿者 · 已认证</div>' +
+      '<div style="text-align:left;font-size:14px;">' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">📋 我的任务 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">📊 服务统计 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">⚙️ 账户设置 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;display:flex;justify-content:space-between;color:var(--h5-danger);">🚪 退出登录 <span>›</span></div>' +
+      '</div></div>';
+    H5.openModal('tipModal');
+  }
+
+  // 维度 modal
+  function openDimModal(dim) {
+    const data = H5.DIM_RULES.volunteer[dim];
+    if (!data) return;
+    document.getElementById('dimModalTitle').textContent = dim;
+    document.getElementById('dimModalScore').textContent = data.current.split('/')[0];
+    document.getElementById('dimModalBase').textContent = data.base;
+    document.getElementById('dimModalRules').innerHTML = data.rules.map((r, i) =>
+      `<div class="h5-rule-item"><div class="badge">${i+1}</div><div>${r}</div></div>`
+    ).join('');
+    H5.openModal('dimModal');
+  }
+
+  // 入场动效
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    // hero 缩放入
+    gsap.fromTo('.h5-hero-content > *',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }
+    );
+    gsap.fromTo('.h5-hero-cta',
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, delay: 0.3, ease: 'back.out(1.6)' }
+    );
+    // 评分双卡上浮
+    gsap.fromTo('.h5-score-card',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, delay: 0.2, stagger: 0.12, ease: 'back.out(1.4)' }
+    );
+    // 进度条 + 爱心足迹条
+    gsap.to('.h5-footprint-progress > div', { width: '70%', duration: 1.2, delay: 0.6, ease: 'power2.out' });
+    // KPI 数字滚动
+    document.querySelectorAll('.counter').forEach(el => {
+      H5.countUp(el, el.dataset.target, 1.4);
+    });
+    // 任务小进度条
+    gsap.utils.toArray('.h5-task-item .progress-mini > div').forEach(b => {
+      const w = b.getAttribute('style')?.match(/width:(\d+%)/)?.[1] || '0%';
+      gsap.fromTo(b, { width: '0%' }, { width: w, duration: 1, delay: 0.8, ease: 'power2.out' });
+    });
+    // 各 section 入场
+    gsap.utils.toArray('.h5-section').forEach((sec, i) => {
+      gsap.fromTo(sec,
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.4 + i * 0.08, ease: 'power2.out' }
+      );
+    });
+  });
+</script>
+</body>
+</html>

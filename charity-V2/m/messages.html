@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>消息中心 — 慈商联营</title>
+<link rel="stylesheet" href="public/css/h5.css">
+<style>
+  .h5-msg-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-msg-tabs::-webkit-scrollbar { display: none; }
+  .h5-msg-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--h5-text-2);
+    background: var(--h5-bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .h5-msg-tab.active {
+    background: var(--h5-primary);
+    color: #fff;
+    font-weight: 600;
+  }
+  .h5-msg-tab .cnt {
+    margin-left: 4px;
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  .h5-msg-item {
+    display: flex; gap: 12px;
+    padding: 14px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    position: relative;
+  }
+  .h5-msg-item.unread {
+    background: linear-gradient(90deg, rgba(232,93,4,0.04) 0%, transparent 60%);
+  }
+  .h5-msg-item.unread::before {
+    content: "";
+    position: absolute;
+    left: 8px; top: 22px;
+    width: 6px; height: 6px;
+    background: var(--h5-primary);
+    border-radius: 50%;
+  }
+  .h5-msg-item .ic {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .h5-msg-item .body { flex: 1; min-width: 0; }
+  .h5-msg-item .head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 4px;
+  }
+  .h5-msg-item .t { font-size: 14px; font-weight: 600; }
+  .h5-msg-item.unread .t { font-weight: 700; }
+  .h5-msg-item .time { font-size: 11px; color: var(--h5-text-3); flex-shrink: 0; }
+  .h5-msg-item .m {
+    font-size: 12px;
+    color: var(--h5-text-2);
+    line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .h5-msg-item .actions {
+    display: flex; gap: 6px;
+    margin-top: 8px;
+  }
+  .h5-msg-banner {
+    margin: 12px 16px 0;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--h5-primary) 0%, var(--h5-primary-deep) 100%);
+    color: #fff;
+    border-radius: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .h5-msg-banner .ic { font-size: 28px; }
+  .h5-msg-banner .body { flex: 1; }
+  .h5-msg-banner .t { font-size: 14px; font-weight: 600; }
+  .h5-msg-banner .d { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  .h5-msg-banner .arrow { font-size: 18px; opacity: 0.7; }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">消息中心</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openMarkAll()">✓</div>
+  </div>
+</div>
+
+<div class="h5-page" style="padding-top: 56px;">
+
+  <!-- 角色 banner -->
+  <div class="h5-msg-banner" id="roleBanner">
+    <div class="ic">📊</div>
+    <div class="body">
+      <div class="t" id="bannerT">企业工作台 · 3 条未读</div>
+      <div class="d" id="bannerD">点击查看完整内容</div>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+
+  <!-- Tab 切换 -->
+  <div class="h5-msg-tabs" id="tabs">
+    <div class="h5-msg-tab active" data-tab="all">全部 <span class="cnt" id="cntAll">5</span></div>
+    <div class="h5-msg-tab" data-tab="unread">未读 <span class="cnt" id="cntUnread">3</span></div>
+    <div class="h5-msg-tab" data-tab="system">系统 <span class="cnt">1</span></div>
+    <div class="h5-msg-tab" data-tab="task">任务 <span class="cnt">2</span></div>
+    <div class="h5-msg-tab" data-tab="notice">公告 <span class="cnt">1</span></div>
+    <div class="h5-msg-tab" data-tab="feedback">反馈 <span class="cnt">1</span></div>
+  </div>
+
+  <!-- 消息列表容器 -->
+  <div id="msgList"></div>
+
+  <div style="height: 24px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='index.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab active" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="public/js/h5.js"></script>
+<script>
+  // 读取 URL ?role=xxx 设置角色
+  const params = new URLSearchParams(location.search);
+  const role = params.get('role') || 'company';
+  const roleMap = {
+    company: { name: '企业工作台', icon: '📊', user: '李经理', cls: 'theme-company' },
+    charity: { name: '慈善会工作台', icon: '🏛', user: '王主任', cls: 'theme-charity' },
+    org: { name: '社会组织工作台', icon: '🏢', user: '李秘书长', cls: 'theme-org' },
+    volunteer: { name: '志愿者工作台', icon: '🙋', user: '张伟', cls: 'theme-volunteer' },
+    recipient: { name: '受捐者中心', icon: '🎁', user: '李华', cls: 'theme-recipient' }
+  };
+  H5.setRole(role);
+  document.body.dataset.role = role;
+
+  // 5 角色消息数据
+  const MESSAGES = {
+    company: [
+      { t: '临期面包糕点 1,200 件已全部签收', m: '受捐者李华等 5 户已确认签收物资。点击查看物资轨迹详情。', time: '刚刚', unread: true, ic: '✅', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', type: 'feedback', actions: ['查看轨迹', '已完成'] },
+      { t: 'Q2 慈善评分已更新', m: '本季评分 98.6 分，行业 TOP 5。连续 8 季位于标杆企业。', time: '1 小时前', unread: true, ic: '🏆', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', type: 'task', actions: ['查看详情'] },
+      { t: '5 月运营月报已生成', m: '本月累计捐赠 28 次，受惠 12,600 人次。完整数据可下载。', time: '今早 09:30', unread: true, ic: '📊', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', type: 'system' },
+      { t: '云南昭通 6.2 级地震紧急救援', m: '云南省慈善总会发布紧急救灾项目，含食品 / 棉被 / 帐篷。点击立即响应。', time: '昨天 18:20', unread: false, ic: '🚨', bg: 'rgba(220,38,38,0.1)', col: '#DC2626', type: 'notice', actions: ['立即响应'] },
+      { t: '注册审核已通过', m: '美心食品集团 资质已认证，可正常发起捐赠。', time: '06-01 14:00', unread: false, ic: '✓', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', type: 'system' }
+    ],
+    charity: [
+      { t: '云南昭通 3 批物资待审批', m: '美心食品集团 / 伊利集团 / 招商银行 提交了应急物资。', time: '刚刚', unread: true, ic: '🚨', bg: 'rgba(220,38,38,0.1)', col: '#DC2626', type: 'task', actions: ['立即审批', '查看'] },
+      { t: '壹基金协同任务派发', m: '云南地震应急派发 5,000 件，需 3 名志愿者。', time: '1 小时前', unread: true, ic: '🤝', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', type: 'task', actions: ['立即派发'] },
+      { t: '5 月运营月报已生成', m: '本月 26 个项目，5,800 万元物资派发，0 损耗。', time: '今早 09:30', unread: true, ic: '📊', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', type: 'system' },
+      { t: '3 个新社会组织入驻申请', m: '深圳志愿者联合会 / 广州青年公益 / 珠海慈善义工 待审核。', time: '昨天 16:40', unread: false, ic: '🏢', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', type: 'task', actions: ['查看', '批量处理'] },
+      { t: '云南地震应急响应', m: '请及时协调 12 家企业资源，向 8,600 受惠者派发物资。', time: '06-01 10:00', unread: false, ic: '🌋', bg: 'rgba(220,38,38,0.1)', col: '#DC2626', type: 'notice', actions: ['立即响应'] }
+    ],
+    org: [
+      { t: '云南昭通应急派发任务', m: '请派发 5,000 件物资，需 3 名志愿者。', time: '刚刚', unread: true, ic: '🚨', bg: 'rgba(220,38,38,0.1)', col: '#DC2626', type: 'task', actions: ['立即派发'] },
+      { t: '5 月运营月报已生成', m: '本月参与 3 个项目，86 名志愿者协同。', time: '今早 09:30', unread: true, ic: '📊', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', type: 'system' },
+      { t: '5 位新志愿者待审核', m: '本月新增注册志愿者 5 名，请审核资质。', time: '昨天 14:20', unread: true, ic: '👥', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', type: 'task', actions: ['立即审核'] },
+      { t: '壹基金资质已通过', m: '贵组织可继续参与广东省慈善总会项目。', time: '06-01 14:00', unread: false, ic: '✓', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', type: 'system' }
+    ],
+    volunteer: [
+      { t: '云南昭通应急派发任务可报名', m: '5,000 件物资派发，需 3 名志愿者，6 月 5 日前完成。', time: '刚刚', unread: true, ic: '🚨', bg: 'rgba(220,38,38,0.1)', col: '#DC2626', type: 'task', actions: ['立即报名'] },
+      { t: '贡献分 +28 达成', m: '本周志愿服务 16 小时，综合贡献分已达 850 / 1000。', time: '1 小时前', unread: true, ic: '🏆', bg: 'rgba(20,184,166,0.1)', col: '#14B8A6', type: 'feedback', actions: ['查看'] },
+      { t: '5 月积分兑换礼已发货', m: '夏季便携水杯 × 1 已发货，预计 3 天内送达。', time: '今早 09:30', unread: true, ic: '🎁', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', type: 'system' },
+      { t: '深圳鹏星社工邀请您加入', m: '壹基金邀请您加入云南地震应急协同任务。', time: '昨天 18:20', unread: false, ic: '🤝', bg: 'rgba(20,184,166,0.1)', col: '#14B8A6', type: 'notice', actions: ['接受', '拒绝'] },
+      { t: '新奖章解锁：雷锋日志愿者', m: '恭喜！您的"雷锋日志愿者"奖章已解锁，可立即查看。', time: '06-01 10:00', unread: false, ic: '🎖', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', type: 'feedback', actions: ['查看奖章'] }
+    ],
+    recipient: [
+      { t: '物资派发通知：面包糕点', m: '美心临期面包 8 件将于 6 月 1 日送达水寨镇文化广场。', time: '刚刚', unread: true, ic: '🍞', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', type: 'system' },
+      { t: '受捐资格已通过审核', m: '您的受捐资格已通过审核，可正常领取物资。', time: '1 小时前', unread: true, ic: '✓', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', type: 'system' },
+      { t: '您的反馈收到回复', m: '感谢您的反馈！运营团队已确认您的建议并改善。', time: '今早 09:30', unread: false, ic: '💬', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', type: 'feedback', actions: ['查看回复'] },
+      { t: '端午粽子礼盒可领取', m: '6 月 15 日可领取端午粽子礼盒，已为您预约。', time: '昨天 14:00', unread: false, ic: '🍙', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', type: 'notice', actions: ['查看预约'] },
+      { t: '您有 1 条未读通知', m: '平台更新了受捐者保护政策。', time: '06-01 10:00', unread: false, ic: '📣', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', type: 'notice' }
+    ]
+  };
+
+  // 渲染消息列表
+  function renderMsgList(tab) {
+    const list = MESSAGES[role] || [];
+    let filtered = list;
+    if (tab === 'unread') filtered = list.filter(x => x.unread);
+    else if (tab !== 'all') filtered = list.filter(x => x.type === tab);
+
+    const unreadCnt = list.filter(x => x.unread).length;
+    const totalCnt = list.length;
+    document.getElementById('cntAll').textContent = totalCnt;
+    document.getElementById('cntUnread').textContent = unreadCnt;
+    document.title = `消息中心(${unreadCnt}) — 慈商联营`;
+
+    const container = document.getElementById('msgList');
+    if (!filtered.length) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:80px 32px;color:var(--h5-text-3);">
+          <div style="font-size:48px;margin-bottom:16px;">📭</div>
+          <div style="font-size:14px;">暂无消息</div>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map((m, i) => `
+      <div class="h5-msg-item ${m.unread ? 'unread' : ''}" data-i="${i}">
+        <div class="ic" style="background:${m.bg};color:${m.col};">${m.ic}</div>
+        <div class="body">
+          <div class="head">
+            <div class="t">${m.t}</div>
+            <div class="time">${m.time}</div>
+          </div>
+          <div class="m">${m.m}</div>
+          ${m.actions ? `<div class="actions">${m.actions.map(a =>
+            `<span class="h5-btn h5-btn-secondary h5-btn-sm" onclick="event.stopPropagation();openTip('${a}','${m.t}')">${a}</span>`
+          ).join('')}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+
+    // 绑定点击
+    container.querySelectorAll('.h5-msg-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const i = +el.dataset.i;
+        const m = filtered[i];
+        openTip('查看详情', m.t, m.m);
+        // 标记已读
+        el.classList.remove('unread');
+        const idx = list.findIndex(x => x === m);
+        if (idx >= 0) list[idx].unread = false;
+      });
+    });
+
+    // 入场动画
+    if (window.gsap) {
+      gsap.fromTo('.h5-msg-item',
+        { x: 20, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'power2.out' }
+      );
+    }
+  }
+
+  function openMarkAll() {
+    const list = MESSAGES[role] || [];
+    let cnt = 0;
+    list.forEach(m => { if (m.unread) { m.unread = false; cnt++; } });
+    if (cnt === 0) {
+      openTip('提示', '没有未读消息', '您已经处理完所有消息');
+    } else {
+      openTip('已全部已读', `已标记 ${cnt} 条消息为已读`, '所有消息已归档');
+      setTimeout(() => renderMsgList(currentTab), 500);
+    }
+  }
+
+  let currentTab = 'all';
+
+  document.querySelectorAll('.h5-msg-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.h5-msg-tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      currentTab = t.dataset.tab;
+      renderMsgList(currentTab);
+    });
+  });
+
+  function openTip(t, d, ext) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      `<div style="text-align:center;"><div style="font-size:48px;margin-bottom:12px;">${getMsgIcon(t)}</div>` +
+      `<div style="font-size:15px;font-weight:600;margin-bottom:8px;">${d}</div>` +
+      (ext ? `<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">${ext}</div>` : '') +
+      `<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal('tipModal')">知道了</button></div>`;
+    H5.openModal('tipModal');
+  }
+  function getMsgIcon(t) {
+    if (t.includes('全部已读')) return '✓';
+    if (t.includes('审批')) return '🚨';
+    if (t.includes('派发')) return '🚚';
+    if (t.includes('响应')) return '🤝';
+    if (t.includes('详情')) return '📋';
+    if (t.includes('完成')) return '✅';
+    if (t.includes('查看')) return '🔍';
+    return '💡';
+  }
+
+  // 初始化
+  const cfg = roleMap[role];
+  document.querySelector('.h5-nav-title').textContent = `消息中心 (${cfg.name})`;
+  document.getElementById('bannerT').textContent = `${cfg.name} · ${(MESSAGES[role]||[]).filter(x=>x.unread).length} 条未读`;
+  document.getElementById('bannerD').textContent = `欢迎回来，${cfg.user}`;
+  document.getElementById('roleBanner').querySelector('.ic').textContent = cfg.icon;
+
+  renderMsgList('all');
+
+  // 入场
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-msg-banner', { y: -10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
+    gsap.fromTo('.h5-msg-tabs', { y: -8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.1, ease: 'power2.out' });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>慈善会工作台 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  .h5-task-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--h5-divider); }
+  .h5-task-item:last-child { border-bottom: 0; }
+  .h5-task-item .ic { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .h5-task-item .body { flex: 1; min-width: 0; }
+  .h5-task-item .t { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .h5-task-item .m { font-size: 11px; color: var(--h5-text-3); }
+  .h5-task-item .r { display: flex; align-items: center; gap: 6px; }
+  .h5-project-list { display: flex; flex-direction: column; }
+  .h5-project-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-project-row:last-child { border-bottom: 0; }
+  .h5-project-row .ic {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .h5-project-row .body { flex: 1; min-width: 0; }
+  .h5-project-row .t { font-size: 13px; font-weight: 500; margin-bottom: 2px;
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .h5-project-row .m { font-size: 11px; color: var(--h5-text-3); }
+  .h5-project-row .progress-mini { width: 50px; height: 4px; background: var(--h5-divider); border-radius: 2px; overflow: hidden; }
+  .h5-project-row .progress-mini > div { height: 100%; background: var(--h5-primary); }
+  .h5-project-row .right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  /* 圆环进度 */
+  .h5-ring-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-ring-row:last-child { border-bottom: 0; }
+  .h5-ring-row .body { flex: 1; }
+  .h5-ring-row .t { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .h5-ring-row .m { font-size: 11px; color: var(--h5-text-3); }
+  /* 数字小标 */
+  .h5-mini-stat {
+    display: flex; flex-direction: column;
+    padding: 8px 0;
+  }
+  .h5-mini-stat .v {
+    font-size: 22px; font-weight: 700; color: var(--h5-text);
+    font-family: -apple-system, sans-serif;
+    line-height: 1.1;
+  }
+  .h5-mini-stat .v .u { font-size: 11px; color: var(--h5-text-3); font-weight: 500; margin-left: 1px; }
+  .h5-mini-stat .l { font-size: 11px; color: var(--h5-text-3); margin-top: 4px; }
+  .h5-mini-stat .trend { font-size: 10px; color: var(--h5-success); margin-top: 2px; }
+  /* 地区分布列表 */
+  .h5-region-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-region-row:last-child { border-bottom: 0; }
+  .h5-region-row .ic { width: 28px; height: 28px; border-radius: 14px; background: var(--h5-primary-soft); color: var(--h5-primary); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .h5-region-row .body { flex: 1; }
+  .h5-region-row .t { font-size: 13px; font-weight: 500; }
+  .h5-region-row .d { font-size: 10px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-region-row .v { font-size: 14px; font-weight: 700; color: var(--h5-primary); }
+</style>
+</head>
+<body data-role="charity" class="has-tabbar">
+
+<!-- 顶部透明 nav -->
+<div class="h5-nav transparent">
+  <div class="h5-nav-back" onclick="location.href='../index.html'">‹</div>
+  <div class="h5-nav-title">慈善会工作台</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openMsg()">🔔<span class="badge">3</span></div>
+  </div>
+</div>
+
+<div class="h5-page">
+
+  <!-- Hero 欢迎区 -->
+  <div class="h5-hero" style="padding-bottom: 56px; background: linear-gradient(135deg, #0E5A6F 0%, #073D4D 100%);">
+    <div class="h5-hero-content">
+      <div class="h5-hero-greet">
+        <span class="wave">👋</span> 你好，<span id="userName">王主任</span>
+      </div>
+      <div class="h5-hero-desc">
+        欢迎回到 <b>广东省慈善总会</b> 工作台。管理 <b>26 个</b>在执行项目，协调 <b>1,260 位</b>志愿者，物资 <b>¥286,500</b> 待审批。
+      </div>
+      <div class="h5-hero-tags">
+        <span class="h5-hero-tag">🏛 总会级</span>
+        <span class="h5-hero-tag">✓ 资质已认证</span>
+        <span class="h5-hero-tag">📋 项目 26</span>
+      </div>
+    </div>
+    <div class="h5-hero-cta" onclick="openPublish()">📋 发布项目</div>
+  </div>
+
+  <!-- 4 KPI 卡片 -->
+  <div class="h5-section" style="padding-top: 16px;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📊 平台总览</div>
+        <a class="more">全部 →</a>
+      </div>
+      <div class="h5-kpi-grid">
+        <div class="h5-kpi theme-info">
+          <div class="ic-deco">📋</div>
+          <div class="label">在执行项目</div>
+          <div class="value"><span class="counter" data-target="26">0</span></div>
+          <div class="trend">含紧急 2</div>
+        </div>
+        <div class="h5-kpi theme-danger">
+          <div class="ic-deco">🎁</div>
+          <div class="label">待领物资</div>
+          <div class="value"><span class="counter" data-target="8">0</span></div>
+          <div class="trend">价值 ¥28.6 万</div>
+        </div>
+        <div class="h5-kpi">
+          <div class="ic-deco">👥</div>
+          <div class="label">受惠人次</div>
+          <div class="value"><span class="counter" data-target="12.6">0</span><span class="unit">万</span></div>
+          <div class="trend up">↑ 同比 +42%</div>
+        </div>
+        <div class="h5-kpi theme-trust">
+          <div class="ic-deco">🤝</div>
+          <div class="label">活跃志愿者</div>
+          <div class="value"><span class="counter" data-target="1260">0</span></div>
+          <div class="trend up">本月新增 86</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 在执行项目 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📋 在执行项目 <span class="h5-tag primary" style="margin-left:4px;">26</span></div>
+        <a class="more" onclick="openTask()">全部 →</a>
+      </div>
+      <div class="h5-project-list">
+        <div class="h5-project-row">
+          <div class="ic" style="background:linear-gradient(135deg,#FECACA,#FCA5A5);">🌋</div>
+          <div class="body">
+            <div class="t">云南昭通 6.2 级地震救援</div>
+            <div class="m">紧急救灾 · 12 家企业 · 60%</div>
+          </div>
+          <div class="right">
+            <div class="progress-mini"><div style="width:60%"></div></div>
+            <span class="h5-tag danger">紧急</span>
+          </div>
+        </div>
+        <div class="h5-project-row">
+          <div class="ic" style="background:linear-gradient(135deg,#D1FAE5,#6EE7B7);">🌾</div>
+          <div class="body">
+            <div class="t">"暖冬" 西北留守儿童过冬</div>
+            <div class="m">乡村振兴 · 8 家企业 · 56%</div>
+          </div>
+          <div class="right">
+            <div class="progress-mini"><div style="width:56%"></div></div>
+            <span class="h5-tag trust">进行中</span>
+          </div>
+        </div>
+        <div class="h5-project-row">
+          <div class="ic" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D);">📚</div>
+          <div class="body">
+            <div class="t">"一书一希望" 山区图书角</div>
+            <div class="m">教育助学 · 23 家企业 · 57%</div>
+          </div>
+          <div class="right">
+            <div class="progress-mini"><div style="width:57%"></div></div>
+            <span class="h5-tag warning">进行中</span>
+          </div>
+        </div>
+        <div class="h5-project-row">
+          <div class="ic" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD);">🏥</div>
+          <div class="body">
+            <div class="t">"健康乡村" 基层医疗设备</div>
+            <div class="m">医疗健康 · 6 家企业 · 85%</div>
+          </div>
+          <div class="right">
+            <div class="progress-mini"><div style="width:85%"></div></div>
+            <span class="h5-tag success">即将完成</span>
+          </div>
+        </div>
+        <div class="h5-project-row">
+          <div class="ic" style="background:linear-gradient(135deg,#FFE4D2,#FAEFD9);">🍞</div>
+          <div class="body">
+            <div class="t">"临期 0 浪费" 食品专项</div>
+            <div class="m">持续项目 · 126 家企业 · 78%</div>
+          </div>
+          <div class="right">
+            <div class="progress-mini"><div style="width:78%"></div></div>
+            <span class="h5-tag primary">持续</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 本月数据 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📈 本月数据</div>
+        <a class="more" onclick="openTask()">详情 →</a>
+      </div>
+      <div class="h5-ring-row">
+        <div class="h5-ring" style="width:48px;height:48px;flex-shrink:0;">
+          <svg viewBox="0 0 36 36">
+            <circle class="h5-ring-bg" cx="18" cy="18" r="14" fill="none" stroke="rgba(14,90,111,0.15)" stroke-width="3.5"></circle>
+            <circle class="h5-ring-fg" cx="18" cy="18" r="14" fill="none" stroke="var(--h5-primary)" stroke-width="3.5" stroke-linecap="round" data-percent="97"></circle>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="t">物资派发率</div>
+          <div class="m">已派发 / 应派发</div>
+        </div>
+        <div style="font-size:18px;font-weight:700;color:var(--h5-primary);">97.2%</div>
+      </div>
+      <div class="h5-ring-row">
+        <div class="h5-ring" style="width:48px;height:48px;flex-shrink:0;">
+          <svg viewBox="0 0 36 36">
+            <circle class="h5-ring-bg" cx="18" cy="18" r="14" fill="none" stroke="rgba(20,184,166,0.15)" stroke-width="3.5"></circle>
+            <circle class="h5-ring-fg" cx="18" cy="18" r="14" fill="none" stroke="#14B8A6" stroke-width="3.5" stroke-linecap="round" data-percent="98"></circle>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="t">受捐者满意度</div>
+          <div class="m">5 月份回收 8,624 份</div>
+        </div>
+        <div style="font-size:18px;font-weight:700;color:#14B8A6;">98.2/100</div>
+      </div>
+      <div class="h5-ring-row">
+        <div class="h5-ring" style="width:48px;height:48px;flex-shrink:0;">
+          <svg viewBox="0 0 36 36">
+            <circle class="h5-ring-bg" cx="18" cy="18" r="14" fill="none" stroke="rgba(196,132,42,0.15)" stroke-width="3.5"></circle>
+            <circle class="h5-ring-fg" cx="18" cy="18" r="14" fill="none" stroke="#C4842A" stroke-width="3.5" stroke-linecap="round" data-percent="95"></circle>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="t">志愿者出勤率</div>
+          <div class="m">本月应到 / 实到</div>
+        </div>
+        <div style="font-size:18px;font-weight:700;color:#C4842A;">95.6%</div>
+      </div>
+      <div class="h5-ring-row">
+        <div class="h5-ring" style="width:48px;height:48px;flex-shrink:0;">
+          <svg viewBox="0 0 36 36">
+            <circle class="h5-ring-bg" cx="18" cy="18" r="14" fill="none" stroke="rgba(232,93,4,0.15)" stroke-width="3.5"></circle>
+            <circle class="h5-ring-fg" cx="18" cy="18" r="14" fill="none" stroke="#E85D04" stroke-width="3.5" stroke-linecap="round" data-percent="99"></circle>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="t">物资损耗率</div>
+          <div class="m">已损耗 / 总派发</div>
+        </div>
+        <div style="font-size:18px;font-weight:700;color:#E85D04;">≤ 0.5%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 广东地区受捐分布 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🗺️ 广东地区受捐分布</div>
+        <a class="more" onclick="openTask()">详情 →</a>
+      </div>
+      <div class="h5-region-row">
+        <div class="ic">深</div>
+        <div class="body">
+          <div class="t">深圳市</div>
+          <div class="d">12 个项目 · 86 个受捐点</div>
+        </div>
+        <div class="v">8,600</div>
+      </div>
+      <div class="h5-region-row">
+        <div class="ic">穗</div>
+        <div class="body">
+          <div class="t">广州市</div>
+          <div class="d">8 个项目 · 62 个受捐点</div>
+        </div>
+        <div class="v">8.6 万</div>
+      </div>
+      <div class="h5-region-row">
+        <div class="ic">莞</div>
+        <div class="body">
+          <div class="t">东莞市</div>
+          <div class="d">6 个项目 · 45 个受捐点</div>
+        </div>
+        <div class="v">5,600</div>
+      </div>
+      <div class="h5-region-row">
+        <div class="ic">佛</div>
+        <div class="body">
+          <div class="t">佛山市</div>
+          <div class="d">5 个项目 · 32 个受捐点</div>
+        </div>
+        <div class="v">4,200</div>
+      </div>
+      <div class="h5-region-row">
+        <div class="ic">梅</div>
+        <div class="body">
+          <div class="t">梅州市</div>
+          <div class="d">3 个项目 · 28 个受捐点</div>
+        </div>
+        <div class="v">3,800</div>
+      </div>
+      <div class="h5-region-row">
+        <div class="ic">湛</div>
+        <div class="body">
+          <div class="t">湛江市</div>
+          <div class="d">2 个项目 · 18 个受捐点</div>
+        </div>
+        <div class="v">2.6 万</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 待办事项 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📌 待办事项 <span class="h5-tag primary" style="margin-left:4px;">5</span></div>
+        <a class="more" onclick="openTask()">全部 →</a>
+      </div>
+      <div class="h5-task-item">
+        <div class="ic" style="background:rgba(220,38,38,0.1);color:#DC2626;">🚨</div>
+        <div class="body">
+          <div class="t">云南地震 2 批物资审批</div>
+          <div class="m">3 家企业提交 · 截止 2025-06-05</div>
+        </div>
+        <div class="r"><span class="h5-btn h5-btn-primary h5-btn-sm">审批</span></div>
+      </div>
+      <div class="h5-task-item">
+        <div class="ic" style="background:rgba(245,158,11,0.12);color:#F59E0B;">📋</div>
+        <div class="body">
+          <div class="t">5 月月报待发布</div>
+          <div class="m">含 8 项数据 + 26 个项目</div>
+        </div>
+        <div class="r"><span class="h5-btn h5-btn-ghost h5-btn-sm">编辑</span></div>
+      </div>
+      <div class="h5-task-item">
+        <div class="ic" style="background:rgba(20,184,166,0.1);color:#14B8A6;">🤝</div>
+        <div class="body">
+          <div class="t">3 个新社会组织入驻申请</div>
+          <div class="m">待审核资质</div>
+        </div>
+        <div class="r"><span class="h5-btn h5-btn-ghost h5-btn-sm">查看</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab active"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="alert('慈善商城 - H5 Phase 2 接入')"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="alert('年度报告')"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="openMsg()"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="openProfile()"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center;padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('charity');
+
+  function openMsg() {
+    document.getElementById('tipTitle').textContent = '消息中心';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px;margin-bottom:16px;">🔔</div>' +
+      '<div style="font-size:18px;font-weight:600;margin-bottom:8px;">3 条未读消息</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">' +
+      '新协同任务派发 / 5 月运营月报已生成<br>云南地震应急响应' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">查看全部</button>';
+    H5.openModal('tipModal');
+  }
+  function openTask() {
+    document.getElementById('tipTitle').textContent = '任务列表';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:left;font-size:14px;line-height:1.8;">' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🚨 云南地震 2 批物资审批 <span class="h5-tag danger" style="float:right;">紧急</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">📋 5 月月报待发布</div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🤝 3 个新社会组织入驻申请</div>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+  function openProfile() {
+    document.getElementById('tipTitle').textContent = '我的';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="width:72px;height:72px;border-radius:36px;background:linear-gradient(135deg,#0E5A6F,#073D4D);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:8px auto 12px;">王</div>' +
+      '<div style="font-size:18px;font-weight:600;">王主任</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);margin-bottom:20px;">广东省慈善总会 · 已认证</div>' +
+      '<div style="text-align:left;font-size:14px;">' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">📋 项目管理 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">🤝 社会组织 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">👥 志愿者管理 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">📊 数据报告 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;display:flex;justify-content:space-between;color:var(--h5-danger);">🚪 退出登录 <span>›</span></div>' +
+      '</div></div>';
+    H5.openModal('tipModal');
+  }
+  function openPublish() {
+    document.getElementById('tipTitle').textContent = '发布受灾项目';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px;margin-bottom:16px;">📋</div>' +
+      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">发布新项目</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;margin-bottom:16px;">' +
+      '项目类型 · 物资需求 · 时间表' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" onclick="H5.closeModal(\'tipModal\')">开始发布</button>';
+    H5.openModal('tipModal');
+  }
+
+  // 圆环动画
+  function animateRing(selector) {
+    const fg = document.querySelector(selector);
+    if (!fg) return;
+    const percent = parseFloat(fg.dataset.percent) || 0;
+    const r = parseFloat(fg.getAttribute('r'));
+    const C = 2 * Math.PI * r;
+    fg.setAttribute('stroke-dasharray', C);
+    fg.setAttribute('stroke-dashoffset', C);
+    if (window.gsap) {
+      gsap.to(fg, { attr: { 'stroke-dashoffset': C * (1 - percent / 100) }, duration: 1.2, delay: 0.4, ease: 'power2.out' });
+    } else {
+      fg.setAttribute('stroke-dashoffset', C * (1 - percent / 100));
+    }
+  }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-hero-content > *',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }
+    );
+    gsap.fromTo('.h5-hero-cta',
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, delay: 0.3, ease: 'back.out(1.6)' }
+    );
+    gsap.utils.toArray('.h5-section').forEach((sec, i) => {
+      gsap.fromTo(sec,
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.2 + i * 0.08, ease: 'power2.out' }
+      );
+    });
+    document.querySelectorAll('.counter').forEach(el => {
+      H5.countUp(el, el.dataset.target, 1.4);
+    });
+    document.querySelectorAll('.h5-ring-fg').forEach(fg => animateRing(fg));
+    // 项目进度条
+    gsap.utils.toArray('.h5-project-row .progress-mini > div').forEach(b => {
+      const w = b.getAttribute('style')?.match(/width:(\d+%)/)?.[1] || '0%';
+      gsap.fromTo(b, { width: '0%' }, { width: w, duration: 1, delay: 0.6, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

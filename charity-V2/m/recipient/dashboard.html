@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>受捐者工作台 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  .h5-receive-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-receive-item:last-child { border-bottom: 0; }
+  .h5-receive-item .ic {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .h5-receive-item .body { flex: 1; min-width: 0; }
+  .h5-receive-item .t { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .h5-receive-item .m { font-size: 11px; color: var(--h5-text-3); }
+  .h5-receive-item .r { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+  /* 预约卡（重点） */
+  .h5-next-card {
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .h5-next-card::before {
+    content: "";
+    position: absolute; top: -30%; right: -20%;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .h5-next-card .lbl { font-size: 12px; opacity: 0.85; }
+  .h5-next-card .date {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 4px 0;
+  }
+  .h5-next-card .date .year { font-size: 14px; opacity: 0.85; font-weight: 500; margin-left: 4px; }
+  .h5-next-card .name { font-size: 14px; font-weight: 600; margin-top: 8px; }
+  .h5-next-card .meta { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  .h5-next-card .loc {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; opacity: 0.85;
+    margin-top: 6px;
+  }
+  .h5-next-card .countdown {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 10px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  /* 快速入口 2x2 */
+  .h5-quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .h5-quick {
+    background: var(--h5-card);
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .h5-quick::after {
+    content: ""; position: absolute; top: -20px; right: -20px;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.06;
+  }
+  .h5-quick .ic {
+    width: 44px; height: 44px;
+    border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 8px;
+    color: #fff;
+  }
+  .h5-quick .t { font-size: 13px; font-weight: 600; }
+  .h5-quick .d { font-size: 10px; color: var(--h5-text-3); margin-top: 2px; }
+
+  /* 反馈列表 */
+  .h5-feedback {
+    display: flex; gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--h5-divider);
+    align-items: center;
+  }
+  .h5-feedback:last-child { border-bottom: 0; }
+  .h5-feedback .stars { color: #F59E0B; font-size: 13px; flex-shrink: 0; }
+  .h5-feedback .text { flex: 1; font-size: 12px; color: var(--h5-text-2); line-height: 1.5; }
+  .h5-feedback .date { font-size: 10px; color: var(--h5-text-3); flex-shrink: 0; }
+</style>
+</head>
+<body data-role="recipient" class="has-tabbar">
+
+<div class="h5-nav transparent">
+  <div class="h5-nav-back" onclick="location.href='../index.html'">‹</div>
+  <div class="h5-nav-title">我的中心</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openMsg()">🔔<span class="badge">2</span></div>
+  </div>
+</div>
+
+<div class="h5-page">
+
+  <div class="h5-hero" style="padding-bottom: 56px; background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);">
+    <div class="h5-hero-content">
+      <div class="h5-hero-greet">
+        <span class="wave">👋</span> 你好，<span id="userName">李华</span>
+      </div>
+      <div class="h5-hero-desc">
+        欢迎回到受捐者中心。已累计领取 <b>12 次</b>物资，反馈 <b>8 条</b>，好评率 <b>100%</b>。
+      </div>
+      <div class="h5-hero-tags">
+        <span class="h5-hero-tag">✓ 资质已通过</span>
+        <span class="h5-hero-tag">📍 五华县水寨镇</span>
+        <span class="h5-hero-tag">⚠️ 受捐者 · 3 户</span>
+      </div>
+    </div>
+    <div class="h5-hero-cta" onclick="openScan()">📷 扫码领取</div>
+  </div>
+
+  <!-- 4 KPI -->
+  <div class="h5-section" style="padding-top: 16px;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📊 我的数据</div>
+        <a class="more">全部 →</a>
+      </div>
+      <div class="h5-kpi-grid">
+        <div class="h5-kpi">
+          <div class="ic-deco">🎁</div>
+          <div class="label">累计领取</div>
+          <div class="value"><span class="counter" data-target="12">0</span><span class="unit">次</span></div>
+          <div class="trend">物资 86 件</div>
+        </div>
+        <div class="h5-kpi theme-trust">
+          <div class="ic-deco">💝</div>
+          <div class="label">受惠价值</div>
+          <div class="value">¥<span class="counter" data-target="1860">0</span></div>
+          <div class="trend">累计</div>
+        </div>
+        <div class="h5-kpi theme-gold">
+          <div class="ic-deco">⭐</div>
+          <div class="label">反馈次数</div>
+          <div class="value"><span class="counter" data-target="8">0</span></div>
+          <div class="trend up">好评率 100%</div>
+        </div>
+        <div class="h5-kpi theme-info">
+          <div class="ic-deco">📅</div>
+          <div class="label">下次领取</div>
+          <div class="value">6/15</div>
+          <div class="trend">端午礼盒</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下次预约（重点卡） -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-next-card">
+      <div class="lbl">📅 下次预约领取</div>
+      <div class="date">6/15<span class="year">2025</span></div>
+      <div class="name">端午粽子礼盒 · 五芳斋</div>
+      <div class="meta">2 盒 · 适配 3 户家庭</div>
+      <div class="loc">📍 五华县水寨镇文化广场 · 09:00-12:00</div>
+      <div class="countdown">⏰ 距离预约 11 天</div>
+    </div>
+  </div>
+
+  <!-- 快速入口 2x2 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-quick-grid">
+      <div class="h5-quick" style="color:#7C3AED;" onclick="openScan()">
+        <div class="ic" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);">📷</div>
+        <div class="t">扫码领取</div>
+        <div class="d">扫描物资二维码</div>
+      </div>
+      <div class="h5-quick" style="color:#E85D04;" onclick="openTask()">
+        <div class="ic" style="background:linear-gradient(135deg,#E85D04,#C44503);">📋</div>
+        <div class="t">领取记录</div>
+        <div class="d">查看历史</div>
+      </div>
+      <div class="h5-quick" style="color:#14B8A6;" onclick="openFeedback()">
+        <div class="ic" style="background:linear-gradient(135deg,#14B8A6,#0D8A7E);">💬</div>
+        <div class="t">意见反馈</div>
+        <div class="d">提交评价</div>
+      </div>
+      <div class="h5-quick" style="color:#C4842A;" onclick="openTask()">
+        <div class="ic" style="background:linear-gradient(135deg,#C4842A,#8B5A1A);">📅</div>
+        <div class="t">预约下次</div>
+        <div class="d">设置提醒</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 近期领取记录 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📋 近期领取记录</div>
+        <a class="more" onclick="openTask()">全部 →</a>
+      </div>
+      <div class="h5-receive-item">
+        <div class="ic" style="background:linear-gradient(135deg,#FFE4D2,#FAEFD9);">🍞</div>
+        <div class="body">
+          <div class="t">美心临期面包</div>
+          <div class="m">8 件 · 2025-06-01 · 五华县水寨镇</div>
+        </div>
+        <span class="h5-tag success">已签收</span>
+      </div>
+      <div class="h5-receive-item">
+        <div class="ic" style="background:linear-gradient(135deg,#E5F0F4,#E0FAF5);">🥛</div>
+        <div class="body">
+          <div class="t">伊利儿童牛奶</div>
+          <div class="m">6 盒 · 2025-05-15 · 五华县水寨镇</div>
+        </div>
+        <span class="h5-tag success">已签收</span>
+      </div>
+      <div class="h5-receive-item">
+        <div class="ic" style="background:linear-gradient(135deg,#F3E8FF,#FFE4D2);">🍙</div>
+        <div class="body">
+          <div class="t">端午粽子礼盒</div>
+          <div class="m">2 盒 · 2025-04-20 · 五华县水寨镇</div>
+        </div>
+        <span class="h5-tag success">已签收</span>
+      </div>
+      <div class="h5-receive-item">
+        <div class="ic" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D);">📚</div>
+        <div class="body">
+          <div class="t">小学教辅书包</div>
+          <div class="m">1 个 · 2025-03-10 · 五华县水寨镇</div>
+        </div>
+        <span class="h5-tag success">已签收</span>
+      </div>
+      <div class="h5-receive-item">
+        <div class="ic" style="background:linear-gradient(135deg,#D1FAE5,#6EE7B7);">🧴</div>
+        <div class="body">
+          <div class="t">日化用品套装</div>
+          <div class="m">3 套 · 2025-02-15 · 五华县水寨镇</div>
+        </div>
+        <span class="h5-tag success">已签收</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 我的反馈 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">⭐ 我的反馈</div>
+        <a class="more" onclick="openFeedback()">新增 →</a>
+      </div>
+      <div class="h5-feedback">
+        <div class="stars">★★★★★</div>
+        <div class="text">美心面包非常新鲜，孩子很喜欢！</div>
+        <div class="date">06-01</div>
+      </div>
+      <div class="h5-feedback">
+        <div class="stars">★★★★★</div>
+        <div class="text">伊利牛奶到货很及时，谢谢！</div>
+        <div class="date">05-15</div>
+      </div>
+      <div class="h5-feedback">
+        <div class="stars">★★★★</div>
+        <div class="text">粽子味道不错，下次还能领吗？</div>
+        <div class="date">04-22</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab active"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="alert('慈善商城 - H5 Phase 2 接入')"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="alert('年度报告')"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="openMsg()"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">2</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="openProfile()"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center;padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('recipient');
+
+  function openMsg() {
+    document.getElementById('tipTitle').textContent = '消息中心';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px;margin-bottom:16px;">🔔</div>' +
+      '<div style="font-size:18px;font-weight:600;margin-bottom:8px;">2 条未读消息</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">' +
+      '受捐资格已认证通过<br>物资派发通知：面包糕点 6 月 1 日送达' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">查看全部</button>';
+    H5.openModal('tipModal');
+  }
+  function openTask() {
+    document.getElementById('tipTitle').textContent = '领取记录';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:left;font-size:13px;line-height:1.8;">' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🍞 美心临期面包 <span style="float:right;color:var(--h5-text-3);">06-01</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🥛 伊利儿童牛奶 <span style="float:right;color:var(--h5-text-3);">05-15</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🍙 端午粽子礼盒 <span style="float:right;color:var(--h5-text-3);">04-20</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">📚 小学教辅书包 <span style="float:right;color:var(--h5-text-3);">03-10</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;">🧴 日化用品套装 <span style="float:right;color:var(--h5-text-3);">02-15</span></div>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+  function openProfile() {
+    document.getElementById('tipTitle').textContent = '我的';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="width:72px;height:72px;border-radius:36px;background:linear-gradient(135deg,#7C3AED,#5B21B6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:8px auto 12px;">李</div>' +
+      '<div style="font-size:18px;font-weight:600;">李华</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);margin-bottom:20px;">受捐者 · 已认证</div>' +
+      '<div style="text-align:left;font-size:14px;">' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">📋 领取记录 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">📷 扫码领取 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">💬 意见反馈 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">⚙️ 账户设置 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;display:flex;justify-content:space-between;color:var(--h5-danger);">🚪 退出登录 <span>›</span></div>' +
+      '</div></div>';
+    H5.openModal('tipModal');
+  }
+  function openScan() {
+    document.getElementById('tipTitle').textContent = '扫码领取';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:64px;margin-bottom:16px;">📷</div>' +
+      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">扫描物资二维码</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;margin-bottom:16px;">' +
+      '将相机对准物资包装上的二维码<br>确认领取信息后即可签收' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" onclick="H5.closeModal(\'tipModal\')">打开相机</button>';
+    H5.openModal('tipModal');
+  }
+  function openFeedback() {
+    document.getElementById('tipTitle').textContent = '意见反馈';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:left;">' +
+      '<div style="font-size:13px;font-weight:600;margin-bottom:8px;">为本次领取打分</div>' +
+      '<div style="font-size:32px;letter-spacing:8px;margin-bottom:16px;color:#F59E0B;text-align:center;">★★★★★</div>' +
+      '<div class="h5-form-group"><textarea class="h5-textarea" placeholder="说说您的感受..." rows="3"></textarea></div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" onclick="H5.closeModal(\'tipModal\')">提交反馈</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-hero-content > *',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }
+    );
+    gsap.fromTo('.h5-hero-cta',
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, delay: 0.3, ease: 'back.out(1.6)' }
+    );
+    gsap.fromTo('.h5-next-card',
+      { y: 20, opacity: 0, scale: 0.96 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.6, delay: 0.3, ease: 'back.out(1.4)' }
+    );
+    gsap.utils.toArray('.h5-section').forEach((sec, i) => {
+      gsap.fromTo(sec,
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.2 + i * 0.08, ease: 'power2.out' }
+      );
+    });
+    document.querySelectorAll('.counter').forEach(el => {
+      H5.countUp(el, el.dataset.target, 1.4);
+    });
+    // 快速入口格子错开
+    gsap.fromTo('.h5-quick',
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, delay: 0.5, stagger: 0.06, ease: 'power2.out' }
+    );
+  });
+</script>
+</body>
+</html>

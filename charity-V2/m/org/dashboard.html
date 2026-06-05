@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>社会组织工作台 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  .h5-task-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--h5-divider); }
+  .h5-task-item:last-child { border-bottom: 0; }
+  .h5-task-item .ic { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .h5-task-item .body { flex: 1; min-width: 0; }
+  .h5-task-item .t { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .h5-task-item .m { font-size: 11px; color: var(--h5-text-3); }
+  .h5-task-item .r { display: flex; align-items: center; gap: 6px; }
+
+  /* 项目行 */
+  .h5-project-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-project-row:last-child { border-bottom: 0; }
+  .h5-project-row .ic { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .h5-project-row .body { flex: 1; min-width: 0; }
+  .h5-project-row .t { font-size: 13px; font-weight: 500; margin-bottom: 2px;
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .h5-project-row .m { font-size: 11px; color: var(--h5-text-3); }
+
+  /* 进度条 */
+  .h5-progress-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--h5-divider); }
+  .h5-progress-row:last-child { border-bottom: 0; }
+  .h5-progress-row .l { font-size: 13px; flex: 1; }
+  .h5-progress-row .v { font-size: 12px; font-weight: 700; color: var(--h5-primary); min-width: 50px; text-align: right; }
+  .h5-progress-row .bar { flex-basis: 100px; }
+
+  /* 志愿者列表 */
+  .h5-vol-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-vol-row:last-child { border-bottom: 0; }
+  .h5-vol-row .av {
+    width: 36px; height: 36px; border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+  }
+  .h5-vol-row .body { flex: 1; min-width: 0; }
+  .h5-vol-row .t { font-size: 13px; font-weight: 500; }
+  .h5-vol-row .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-vol-row .v { font-size: 14px; font-weight: 700; color: var(--h5-primary); }
+</style>
+</head>
+<body data-role="org" class="has-tabbar">
+
+<div class="h5-nav transparent">
+  <div class="h5-nav-back" onclick="location.href='../index.html'">‹</div>
+  <div class="h5-nav-title">社会组织工作台</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openMsg()">🔔<span class="badge">2</span></div>
+  </div>
+</div>
+
+<div class="h5-page">
+
+  <div class="h5-hero" style="padding-bottom: 56px; background: linear-gradient(135deg, #C4842A 0%, #8B5A1A 100%);">
+    <div class="h5-hero-content">
+      <div class="h5-hero-greet">
+        <span class="wave">👋</span> 你好，<span id="userName">李秘书长</span>
+      </div>
+      <div class="h5-hero-desc">
+        欢迎回到 <b>深圳市壹基金公益基金会</b> 工作台。组织合作慈善会 <b>3 家</b>、管理志愿者 <b>86 名</b>。
+      </div>
+      <div class="h5-hero-tags">
+        <span class="h5-hero-tag">🏢 公募基金会</span>
+        <span class="h5-hero-tag">✓ 资质已认证</span>
+        <span class="h5-hero-tag">🤝 合作慈善会 3 家</span>
+      </div>
+    </div>
+    <div class="h5-hero-cta" onclick="openDispatch()">🚚 派发任务</div>
+  </div>
+
+  <!-- KPI 4 个 -->
+  <div class="h5-section" style="padding-top: 16px;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📊 我的数据</div>
+        <a class="more">全部 →</a>
+      </div>
+      <div class="h5-kpi-grid">
+        <div class="h5-kpi">
+          <div class="ic-deco">📚</div>
+          <div class="label">参与项目</div>
+          <div class="value"><span class="counter" data-target="28">0</span></div>
+          <div class="trend">本年新增 12</div>
+        </div>
+        <div class="h5-kpi theme-gold">
+          <div class="ic-deco">🚚</div>
+          <div class="label">派发物资</div>
+          <div class="value"><span class="counter" data-target="8.26">0</span><span class="unit">万件</span></div>
+          <div class="trend">累计</div>
+        </div>
+        <div class="h5-kpi theme-trust">
+          <div class="ic-deco">👨‍👩‍👧</div>
+          <div class="label">受惠人次</div>
+          <div class="value"><span class="counter" data-target="4.28">0</span><span class="unit">万</span></div>
+          <div class="trend up">↑ 同比 +38%</div>
+        </div>
+        <div class="h5-kpi theme-info">
+          <div class="ic-deco">🙋</div>
+          <div class="label">志愿者</div>
+          <div class="value"><span class="counter" data-target="86">0</span><span class="unit">人</span></div>
+          <div class="trend">活跃 62 人</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 参与的项目 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📚 参与的项目 <span class="h5-tag primary" style="margin-left:4px;">3</span></div>
+        <a class="more" onclick="openTask()">全部 →</a>
+      </div>
+      <div class="h5-project-row">
+        <div class="ic" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D);">📚</div>
+        <div class="body">
+          <div class="t">"一书一希望" 山区图书角</div>
+          <div class="m">协办 12 场 · 受惠 5,600 学生</div>
+        </div>
+        <span class="h5-tag warning">进行中</span>
+      </div>
+      <div class="h5-project-row">
+        <div class="ic" style="background:linear-gradient(135deg,#FFE4D2,#FAEFD9);">🍞</div>
+        <div class="body">
+          <div class="t">"临期 0 浪费" 食品专项</div>
+          <div class="m">累计派发 86 万件</div>
+        </div>
+        <span class="h5-tag primary">持续</span>
+      </div>
+      <div class="h5-project-row">
+        <div class="ic" style="background:linear-gradient(135deg,#D1FAE5,#6EE7B7);">🌾</div>
+        <div class="body">
+          <div class="t">"暖冬" 西北留守儿童过冬</div>
+          <div class="m">协办 6 场 · 受惠 2,860 儿童</div>
+        </div>
+        <span class="h5-tag trust">进行中</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 本月数据 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📈 本月数据</div>
+        <a class="more" onclick="openTask()">详情 →</a>
+      </div>
+      <div class="h5-progress-row">
+        <div class="l">🚚 物资派发率</div>
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar" data-width="97.2%"></div></div></div>
+        <div class="v">97.2%</div>
+      </div>
+      <div class="h5-progress-row">
+        <div class="l">💯 受捐者满意度</div>
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar" data-width="98.2%"></div></div></div>
+        <div class="v">98.2/100</div>
+      </div>
+      <div class="h5-progress-row">
+        <div class="l">⏰ 志愿者出勤率</div>
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar success" data-width="95.6%"></div></div></div>
+        <div class="v">95.6%</div>
+      </div>
+      <div class="h5-progress-row">
+        <div class="l">📦 物资损耗率</div>
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar gold" data-width="0.5%"></div></div></div>
+        <div class="v">≤ 0.5%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 待办事项 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📌 待办事项 <span class="h5-tag primary" style="margin-left:4px;">3</span></div>
+        <a class="more" onclick="openTask()">全部 →</a>
+      </div>
+      <div class="h5-task-item">
+        <div class="ic" style="background:rgba(220,38,38,0.1);color:#DC2626;">🚨</div>
+        <div class="body">
+          <div class="t">云南昭通地震应急派发</div>
+          <div class="m">5,000 件物资 · 3 个志愿者待派</div>
+        </div>
+        <div class="r"><span class="h5-btn h5-btn-primary h5-btn-sm">派发</span></div>
+      </div>
+      <div class="h5-task-item">
+        <div class="ic" style="background:rgba(232,93,4,0.1);color:#E85D04;">📋</div>
+        <div class="body">
+          <div class="t">12 场图书角 物资确认</div>
+          <div class="m">截止 2025-06-08 · 已确认 8</div>
+        </div>
+        <div class="r"><span class="h5-btn h5-btn-ghost h5-btn-sm">查看</span></div>
+      </div>
+      <div class="h5-task-item">
+        <div class="ic" style="background:rgba(20,184,166,0.1);color:#14B8A6;">👥</div>
+        <div class="body">
+          <div class="t">5 位新志愿者待审核</div>
+          <div class="m">已注册 86 人</div>
+        </div>
+        <div class="r"><span class="h5-btn h5-btn-ghost h5-btn-sm">审核</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 志愿者 Top 5 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🙋 优秀志愿者 Top 5</div>
+        <a class="more" onclick="openTask()">详情 →</a>
+      </div>
+      <div class="h5-vol-row">
+        <div class="av" style="background:linear-gradient(135deg,#14B8A6,#0D8A7E);">张</div>
+        <div class="body">
+          <div class="t">张伟</div>
+          <div class="d">本月 28h · 评分 850</div>
+        </div>
+        <div class="v">A+</div>
+      </div>
+      <div class="h5-vol-row">
+        <div class="av" style="background:linear-gradient(135deg,#E85D04,#C44503);">王</div>
+        <div class="body">
+          <div class="t">王芳</div>
+          <div class="d">本月 24h · 评分 820</div>
+        </div>
+        <div class="v">A</div>
+      </div>
+      <div class="h5-vol-row">
+        <div class="av" style="background:linear-gradient(135deg,#0E5A6F,#073D4D);">李</div>
+        <div class="body">
+          <div class="t">李军</div>
+          <div class="d">本月 20h · 评分 780</div>
+        </div>
+        <div class="v">A</div>
+      </div>
+      <div class="h5-vol-row">
+        <div class="av" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);">陈</div>
+        <div class="body">
+          <div class="t">陈丽</div>
+          <div class="d">本月 18h · 评分 760</div>
+        </div>
+        <div class="v">B+</div>
+      </div>
+      <div class="h5-vol-row">
+        <div class="av" style="background:linear-gradient(135deg,#C4842A,#8B5A1A);">刘</div>
+        <div class="body">
+          <div class="t">刘明</div>
+          <div class="d">本月 16h · 评分 720</div>
+        </div>
+        <div class="v">B</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab active"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="alert('慈善商城 - H5 Phase 2 接入')"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="alert('年度报告')"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="openMsg()"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">2</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="openProfile()"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center;padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('org');
+
+  function openMsg() {
+    document.getElementById('tipTitle').textContent = '消息中心';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px;margin-bottom:16px;">🔔</div>' +
+      '<div style="font-size:18px;font-weight:600;margin-bottom:8px;">2 条未读消息</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">' +
+      '新协同任务派发 / 5 月运营月报已生成' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">查看全部</button>';
+    H5.openModal('tipModal');
+  }
+  function openTask() {
+    document.getElementById('tipTitle').textContent = '任务列表';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:left;font-size:14px;line-height:1.8;">' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">🚨 云南地震应急派发 <span class="h5-tag danger" style="float:right;">紧急</span></div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">📋 12 场图书角物资确认</div>' +
+      '<div style="padding:12px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">👥 5 位新志愿者待审核</div>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+  function openProfile() {
+    document.getElementById('tipTitle').textContent = '我的';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="width:72px;height:72px;border-radius:36px;background:linear-gradient(135deg,#C4842A,#8B5A1A);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:8px auto 12px;">李</div>' +
+      '<div style="font-size:18px;font-weight:600;">李秘书长</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);margin-bottom:20px;">深圳市壹基金 · 已认证</div>' +
+      '<div style="text-align:left;font-size:14px;">' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">🏢 组织信息 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">👥 志愿者管理 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">🚚 物资派发 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;border-bottom:1px solid var(--h5-divider);display:flex;justify-content:space-between;">📊 统计报告 <span style="color:var(--h5-text-3);">›</span></div>' +
+      '<div style="padding:14px 0;display:flex;justify-content:space-between;color:var(--h5-danger);">🚪 退出登录 <span>›</span></div>' +
+      '</div></div>';
+    H5.openModal('tipModal');
+  }
+  function openDispatch() {
+    document.getElementById('tipTitle').textContent = '物资派发';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px;margin-bottom:16px;">🚚</div>' +
+      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">派发新任务</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;margin-bottom:16px;">' +
+      '选择项目 · 分配志愿者 · 追踪派发' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" onclick="H5.closeModal(\'tipModal\')">开始派发</button>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-hero-content > *',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }
+    );
+    gsap.fromTo('.h5-hero-cta',
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.5, delay: 0.3, ease: 'back.out(1.6)' }
+    );
+    gsap.utils.toArray('.h5-section').forEach((sec, i) => {
+      gsap.fromTo(sec,
+        { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.2 + i * 0.08, ease: 'power2.out' }
+      );
+    });
+    document.querySelectorAll('.counter').forEach(el => {
+      H5.countUp(el, el.dataset.target, 1.4);
+    });
+    // 本月数据进度条
+    gsap.utils.toArray('.h5-progress-bar[data-width]').forEach(b => {
+      const w = b.dataset.width;
+      gsap.fromTo(b, { width: '0%' }, { width: w, duration: 1, delay: 0.6, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

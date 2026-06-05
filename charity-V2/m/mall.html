@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>慈善商城 — 慈商联营</title>
+<link rel="stylesheet" href="public/css/h5.css">
+<style>
+  /* 0.5% 公益 hero */
+  .h5-mall-hero {
+    background: linear-gradient(135deg, #FF6B35 0%, #C44503 50%, #8B2C03 100%);
+    color: #fff;
+    padding: 56px 16px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .h5-mall-hero::before {
+    content: "";
+    position: absolute; top: -60px; right: -40px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .h5-mall-hero::after {
+    content: "";
+    position: absolute; bottom: -50px; left: -30px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .h5-mall-hero .t {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .h5-mall-hero .t .highlight {
+    color: #FFE066;
+    font-size: 32px;
+  }
+  .h5-mall-hero .d {
+    font-size: 13px;
+    opacity: 0.92;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .h5-mall-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 12px 0;
+    border: 1px solid rgba(255,255,255,0.2);
+    position: relative;
+  }
+  .h5-mall-stats .it {
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+  }
+  .h5-mall-stats .it:last-child { border-right: 0; }
+  .h5-mall-stats .v { font-size: 18px; font-weight: 700; }
+  .h5-mall-stats .l { font-size: 10px; opacity: 0.85; margin-top: 2px; }
+
+  /* 搜索框 */
+  .h5-search-bar {
+    background: var(--h5-card);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--h5-divider);
+    position: sticky; top: 56px; z-index: 5;
+  }
+  .h5-search {
+    background: var(--h5-bg);
+    border-radius: 999px;
+    padding: 8px 14px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px;
+    color: var(--h5-text-3);
+  }
+  .h5-search input {
+    flex: 1; border: 0; background: transparent;
+    font-size: 13px; color: var(--h5-text); outline: 0;
+  }
+  .h5-search input::placeholder { color: var(--h5-text-3); }
+
+  /* 分类横滑 */
+  .h5-cat-strip {
+    background: var(--h5-card);
+    padding: 14px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-cat-strip::-webkit-scrollbar { display: none; }
+  .h5-cat-list {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px;
+  }
+  .h5-cat-pill {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--h5-text-2);
+    background: var(--h5-bg);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .h5-cat-pill.active {
+    background: var(--h5-primary);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* 商品卡 */
+  .h5-product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+  .h5-product {
+    background: var(--h5-card);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .h5-product .cover {
+    aspect-ratio: 1;
+    background: var(--h5-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px;
+    position: relative;
+  }
+  .h5-product .cover .badge-05 {
+    position: absolute; top: 8px; left: 8px;
+    background: linear-gradient(135deg, #FF6B35, #C44503);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  .h5-product .body {
+    padding: 10px;
+  }
+  .h5-product .name {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    min-height: 32px;
+  }
+  .h5-product .price {
+    margin-top: 6px;
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .h5-product .price .now {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--h5-primary);
+  }
+  .h5-product .price .now .y { font-size: 12px; }
+  .h5-product .price .old {
+    font-size: 11px;
+    color: var(--h5-text-3);
+    text-decoration: line-through;
+  }
+  .h5-product .meta {
+    margin-top: 6px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10px;
+    color: var(--h5-text-3);
+  }
+  .h5-product .meta .donate {
+    color: var(--h5-primary);
+    font-weight: 600;
+  }
+  .h5-product .cart-btn {
+    position: absolute; right: 8px; bottom: 8px;
+    width: 28px; height: 28px;
+    border-radius: 14px;
+    background: var(--h5-primary);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(232,93,4,0.3);
+  }
+
+  /* 入驻品牌 */
+  .h5-brand-strip {
+    background: var(--h5-card);
+    margin: 12px 16px 0;
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .h5-brand-title {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .h5-brand-title .t { font-size: 14px; font-weight: 600; }
+  .h5-brand-title .more { font-size: 11px; color: var(--h5-text-3); }
+  .h5-brand-list {
+    display: flex; gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-brand-list::-webkit-scrollbar { display: none; }
+  .h5-brand {
+    flex-shrink: 0;
+    width: 80px;
+    text-align: center;
+  }
+  .h5-brand .logo {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: var(--h5-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 4px;
+  }
+  .h5-brand .n { font-size: 11px; }
+
+  /* 公益数据条 */
+  .h5-impact-strip {
+    background: linear-gradient(135deg, rgba(20,184,166,0.08) 0%, rgba(232,93,4,0.08) 100%);
+    margin: 12px 16px 0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .h5-impact-strip .body { flex: 1; }
+  .h5-impact-strip .t { font-size: 14px; font-weight: 600; }
+  .h5-impact-strip .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; line-height: 1.4; }
+  .h5-impact-strip .ic { font-size: 32px; }
+</style>
+</head>
+<body class="has-tabbar">
+
+<div class="h5-nav transparent">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">慈善商城</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openCart()">🛒<span class="badge">2</span></div>
+  </div>
+</div>
+
+<div class="h5-mall-hero">
+  <div class="t">每笔订单自动捐赠<br><span class="highlight">0.5%</span> 公益金</div>
+  <div class="d">您买得越多，受惠者越多。已累计为受惠者募集 <b>¥860,000</b> 公益金。</div>
+  <div class="h5-mall-stats">
+    <div class="it"><div class="v">¥86万</div><div class="l">累计公益金</div></div>
+    <div class="it"><div class="v">28.6万</div><div class="l">受惠人次</div></div>
+    <div class="it"><div class="v">3,200</div><div class="l">合作商家</div></div>
+  </div>
+</div>
+
+<div class="h5-search-bar">
+  <div class="h5-search">
+    <span>🔍</span>
+    <input placeholder="搜索商品 / 品牌 / 公益项目">
+  </div>
+</div>
+
+<div class="h5-cat-strip">
+  <div class="h5-cat-list">
+    <div class="h5-cat-pill active" onclick="selectCat(this)">🔥 全部</div>
+    <div class="h5-cat-pill" onclick="selectCat(this)">🍞 临期食品</div>
+    <div class="h5-cat-pill" onclick="selectCat(this)">🥛 新品食品</div>
+    <div class="h5-cat-pill" onclick="selectCat(this)">🧴 日化</div>
+    <div class="h5-cat-pill" onclick="selectCat(this)">👕 服饰</div>
+    <div class="h5-cat-pill" onclick="selectCat(this)">📚 母婴</div>
+    <div class="h5-cat-pill" onclick="selectCat(this)">🎁 礼盒</div>
+  </div>
+</div>
+
+<!-- 公益金累计条 -->
+<div class="h5-impact-strip" onclick="openImpact()">
+  <div class="ic">🎁</div>
+  <div class="body">
+    <div class="t">0.5% 公益金实时累计</div>
+    <div class="d">本年累计 ¥128,600 · 来自 86,200 笔订单</div>
+  </div>
+  <span style="font-size:18px;color:var(--h5-text-3);">›</span>
+</div>
+
+<!-- 入驻品牌 -->
+<div class="h5-brand-strip">
+  <div class="h5-brand-title">
+    <div class="t">🏢 入驻品牌</div>
+    <a class="more" onclick="openTip('入驻品牌','3,200 家品牌商家','其中标杆爱心企业 86 家')">更多 →</a>
+  </div>
+  <div class="h5-brand-list">
+    <div class="h5-brand"><div class="logo" style="background:rgba(232,93,4,0.1);">🍞</div><div class="n">美心食品</div></div>
+    <div class="h5-brand"><div class="logo" style="background:rgba(20,184,166,0.1);">🥛</div><div class="n">伊利集团</div></div>
+    <div class="h5-brand"><div class="logo" style="background:rgba(196,132,42,0.12);">🧴</div><div class="n">宝洁</div></div>
+    <div class="h5-brand"><div class="logo" style="background:rgba(124,58,237,0.1);">🧴</div><div class="n">联合利华</div></div>
+    <div class="h5-brand"><div class="logo" style="background:rgba(245,158,11,0.12);">🍚</div><div class="n">金龙鱼</div></div>
+    <div class="h5-brand"><div class="logo" style="background:rgba(99,102,241,0.1);">🥤</div><div class="n">康师傅</div></div>
+    <div class="h5-brand"><div class="logo" style="background:rgba(232,93,4,0.1);">🍜</div><div class="n">统一</div></div>
+  </div>
+</div>
+
+<!-- 为你推荐 -->
+<div class="h5-section" style="padding: 12px 0 0;">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 8px;">
+    <div style="font-size:15px;font-weight:700;">🔥 为你推荐</div>
+    <a class="more" style="font-size:11px;color:var(--h5-text-3);" onclick="openTip('换一批','为您重新推荐商品')">换一批</a>
+  </div>
+  <div class="h5-product-grid" id="productGrid"></div>
+</div>
+
+<div style="height: 24px;"></div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='index.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab active" onclick="location.href='mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="public/js/h5.js"></script>
+<script>
+  // 商品数据
+  const PRODUCTS = [
+    { ic: '🍞', bg: '#FFE4D2', name: '美心临期面包糕点', price: 9.9, old: 19.9, sold: '2,860', donate: '0.05' },
+    { ic: '🥛', bg: '#E0FAF5', name: '伊利儿童牛奶 6 盒装', price: 29.9, old: 39.9, sold: '1,260', donate: '0.15' },
+    { ic: '🍙', bg: '#F3E8FF', name: '端午粽子礼盒 五芳斋', price: 88, old: 128, sold: '628', donate: '0.44' },
+    { ic: '🧴', bg: '#E0F2FE', name: '宝洁日化用品套装', price: 49.9, old: 89, sold: '1,820', donate: '0.25' },
+    { ic: '📚', bg: '#FEF3C7', name: '小学教辅书包 (捐山区)', price: 199, old: 299, sold: '386', donate: '1.0' },
+    { ic: '🍚', bg: '#FFE4D2', name: '金龙鱼东北大米 5kg', price: 39.9, old: 49.9, sold: '926', donate: '0.20' },
+    { ic: '🥤', bg: '#FFE4D2', name: '康师傅方便面 24 包', price: 29.9, old: 35, sold: '1,560', donate: '0.15' },
+    { ic: '🍜', bg: '#FEF3C7', name: '统一老坛酸菜牛肉面', price: 24.9, old: 30, sold: '1,238', donate: '0.12' }
+  ];
+
+  // 渲染商品
+  document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => `
+    <div class="h5-product" onclick="openDetail('${p.name}', '${p.price}', '${p.donate}')">
+      <div class="cover" style="background:${p.bg};">
+        <span class="badge-05">+${p.donate} 公益</span>
+        ${p.ic}
+      </div>
+      <div class="body">
+        <div class="name">${p.name}</div>
+        <div class="price">
+          <span class="now"><span class="y">¥</span>${p.price}</span>
+          <span class="old">¥${p.old}</span>
+        </div>
+        <div class="meta">
+          <span>已售 ${p.sold}</span>
+          <span class="donate">+¥${p.donate} 公益</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  function selectCat(el) {
+    document.querySelectorAll('.h5-cat-pill').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function openDetail(name, price, donate) {
+    document.getElementById('tipTitle').textContent = '商品详情';
+    document.getElementById('tipBody').innerHTML = `
+      <div style="text-align:left;">
+        <div style="aspect-ratio:1;background:linear-gradient(135deg,#FFE4D2,#FAEFD9);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:12px;">🍞</div>
+        <div style="font-size:16px;font-weight:600;margin-bottom:4px;">${name}</div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:8px;">
+          <span style="font-size:22px;font-weight:700;color:var(--h5-primary);">¥${price}</span>
+          <span style="font-size:12px;color:var(--h5-text-3);text-decoration:line-through;">¥39.9</span>
+        </div>
+        <div style="background:rgba(232,93,4,0.06);border:1px dashed var(--h5-primary);border-radius:8px;padding:10px;margin-bottom:14px;">
+          <div style="font-size:12px;color:var(--h5-primary);font-weight:600;">🎁 本次购买将自动捐赠 ¥${donate} 至公益金</div>
+        </div>
+        <div style="font-size:13px;color:var(--h5-text-2);line-height:1.6;">
+          美心食品集团提供，资质已认证。临期 30 天内，无任何质量问题。保质期至 2025-07-15。
+        </div>
+        <button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:16px;" onclick="H5.closeModal('tipModal')">立即购买</button>
+      </div>
+    `;
+    H5.openModal('tipModal');
+  }
+  function openImpact() {
+    document.getElementById('tipTitle').textContent = '0.5% 公益金';
+    document.getElementById('tipBody').innerHTML = `
+      <div style="text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">🎁</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:12px;">每笔订单自动捐赠 0.5%</div>
+        <div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;margin-bottom:16px;">
+          您买的每一笔订单，平台自动按 0.5% 计提公益金。公益金全透明，进入"慈商联营公益基金"，由 5 角色协同分配。
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">
+          <div style="background:var(--h5-bg);padding:12px;border-radius:10px;">
+            <div style="font-size:20px;font-weight:700;color:var(--h5-primary);">¥86万</div>
+            <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">累计公益金</div>
+          </div>
+          <div style="background:var(--h5-bg);padding:12px;border-radius:10px;">
+            <div style="font-size:20px;font-weight:700;color:var(--h5-trust);">28.6万</div>
+            <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">受惠人次</div>
+          </div>
+          <div style="background:var(--h5-bg);padding:12px;border-radius:10px;">
+            <div style="font-size:20px;font-weight:700;color:var(--h5-gold);">3,200</div>
+            <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">合作商家</div>
+          </div>
+        </div>
+      </div>
+    `;
+    H5.openModal('tipModal');
+  }
+  function openCart() {
+    document.getElementById('tipTitle').textContent = '购物车';
+    document.getElementById('tipBody').innerHTML = `
+      <div style="text-align:left;">
+        <div style="font-size:13px;color:var(--h5-text-3);margin-bottom:12px;">2 件商品</div>
+        <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--h5-bg);border-radius:10px;margin-bottom:8px;">
+          <div style="width:48px;height:48px;background:#FFE4D2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;">🍞</div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">美心临期面包</div><div style="font-size:11px;color:var(--h5-primary);">+¥0.05 公益</div></div>
+          <div style="font-size:14px;font-weight:700;color:var(--h5-primary);">¥9.9 ×1</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--h5-bg);border-radius:10px;margin-bottom:14px;">
+          <div style="width:48px;height:48px;background:#E0FAF5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;">🥛</div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:500;">伊利儿童牛奶</div><div style="font-size:11px;color:var(--h5-primary);">+¥0.15 公益</div></div>
+          <div style="font-size:14px;font-weight:700;color:var(--h5-primary);">¥29.9 ×1</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--h5-divider);">
+          <span style="font-size:14px;">合计</span>
+          <span style="font-size:18px;font-weight:700;color:var(--h5-primary);">¥39.80</span>
+        </div>
+        <div style="font-size:11px;color:var(--h5-text-3);margin-bottom:12px;">含公益金 ¥0.20</div>
+        <button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" onclick="H5.closeModal('tipModal')">去结算</button>
+      </div>
+    `;
+    H5.openModal('tipModal');
+  }
+  function openTip(t, d, ext) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      `<div style="text-align:center;font-size:14px;line-height:1.7;">
+        <div style="font-size:48px;margin-bottom:12px;">📋</div>
+        <div style="font-weight:600;margin-bottom:8px;">${t}</div>
+        ${d ? `<div style="font-size:13px;color:var(--h5-text-3);">${d}</div>` : ''}
+        ${ext ? `<div style="font-size:12px;color:var(--h5-text-3);margin-top:6px;">${ext}</div>` : ''}
+        <button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal('tipModal')">知道了</button>
+      </div>`;
+    H5.openModal('tipModal');
+  }
+
+  // nav 滚动
+  if (window.H5 && H5.initNavScroll) {
+    setTimeout(() => H5.initNavScroll(), 100);
+  }
+
+  // 入场
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-mall-hero .t, .h5-mall-hero .d, .h5-mall-stats',
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power2.out' }
+    );
+    gsap.fromTo('.h5-impact-strip, .h5-brand-strip',
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, delay: 0.3, stagger: 0.08, ease: 'power2.out' }
+    );
+    gsap.fromTo('.h5-product',
+      { y: 16, opacity: 0, scale: 0.96 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.4, delay: 0.5, stagger: 0.04, ease: 'power2.out' }
+    );
+  });
+</script>
+</body>
+</html>

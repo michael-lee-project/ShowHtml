@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>报告中心 — 慈商联营</title>
+<link rel="stylesheet" href="public/css/h5.css">
+<style>
+  /* Hero 黑色 */
+  .h5-rpt-hero {
+    padding: 56px 16px 24px;
+    color: #fff;
+    background: linear-gradient(135deg, #1A1A1A 0%, #0A0A0A 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .h5-rpt-hero::before {
+    content: "";
+    position: absolute; top: -40px; right: -30px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255,200,87,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .h5-rpt-hero .lbl { font-size: 12px; opacity: 0.7; letter-spacing: 1px; }
+  .h5-rpt-hero .t {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 4px 0 8px;
+    background: linear-gradient(135deg, #FFC857 0%, #FF6B35 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .h5-rpt-hero .d {
+    font-size: 13px;
+    opacity: 0.85;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .h5-rpt-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .h5-rpt-stat {
+    text-align: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 4px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .h5-rpt-stat .v { font-size: 16px; font-weight: 700; color: #FFC857; }
+  .h5-rpt-stat .l { font-size: 10px; opacity: 0.7; margin-top: 2px; }
+
+  /* Tab 切换 */
+  .h5-rpt-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 12px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-rpt-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--h5-text-2);
+    background: var(--h5-bg);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .h5-rpt-tab.active {
+    background: var(--h5-text);
+    color: var(--h5-card);
+    font-weight: 600;
+  }
+
+  /* 月度数据 */
+  .h5-rpt-month {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+  .h5-rpt-month-card {
+    background: var(--h5-card);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .h5-rpt-month-card .l { font-size: 12px; color: var(--h5-text-3); }
+  .h5-rpt-month-card .v {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--h5-text);
+    margin: 4px 0;
+    line-height: 1.1;
+  }
+  .h5-rpt-month-card .v .u { font-size: 12px; color: var(--h5-text-3); font-weight: 500; margin-left: 2px; }
+  .h5-rpt-month-card .trend { font-size: 11px; color: var(--h5-success); }
+  .h5-rpt-month-card .trend.down { color: var(--h5-danger); }
+  .h5-rpt-month-card .trend.flat { color: var(--h5-text-3); }
+  .h5-rpt-month-card .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  /* 柱状图（垂直 12 月）*/
+  .h5-rpt-bars {
+    display: flex; align-items: flex-end;
+    gap: 4px;
+    height: 100px;
+    padding: 8px 4px 0;
+  }
+  .h5-rpt-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--h5-primary) 0%, var(--h5-primary-deep) 100%);
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    min-height: 4px;
+  }
+  .h5-rpt-bar .label {
+    position: absolute;
+    bottom: -16px; left: 0; right: 0;
+    font-size: 8px;
+    color: var(--h5-text-3);
+    text-align: center;
+  }
+
+  /* 时间轴 */
+  .h5-timeline { position: relative; padding-left: 24px; }
+  .h5-timeline::before {
+    content: "";
+    position: absolute;
+    left: 8px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--h5-divider);
+  }
+  .h5-tl-item {
+    position: relative;
+    padding-bottom: 18px;
+  }
+  .h5-tl-item::before {
+    content: "";
+    position: absolute;
+    left: -19px; top: 6px;
+    width: 10px; height: 10px;
+    background: var(--h5-primary);
+    border-radius: 5px;
+    border: 2px solid var(--h5-card);
+    box-shadow: 0 0 0 2px var(--h5-primary);
+  }
+  .h5-tl-item.gray::before {
+    background: var(--h5-divider);
+    box-shadow: 0 0 0 2px var(--h5-divider);
+  }
+  .h5-tl-item .t { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .h5-tl-item .m { font-size: 11px; color: var(--h5-text-3); }
+  .h5-tl-item .d { font-size: 11px; color: var(--h5-text-2); margin-top: 4px; line-height: 1.5; }
+
+  /* 角色贡献 */
+  .h5-rpt-role {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-rpt-role:last-child { border-bottom: 0; }
+  .h5-rpt-role .av {
+    width: 32px; height: 32px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .h5-rpt-role .body { flex: 1; }
+  .h5-rpt-role .t { font-size: 13px; font-weight: 500; }
+  .h5-rpt-role .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-rpt-role .v { font-size: 14px; font-weight: 700; }
+</style>
+</head>
+<body class="has-tabbar">
+
+<div class="h5-nav transparent">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">报告中心</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openShare()">📤</div>
+  </div>
+</div>
+
+<div class="h5-rpt-hero">
+  <div class="lbl">2024 ANNUAL IMPACT REPORT</div>
+  <div class="t">2024 年度报告</div>
+  <div class="d">本年累计服务 <b>126,800</b> 人次，5 角色协同 <b>3,200</b> 家企业，<b>0 损耗</b>。</div>
+  <div class="h5-rpt-stats">
+    <div class="h5-rpt-stat"><div class="v">¥2.86亿</div><div class="l">总价值</div></div>
+    <div class="h5-rpt-stat"><div class="v">86万</div><div class="l">物资</div></div>
+    <div class="h5-rpt-stat"><div class="v">126.8K</div><div class="l">受惠</div></div>
+    <div class="h5-rpt-stat"><div class="v">0</div><div class="l">损耗</div></div>
+  </div>
+</div>
+
+<div class="h5-rpt-tabs">
+  <div class="h5-rpt-tab active" onclick="selectRpt(this,'year')">年度</div>
+  <div class="h5-rpt-tab" onclick="selectRpt(this,'month')">本月</div>
+  <div class="h5-rpt-tab" onclick="selectRpt(this,'quarter')">本季</div>
+  <div class="h5-rpt-tab" onclick="selectRpt(this,'all')">历届</div>
+</div>
+
+<!-- 月度数据 -->
+<div class="h5-section" style="padding: 12px 0 0;">
+  <div class="h5-card">
+    <div class="h5-card-title">
+      <div class="title">📊 5 月数据</div>
+      <a class="more" onclick="openTip('查看完整','5 月运营月报已生成','含 8 项数据 + 26 个项目')">详情 →</a>
+    </div>
+    <div class="h5-rpt-month">
+      <div class="h5-rpt-month-card">
+        <div class="ic" style="background:rgba(232,93,4,0.1);color:#E85D04;">📦</div>
+        <div class="l">捐赠次数</div>
+        <div class="v">28<span class="u">次</span></div>
+        <div class="trend">↑ 同比 +12%</div>
+      </div>
+      <div class="h5-rpt-month-card">
+        <div class="ic" style="background:rgba(20,184,166,0.12);color:#14B8A6;">💝</div>
+        <div class="l">受惠人次</div>
+        <div class="v">12.6<span class="u">万</span></div>
+        <div class="trend">↑ 同比 +42%</div>
+      </div>
+      <div class="h5-rpt-month-card">
+        <div class="ic" style="background:rgba(196,132,42,0.12);color:#C4842A;">🚚</div>
+        <div class="l">派发物资</div>
+        <div class="v">8.26<span class="u">万件</span></div>
+        <div class="trend">↑ 同比 +38%</div>
+      </div>
+      <div class="h5-rpt-month-card">
+        <div class="ic" style="background:rgba(124,58,237,0.1);color:#7C3AED;">📋</div>
+        <div class="l">完成项目</div>
+        <div class="v">26</div>
+        <div class="trend">含紧急 2</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 12 月趋势 -->
+<div class="h5-section" style="padding-top: 0;">
+  <div class="h5-card">
+    <div class="h5-card-title">
+      <div class="title">📈 近 12 月趋势</div>
+      <a class="more" onclick="openTip('趋势图','近 12 月物资价值趋势','单位：万元')">详情 →</a>
+    </div>
+    <div class="h5-rpt-bars" id="bars">
+      <div class="h5-rpt-bar" style="height: 38%;" data-h="38"><div class="label">1月</div></div>
+      <div class="h5-rpt-bar" style="height: 46%;" data-h="46"><div class="label">2月</div></div>
+      <div class="h5-rpt-bar" style="height: 32%;" data-h="32"><div class="label">3月</div></div>
+      <div class="h5-rpt-bar" style="height: 70%;" data-h="70"><div class="label">4月</div></div>
+      <div class="h5-rpt-bar" style="height: 78%;" data-h="78"><div class="label">5月</div></div>
+      <div class="h5-rpt-bar" style="height: 60%;" data-h="60"><div class="label">6月</div></div>
+      <div class="h5-rpt-bar" style="height: 68%;" data-h="68"><div class="label">7月</div></div>
+      <div class="h5-rpt-bar" style="height: 55%;" data-h="55"><div class="label">8月</div></div>
+      <div class="h5-rpt-bar" style="height: 50%;" data-h="50"><div class="label">9月</div></div>
+      <div class="h5-rpt-bar" style="height: 72%;" data-h="72"><div class="label">10月</div></div>
+      <div class="h5-rpt-bar" style="height: 80%;" data-h="80"><div class="label">11月</div></div>
+      <div class="h5-rpt-bar" style="height: 90%;" data-h="90"><div class="label">12月</div></div>
+    </div>
+    <div style="height: 24px;"></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--h5-text-3);margin-top:6px;">
+      <span>最低 70 万 (3月)</span>
+      <span>最高 175 万 (12月)</span>
+    </div>
+  </div>
+</div>
+
+<!-- 5 角色贡献分布 -->
+<div class="h5-section" style="padding-top: 0;">
+  <div class="h5-card">
+    <div class="h5-card-title">
+      <div class="title">🤝 5 角色贡献分布</div>
+      <a class="more" onclick="openTip('5 角色','企业 128 · 慈善会 26 · 组织 28 · 志愿者 1,260 · 受捐者 12.6万','完整数据')">详情 →</a>
+    </div>
+    <div class="h5-rpt-role">
+      <div class="av" style="background:linear-gradient(135deg,#E85D04,#C44503);">🏢</div>
+      <div class="body">
+        <div class="t">企业</div>
+        <div class="d">3,200 家</div>
+      </div>
+      <div class="v" style="color:#E85D04;">¥1.86亿</div>
+    </div>
+    <div class="h5-rpt-role">
+      <div class="av" style="background:linear-gradient(135deg,#0E5A6F,#073D4D);">🏛</div>
+      <div class="body">
+        <div class="t">慈善会</div>
+        <div class="d">86 家</div>
+      </div>
+      <div class="v" style="color:#0E5A6F;">¥0.86亿</div>
+    </div>
+    <div class="h5-rpt-role">
+      <div class="av" style="background:linear-gradient(135deg,#C4842A,#8B5A1A);">🏢</div>
+      <div class="body">
+        <div class="t">社会组织</div>
+        <div class="d">128 家</div>
+      </div>
+      <div class="v" style="color:#C4842A;">¥0.32亿</div>
+    </div>
+    <div class="h5-rpt-role">
+      <div class="av" style="background:linear-gradient(135deg,#14B8A6,#0D8A7E);">🙋</div>
+      <div class="body">
+        <div class="t">志愿者</div>
+        <div class="d">1,260 人</div>
+      </div>
+      <div class="v" style="color:#14B8A6;">12.6万h</div>
+    </div>
+    <div class="h5-rpt-role">
+      <div class="av" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);">🎁</div>
+      <div class="body">
+        <div class="t">受捐者</div>
+        <div class="d">12.6万 人</div>
+      </div>
+      <div class="v" style="color:#7C3AED;">86万件</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2024 关键里程碑 -->
+<div class="h5-section" style="padding-top: 0;">
+  <div class="h5-card">
+    <div class="h5-card-title">
+      <div class="title">🏆 2024 关键里程碑</div>
+      <a class="more" onclick="openTip('2024 里程碑','12 项关键事件','含 6 项行业首创')">详情 →</a>
+    </div>
+    <div class="h5-timeline">
+      <div class="h5-tl-item">
+        <div class="t">2024.12.31 · 年度收官</div>
+        <div class="d">年度受惠 126,800 人次，物资 86 万件，<b>0 损耗</b>。</div>
+      </div>
+      <div class="h5-tl-item">
+        <div class="t">2024.11.20 · 行业首创</div>
+        <div class="d">"慈商联营"模式获国家民政部表彰，纳入 2025 全国推广项目。</div>
+      </div>
+      <div class="h5-tl-item">
+        <div class="t">2024.10.10 · 标杆企业</div>
+        <div class="d">美心食品集团 / 伊利集团 / 格力电器 等 86 家企业获"标杆爱心企业"称号。</div>
+      </div>
+      <div class="h5-tl-item">
+        <div class="t">2024.09.05 · 平台 v2.0 上线</div>
+        <div class="d">引入区块链溯源 + 0.5% 自动捐赠 + 5 角色协同工作台。</div>
+      </div>
+      <div class="h5-tl-item">
+        <div class="t">2024.06.18 · 慈善法实施</div>
+        <div class="d">响应《慈善法》新规，全平台资质 100% 已认证。</div>
+      </div>
+      <div class="h5-tl-item gray">
+        <div class="t">2024.01.01 · 平台启动</div>
+        <div class="d">"慈商联营"平台正式上线，3 角色试点。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height: 24px;"></div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='index.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab active" onclick="location.href='report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="public/js/h5.js"></script>
+<script>
+  function selectRpt(el, t) {
+    document.querySelectorAll('.h5-rpt-tab').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    if (t === 'all') {
+      openTip('历届报告', '2022 / 2023 / 2024 共 3 份年度报告', '可下载 PDF 查看完整内容');
+    } else if (t === 'quarter') {
+      openTip('本季数据', 'Q2 累计 86 个项目，12,600 万元物资', '环比 Q1 +28%');
+    } else if (t === 'month') {
+      openTip('本月数据', '5 月运营月报已生成', '含 8 项数据 + 26 个项目');
+    }
+  }
+  function openShare() {
+    openTip('分享报告', '将 2024 年度报告分享给好友', '支持微信 / 微博 / 复制链接');
+  }
+  function openTip(t, d, ext) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      `<div style="text-align:center;font-size:14px;line-height:1.7;">
+        <div style="font-size:48px;margin-bottom:12px;">📊</div>
+        <div style="font-weight:600;margin-bottom:8px;">${t}</div>
+        ${d ? `<div style="font-size:13px;color:var(--h5-text-3);">${d}</div>` : ''}
+        ${ext ? `<div style="font-size:12px;color:var(--h5-text-3);margin-top:6px;">${ext}</div>` : ''}
+        <button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal('tipModal')">知道了</button>
+      </div>`;
+    H5.openModal('tipModal');
+  }
+
+  if (window.H5 && H5.initNavScroll) {
+    setTimeout(() => H5.initNavScroll(), 100);
+  }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-rpt-hero .lbl, .h5-rpt-hero .t, .h5-rpt-hero .d, .h5-rpt-stats',
+      { y: 12, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' }
+    );
+    gsap.utils.toArray('.h5-section').forEach((sec, i) => {
+      gsap.fromTo(sec, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.3 + i * 0.08, ease: 'power2.out' });
+    });
+    // 柱状图
+    gsap.utils.toArray('.h5-rpt-bar').forEach((b, i) => {
+      const h = b.dataset.h;
+      gsap.fromTo(b, { height: '0%' }, { height: h + '%', duration: 0.8, delay: 0.4 + i * 0.04, ease: 'power2.out' });
+    });
+    // 时间轴
+    gsap.utils.toArray('.h5-tl-item').forEach((it, i) => {
+      gsap.fromTo(it, { x: -8, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, delay: 0.6 + i * 0.08, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

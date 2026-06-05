@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>我的 — 慈商联营</title>
+<link rel="stylesheet" href="public/css/h5.css">
+<style>
+  /* profile hero */
+  .h5-profile-hero {
+    padding: 56px 16px 28px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--h5-primary) 0%, var(--h5-primary-deep) 100%);
+    position: relative;
+  }
+  .h5-profile-hero::before {
+    content: "";
+    position: absolute; top: -40px; right: -20px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .h5-profile-hero::after {
+    content: "";
+    position: absolute; bottom: -20px; left: -40px;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .h5-profile-info {
+    display: flex; align-items: center; gap: 14px;
+    position: relative;
+  }
+  .h5-profile-info .av {
+    width: 64px; height: 64px;
+    border-radius: 32px;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid rgba(255,255,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .h5-profile-info .body { flex: 1; min-width: 0; }
+  .h5-profile-info .name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .h5-profile-info .sub { font-size: 12px; opacity: 0.85; }
+  .h5-profile-info .edit {
+    width: 32px; height: 32px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* 数据 strip */
+  .h5-stats-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 14px 0;
+    margin: 16px 0 0;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .h5-stats-strip .it {
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+  }
+  .h5-stats-strip .it:last-child { border-right: 0; }
+  .h5-stats-strip .v { font-size: 18px; font-weight: 700; }
+  .h5-stats-strip .l { font-size: 10px; opacity: 0.85; margin-top: 2px; }
+
+  /* 菜单卡 */
+  .h5-menu-card {
+    background: var(--h5-card);
+    border-radius: 14px;
+    margin: 12px 16px 0;
+    padding: 0 14px;
+  }
+  .h5-menu-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-menu-item:last-child { border-bottom: 0; }
+  .h5-menu-item .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .h5-menu-item .body { flex: 1; min-width: 0; }
+  .h5-menu-item .t { font-size: 14px; font-weight: 500; }
+  .h5-menu-item .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-menu-item .r { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--h5-text-3); }
+  .h5-menu-item .red { color: var(--h5-danger); }
+  .h5-menu-item .arrow { font-size: 18px; color: var(--h5-text-3); }
+
+  /* 切角色按钮 */
+  .h5-role-switcher {
+    margin: 12px 16px 0;
+    background: var(--h5-card);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .h5-role-switcher .body { flex: 1; }
+  .h5-role-switcher .t { font-size: 13px; font-weight: 500; }
+  .h5-role-switcher .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<!-- 顶部透明 nav -->
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title" id="navTitle">我的</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openSettings()">⚙️</div>
+  </div>
+</div>
+
+<!-- Profile Hero -->
+<div class="h5-profile-hero" id="profileHero">
+  <div class="h5-profile-info">
+    <div class="av" id="avChar">李</div>
+    <div class="body">
+      <div class="name" id="userName">李经理</div>
+      <div class="sub" id="userSub">美心食品集团 · 已认证</div>
+    </div>
+    <div class="edit" onclick="openSettings()">✎</div>
+  </div>
+  <div class="h5-stats-strip" id="statsStrip">
+    <div class="it"><div class="v" id="stat0">128</div><div class="l">捐赠</div></div>
+    <div class="it"><div class="v" id="stat1">12.6万</div><div class="l">受惠</div></div>
+    <div class="it"><div class="v" id="stat2">¥1,860万</div><div class="l">价值</div></div>
+    <div class="it"><div class="v" id="stat3">2年</div><div class="l">入驻</div></div>
+  </div>
+</div>
+
+<div class="h5-page" style="padding-top: 0;">
+
+  <!-- 切角色 -->
+  <div class="h5-role-switcher" onclick="openSwitchRole()">
+    <div style="width:32px;height:32px;border-radius:8px;background:rgba(124,58,237,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;">🔄</div>
+    <div class="body">
+      <div class="t">切换角色</div>
+      <div class="d">体验 5 角色不同视角</div>
+    </div>
+    <span class="arrow" style="font-size:18px;color:var(--h5-text-3);">›</span>
+  </div>
+
+  <!-- 我的工作 -->
+  <div class="h5-menu-card" id="menu1"></div>
+
+  <!-- 资产与数据 -->
+  <div class="h5-menu-card" id="menu2"></div>
+
+  <!-- 服务与设置 -->
+  <div class="h5-menu-card" id="menu3"></div>
+
+  <!-- 关于 -->
+  <div class="h5-menu-card" id="menu4"></div>
+
+  <div style="height: 24px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='index.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab active" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="public/js/h5.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const role = params.get('role') || 'company';
+  H5.setRole(role);
+  document.body.dataset.role = role;
+
+  const ROLE_DATA = {
+    company: {
+      name: '李经理', char: '李', sub: '美心食品集团 · 已认证',
+      stats: ['128', '12.6万', '¥1,860万', '2年'],
+      menu1: {
+        title: '我的工作',
+        items: [
+          { ic: '📦', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', t: '发起捐赠', d: '响应项目 · 提交审核' },
+          { ic: '📋', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', t: '捐赠记录', d: '128 笔 · 累计 ¥1,860 万' },
+          { ic: '🚚', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', t: '物资轨迹', d: '实时追踪 · 已派发 86 万件' },
+          { ic: '🏆', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '慈善评分', d: '98.6 分 · 行业 TOP 5', r: '查看' }
+        ]
+      },
+      menu2: {
+        title: '资产与数据',
+        items: [
+          { ic: '💳', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', t: '我的钱包', d: '余额 ¥86,500' },
+          { ic: '📊', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', t: '数据报告', d: '月度 / 季度 / 年度' },
+          { ic: '🏢', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', t: '企业主页', d: '美心食品集团' }
+        ]
+      },
+      menu3: {
+        title: '服务与设置',
+        items: [
+          { ic: '🔔', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '消息通知', d: '3 条未读' },
+          { ic: '🔒', bg: 'rgba(99,102,241,0.1)', col: '#6366F1', t: '账户安全', d: '已绑定手机' },
+          { ic: '🎨', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', t: '外观设置', d: '跟随系统' }
+        ]
+      }
+    },
+    charity: {
+      name: '王主任', char: '王', sub: '广东省慈善总会 · 已认证',
+      stats: ['26', '12.6万', '1,260', '8年'],
+      menu1: {
+        title: '我的工作',
+        items: [
+          { ic: '📋', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', t: '项目管理', d: '26 个在执行' },
+          { ic: '🚚', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', t: '物资审批', d: '3 笔待审批', r: '紧急' },
+          { ic: '🤝', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', t: '社会组织', d: '28 家合作' },
+          { ic: '👥', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', t: '志愿者管理', d: '1,260 人' }
+        ]
+      },
+      menu2: {
+        title: '资产与数据',
+        items: [
+          { ic: '💳', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', t: '项目资金', d: '可用 ¥86 万' },
+          { ic: '📊', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', t: '数据报告', d: '本月 / 本季 / 全年' },
+          { ic: '🏛', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', t: '总会主页', d: '广东省慈善总会' }
+        ]
+      },
+      menu3: {
+        title: '服务与设置',
+        items: [
+          { ic: '🔔', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '消息通知', d: '3 条未读' },
+          { ic: '🔒', bg: 'rgba(99,102,241,0.1)', col: '#6366F1', t: '账户安全', d: '已绑定手机' },
+          { ic: '🎨', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', t: '外观设置', d: '跟随系统' }
+        ]
+      }
+    },
+    org: {
+      name: '李秘书长', char: '李', sub: '深圳市壹基金 · 已认证',
+      stats: ['28', '4.28万', '86', '3年'],
+      menu1: {
+        title: '我的工作',
+        items: [
+          { ic: '🚚', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', t: '物资派发', d: '本月 8,260 件' },
+          { ic: '👥', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', t: '志愿者管理', d: '86 人 · 5 待审', r: '审核' },
+          { ic: '🏢', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', t: '合作慈善会', d: '3 家' },
+          { ic: '📚', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', t: '参与项目', d: '28 个' }
+        ]
+      },
+      menu2: {
+        title: '资产与数据',
+        items: [
+          { ic: '💳', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', t: '项目资金', d: '可用 ¥12.6 万' },
+          { ic: '📊', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', t: '数据报告', d: '本月 / 本季 / 全年' },
+          { ic: '🏢', bg: 'rgba(14,90,111,0.1)', col: '#0E5A6F', t: '组织主页', d: '深圳市壹基金' }
+        ]
+      },
+      menu3: {
+        title: '服务与设置',
+        items: [
+          { ic: '🔔', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '消息通知', d: '2 条未读' },
+          { ic: '🔒', bg: 'rgba(99,102,241,0.1)', col: '#6366F1', t: '账户安全', d: '已绑定手机' },
+          { ic: '🎨', bg: 'rgba(196,132,42,0.12)', col: '#C4842A', t: '外观设置', d: '跟随系统' }
+        ]
+      }
+    },
+    volunteer: {
+      name: '张伟', char: '张', sub: '深圳鹏星社工 · 注册志愿者',
+      stats: ['850', '28', '156h', '286人'],
+      menu1: {
+        title: '我的志愿',
+        items: [
+          { ic: '🏆', bg: 'rgba(20,184,166,0.1)', col: '#14B8A6', t: '贡献分', d: '850 / 1000 · 较上周 +28' },
+          { ic: '📋', bg: 'rgba(20,184,166,0.1)', col: '#14B8A6', t: '我的任务', d: '3 个待执行' },
+          { ic: '🎖', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '我的奖章', d: '3 / 8 解锁' },
+          { ic: '🛍', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', t: '积分兑换', d: '可用 1,500 分' }
+        ]
+      },
+      menu2: {
+        title: '资产与数据',
+        items: [
+          { ic: '💰', bg: 'rgba(20,184,166,0.1)', col: '#14B8A6', t: '我的钱包', d: '余额 ¥86.50' },
+          { ic: '📊', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', t: '志愿服务报告', d: '月度 / 季度' },
+          { ic: '❤️', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '爱心足迹', d: '13,033 步 · 8.7 km' }
+        ]
+      },
+      menu3: {
+        title: '服务与设置',
+        items: [
+          { ic: '🔔', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '消息通知', d: '5 条未读' },
+          { ic: '🔒', bg: 'rgba(99,102,241,0.1)', col: '#6366F1', t: '账户安全', d: '已绑定手机' },
+          { ic: '🎨', bg: 'rgba(20,184,166,0.1)', col: '#14B8A6', t: '外观设置', d: '跟随系统' }
+        ]
+      }
+    },
+    recipient: {
+      name: '李华', char: '李', sub: '受捐者 · 已认证 · 五华县水寨镇',
+      stats: ['12', '8', '¥1,860', '3户'],
+      menu1: {
+        title: '我的领取',
+        items: [
+          { ic: '🎁', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', t: '领取记录', d: '12 次 · 86 件' },
+          { ic: '📷', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', t: '扫码领取', d: '扫描物资二维码' },
+          { ic: '💬', bg: 'rgba(232,93,4,0.1)', col: '#E85D04', t: '我的反馈', d: '8 条 · 好评率 100%' },
+          { ic: '📅', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '预约记录', d: '下次 6/15' }
+        ]
+      },
+      menu2: {
+        title: '资产与数据',
+        items: [
+          { ic: '💰', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', t: '受惠价值', d: '累计 ¥1,860' },
+          { ic: '📊', bg: 'rgba(20,184,166,0.12)', col: '#14B8A6', t: '受捐报告', d: '年度明细' },
+          { ic: '🏠', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '家庭信息', d: '3 户 · 已认证' }
+        ]
+      },
+      menu3: {
+        title: '服务与设置',
+        items: [
+          { ic: '🔔', bg: 'rgba(245,158,11,0.12)', col: '#F59E0B', t: '消息通知', d: '2 条未读' },
+          { ic: '🔒', bg: 'rgba(99,102,241,0.1)', col: '#6366F1', t: '账户安全', d: '已绑定手机' },
+          { ic: '🎨', bg: 'rgba(124,58,237,0.1)', col: '#7C3AED', t: '外观设置', d: '跟随系统' }
+        ]
+      }
+    }
+  };
+
+  const d = ROLE_DATA[role] || ROLE_DATA.company;
+  document.getElementById('avChar').textContent = d.char;
+  document.getElementById('userName').textContent = d.name;
+  document.getElementById('userSub').textContent = d.sub;
+  d.stats.forEach((s, i) => { document.getElementById('stat' + i).textContent = s; });
+
+  // 渲染菜单
+  function renderMenu(id, m) {
+    document.getElementById(id).innerHTML = `
+      <div style="padding:14px 0 8px;font-size:13px;font-weight:600;color:var(--h5-text-3);">${m.title}</div>
+      ${m.items.map(it => `
+        <div class="h5-menu-item" onclick="openTip('${it.t}','${it.d || ''}')">
+          <div class="ic" style="background:${it.bg};color:${it.col};">${it.ic}</div>
+          <div class="body">
+            <div class="t">${it.t}</div>
+            <div class="d">${it.d}</div>
+          </div>
+          ${it.r ? `<div class="r" style="color:var(--h5-primary);">${it.r}</div>` : ''}
+          <span class="arrow">›</span>
+        </div>
+      `).join('')}
+    `;
+  }
+  renderMenu('menu1', d.menu1);
+  renderMenu('menu2', d.menu2);
+  renderMenu('menu3', d.menu3);
+  // menu4 通用
+  document.getElementById('menu4').innerHTML = `
+    <div style="padding:14px 0 8px;font-size:13px;font-weight:600;color:var(--h5-text-3);">关于</div>
+    <div class="h5-menu-item" onclick="openTip('用户协议','请查看用户协议')"><div class="ic" style="background:rgba(99,102,241,0.1);color:#6366F1;">📄</div><div class="body"><div class="t">用户协议</div></div><span class="arrow">›</span></div>
+    <div class="h5-menu-item" onclick="openTip('隐私政策','请查看隐私政策')"><div class="ic" style="background:rgba(99,102,241,0.1);color:#6366F1;">🔒</div><div class="body"><div class="t">隐私政策</div></div><span class="arrow">›</span></div>
+    <div class="h5-menu-item" onclick="openTip('关于慈商联营','v1.0.0 · 海南亚洲公益研究院')"><div class="ic" style="background:rgba(124,58,237,0.1);color:#7C3AED;">ℹ️</div><div class="body"><div class="t">关于慈商联营</div><div class="d">v1.0.0</div></div><span class="arrow">›</span></div>
+    <div class="h5-menu-item" onclick="confirmExit()"><div class="ic" style="background:rgba(220,38,38,0.1);color:#DC2626;">🚪</div><div class="body"><div class="t red">退出登录</div></div></div>
+  `;
+
+  function openSettings() {
+    openTip('设置', '账户与外观设置', '当前角色：' + d.name);
+  }
+  function openSwitchRole() {
+    document.getElementById('tipTitle').textContent = '切换角色';
+    document.getElementById('tipBody').innerHTML = `
+      <div style="font-size:13px;color:var(--h5-text-3);margin-bottom:14px;">选择要体验的角色视角</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div onclick="location.href='profile.html?role=company'" style="padding:14px;border-radius:10px;background:rgba(232,93,4,0.06);cursor:pointer;">
+          <div style="font-size:24px;margin-bottom:4px;">🏢</div>
+          <div style="font-size:13px;font-weight:600;">企业</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">美心食品</div>
+        </div>
+        <div onclick="location.href='profile.html?role=charity'" style="padding:14px;border-radius:10px;background:rgba(14,90,111,0.06);cursor:pointer;">
+          <div style="font-size:24px;margin-bottom:4px;">🏛</div>
+          <div style="font-size:13px;font-weight:600;">慈善会</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">广东省慈善总会</div>
+        </div>
+        <div onclick="location.href='profile.html?role=org'" style="padding:14px;border-radius:10px;background:rgba(196,132,42,0.08);cursor:pointer;">
+          <div style="font-size:24px;margin-bottom:4px;">🏢</div>
+          <div style="font-size:13px;font-weight:600;">社会组织</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">深圳壹基金</div>
+        </div>
+        <div onclick="location.href='profile.html?role=volunteer'" style="padding:14px;border-radius:10px;background:rgba(20,184,166,0.06);cursor:pointer;">
+          <div style="font-size:24px;margin-bottom:4px;">🙋</div>
+          <div style="font-size:13px;font-weight:600;">志愿者</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">张伟</div>
+        </div>
+        <div onclick="location.href='profile.html?role=recipient'" style="padding:14px;border-radius:10px;background:rgba(124,58,237,0.06);cursor:pointer;grid-column:span 2;">
+          <div style="font-size:24px;margin-bottom:4px;">🎁</div>
+          <div style="font-size:13px;font-weight:600;">受捐者</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">李华 · 五华县水寨镇</div>
+        </div>
+      </div>
+    `;
+    H5.openModal('tipModal');
+  }
+  function confirmExit() {
+    document.getElementById('tipTitle').textContent = '退出登录';
+    document.getElementById('tipBody').innerHTML = `
+      <div style="text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">🚪</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:8px;">确定要退出登录吗？</div>
+        <div style="font-size:13px;color:var(--h5-text-3);margin-bottom:20px;">退出后部分数据将不会保留</div>
+        <div style="display:flex;gap:10px;">
+          <button class="h5-btn h5-btn-ghost h5-btn-block" onclick="H5.closeModal('tipModal')">取消</button>
+          <button class="h5-btn h5-btn-primary h5-btn-block" onclick="location.href='login.html'">确定退出</button>
+        </div>
+      </div>
+    `;
+    H5.openModal('tipModal');
+  }
+  function openTip(t, d) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      `<div style="text-align:center;font-size:14px;line-height:1.7;">
+        <div style="font-size:48px;margin-bottom:16px;">📋</div>
+        <div style="font-weight:600;margin-bottom:8px;">${t}</div>
+        ${d ? `<div style="font-size:13px;color:var(--h5-text-3);">${d}</div>` : ''}
+        <button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal('tipModal')">知道了</button>
+      </div>`;
+    H5.openModal('tipModal');
+  }
+
+  // nav 滚动切回
+  if (window.H5 && H5.initNavScroll) {
+    setTimeout(() => H5.initNavScroll(), 100);
+  }
+
+  // 入场
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-profile-info',
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+    );
+    gsap.fromTo('.h5-stats-strip',
+      { y: 12, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, delay: 0.2, ease: 'power2.out' }
+    );
+    gsap.utils.toArray('.h5-menu-card, .h5-role-switcher').forEach((c, i) => {
+      gsap.fromTo(c, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.3 + i * 0.06, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

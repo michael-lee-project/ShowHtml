@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>登录 — 慈商联营</title>
+<link rel="stylesheet" href="./public/css/h5.css">
+<style>
+  body { background: #fff; }
+  .h5-auth-wrap {
+    min-height: 100vh;
+    padding: 24px 24px 40px;
+    display: flex; flex-direction: column;
+  }
+  .h5-auth-logo {
+    width: 64px; height: 64px;
+    margin: 32px 0 24px;
+  }
+  .h5-auth-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--h5-text);
+    margin-bottom: 6px;
+  }
+  .h5-auth-sub {
+    font-size: 14px;
+    color: var(--h5-text-3);
+    margin-bottom: 32px;
+  }
+  .h5-role-switch {
+    display: flex; gap: 8px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .h5-role-pill {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    background: var(--h5-bg);
+    color: var(--h5-text-2);
+    border-radius: var(--h5-radius-pill);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .h5-role-pill.active {
+    background: var(--h5-primary);
+    color: #fff;
+  }
+  .h5-input-icon {
+    position: relative;
+  }
+  .h5-input-icon .h5-input {
+    padding-left: 40px;
+  }
+  .h5-input-icon .ic {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--h5-text-3);
+    font-size: 18px;
+    pointer-events: none;
+  }
+  .h5-input-extra {
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--h5-primary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .h5-remember {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 8px 0 24px;
+    font-size: 13px;
+    color: var(--h5-text-2);
+  }
+  .h5-checkbox {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .h5-checkbox input { width: 16px; height: 16px; accent-color: var(--h5-primary); }
+  .h5-forgot { color: var(--h5-primary); }
+  .h5-divider {
+    display: flex; align-items: center;
+    margin: 32px 0 16px;
+    color: var(--h5-text-3);
+    font-size: 12px;
+  }
+  .h5-divider::before, .h5-divider::after {
+    content: "";
+    flex: 1; height: 1px;
+    background: var(--h5-divider);
+  }
+  .h5-divider span { padding: 0 12px; }
+  .h5-third-party {
+    display: flex; justify-content: center; gap: 32px;
+  }
+  .h5-third-party .item {
+    width: 44px; height: 44px;
+    background: var(--h5-bg);
+    border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    transition: transform 0.15s;
+  }
+  .h5-third-party .item:active { transform: scale(0.92); }
+  .h5-register-link {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 32px;
+    font-size: 14px;
+    color: var(--h5-text-3);
+  }
+  .h5-register-link a { color: var(--h5-primary); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="h5-auth-wrap">
+  <div class="h5-auth-logo" id="authLogo"></div>
+  <div class="h5-auth-title">欢迎回来</div>
+  <div class="h5-auth-sub">登录后开启您的公益之旅</div>
+
+  <!-- 角色快速切换 -->
+  <div class="h5-role-switch" id="roleSwitch">
+    <div class="h5-role-pill active" data-role="volunteer">🙋 志愿者</div>
+    <div class="h5-role-pill" data-role="recipient">❤️ 受捐者</div>
+    <div class="h5-role-pill" data-role="company">🏢 企业</div>
+    <div class="h5-role-pill" data-role="charity">慈 慈善会</div>
+    <div class="h5-role-pill" data-role="org">社 社会组织</div>
+  </div>
+
+  <form id="loginForm" onsubmit="return doLogin(event)">
+    <div class="h5-form-group">
+      <div class="h5-input-icon">
+        <span class="ic">📱</span>
+        <input type="tel" class="h5-input" id="phone" placeholder="请输入手机号" maxlength="11" required>
+      </div>
+    </div>
+    <div class="h5-form-group">
+      <div class="h5-input-icon">
+        <span class="ic">🔒</span>
+        <input type="password" class="h5-input" id="password" placeholder="请输入密码" required>
+        <span class="h5-input-extra" onclick="togglePwd()">显示</span>
+      </div>
+    </div>
+
+    <div class="h5-remember">
+      <label class="h5-checkbox">
+        <input type="checkbox" checked> 7 天内自动登录
+      </label>
+      <a href="#" class="h5-forgot">忘记密码？</a>
+    </div>
+
+    <div style="height: 100px;"></div>
+  </form>
+
+  <!-- 登录按钮 fixed bottom -->
+  <div class="h5-bottom-action">
+    <button type="submit" class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" id="loginBtn" onclick="doLogin(event)">登 录</button>
+  </div>
+
+  <div class="h5-divider"><span>其他登录方式</span></div>
+  <div class="h5-third-party">
+    <div class="item" title="微信">💬</div>
+    <div class="item" title="支付宝">💰</div>
+    <div class="item" title="Apple">🍎</div>
+  </div>
+
+  <div class="h5-register-link">
+    还没账号？<a href="./register.html">立即注册</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="./public/js/h5.js"></script>
+<script>
+  document.getElementById('authLogo').innerHTML = H5.LOGO_SVG;
+
+  // 角色切换
+  document.querySelectorAll('#roleSwitch .h5-role-pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('#roleSwitch .h5-role-pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      H5.setRole(p.dataset.role);
+    });
+  });
+
+  // 默认角色
+  H5.setRole(H5.currentRole);
+
+  // 切换密码显示
+  function togglePwd() {
+    const el = document.getElementById('password');
+    const ev = event.target;
+    if (el.type === 'password') { el.type = 'text'; ev.textContent = '隐藏'; }
+    else { el.type = 'password'; ev.textContent = '显示'; }
+  }
+
+  // 登录（原型：直接跳转，不验证表单）
+  function doLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('loginBtn');
+    btn.textContent = '登录中...';
+    btn.disabled = true;
+    setTimeout(() => {
+      H5.setRole(H5.currentRole);
+      location.href = `./${H5.currentRole}/dashboard.html?role=${H5.currentRole}`;
+    }, 400);
+    return false;
+  }
+
+  // 入场动效
+  H5.fadeInUp('.h5-auth-logo, .h5-auth-title, .h5-auth-sub, .h5-role-switch, #loginForm, .h5-divider, .h5-third-party', {
+    y: 20, opacity: 0, duration: 0.5, stagger: 0.08
+  });
+</script>
+</body>
+</html>
