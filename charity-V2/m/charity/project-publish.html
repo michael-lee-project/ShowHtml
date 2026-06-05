@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>发布受灾项目 — 慈善会 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  .h5-publish-steps {
+    display: flex;
+    align-items: center;
+    padding: 16px 16px 12px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-publish-step {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    position: relative; text-align: center;
+  }
+  .h5-publish-step .num {
+    width: 28px; height: 28px;
+    border-radius: 14px;
+    background: var(--h5-divider);
+    color: var(--h5-text-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    transition: all 0.25s;
+    position: relative; z-index: 2;
+  }
+  .h5-publish-step.active .num {
+    background: var(--h5-primary);
+    color: #fff;
+    box-shadow: 0 0 0 4px var(--h5-primary-soft);
+  }
+  .h5-publish-step.done .num { background: var(--h5-primary); color: #fff; }
+  .h5-publish-step.done .num::after { content: '✓'; }
+  .h5-publish-step.done .num span { display: none; }
+  .h5-publish-step .lbl {
+    font-size: 11px; color: var(--h5-text-3);
+    margin-top: 4px; white-space: nowrap;
+  }
+  .h5-publish-step.active .lbl,
+  .h5-publish-step.done .lbl { color: var(--h5-text); font-weight: 500; }
+  .h5-publish-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 14px; left: calc(50% + 18px); right: calc(-50% + 18px);
+    height: 2px; background: var(--h5-divider); z-index: 1;
+  }
+  .h5-publish-step.done:not(:last-child)::after { background: var(--h5-primary); }
+
+  .h5-form-section {
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+    padding: 16px;
+  }
+  .h5-form-section + .h5-form-section { margin-top: 12px; }
+  .h5-form-section .sec-title {
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .h5-form-row { margin-bottom: 14px; }
+  .h5-form-row:last-child { margin-bottom: 0; }
+  .h5-form-row .lbl {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 13px; color: var(--h5-text-2);
+    margin-bottom: 6px;
+  }
+  .h5-form-row .lbl .req { color: var(--h5-danger); }
+  .h5-form-row .hint { font-size: 11px; color: var(--h5-text-3); margin-top: 4px; }
+
+  .h5-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .h5-chip {
+    padding: 6px 12px;
+    border-radius: var(--h5-radius-pill);
+    background: var(--h5-bg);
+    color: var(--h5-text-2);
+    font-size: 13px;
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+  }
+  .h5-chip.active {
+    background: var(--h5-primary-soft);
+    color: var(--h5-primary);
+    border-color: var(--h5-primary);
+    font-weight: 500;
+  }
+
+  .h5-prio {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    border-radius: var(--h5-radius-pill);
+    font-size: 11px; font-weight: 500;
+  }
+  .h5-prio.danger { background: rgba(220,38,38,0.1); color: var(--h5-danger); }
+  .h5-prio.warning { background: rgba(245,158,11,0.12); color: var(--h5-warning); }
+
+  .h5-supply-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--h5-bg);
+    border-radius: var(--h5-radius-sm);
+    margin-bottom: 8px;
+  }
+  .h5-supply-row .name { flex: 1; min-width: 0; }
+  .h5-supply-row .name .t { font-size: 13px; font-weight: 500; }
+  .h5-supply-row .name .gap { font-size: 11px; color: var(--h5-danger); margin-top: 2px; }
+  .h5-supply-row .num {
+    font-size: 11px; color: var(--h5-text-2);
+    white-space: nowrap; text-align: right;
+  }
+  .h5-supply-row .num b { color: var(--h5-text); font-weight: 700; font-size: 13px; }
+  .h5-supply-add {
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    padding: 10px;
+    color: var(--h5-primary);
+    font-size: 13px;
+    border: 1.5px dashed var(--h5-primary);
+    border-radius: var(--h5-radius-sm);
+    background: var(--h5-primary-soft);
+  }
+
+  .h5-region-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+
+  .h5-uploader { display: flex; gap: 8px; flex-wrap: wrap; }
+  .h5-uploader .pic {
+    width: 84px; height: 64px;
+    border-radius: var(--h5-radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 24px; flex-shrink: 0;
+  }
+  .h5-uploader .add {
+    width: 84px; height: 64px;
+    border-radius: var(--h5-radius-sm);
+    background: var(--h5-bg);
+    border: 1.5px dashed var(--h5-border);
+    color: var(--h5-text-3);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; font-size: 11px;
+  }
+
+  .h5-flow-pick {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px;
+    border-radius: var(--h5-radius-sm);
+    border: 1.5px solid var(--h5-border);
+    background: var(--h5-card);
+    transition: all 0.2s;
+  }
+  .h5-flow-pick.active {
+    border-color: var(--h5-primary);
+    background: var(--h5-primary-soft);
+  }
+  .h5-flow-pick input { width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--h5-primary); }
+  .h5-flow-pick .body { flex: 1; }
+  .h5-flow-pick .body .t { font-size: 14px; font-weight: 500; }
+  .h5-flow-pick .body .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+
+  .h5-step-panel { display: none; }
+  .h5-step-panel.active { display: block; }
+
+  .h5-summary-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--h5-divider);
+    font-size: 13px; gap: 8px;
+  }
+  .h5-summary-row:last-child { border-bottom: 0; }
+  .h5-summary-row .l { color: var(--h5-text-3); white-space: nowrap; }
+  .h5-summary-row .v { color: var(--h5-text); font-weight: 500; text-align: right; flex: 1; word-break: break-all; }
+</style>
+</head>
+<body data-role="charity" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="goBack()">‹</div>
+  <div class="h5-nav-title">发布受灾项目</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-text-btn" onclick="saveDraft()">存草稿</div>
+  </div>
+</div>
+
+<div class="h5-page">
+
+  <div class="h5-publish-steps">
+    <div class="h5-publish-step active" data-step="1">
+      <div class="num"><span>1</span></div>
+      <div class="lbl">项目信息</div>
+    </div>
+    <div class="h5-publish-step" data-step="2">
+      <div class="num"><span>2</span></div>
+      <div class="lbl">物资需求</div>
+    </div>
+    <div class="h5-publish-step" data-step="3">
+      <div class="num"><span>3</span></div>
+      <div class="lbl">提交审核</div>
+    </div>
+  </div>
+
+  <div class="h5-step-panel active" data-panel="1">
+    <div class="h5-section" style="padding-top: 12px;">
+      <div class="h5-form-section">
+        <div class="sec-title">📋 项目基本信息</div>
+
+        <div class="h5-form-row">
+          <div class="lbl">项目类型 <span class="req">*</span></div>
+          <div class="h5-chip-group" id="typeChips">
+            <div class="h5-chip active" data-val="应急救援">🚨 应急救援</div>
+            <div class="h5-chip" data-val="教育助学">📚 教育助学</div>
+            <div class="h5-chip" data-val="医疗救助">🏥 医疗救助</div>
+            <div class="h5-chip" data-val="乡村振兴">🌾 乡村振兴</div>
+            <div class="h5-chip" data-val="扶老助残">👴 扶老助残</div>
+            <div class="h5-chip" data-val="环境保护">🌳 环境保护</div>
+          </div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">紧急程度 <span class="req">*</span></div>
+          <div class="h5-chip-group" id="prioChips">
+            <div class="h5-chip active" data-val="紧急">🚨 紧急（24h 内）</div>
+            <div class="h5-chip" data-val="较急">⚠️ 较急（一周内）</div>
+            <div class="h5-chip" data-val="普通">普通（月度）</div>
+          </div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">项目标题 <span class="req">*</span></div>
+          <input type="text" class="h5-input" value="云南昭通 6.2 级地震 · 应急救援物资">
+          <div class="hint">建议 30 字以内 · 凸显地区 + 事件 + 需求</div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">受捐地区 <span class="req">*</span></div>
+          <div class="h5-region-row">
+            <select class="h5-select"><option>云南省</option></select>
+            <select class="h5-select"><option>昭通市</option></select>
+            <select class="h5-select"><option>鲁甸县</option></select>
+            <select class="h5-select"><option>龙头山镇</option></select>
+          </div>
+          <div class="hint">📍 平台将优先匹配属地企业捐赠</div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">预计受惠人数 <span class="req">*</span></div>
+          <input type="number" class="h5-input" value="8600">
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">项目起止时间 <span class="req">*</span></div>
+          <div style="display:grid;grid-template-columns:1fr 12px 1fr;align-items:center;gap:6px;">
+            <input type="date" class="h5-input" value="2025-05-30">
+            <span style="color:var(--h5-text-3);">→</span>
+            <input type="date" class="h5-input" value="2025-06-25">
+          </div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">项目详情 <span class="req">*</span></div>
+          <textarea class="h5-textarea" rows="4">2025 年 5 月 30 日 14 时，云南昭通市鲁甸县发生 6.2 级地震，震源深度 12 公里。截至 5 月 31 日 12 时，地震已造成 12 万人受灾，2,860 户房屋倒塌，亟需帐篷、棉被、矿泉水、方便面、消毒用品等应急物资。灾区位置：东经 103.4°，北纬 27.1°，平均海拔 1,800 米。物流时间约 28 小时。</textarea>
+          <div class="hint">建议包含：灾情概况 / 受灾人数 / 急需物资 / 物流信息</div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">📷 项目封面图 <span class="req">*</span></div>
+          <div class="h5-uploader">
+            <div class="pic" style="background:linear-gradient(135deg,#DC2626,#F59E0B);">🚁</div>
+            <div class="pic" style="background:linear-gradient(135deg,#7C3AED,#E85D04);">📦</div>
+            <div class="add">📤<span>上传图片</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-step-panel" data-panel="2">
+    <div class="h5-section" style="padding-top: 12px;">
+      <div class="h5-form-section">
+        <div class="sec-title">📦 物资需求清单 <span class="h5-tag primary" style="margin-left:4px;">6 类</span></div>
+
+        <div class="h5-supply-row">
+          <div class="name"><div class="t">救灾帐篷（4 人）</div><div class="gap">⚠ 缺口 180 顶</div></div>
+          <div class="num"><span class="h5-prio danger">紧急</span><br><b>320</b>/500 顶</div>
+        </div>
+        <div class="h5-supply-row">
+          <div class="name"><div class="t">棉被（冬季加厚）</div><div class="gap">⚠ 缺口 740 床</div></div>
+          <div class="num"><span class="h5-prio danger">紧急</span><br><b>1,260</b>/2,000 床</div>
+        </div>
+        <div class="h5-supply-row">
+          <div class="name"><div class="t">矿泉水 550ml × 24</div><div class="gap">⚠ 缺口 1,200 箱</div></div>
+          <div class="num"><span class="h5-prio danger">紧急</span><br><b>3,800</b>/5,000 箱</div>
+        </div>
+        <div class="h5-supply-row">
+          <div class="name"><div class="t">方便面 12 桶/箱</div><div class="gap">⚠ 缺口 600 箱</div></div>
+          <div class="num"><span class="h5-prio warning">较急</span><br><b>2,400</b>/3,000 箱</div>
+        </div>
+        <div class="h5-supply-row">
+          <div class="name"><div class="t">消毒湿巾 / 84 液</div><div class="gap">⚠ 缺口 380 套</div></div>
+          <div class="num"><span class="h5-prio warning">较急</span><br><b>620</b>/1,000 套</div>
+        </div>
+        <div class="h5-supply-row">
+          <div class="name"><div class="t">应急药品包</div><div class="gap">⚠ 缺口 220 份</div></div>
+          <div class="num"><span class="h5-prio warning">较急</span><br><b>280</b>/500 份</div>
+        </div>
+
+        <div class="h5-supply-add" onclick="addSupply()">＋ 添加物资品类</div>
+      </div>
+
+      <div class="h5-form-section">
+        <div class="sec-title">🚚 派发方案</div>
+
+        <div class="h5-form-row">
+          <div class="lbl">允许响应方式 <span class="req">*</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label class="h5-flow-pick active">
+              <input type="checkbox" checked>
+              <div class="body"><div class="t">流程一（受捐者现场领取）</div><div class="d">受捐者到派发点扫码领取</div></div>
+            </label>
+            <label class="h5-flow-pick active">
+              <input type="checkbox" checked>
+              <div class="body"><div class="t">流程二（派发后发货）</div><div class="d">慈善会组织派发到户</div></div>
+            </label>
+            <label class="h5-flow-pick">
+              <input type="checkbox">
+              <div class="body"><div class="t">流程三（寄送+登记）</div><div class="d">企业寄送至慈善会区域仓</div></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">物资接收地址 <span class="req">*</span></div>
+          <textarea class="h5-textarea" rows="3">云南省昭通市鲁甸县龙头山镇 · 鲁甸县慈善会区域仓
+联系人：李主任 · 138 ****  8888</textarea>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">协同社会组织</div>
+          <div class="h5-chip-group" id="orgChips">
+            <div class="h5-chip active">深圳鹏星社工</div>
+            <div class="h5-chip active">广州同心社工</div>
+            <div class="h5-chip active">佛山志愿者联合会</div>
+            <div class="h5-chip">东莞阳光公益</div>
+          </div>
+        </div>
+
+        <div class="h5-form-row">
+          <div class="lbl">志愿者团队规模 <span class="req">*</span></div>
+          <input type="number" class="h5-input" value="60">
+          <div class="hint">计划调动 60 名志愿者</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-step-panel" data-panel="3">
+    <div class="h5-section" style="padding-top: 12px;">
+
+      <div style="background:linear-gradient(135deg, rgba(20,184,166,0.1) 0%, rgba(20,184,166,0.04) 100%); border:1px solid rgba(20,184,166,0.2); border-radius:12px; padding:14px; display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="font-size:32px;">✅</div>
+        <div style="flex:1;">
+          <div style="font-size:14px; font-weight:600; color:var(--h5-text);">资料已填完</div>
+          <div style="font-size:12px; color:var(--h5-text-3); margin-top:2px;">提交后将进入审核，预计 2 小时内回复</div>
+        </div>
+      </div>
+
+      <div class="h5-form-section">
+        <div class="sec-title">📋 项目概要</div>
+        <div class="h5-summary-row"><div class="l">项目编号</div><div class="v">提交后自动生成</div></div>
+        <div class="h5-summary-row"><div class="l">项目标题</div><div class="v">云南昭通 6.2 级地震 · 应急救援物资</div></div>
+        <div class="h5-summary-row"><div class="l">项目类型</div><div class="v">🚨 应急救援 · 🚨 紧急</div></div>
+        <div class="h5-summary-row"><div class="l">受捐地区</div><div class="v">云南省昭通市鲁甸县龙头山镇</div></div>
+        <div class="h5-summary-row"><div class="l">受惠人数</div><div class="v">8,600 人</div></div>
+        <div class="h5-summary-row"><div class="l">项目周期</div><div class="v">2025-05-30 → 2025-06-25</div></div>
+        <div class="h5-summary-row"><div class="l">物资品类</div><div class="v">6 类 · 总缺口 3,320 件</div></div>
+        <div class="h5-summary-row"><div class="l">响应方式</div><div class="v">流程一 / 流程二</div></div>
+        <div class="h5-summary-row"><div class="l">协同组织</div><div class="v">3 家</div></div>
+        <div class="h5-summary-row"><div class="l">志愿者</div><div class="v">60 名</div></div>
+      </div>
+
+      <div class="h5-form-section" style="background: linear-gradient(135deg, var(--h5-primary-soft) 0%, rgba(14,90,111,0.04) 100%);">
+        <div class="sec-title">🎁 发布后将获得</div>
+        <div style="font-size:13px; color:var(--h5-text-2); line-height:1.9;">
+          <div>· 项目专属页面 · 公开透明展示</div>
+          <div>· 实时响应企业列表 + 物资筹集进度</div>
+          <div>· 平台全渠道推广（首页 / APP / 邮件）</div>
+          <div>· 专属客户经理 + 1 对 1 服务</div>
+        </div>
+      </div>
+
+      <label style="display:flex; gap:8px; align-items:flex-start; padding:14px 16px 0; font-size:13px; color:var(--h5-text-2);">
+        <input type="checkbox" checked id="agree" style="margin-top:2px; accent-color:var(--h5-primary);">
+        <span>我已阅读并同意 <span style="color:var(--h5-primary);">《项目发布规范》</span>，承诺项目信息真实有效</span>
+      </label>
+    </div>
+  </div>
+
+  <div style="height: 80px;"></div>
+</div>
+
+<div class="h5-bottom-action">
+  <div style="display:flex; gap:8px;">
+    <button class="h5-btn h5-btn-ghost h5-btn-lg" style="flex:0 0 100px;" id="prevBtn" onclick="prevStep()" disabled>上一步</button>
+    <button class="h5-btn h5-btn-primary h5-btn-lg h5-btn-block" id="nextBtn" onclick="nextStep()">下一步</button>
+  </div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center;padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('charity');
+
+  let currentStep = 1;
+  const totalSteps = 3;
+
+  function goBack() {
+    if (currentStep > 1) prevStep();
+    else location.href = './project-list.html';
+  }
+
+  function updateStep() {
+    document.querySelectorAll('.h5-publish-step').forEach(s => {
+      const n = +s.dataset.step;
+      s.classList.toggle('active', n === currentStep);
+      s.classList.toggle('done', n < currentStep);
+    });
+    document.querySelectorAll('.h5-step-panel').forEach(p => {
+      p.classList.toggle('active', +p.dataset.panel === currentStep);
+    });
+    document.getElementById('prevBtn').disabled = currentStep === 1;
+    document.getElementById('nextBtn').textContent = currentStep === totalSteps ? '🚀 立即发布' : '下一步';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep() {
+    if (currentStep < totalSteps) {
+      currentStep++;
+      updateStep();
+    } else {
+      if (!document.getElementById('agree').checked) {
+        openTip('⚠️', '请先同意《项目发布规范》');
+        return;
+      }
+      openTip('🎉', '项目已提交审核！', '预计 2 小时内回复。<br>项目编号 <b>CC-PRJ-2025-0683</b>');
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 1) { currentStep--; updateStep(); }
+  }
+
+  function saveDraft() { openTip('💾', '草稿已保存', '可在项目管理 → 草稿箱继续编辑'); }
+  function addSupply() { openTip('📦', '添加物资品类', '点击"物资名称/数量/优先级"输入即可。'); }
+
+  function openTip(ic, t, d) {
+    document.getElementById('tipTitle').textContent = '发布受灾项目';
+    document.getElementById('tipBody').innerHTML =
+      `<div style="font-size:48px;margin-bottom:12px;">${ic}</div>` +
+      `<div style="font-size:16px;font-weight:600;margin-bottom:8px;">${t}</div>` +
+      (d ? `<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">${d}</div>` : '') +
+      `<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal('tipModal')">知道了</button>`;
+    H5.openModal('tipModal');
+  }
+
+  document.querySelectorAll('.h5-chip-group').forEach(group => {
+    group.querySelectorAll('.h5-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const isMulti = group.id === 'orgChips';
+        if (isMulti) chip.classList.toggle('active');
+        else {
+          group.querySelectorAll('.h5-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+        }
+      });
+    });
+  });
+
+  document.querySelectorAll('.h5-flow-pick').forEach(pick => {
+    pick.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'INPUT') {
+        const input = pick.querySelector('input');
+        input.checked = !input.checked;
+      }
+      pick.classList.toggle('active', pick.querySelector('input').checked);
+    });
+  });
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-publish-steps',
+      { y: -10, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' }
+    );
+    gsap.utils.toArray('.h5-step-panel.active .h5-form-section').forEach((s, i) => {
+      gsap.fromTo(s, { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.1 + i * 0.08, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

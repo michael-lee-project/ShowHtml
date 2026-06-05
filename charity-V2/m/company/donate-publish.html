@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>发起捐赠 — 美心食品 · 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 步骤条 */
+  .h5-stepper {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .h5-step {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px;
+    position: relative;
+  }
+  .h5-step .num {
+    width: 28px; height: 28px;
+    border-radius: 14px;
+    background: var(--h5-divider);
+    color: var(--h5-text-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    transition: all 0.3s;
+  }
+  .h5-step.active .num {
+    background: var(--h5-primary);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(232,93,4,0.3);
+  }
+  .h5-step.done .num {
+    background: var(--h5-success);
+    color: #fff;
+  }
+  .h5-step .lbl {
+    font-size: 11px;
+    color: var(--h5-text-3);
+  }
+  .h5-step.active .lbl { color: var(--h5-primary); font-weight: 600; }
+  .h5-step.done .lbl { color: var(--h5-success); }
+  .h5-step-line {
+    flex: 0 0 24px;
+    height: 2px;
+    background: var(--h5-divider);
+    margin-bottom: 18px;
+  }
+  .h5-step.done + .h5-step-line { background: var(--h5-success); }
+  /* 流程选择卡 */
+  .h5-flow-card {
+    border: 2px solid var(--h5-divider);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: var(--h5-card);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .h5-flow-card.selected {
+    border-color: var(--h5-primary);
+    background: rgba(232,93,4,0.04);
+  }
+  .h5-flow-card .ic {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--h5-primary-soft);
+    color: var(--h5-primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .h5-flow-card .t { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .h5-flow-card .d { font-size: 12px; color: var(--h5-text-3); line-height: 1.6; }
+  .h5-flow-card .meta { font-size: 11px; color: var(--h5-primary); margin-top: 8px; }
+  /* 上传 */
+  .h5-upload {
+    border: 2px dashed var(--h5-divider);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    background: var(--h5-bg);
+    cursor: pointer;
+  }
+  .h5-upload:active { border-color: var(--h5-primary); }
+  .h5-upload .ic { font-size: 32px; opacity: 0.5; }
+  .h5-upload .t { font-size: 13px; color: var(--h5-text-2); margin-top: 4px; }
+  .h5-upload .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-upload-list {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .h5-upload-thumb {
+    width: 64px; height: 64px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--h5-primary-soft), #FED7AA);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    position: relative;
+  }
+  .h5-upload-thumb .close {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 18px; height: 18px;
+    background: var(--h5-danger);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* 慈善会推荐 */
+  .h5-charity-card {
+    border: 2px solid var(--h5-divider);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: var(--h5-card);
+    position: relative;
+  }
+  .h5-charity-card.recommend {
+    border-color: var(--h5-primary);
+    background: linear-gradient(180deg, rgba(232,93,4,0.04), transparent 60%);
+  }
+  .h5-charity-card .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px;
+  }
+  .h5-charity-card .logo {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--h5-primary), var(--h5-primary-deep));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .h5-charity-card .body { flex: 1; min-width: 0; }
+  .h5-charity-card .name { font-size: 14px; font-weight: 600; }
+  .h5-charity-card .meta { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-charity-card .rec-tag {
+    position: absolute;
+    top: -8px; left: 14px;
+    background: var(--h5-primary);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+  .h5-charity-card .stat-row {
+    display: flex; gap: 8px; margin-top: 8px;
+  }
+  .h5-charity-card .stat-pill {
+    flex: 1;
+    background: var(--h5-bg);
+    border-radius: 6px;
+    padding: 6px;
+    text-align: center;
+  }
+  .h5-charity-card .stat-pill .v { font-size: 13px; font-weight: 700; color: var(--h5-primary); }
+  .h5-charity-card .stat-pill .l { font-size: 10px; color: var(--h5-text-3); }
+  /* 协议 */
+  .h5-agree {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 12px;
+    background: var(--h5-bg);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  .h5-agree .box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--h5-divider);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    color: transparent;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .h5-agree.on .box {
+    background: var(--h5-primary);
+    border-color: var(--h5-primary);
+    color: #fff;
+  }
+  .h5-agree .t { font-size: 12px; color: var(--h5-text-2); line-height: 1.6; }
+  .h5-agree a { color: var(--h5-primary); }
+  /* 步骤面板 */
+  .h5-step-panel { display: none; }
+  .h5-step-panel.active { display: block; }
+  /* 摘要卡 */
+  .h5-summary {
+    background: linear-gradient(135deg, rgba(232,93,4,0.08), rgba(196,69,3,0.04));
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .h5-summary-row {
+    display: flex; justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+  .h5-summary-row .l { color: var(--h5-text-3); }
+  .h5-summary-row .v { color: var(--h5-text); font-weight: 500; }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">发起捐赠</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-text-btn muted" onclick="saveDraft()">草稿</div>
+  </div>
+</div>
+
+<!-- 步骤条 -->
+<div class="h5-stepper">
+  <div class="h5-step active" data-step="1"><div class="num">1</div><div class="lbl">选流程</div></div>
+  <div class="h5-step-line"></div>
+  <div class="h5-step" data-step="2"><div class="num">2</div><div class="lbl">填物资</div></div>
+  <div class="h5-step-line"></div>
+  <div class="h5-step" data-step="3"><div class="num">3</div><div class="lbl">选慈善会</div></div>
+</div>
+
+<div class="h5-page" style="padding-top: 0;">
+
+  <!-- Step 1: 选流程 -->
+  <div class="h5-step-panel active" id="step1">
+    <div class="h5-section">
+      <div class="h5-card">
+        <div class="h5-card-title">
+          <div class="title">📋 选择捐赠流程</div>
+        </div>
+        <div style="font-size:12px;color:var(--h5-text-3);margin-bottom:14px;line-height:1.6;">
+          3 种流程适配不同物资类型，企业可按自身仓储 / 物流情况灵活选择。
+        </div>
+        <div class="h5-flow-card selected" data-flow="1" onclick="pickFlow(1)">
+          <div class="ic">📦</div>
+          <div class="t">流程一 · 企业主动捐赠</div>
+          <div class="d">企业自主发起，平台智能匹配属地慈善会。最常用，覆盖临期 / 新品 / 日化等物资。</div>
+          <div class="meta">✓ 智能匹配 · 全程轨迹 · 0 仓储压力</div>
+        </div>
+        <div class="h5-flow-card" data-flow="2" onclick="pickFlow(2)">
+          <div class="ic">🚚</div>
+          <div class="t">流程二 · 慈善会派发后发货</div>
+          <div class="d">先由慈善会确认受捐需求，再由企业按需发货。适合定向 / 紧急救灾场景。</div>
+          <div class="meta">✓ 需求明确 · 减少库存 · 流程短</div>
+        </div>
+        <div class="h5-flow-card" data-flow="3" onclick="pickFlow(3)">
+          <div class="ic">📮</div>
+          <div class="t">流程三 · 寄送 + 平台登记</div>
+          <div class="d">企业自行寄送至慈善会指定仓库，平台登记物资信息。适合大宗 / 异地捐赠。</div>
+          <div class="meta">✓ 自有物流 · 大宗支持 · 凭证齐全</div>
+        </div>
+      </div>
+
+      <div class="h5-card">
+        <div class="h5-card-title">
+          <div class="title">💡 流程对比</div>
+        </div>
+        <div class="h5-data-row">
+          <div class="l">流程一</div>
+          <div class="v" style="color:var(--h5-success);font-weight:600;">推荐</div>
+        </div>
+        <div class="h5-data-row">
+          <div class="l">流程二</div>
+          <div class="v" style="color:var(--h5-text-2);">定向</div>
+        </div>
+        <div class="h5-data-row">
+          <div class="l">流程三</div>
+          <div class="v" style="color:var(--h5-text-2);">大宗</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="h5-bottom-action">
+      <button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" onclick="goStep(2)">下一步 · 填写物资</button>
+    </div>
+  </div>
+
+  <!-- Step 2: 填物资 -->
+  <div class="h5-step-panel" id="step2">
+    <div class="h5-section">
+      <div class="h5-card">
+        <div class="h5-card-title">
+          <div class="title">📦 物资信息</div>
+        </div>
+
+        <div class="h5-form-group">
+          <label class="h5-form-label">物资类型</label>
+          <select class="h5-select">
+            <option>🍞 临期食品</option>
+            <option>🥛 新品食品</option>
+            <option>🧴 日化用品</option>
+            <option>📚 文教用品</option>
+            <option>👕 服装纺织</option>
+            <option>💊 医疗用品</option>
+          </select>
+        </div>
+
+        <div class="h5-form-group">
+          <label class="h5-form-label">物资名称</label>
+          <input class="h5-input" placeholder="如：美心临期面包礼盒 1.2kg" value="美心临期面包礼盒 1.2kg · 8 种口味">
+        </div>
+
+        <div class="h5-form-group" style="display:flex;gap:8px;">
+          <div style="flex:1;">
+            <label class="h5-form-label">数量（件）</label>
+            <input class="h5-input" type="number" value="1200">
+          </div>
+          <div style="flex:1;">
+            <label class="h5-form-label">保质期至</label>
+            <input class="h5-input" type="date" value="2025-07-15">
+          </div>
+        </div>
+
+        <div class="h5-form-group" style="display:flex;gap:8px;">
+          <div style="flex:1;">
+            <label class="h5-form-label">评估总价值</label>
+            <input class="h5-input" placeholder="¥" value="18600">
+          </div>
+          <div style="flex:1;">
+            <label class="h5-form-label">重量（kg）</label>
+            <input class="h5-input" type="number" value="1440">
+          </div>
+        </div>
+
+        <div class="h5-form-group">
+          <label class="h5-form-label">所在地</label>
+          <div style="display:flex;gap:6px;">
+            <select class="h5-select" style="flex:1;"><option>广东省</option></select>
+            <select class="h5-select" style="flex:1;"><option>东莞市</option></select>
+            <select class="h5-select" style="flex:1;"><option>东城区</option></select>
+          </div>
+        </div>
+
+        <div class="h5-form-group">
+          <label class="h5-form-label">物资描述</label>
+          <textarea class="h5-textarea" placeholder="8 种口味混合装，保质期剩余 30 天。包装完好，可整托发货。">8 种口味混合装，保质期剩余 30 天。包装完好，可整托发货。</textarea>
+        </div>
+      </div>
+
+      <div class="h5-card">
+        <div class="h5-card-title">
+          <div class="title">📷 凭证图片 <span class="h5-text-xs h5-text-3">（最多 6 张）</span></div>
+        </div>
+        <div class="h5-upload" onclick="alert('调起相机 / 相册 · 原型省略')">
+          <div class="ic">📷</div>
+          <div class="t">点击上传</div>
+          <div class="d">支持 JPG / PNG · 单张 ≤5MB</div>
+        </div>
+        <div class="h5-upload-list">
+          <div class="h5-upload-thumb">🍞<div class="close" onclick="event.stopPropagation()">✕</div></div>
+          <div class="h5-upload-thumb">📦<div class="close" onclick="event.stopPropagation()">✕</div></div>
+          <div class="h5-upload-thumb">📋<div class="close" onclick="event.stopPropagation()">✕</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="h5-bottom-action" style="display:flex;gap:8px;">
+      <button class="h5-btn h5-btn-ghost" style="flex:1;" onclick="goStep(1)">上一步</button>
+      <button class="h5-btn h5-btn-primary" style="flex:2;" onclick="goStep(3)">下一步 · 选慈善会</button>
+    </div>
+  </div>
+
+  <!-- Step 3: 选慈善会 + 提交 -->
+  <div class="h5-step-panel" id="step3">
+    <div class="h5-section">
+      <div class="h5-card">
+        <div class="h5-card-title">
+          <div class="title">🏛 智能匹配 · 推荐慈善会</div>
+        </div>
+        <div style="font-size:12px;color:var(--h5-text-3);margin-bottom:12px;line-height:1.6;">
+          基于物资类型、属地、规模、响应速度综合排序。前 3 名推荐。
+        </div>
+
+        <div class="h5-charity-card recommend">
+          <div class="rec-tag">推荐 1</div>
+          <div class="head">
+            <div class="logo">粤</div>
+            <div class="body">
+              <div class="name">广东省慈善总会</div>
+              <div class="meta">📍 广州市 · 注册 1994 · 5A 级</div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-pill"><div class="v">4.9</div><div class="l">评分</div></div>
+            <div class="stat-pill"><div class="v">1,860t</div><div class="l">年派发</div></div>
+            <div class="stat-pill"><div class="v">4.2h</div><div class="l">响应</div></div>
+          </div>
+        </div>
+
+        <div class="h5-charity-card recommend">
+          <div class="rec-tag">推荐 2</div>
+          <div class="head">
+            <div class="logo" style="background:linear-gradient(135deg,#0E5A6F,#0A4456);">东</div>
+            <div class="body">
+              <div class="name">东莞市慈善会</div>
+              <div class="meta">📍 东莞市 · 注册 2002 · 5A 级</div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-pill"><div class="v">4.7</div><div class="l">评分</div></div>
+            <div class="stat-pill"><div class="v">580t</div><div class="l">年派发</div></div>
+            <div class="stat-pill"><div class="v">3.8h</div><div class="l">响应</div></div>
+          </div>
+        </div>
+
+        <div class="h5-charity-card recommend">
+          <div class="rec-tag">推荐 3</div>
+          <div class="head">
+            <div class="logo" style="background:linear-gradient(135deg,#C4842A,#8B5A1A);">深</div>
+            <div class="body">
+              <div class="name">深圳市慈善会</div>
+              <div class="meta">📍 深圳市 · 注册 2004 · 5A 级</div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-pill"><div class="v">4.6</div><div class="l">评分</div></div>
+            <div class="stat-pill"><div class="v">720t</div><div class="l">年派发</div></div>
+            <div class="stat-pill"><div class="v">5.1h</div><div class="l">响应</div></div>
+          </div>
+        </div>
+
+        <div class="h5-charity-card" style="border-style:dashed;text-align:center;cursor:pointer;" onclick="openMoreCharity()">
+          <div style="font-size:24px;margin-bottom:6px;">🔍</div>
+          <div class="name" style="font-size:13px;">查看全部 12 家属地慈善会</div>
+          <div class="meta">支持属地 / 行业 / 历史合作 3 维度筛选</div>
+        </div>
+
+        <div class="h5-charity-card" style="border-style:dashed;text-align:center;cursor:pointer;">
+          <div style="font-size:24px;margin-bottom:6px;">🚫</div>
+          <div class="name" style="font-size:13px;color:var(--h5-text-3);">暂不指定，由平台分配</div>
+          <div class="meta">适合流程一 · 由系统按规则自动匹配</div>
+        </div>
+      </div>
+
+      <div class="h5-card">
+        <div class="h5-card-title">
+          <div class="title">📋 捐赠摘要</div>
+        </div>
+        <div class="h5-summary">
+          <div class="h5-summary-row"><div class="l">流程</div><div class="v">流程一 · 企业主动</div></div>
+          <div class="h5-summary-row"><div class="l">物资</div><div class="v">美心临期面包礼盒 1.2kg</div></div>
+          <div class="h5-summary-row"><div class="l">数量</div><div class="v">1,200 件</div></div>
+          <div class="h5-summary-row"><div class="l">评估价值</div><div class="v" style="color:var(--h5-primary);font-weight:700;">¥18,600</div></div>
+          <div class="h5-summary-row"><div class="l">受捐慈善会</div><div class="v">广东省慈善总会 ⭐推荐 1</div></div>
+        </div>
+
+        <div class="h5-agree on" id="agreeBox" onclick="toggleAgree()">
+          <div class="box">✓</div>
+          <div class="t">
+            我已阅读并同意 <a onclick="event.stopPropagation()">《慈商联营捐赠协议》</a> 、
+            <a onclick="event.stopPropagation()">《物资数据真实性承诺书》</a>，确认所提交物资符合国家食品安全及慈善法规要求。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="h5-bottom-action" style="display:flex;gap:8px;">
+      <button class="h5-btn h5-btn-ghost" style="flex:1;" onclick="goStep(2)">上一步</button>
+      <button class="h5-btn h5-btn-primary" style="flex:2;" onclick="submitDonate()">提交审核</button>
+    </div>
+  </div>
+
+  <div style="height: 24px;"></div>
+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab active"><div class="tab-ic">📦</div><div class="tab-label">捐赠</div></div>
+  <div class="h5-tab" onclick="location.href='donate-respond.html'"><div class="tab-ic">🤝</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('company');
+
+  let currentStep = 1;
+
+  function goStep(n) {
+    document.querySelectorAll('.h5-step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step' + n).classList.add('active');
+    document.querySelectorAll('.h5-step').forEach((s, i) => {
+      s.classList.remove('active', 'done');
+      if (i + 1 < n) s.classList.add('done');
+      else if (i + 1 === n) s.classList.add('active');
+    });
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.gsap) {
+      gsap.fromTo('#step' + n, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power2.out' });
+    }
+  }
+
+  function pickFlow(n) {
+    document.querySelectorAll('.h5-flow-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`.h5-flow-card[data-flow="${n}"]`).classList.add('selected');
+  }
+
+  function toggleAgree() {
+    document.getElementById('agreeBox').classList.toggle('on');
+  }
+
+  function saveDraft() {
+    openTip('已保存草稿', '✅', '草稿已保存至"捐赠记录 - 草稿箱"，您可稍后继续编辑。');
+  }
+
+  function openMoreCharity() {
+    openTip('属地筛选', '🔍', '全省 12 家 5A 级慈善会可选择。原型仅展示推荐 3 家，完整列表请见 PC 端。');
+  }
+
+  function submitDonate() {
+    const agreed = document.getElementById('agreeBox').classList.contains('on');
+    if (!agreed) { openTip('提示', '⚠️', '请勾选并同意《慈商联营捐赠协议》后再提交。'); return; }
+    document.getElementById('tipTitle').textContent = '提交成功';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">🎉</div>' +
+      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">提交成功</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">' +
+      '捐赠编号：<b style="color:var(--h5-primary);">CC-DON-2025-0682-0001</b><br>' +
+      '审核状态：<span class="h5-tag warning" style="margin-left:4px;">待审核</span><br>' +
+      '预计 4 小时内反馈，' +
+      '可通过首页"待办"或"消息中心"查看进度。' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;margin-top:20px;">' +
+      '<button class="h5-btn h5-btn-ghost h5-btn-lg" style="flex:1;" onclick="H5.closeModal(\'tipModal\');location.href=\'donation-list.html\'">查看记录</button>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-lg" style="flex:1;" onclick="H5.closeModal(\'tipModal\');location.href=\'dashboard.html\'">回首页</button>' +
+      '</div></div>';
+    H5.openModal('tipModal');
+  }
+
+  function openTip(t, ic, body) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">' + ic + '</div>' +
+      '<div style="font-size:14px;color:var(--h5-text-2);line-height:1.7;">' + body + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (window.gsap) {
+      gsap.fromTo('.h5-step', { y: -8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.06, ease: 'power2.out' });
+      gsap.fromTo('.h5-flow-card', { x: -16, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, stagger: 0.08, delay: 0.15, ease: 'power2.out' });
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>数据报告 — 慈善会 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* ===== Hero 年报卡 ===== */
+  .h5-report-hero {
+    background: linear-gradient(135deg, #0E5A6F 0%, #164E63 100%);
+    color: #fff;
+    padding: 18px 16px 20px;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .h5-report-hero::before {
+    content: "";
+    position: absolute; top: -50%; right: -30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(20,184,166,0.35) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .h5-report-hero .row {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 12px;
+  }
+  .h5-report-hero .item .v {
+    font-size: 26px; font-weight: 800;
+    background: linear-gradient(135deg, #FFA35E 0%, #FFD480 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  .h5-report-hero .item .v .u { font-size: 13px; -webkit-text-fill-color: rgba(255,255,255,0.8); }
+  .h5-report-hero .item .l { font-size: 12px; color: rgba(255,255,255,0.78); margin-top: 4px; }
+
+  /* ===== KPI 4 圆环 ===== */
+  .h5-kpi-rings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .h5-kpi-ring {
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+    padding: 14px 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .h5-kpi-ring .ic-wrap {
+    width: 44px; height: 44px;
+    border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .h5-kpi-ring.trust .ic-wrap { background: rgba(20,184,166,0.1); }
+  .h5-kpi-ring.primary .ic-wrap { background: var(--h5-primary-soft); }
+  .h5-kpi-ring.gold .ic-wrap { background: rgba(196,132,42,0.12); }
+  .h5-kpi-ring.purple .ic-wrap { background: rgba(124,58,237,0.1); }
+  .h5-kpi-ring .body { flex: 1; min-width: 0; }
+  .h5-kpi-ring .t { font-size: 12px; color: var(--h5-text-3); }
+  .h5-kpi-ring .v {
+    font-size: 18px; font-weight: 700;
+    line-height: 1.2;
+  }
+
+  /* ===== 柱状图 ===== */
+  .h5-chart-bar {
+    display: flex; align-items: flex-end;
+    gap: 5px; height: 100px;
+    padding: 4px 0 0;
+  }
+  .h5-chart-bar .bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--h5-primary) 0%, #073D4D 100%);
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    min-height: 6px;
+    transition: height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .h5-chart-bar .bar.cur {
+    background: linear-gradient(180deg, #FFA35E 0%, #E85D04 100%);
+  }
+  .h5-chart-bar .lbl {
+    position: absolute;
+    bottom: -16px; left: 0; right: 0;
+    text-align: center;
+    font-size: 9px;
+    color: var(--h5-text-3);
+  }
+
+  /* ===== 品类分布（带 bar） ===== */
+  .h5-cat-row {
+    margin-bottom: 12px;
+  }
+  .h5-cat-row .head {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .h5-cat-row .head .l { color: var(--h5-text-2); }
+  .h5-cat-row .head .v { color: var(--h5-text); font-weight: 600; }
+  .h5-cat-row .bar {
+    width: 100%; height: 6px;
+    background: var(--h5-divider);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .h5-cat-row .bar > div {
+    height: 100%;
+    background: var(--h5-primary);
+    border-radius: 3px;
+  }
+
+  /* ===== mini 地图（简化为 4 列横滑卡片） ===== */
+  .h5-region-list {
+    display: flex; flex-direction: column;
+  }
+  .h5-region-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-region-row:last-child { border-bottom: 0; }
+  .h5-region-row .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--h5-primary-soft);
+    color: var(--h5-primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .h5-region-row .body { flex: 1; min-width: 0; }
+  .h5-region-row .t { font-size: 13px; font-weight: 500; }
+  .h5-region-row .bar {
+    width: 80px; height: 5px;
+    background: var(--h5-divider);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .h5-region-row .bar > div {
+    height: 100%;
+    background: var(--h5-primary);
+    border-radius: 3px;
+  }
+  .h5-region-row .pct {
+    font-size: 13px; font-weight: 700;
+    color: var(--h5-primary);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body data-role="charity" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="location.href='./dashboard.html'">‹</div>
+  <div class="h5-nav-title">数据报告</div>
+  <div class="h5-nav-right">
+    <select class="h5-nav-text-btn" style="background:transparent; border:0; padding:0;" onchange="openYear(this.value)">
+      <option>2025 年</option>
+      <option>2024 年</option>
+      <option>2023 年</option>
+    </select>
+  </div>
+</div>
+
+<div class="h5-page">
+
+  <!-- Hero 年报卡 -->
+  <div class="h5-report-hero">
+    <div style="position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div>
+        <div style="font-size:13px;opacity:0.8;">2025 年 · 累计运营数据</div>
+        <div style="font-size:18px;font-weight:700;margin-top:2px;">广东省慈善总会</div>
+      </div>
+      <div class="h5-nav-text-btn" onclick="openDownload()">📥 导出</div>
+    </div>
+    <div class="row">
+      <div class="item">
+        <div class="v">¥ 8,260<span class="u">万</span></div>
+        <div class="l">本年累计物资价值</div>
+      </div>
+      <div class="item">
+        <div class="v">426,830</div>
+        <div class="l">受惠人次</div>
+      </div>
+      <div class="item">
+        <div class="v">186</div>
+        <div class="l">合作企业</div>
+      </div>
+      <div class="item">
+        <div class="v">1,260</div>
+        <div class="l">活跃志愿者</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关键 KPI 4 块 -->
+  <div class="h5-section">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🎯 关键绩效</div>
+        <span class="more">本年</span>
+      </div>
+      <div class="h5-kpi-rings">
+        <div class="h5-kpi-ring trust">
+          <div class="ic-wrap">✅</div>
+          <div class="body">
+            <div class="t">物资到户率</div>
+            <div class="v">98.6%</div>
+          </div>
+        </div>
+        <div class="h5-kpi-ring primary">
+          <div class="ic-wrap">⏱</div>
+          <div class="body">
+            <div class="t">平均派发时效</div>
+            <div class="v">3.2 天</div>
+          </div>
+        </div>
+        <div class="h5-kpi-ring gold">
+          <div class="ic-wrap">⭐</div>
+          <div class="body">
+            <div class="t">受捐者满意度</div>
+            <div class="v">98.6</div>
+          </div>
+        </div>
+        <div class="h5-kpi-ring purple">
+          <div class="ic-wrap">📅</div>
+          <div class="body">
+            <div class="t">志愿者出勤率</div>
+            <div class="v">96.8%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 简化月度柱状图 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📊 月度趋势</div>
+        <span class="more">2025 年</span>
+      </div>
+      <div class="h5-chart-bar" id="barChart" style="margin-top: 18px; margin-bottom: 18px;">
+        <div class="bar" style="height:35%" data-h="35"><div class="lbl">1月</div></div>
+        <div class="bar" style="height:42%" data-h="42"><div class="lbl">2月</div></div>
+        <div class="bar" style="height:28%" data-h="28"><div class="lbl">3月</div></div>
+        <div class="bar" style="height:65%" data-h="65"><div class="lbl">4月</div></div>
+        <div class="bar cur" style="height:78%" data-h="78"><div class="lbl">5月</div></div>
+        <div class="bar" style="height:55%" data-h="55"><div class="lbl">6月</div></div>
+        <div class="bar" style="height:90%" data-h="90"><div class="lbl">7月</div></div>
+        <div class="bar" style="height:62%" data-h="62"><div class="lbl">8月</div></div>
+        <div class="bar" style="height:48%" data-h="48"><div class="lbl">9月</div></div>
+        <div class="bar" style="height:70%" data-h="70"><div class="lbl">10月</div></div>
+        <div class="bar" style="height:82%" data-h="82"><div class="lbl">11月</div></div>
+        <div class="bar" style="height:100%" data-h="100"><div class="lbl">12月</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:18px;font-size:11px;color:var(--h5-text-3);">
+        <span>📉 最低 260 万 (3月)</span>
+        <span>📈 最高 920 万 (12月)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 物资品类分布 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🥧 物资品类分布</div>
+        <span class="more">本年</span>
+      </div>
+      <div style="margin-top: 8px;">
+        <div class="h5-cat-row">
+          <div class="head"><div class="l">🍞 食品保健</div><div class="v">42.6%</div></div>
+          <div class="bar"><div style="width:42.6%"></div></div>
+        </div>
+        <div class="h5-cat-row">
+          <div class="head"><div class="l">🧴 日化用品</div><div class="v">23.8%</div></div>
+          <div class="bar"><div style="width:23.8%;background:linear-gradient(90deg,#20c5b5,#14B8A6);"></div></div>
+        </div>
+        <div class="h5-cat-row">
+          <div class="head"><div class="l">🧥 服饰家纺</div><div class="v">18.2%</div></div>
+          <div class="bar"><div style="width:18.2%;background:linear-gradient(90deg,#D9A55B,#C4842A);"></div></div>
+        </div>
+        <div class="h5-cat-row">
+          <div class="head"><div class="l">🩺 医疗物资</div><div class="v">8.6%</div></div>
+          <div class="bar"><div style="width:8.6%;background:linear-gradient(90deg,#7C3AED,#5B21B6);"></div></div>
+        </div>
+        <div class="h5-cat-row">
+          <div class="head"><div class="l">📚 教育用品</div><div class="v">4.2%</div></div>
+          <div class="bar"><div style="width:4.2%;background:linear-gradient(90deg,#0EA5E9,#0284C7);"></div></div>
+        </div>
+        <div class="h5-cat-row" style="margin-bottom: 0;">
+          <div class="head"><div class="l">其他</div><div class="v">2.6%</div></div>
+          <div class="bar"><div style="width:2.6%;background:var(--h5-text-3);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mini 地区分布地图（简化为 6 行 list） -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🗺️ 地区受捐分布</div>
+        <span class="more">21 个地级市</span>
+      </div>
+      <div class="h5-region-list">
+        <div class="h5-region-row">
+          <div class="ic">广</div>
+          <div class="body">
+            <div class="t">广东省内</div>
+            <div class="bar"><div style="width:68.6%"></div></div>
+          </div>
+          <div class="pct">68.6%</div>
+        </div>
+        <div class="h5-region-row">
+          <div class="ic">云</div>
+          <div class="body">
+            <div class="t">云南省</div>
+            <div class="bar"><div style="width:12.8%"></div></div>
+          </div>
+          <div class="pct">12.8%</div>
+        </div>
+        <div class="h5-region-row">
+          <div class="ic">贵</div>
+          <div class="body">
+            <div class="t">贵州省</div>
+            <div class="bar"><div style="width:6.4%"></div></div>
+          </div>
+          <div class="pct">6.4%</div>
+        </div>
+        <div class="h5-region-row">
+          <div class="ic">甘</div>
+          <div class="body">
+            <div class="t">甘肃省</div>
+            <div class="bar"><div style="width:4.2%"></div></div>
+          </div>
+          <div class="pct">4.2%</div>
+        </div>
+        <div class="h5-region-row">
+          <div class="ic">青</div>
+          <div class="body">
+            <div class="t">青海省</div>
+            <div class="bar"><div style="width:4.8%"></div></div>
+          </div>
+          <div class="pct">4.8%</div>
+        </div>
+        <div class="h5-region-row">
+          <div class="ic">桂</div>
+          <div class="body">
+            <div class="t">广西</div>
+            <div class="bar"><div style="width:3.2%"></div></div>
+          </div>
+          <div class="pct">3.2%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='./dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">工作台</div></div>
+  <div class="h5-tab" onclick="location.href='./project-list.html'"><div class="tab-ic">📋</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab" onclick="location.href='./distribute.html'"><div class="tab-ic">🚚</div><div class="tab-label">派发</div></div>
+  <div class="h5-tab" onclick="location.href='./volunteer-manage.html'"><div class="tab-ic">🤝</div><div class="tab-label">志愿者</div></div>
+  <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center;padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('charity');
+
+  function openYear(y) {
+    openTip('📅', `已切换到 ${y} 年数据`, '（演示）所有数据按年份筛选');
+  }
+
+  function openDownload() {
+    openTip('📥', '下载报告', '2025 年度运营报告 PDF 已生成 · 32 页');
+  }
+
+  function openTip(ic, t, d) {
+    document.getElementById('tipTitle').textContent = '数据报告';
+    document.getElementById('tipBody').innerHTML =
+      `<div style="font-size:48px;margin-bottom:12px;">${ic}</div>` +
+      `<div style="font-size:16px;font-weight:600;margin-bottom:8px;">${t}</div>` +
+      (d ? `<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">${d}</div>` : '') +
+      `<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal('tipModal')">知道了</button>`;
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+
+    // Hero
+    gsap.fromTo('.h5-report-hero .item',
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power2.out' }
+    );
+
+    // 各 section
+    gsap.utils.toArray('.h5-section').forEach((sec, i) => {
+      gsap.fromTo(sec,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.2 + i * 0.08, ease: 'power2.out' }
+      );
+    });
+
+    // 数字滚动（hero 4 大数据）
+    document.querySelectorAll('.h5-report-hero .v').forEach(el => {
+      const txt = el.textContent;
+      // 简单模拟
+    });
+
+    // 柱状图动画
+    gsap.utils.toArray('.h5-chart-bar .bar').forEach((b, i) => {
+      const h = b.dataset.h;
+      gsap.fromTo(b, { height: '0%' }, { height: h + '%', duration: 0.7, delay: 0.4 + i * 0.04, ease: 'power2.out' });
+    });
+
+    // 品类 bar
+    gsap.utils.toArray('.h5-cat-row .bar > div').forEach(b => {
+      const w = b.getAttribute('style')?.match(/width:(\d+(\.\d+)?%)/)?.[1] || '0%';
+      gsap.fromTo(b, { width: '0%' }, { width: w, duration: 1, delay: 0.3, ease: 'power2.out' });
+    });
+
+    // 地区 bar
+    gsap.utils.toArray('.h5-region-row .bar > div').forEach(b => {
+      const w = b.getAttribute('style')?.match(/width:(\d+(\.\d+)?%)/)?.[1] || '0%';
+      gsap.fromTo(b, { width: '0%' }, { width: w, duration: 1, delay: 0.4, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

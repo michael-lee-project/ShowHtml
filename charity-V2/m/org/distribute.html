@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>物资派发 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 派发任务卡 */
+  .h5-disp-card {
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    border: 1px solid var(--h5-divider);
+  }
+  .h5-disp-card.emergency {
+    border-color: var(--h5-danger);
+    background: linear-gradient(135deg, rgba(220,38,38,0.04) 0%, transparent 60%);
+  }
+  .h5-disp-card .head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .h5-disp-card .ic {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .h5-disp-card .head .body { flex: 1; min-width: 0; }
+  .h5-disp-card .head .t {
+    font-size: 14px; font-weight: 600;
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .h5-disp-card .head .m {
+    font-size: 11px; color: var(--h5-text-3); margin-top: 2px;
+  }
+  .h5-disp-card .meta {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .h5-disp-card .progress-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .h5-disp-card .progress-row .l { font-size: 12px; color: var(--h5-text-2); flex: 1; }
+  .h5-disp-card .progress-row .v { font-size: 12px; font-weight: 700; color: var(--h5-org); }
+  .h5-disp-card .progress-row .bar { flex-basis: 110px; }
+  .h5-disp-card .footer {
+    display: flex; gap: 8px; justify-content: flex-end;
+  }
+  .h5-disp-card .footer .h5-btn { padding: 6px 14px; }
+
+  /* Tab 切换 */
+  .h5-disp-tabs {
+    display: flex;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    position: sticky; top: 44px; z-index: 50;
+  }
+  .h5-disp-tab {
+    flex: 1;
+    padding: 12px 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--h5-text-2);
+    position: relative;
+  }
+  .h5-disp-tab.active {
+    color: var(--h5-org);
+    font-weight: 600;
+  }
+  .h5-disp-tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 28px; height: 3px;
+    background: var(--h5-org);
+    border-radius: 2px;
+  }
+  .h5-disp-tab .cnt {
+    display: inline-block;
+    margin-left: 2px;
+    padding: 1px 6px;
+    background: var(--h5-bg);
+    color: var(--h5-text-3);
+    border-radius: 8px;
+    font-size: 11px;
+  }
+  .h5-disp-tab.active .cnt {
+    background: rgba(196,132,42,0.12);
+    color: var(--h5-org);
+  }
+</style>
+</head>
+<body data-role="org" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">物资派发</div>
+  <div class="h5-nav-right">
+    <span class="h5-nav-text-btn" onclick="openTip('筛选','按地区 / 紧急度筛选任务')">筛选</span>
+  </div>
+</div>
+
+<div class="h5-page" style="padding-top: 0;">
+
+  <!-- Tab 切换 -->
+  <div class="h5-disp-tabs">
+    <div class="h5-disp-tab active" data-tab="todo">待执行 <span class="cnt">5</span></div>
+    <div class="h5-disp-tab" data-tab="doing">派发中 <span class="cnt">3</span></div>
+    <div class="h5-disp-tab" data-tab="done">已完成 <span class="cnt">86</span></div>
+  </div>
+
+  <!-- 紧急任务 banner -->
+  <div class="h5-section" style="padding-top:12px;">
+    <div style="background:linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color:#fff; border-radius: var(--h5-radius); padding:14px 16px; display:flex; align-items:center; gap:10px;">
+      <div style="font-size:28px;">🚨</div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:14px; font-weight:600;">云南昭通 6.2 级地震救援</div>
+        <div style="font-size:11px; opacity:0.85; margin-top:2px;">紧急派发 5,000 件物资 · 截止 6/7</div>
+      </div>
+      <span class="h5-btn h5-btn-sm" style="background:rgba(255,255,255,0.25); color:#fff; backdrop-filter:blur(8px);" onclick="openDispatch()">立即处理</span>
+    </div>
+  </div>
+
+  <!-- 派发任务列表 -->
+  <div class="h5-section" style="padding-top:0;">
+
+    <div class="h5-disp-card" onclick="openDetail('美心临期面包','派发中')">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg, #FFE4D2, #FAEFD9);">🍞</div>
+        <div class="body">
+          <div class="t">美心临期面包 · 五华县</div>
+          <div class="m">1,200 件 · 责任社工：李梅</div>
+        </div>
+        <span class="h5-tag primary">派发中</span>
+      </div>
+      <div class="progress-row">
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar" data-width="60%"></div></div></div>
+        <div class="v">60%</div>
+      </div>
+      <div class="meta">
+        <span class="h5-tag trust">流程一</span>
+        <span class="h5-tag">广东省慈善总会</span>
+        <span class="h5-tag">720/1,200</span>
+      </div>
+      <div class="footer">
+        <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="event.stopPropagation();openTip('轨迹','查看 720 户受捐者签收轨迹')">查看轨迹</button>
+        <button class="h5-btn h5-btn-primary h5-btn-sm" onclick="event.stopPropagation();openTip('继续派发','扫码登记下一批受捐者')">继续派发</button>
+      </div>
+    </div>
+
+    <div class="h5-disp-card" onclick="openDetail('图书角','待执行')">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg, #FAEFD9, #FFF1E5);">📚</div>
+        <div class="body">
+          <div class="t">"一书一希望" 图书角 · 黔东南</div>
+          <div class="m">800 套 · 准备派发</div>
+        </div>
+        <span class="h5-tag warning">待执行</span>
+      </div>
+      <div class="progress-row">
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar warning" data-width="0%"></div></div></div>
+        <div class="v">0%</div>
+      </div>
+      <div class="meta">
+        <span class="h5-tag info">流程三</span>
+        <span class="h5-tag">贵州省慈善总会</span>
+        <span class="h5-tag">截止 6/12</span>
+      </div>
+      <div class="footer">
+        <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="event.stopPropagation();openTip('详情','查看 800 套图书清单')">详情</button>
+        <button class="h5-btn h5-btn-primary h5-btn-sm" onclick="event.stopPropagation();openTip('开始派发','任务已启动')">开始派发 →</button>
+      </div>
+    </div>
+
+    <div class="h5-disp-card" onclick="openDetail('伊利儿童牛奶','待执行')">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg, #E0FAF5, #E5F0F4);">🥛</div>
+        <div class="body">
+          <div class="t">伊利儿童牛奶 · 河源</div>
+          <div class="m">600 盒 · 准备派发</div>
+        </div>
+        <span class="h5-tag warning">待执行</span>
+      </div>
+      <div class="progress-row">
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar warning" data-width="0%"></div></div></div>
+        <div class="v">0%</div>
+      </div>
+      <div class="meta">
+        <span class="h5-tag trust">流程一</span>
+        <span class="h5-tag">广东省慈善总会</span>
+        <span class="h5-tag">600 户</span>
+      </div>
+      <div class="footer">
+        <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="event.stopPropagation();openTip('详情','查看 600 户受捐者清单')">详情</button>
+        <button class="h5-btn h5-btn-primary h5-btn-sm" onclick="event.stopPropagation();openTip('开始派发','任务已启动')">开始派发 →</button>
+      </div>
+    </div>
+
+    <div class="h5-disp-card" onclick="openDetail('安利洗护','待执行')">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg, #F3E8FF, #FFE4D2);">🧴</div>
+        <div class="body">
+          <div class="t">安利洗护用品 · 肇庆</div>
+          <div class="m">500 套 · 准备派发</div>
+        </div>
+        <span class="h5-tag warning">待执行</span>
+      </div>
+      <div class="progress-row">
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar warning" data-width="0%"></div></div></div>
+        <div class="v">0%</div>
+      </div>
+      <div class="meta">
+        <span class="h5-tag trust">流程一</span>
+        <span class="h5-tag">广东省慈善总会</span>
+        <span class="h5-tag">500 户</span>
+      </div>
+      <div class="footer">
+        <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="event.stopPropagation();openTip('详情','查看 500 户受捐者清单')">详情</button>
+        <button class="h5-btn h5-btn-primary h5-btn-sm" onclick="event.stopPropagation();openTip('开始派发','任务已启动')">开始派发 →</button>
+      </div>
+    </div>
+
+    <div class="h5-disp-card emergency" onclick="openDetail('云南地震','紧急')">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg, #DC2626, #F59E0B);">🚨</div>
+        <div class="body">
+          <div class="t">云南昭通地震救援 · 帐篷</div>
+          <div class="m">320 顶 · 紧急</div>
+        </div>
+        <span class="h5-tag danger">🚨 紧急</span>
+      </div>
+      <div class="progress-row">
+        <div class="bar"><div class="h5-progress"><div class="h5-progress-bar" data-width="15%"></div></div></div>
+        <div class="v" style="color:var(--h5-danger);">15%</div>
+      </div>
+      <div class="meta">
+        <span class="h5-tag info">流程二</span>
+        <span class="h5-tag">云南省慈善总会</span>
+        <span class="h5-tag danger">48/320</span>
+      </div>
+      <div class="footer">
+        <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="event.stopPropagation();openTip('详情','查看 320 顶帐篷去向')">详情</button>
+        <button class="h5-btn h5-btn-sm" style="background:var(--h5-danger); color:#fff;" onclick="event.stopPropagation();openTip('立即开始','紧急派发已启动')">立即开始 →</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="height: 24px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab active" onclick="location.href='distribute.html'"><div class="tab-ic">🚚</div><div class="tab-label">派发</div></div>
+  <div class="h5-tab" onclick="location.href='statistics.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center; padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('org');
+
+  document.querySelectorAll('.h5-disp-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.h5-disp-tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+
+  function openDetail(t, st) {
+    document.getElementById('tipTitle').textContent = '任务详情';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:left;">' +
+        '<div style="font-size:16px; font-weight:600; margin-bottom:4px;">' + t + '</div>' +
+        '<div style="font-size:12px; color:var(--h5-text-3); margin-bottom:14px;">状态：' + st + '</div>' +
+        '<div style="padding:10px 0; border-bottom:1px solid var(--h5-divider); display:flex; justify-content:space-between;"><span style="color:var(--h5-text-3);">物资来源</span><span style="font-size:13px;">美心食品集团</span></div>' +
+        '<div style="padding:10px 0; border-bottom:1px solid var(--h5-divider); display:flex; justify-content:space-between;"><span style="color:var(--h5-text-3);">派发地区</span><span style="font-size:13px;">广东 五华县</span></div>' +
+        '<div style="padding:10px 0; border-bottom:1px solid var(--h5-divider); display:flex; justify-content:space-between;"><span style="color:var(--h5-text-3);">受捐户数</span><span style="font-size:13px;">86 户</span></div>' +
+        '<div style="padding:10px 0; border-bottom:1px solid var(--h5-divider); display:flex; justify-content:space-between;"><span style="color:var(--h5-text-3);">责任社工</span><span style="font-size:13px;">李梅</span></div>' +
+        '<div style="padding:10px 0; display:flex; justify-content:space-between;"><span style="color:var(--h5-text-3);">进度</span><span style="font-size:13px; color:var(--h5-org); font-weight:700;">60% (56/86)</span></div>' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:18px;" onclick="H5.closeModal(\'tipModal\')">查看完整详情</button>';
+    H5.openModal('tipModal');
+  }
+
+  function openTip(t, d) {
+    const icon = t === '筛选' ? '🔍'
+      : t === '立即开始' || t === '开始派发' ? '🚚'
+      : t === '继续派发' ? '📲'
+      : t === '详情' ? '📋'
+      : t === '轨迹' ? '📍'
+      : '✅';
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px; margin-bottom:16px;">' + icon + '</div>' +
+      '<div style="font-size:15px; font-weight:600; margin-bottom:8px;">' + d + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>';
+    H5.openModal('tipModal');
+  }
+  function openDispatch() { openTip('立即处理','云南地震应急响应已派发到您'); }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-section', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' });
+    gsap.utils.toArray('.h5-progress-bar[data-width]').forEach(b => {
+      const w = b.dataset.width;
+      gsap.fromTo(b, { width: '0%' }, { width: w, duration: 1, delay: 0.4, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

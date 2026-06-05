@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>商品管理 — 美心食品 · 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 顶部自动捐赠提示 */
+  .h5-donate-tip {
+    margin: 12px 16px 0;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, rgba(232,93,4,0.08), rgba(196,69,3,0.02));
+    border-left: 3px solid var(--h5-primary);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--h5-text-2);
+    line-height: 1.6;
+  }
+  .h5-donate-tip b { color: var(--h5-primary); }
+  /* 2x2 统计 */
+  .h5-stat-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .h5-stat-2x2 .cell {
+    background: var(--h5-bg);
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .h5-stat-2x2 .v {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--h5-primary);
+    line-height: 1.1;
+  }
+  .h5-stat-2x2 .v .u { font-size: 11px; font-weight: 400; color: var(--h5-text-3); margin-left: 2px; }
+  .h5-stat-2x2 .l { font-size: 11px; color: var(--h5-text-3); margin-top: 4px; }
+  /* tab */
+  .h5-prd-tabs {
+    display: flex;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-prd-tabs::-webkit-scrollbar { display: none; }
+  .h5-prd-tab {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--h5-text-2);
+    position: relative;
+    cursor: pointer;
+  }
+  .h5-prd-tab.active { color: var(--h5-primary); font-weight: 600; }
+  .h5-prd-tab.active::after {
+    content: ""; position: absolute;
+    bottom: 0; left: 16px; right: 16px;
+    height: 2px; background: var(--h5-primary); border-radius: 1px;
+  }
+  .h5-prd-tab .cnt { font-size: 11px; opacity: 0.6; margin-left: 3px; }
+  /* 商品卡 */
+  .h5-prd-card {
+    margin: 10px 16px 0;
+    padding: 12px;
+    background: var(--h5-card);
+    border-radius: 12px;
+    display: flex; gap: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--h5-divider);
+  }
+  .h5-prd-card .pic {
+    width: 80px; height: 80px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--h5-primary-soft), #FED7AA);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    flex-shrink: 0;
+  }
+  .h5-prd-card .body { flex: 1; min-width: 0; }
+  .h5-prd-card .name {
+    font-size: 14px; font-weight: 600;
+    overflow: hidden; text-overflow: ellipsis;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    line-height: 1.4;
+  }
+  .h5-prd-card .meta {
+    font-size: 11px; color: var(--h5-text-3);
+    margin-top: 4px;
+  }
+  .h5-prd-card .price-row {
+    display: flex; align-items: baseline; gap: 6px;
+    margin-top: 6px;
+  }
+  .h5-prd-card .price {
+    font-size: 15px; font-weight: 700; color: var(--h5-primary);
+  }
+  .h5-prd-card .price .u { font-size: 11px; }
+  .h5-prd-card .old-price {
+    font-size: 11px; color: var(--h5-text-3);
+    text-decoration: line-through;
+  }
+  .h5-prd-card .foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 8px;
+  }
+  .h5-prd-card .sales { font-size: 11px; color: var(--h5-text-3); }
+  .h5-prd-card .sales b { color: var(--h5-text); }
+  /* 开关 */
+  .h5-toggle {
+    position: relative;
+    display: inline-block;
+    width: 38px; height: 22px;
+    flex-shrink: 0;
+  }
+  .h5-toggle input { display: none; }
+  .h5-toggle .slider {
+    position: absolute; inset: 0;
+    background: var(--h5-divider);
+    border-radius: 11px;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  .h5-toggle .slider::before {
+    content: "";
+    position: absolute;
+    left: 2px; top: 2px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+  .h5-toggle input:checked + .slider { background: var(--h5-success); }
+  .h5-toggle input:checked + .slider::before { transform: translateX(16px); }
+  /* 浮动发布按钮 */
+  .h5-fab {
+    position: fixed;
+    right: 16px; bottom: calc(var(--h5-tabbar-h) + 16px);
+    width: 52px; height: 52px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, var(--h5-primary), var(--h5-primary-deep));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 16px rgba(232,93,4,0.4);
+    z-index: 50;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">商品管理</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="alert('搜索 · 原型省略')">🔍</div>
+  </div>
+</div>
+
+<div class="h5-donate-tip">
+  💡 商城每单自动捐赠 <b>0.5%</b> 至慈商联营公益基金。2025 年已累计自动捐赠 <b style="color:var(--h5-primary);">¥1,432.5</b>。
+</div>
+
+<div class="h5-section" style="padding-top: 0;">
+  <div class="h5-card">
+    <div class="h5-card-title">
+      <div class="title">🏪 店铺数据</div>
+    </div>
+    <div class="h5-stat-2x2">
+      <div class="cell"><div class="v"><span class="counter" data-target="26">0</span></div><div class="l">在售商品</div></div>
+      <div class="cell"><div class="v"><span class="counter" data-target="8620">0</span></div><div class="l">月销量（件）</div></div>
+      <div class="cell"><div class="v">¥<span class="counter" data-target="28.65">0</span><span class="u">万</span></div><div class="l">月销售额</div></div>
+      <div class="cell"><div class="v">¥<span class="counter" data-target="1432.5">0</span></div><div class="l">自动捐赠</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="h5-prd-tabs">
+  <div class="h5-prd-tab active" data-tab="onsell" onclick="switchTab(this)">在售 <span class="cnt">26</span></div>
+  <div class="h5-prd-tab" data-tab="offsell" onclick="switchTab(this)">已下架 <span class="cnt">3</span></div>
+  <div class="h5-prd-tab" data-tab="draft" onclick="switchTab(this)">草稿箱 <span class="cnt">2</span></div>
+  <div class="h5-prd-tab" data-tab="audit" onclick="switchTab(this)">审核中 <span class="cnt">1</span></div>
+</div>
+
+<div class="h5-page" style="padding-top:0;" id="prdList">
+
+  <div class="h5-prd-card" data-status="onsell">
+    <div class="pic">🍞</div>
+    <div class="body">
+      <div class="name">美心临期面包礼盒 1.2kg 8 种口味</div>
+      <div class="meta">临期食品 · 库存 1,860</div>
+      <div class="price-row">
+        <div class="price"><span class="u">¥</span>15.5</div>
+        <div class="old-price">¥39.9</div>
+        <span class="h5-tag danger" style="font-size:9px;padding:1px 5px;">3.9 折</span>
+      </div>
+      <div class="foot">
+        <div class="sales">月销 <b>2,860</b></div>
+        <label class="h5-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-prd-card" data-status="onsell">
+    <div class="pic" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">🥛</div>
+    <div class="body">
+      <div class="name">伊利儿童成长牛奶 200ml×12 盒装</div>
+      <div class="meta">乳制品 · 库存 4,200</div>
+      <div class="price-row">
+        <div class="price"><span class="u">¥</span>54.0</div>
+        <div class="old-price">¥68.0</div>
+        <span class="h5-tag primary" style="font-size:9px;padding:1px 5px;">爆款</span>
+      </div>
+      <div class="foot">
+        <div class="sales">月销 <b>1,820</b></div>
+        <label class="h5-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-prd-card" data-status="onsell">
+    <div class="pic" style="background:linear-gradient(135deg,#DBEAFE,#BFDBFE);">🧴</div>
+    <div class="body">
+      <div class="name">蓝月亮深层洁净洗衣液 3kg 装</div>
+      <div class="meta">日化用品 · 库存 980</div>
+      <div class="price-row">
+        <div class="price"><span class="u">¥</span>39.9</div>
+        <div class="old-price">¥59.9</div>
+      </div>
+      <div class="foot">
+        <div class="sales">月销 <b>1,260</b></div>
+        <label class="h5-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-prd-card" data-status="onsell">
+    <div class="pic" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0);">📚</div>
+    <div class="body">
+      <div class="name">儿童课外读物礼盒 10 册装（小学版）</div>
+      <div class="meta">文教用品 · 库存 560</div>
+      <div class="price-row">
+        <div class="price"><span class="u">¥</span>128.0</div>
+        <span class="h5-tag gold" style="font-size:9px;padding:1px 5px;">新品</span>
+      </div>
+      <div class="foot">
+        <div class="sales">月销 <b>820</b></div>
+        <label class="h5-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-prd-card" data-status="onsell">
+    <div class="pic" style="background:linear-gradient(135deg,#FCE7F3,#FBCFE8);">🍙</div>
+    <div class="body">
+      <div class="name">五芳斋端午粽子礼盒 800g 8 粽 5 味</div>
+      <div class="meta">节令食品 · 库存 320</div>
+      <div class="price-row">
+        <div class="price"><span class="u">¥</span>99.0</div>
+        <div class="old-price">¥138.0</div>
+        <span class="h5-tag warning" style="font-size:9px;padding:1px 5px;">限时</span>
+      </div>
+      <div class="foot">
+        <div class="sales">月销 <b>1,260</b></div>
+        <label class="h5-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-prd-card" data-status="onsell">
+    <div class="pic" style="background:linear-gradient(135deg,#E0E7FF,#C7D2FE);">🧴</div>
+    <div class="body">
+      <div class="name">舒肤佳纯白清香沐浴露 720ml 家庭装</div>
+      <div class="meta">日化用品 · 库存 1,420</div>
+      <div class="price-row">
+        <div class="price"><span class="u">¥</span>29.9</div>
+        <div class="old-price">¥45.0</div>
+      </div>
+      <div class="foot">
+        <div class="sales">月销 <b>600</b></div>
+        <label class="h5-toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-prd-card" data-status="offsell" style="display:none;">
+    <div class="pic" style="background:linear-gradient(135deg,#F3F4F6,#E5E7EB);opacity:0.5;">🥤</div>
+    <div class="body">
+      <div class="name" style="color:var(--h5-text-3);">可口可乐 330ml×24 罐装（已下架）</div>
+      <div class="meta">饮料 · 库存 0</div>
+      <div class="price-row">
+        <div class="price" style="color:var(--h5-text-3);"><span class="u">¥</span>49.9</div>
+      </div>
+      <div class="foot">
+        <div class="sales">下架于 2025-05-20</div>
+        <span class="h5-btn h5-btn-ghost h5-btn-sm" onclick="event.stopPropagation()">重新上架</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-loadmore" style="text-align:center;padding:20px;font-size:12px;color:var(--h5-text-3);" onclick="loadMore()">
+    ↓ 加载更多（共 26 件，已显示 6 件）
+  </div>
+
+  <div style="height: 80px;"></div>
+</div>
+
+<!-- 浮动发布按钮 -->
+<div class="h5-fab" onclick="openPublish()">+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='donate-publish.html'"><div class="tab-ic">📦</div><div class="tab-label">捐赠</div></div>
+  <div class="h5-tab" onclick="location.href='donate-respond.html'"><div class="tab-ic">🤝</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab active" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('company');
+
+  function switchTab(el) {
+    document.querySelectorAll('.h5-prd-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const tab = el.dataset.tab;
+    document.querySelectorAll('.h5-prd-card').forEach(c => {
+      c.style.display = (c.dataset.status === tab) ? '' : 'none';
+    });
+  }
+
+  function openPublish() { openTip('发布新商品', '➕', '支持图文编辑、规格 SKU、库存 / 价格 / 限购设置。原型仅提示。'); }
+  function loadMore() { openTip('加载更多', '📥', '原型仅展示前 6 件 + 已下架 1 件。PC 端支持分页浏览全部 32 件。'); }
+
+  function openTip(t, ic, body) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">' + ic + '</div>' +
+      '<div style="font-size:14px;color:var(--h5-text-2);line-height:1.7;">' + body + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (window.gsap) {
+      gsap.fromTo('.h5-stat-2x2 .cell', { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.06, ease: 'back.out(1.4)' });
+      gsap.fromTo('.h5-prd-card', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, delay: 0.2, ease: 'power2.out' });
+    }
+    document.querySelectorAll('.counter').forEach(el => H5.countUp(el, el.dataset.target, 1.2));
+  });
+</script>
+</body>
+</html>

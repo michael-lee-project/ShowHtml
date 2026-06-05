@@ -913,6 +913,7 @@
       <a href="dashboard.html" class="${active==='dashboard'?'active':''}"><span class="ic">📊</span>数据看板</a>
       <a href="messages.html" class="${active==='messages'?'active':''}"><span class="ic">🔔</span>消息中心 <span class="badge-mini">${getUnreadCount("volunteer")}</span></a>
       <a href="task-list.html" class="${active==='task-list'?'active':''}"><span class="ic">📋</span>派发任务 <span class="badge-mini">3</span></a>
+      <a href="points-mall.html" class="${active==='points-mall'?'active':''}"><span class="ic">🎁</span>贡献分商城 <span class="badge-mini">14</span></a>
     </div>
   </div>
   <div class="side-section">

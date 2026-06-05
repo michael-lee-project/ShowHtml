@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>志愿者管理 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 筛选条 */
+  .h5-filter-bar {
+    display: flex; gap: 6px;
+    padding: 12px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-filter-bar::-webkit-scrollbar { display: none; }
+  .h5-filter-chip {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--h5-text-2);
+    background: var(--h5-bg);
+  }
+  .h5-filter-chip.active {
+    background: var(--h5-org);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* 志愿者行 */
+  .h5-vol-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-vol-row:last-child { border-bottom: 0; }
+  .h5-vol-row .av {
+    width: 38px; height: 38px;
+    border-radius: 19px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .h5-vol-row .body { flex: 1; min-width: 0; }
+  .h5-vol-row .t { font-size: 13px; font-weight: 500; }
+  .h5-vol-row .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-vol-row .r { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .h5-vol-row .arrow { color: var(--h5-text-3); font-size: 16px; }
+
+  /* KPI mini */
+  .h5-mini-kpi {
+    text-align: center;
+    padding: 8px 0;
+  }
+  .h5-mini-kpi .v { font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .h5-mini-kpi .l { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+</style>
+</head>
+<body data-role="org" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">志愿者管理</div>
+  <div class="h5-nav-right">
+    <span class="h5-nav-text-btn" onclick="openTip('添加志愿者','添加新志愿者到本组织')">+ 添加</span>
+  </div>
+</div>
+
+<div class="h5-page" style="padding-top: 0;">
+
+  <!-- 顶部 4 KPI -->
+  <div class="h5-section" style="padding-top: 12px;">
+    <div class="h5-card">
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0;">
+        <div class="h5-mini-kpi">
+          <div class="v" style="color:var(--h5-org);">86</div>
+          <div class="l">志愿者总数</div>
+        </div>
+        <div class="h5-mini-kpi" style="border-left:1px solid var(--h5-divider); border-right:1px solid var(--h5-divider);">
+          <div class="v" style="color:var(--h5-trust);">80</div>
+          <div class="l">已认证</div>
+        </div>
+        <div class="h5-mini-kpi" style="border-right:1px solid var(--h5-divider);">
+          <div class="v" style="color:var(--h5-warning);">62</div>
+          <div class="l">本月活跃</div>
+        </div>
+        <div class="h5-mini-kpi">
+          <div class="v" style="color:var(--h5-info);">1860<span style="font-size:12px; font-weight:500;">h</span></div>
+          <div class="l">总时长</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 筛选 -->
+  <div class="h5-filter-bar">
+    <div class="h5-filter-chip active" data-f="all">全部 86</div>
+    <div class="h5-filter-chip" data-f="active">活跃 62</div>
+    <div class="h5-filter-chip" data-f="audit">待审核 5</div>
+    <div class="h5-filter-chip" data-f="expert">社工/医生 8</div>
+    <div class="h5-filter-chip" data-f="new">本月新增 12</div>
+  </div>
+
+  <!-- 待审核提示 -->
+  <div class="h5-section" style="padding-top:0;">
+    <div class="h5-card" style="background:linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(245,158,11,0.03) 100%); border:1px solid rgba(245,158,11,0.2);">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:36px; height:36px; border-radius:18px; background:rgba(245,158,11,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">⏰</div>
+        <div style="flex:1;">
+          <div style="font-size:13px; font-weight:600; color:var(--h5-warning);">5 位新志愿者待审核</div>
+          <div style="font-size:11px; color:var(--h5-text-3); margin-top:2px;">需 7 天内完成资质审核</div>
+        </div>
+        <span class="h5-btn h5-btn-sm" style="background:var(--h5-warning); color:#fff;" onclick="openTip('审核','切换到待审核列表')">去审核</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 志愿者列表 -->
+  <div class="h5-section" style="padding-top:0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🙋 志愿者列表 <span class="h5-tag primary" style="margin-left:4px;">86</span></div>
+        <span class="more" onclick="openSort()">排序 ↓</span>
+      </div>
+      <div class="h5-vol-row" onclick="openDetail('张同学','助学志愿者')">
+        <div class="av" style="background:linear-gradient(135deg, #14B8A6, #0D8A7E);">张</div>
+        <div class="body">
+          <div class="t">张同学 <span class="h5-tag success" style="margin-left:4px; font-size:10px;">活跃</span></div>
+          <div class="d">深圳南山 · 助学 · 本月 32h</div>
+        </div>
+        <div class="r">
+          <span style="font-size:13px; font-weight:700; color:var(--h5-org);">A+</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+      <div class="h5-vol-row" onclick="openDetail('李大姐','济困社工')">
+        <div class="av" style="background:linear-gradient(135deg, var(--h5-org), #8B5A1A);">李</div>
+        <div class="body">
+          <div class="t">李大姐 <span class="h5-tag gold" style="margin-left:4px; font-size:10px;">社工</span></div>
+          <div class="d">深圳福田 · 济困 · 本月 28h</div>
+        </div>
+        <div class="r">
+          <span style="font-size:13px; font-weight:700; color:var(--h5-org);">A</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+      <div class="h5-vol-row" onclick="openDetail('王医生','医务志愿者')">
+        <div class="av" style="background:linear-gradient(135deg, #DC2626, #B91C1C);">王</div>
+        <div class="body">
+          <div class="t">王医生 <span class="h5-tag danger" style="margin-left:4px; font-size:10px;">医生</span></div>
+          <div class="d">深圳罗湖 · 医疗 · 本月 20h</div>
+        </div>
+        <div class="r">
+          <span style="font-size:13px; font-weight:700; color:var(--h5-org);">A</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+      <div class="h5-vol-row" onclick="openDetail('陈老师','支教志愿者')">
+        <div class="av" style="background:linear-gradient(135deg, #0EA5E9, #0284C7);">陈</div>
+        <div class="body">
+          <div class="t">陈老师</div>
+          <div class="d">深圳宝安 · 支教 · 本月 16h</div>
+        </div>
+        <div class="r">
+          <span style="font-size:13px; font-weight:700; color:var(--h5-org);">B+</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+      <div class="h5-vol-row" style="background:rgba(245,158,11,0.04);" onclick="openDetail('赵先生','应急志愿者')">
+        <div class="av" style="background:linear-gradient(135deg, #F59E0B, #D97706);">赵</div>
+        <div class="body">
+          <div class="t">赵先生 <span class="h5-tag warning" style="margin-left:4px; font-size:10px;">待审核</span></div>
+          <div class="d">深圳龙岗 · 应急 · 申请于昨天</div>
+        </div>
+        <div class="r" style="display:flex; gap:4px;">
+          <span class="h5-btn h5-btn-sm" style="background:var(--h5-trust); color:#fff;" onclick="event.stopPropagation();openTip('已通过','赵先生已加入本组织')">通过</span>
+          <span class="h5-btn h5-btn-sm h5-btn-ghost" onclick="event.stopPropagation();openTip('已拒绝','已通知赵先生')">拒绝</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 24px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='distribute.html'"><div class="tab-ic">🚚</div><div class="tab-label">派发</div></div>
+  <div class="h5-tab" onclick="location.href='statistics.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab active" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center; padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('org');
+
+  // 筛选切换
+  document.querySelectorAll('.h5-filter-chip').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.h5-filter-chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+    });
+  });
+
+  function openDetail(name, role) {
+    document.getElementById('tipTitle').textContent = name;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="width:64px; height:64px; border-radius:32px; background:linear-gradient(135deg, var(--h5-org), #8B5A1A); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:700; margin:8px auto 12px;">' + name[0] + '</div>' +
+      '<div style="font-size:17px; font-weight:600; margin-bottom:4px;">' + name + '</div>' +
+      '<div style="font-size:13px; color:var(--h5-text-3); margin-bottom:16px;">' + role + '</div>' +
+      '<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; text-align:center;">' +
+        '<div style="padding:8px; background:var(--h5-bg); border-radius:8px;"><div style="font-size:16px; font-weight:700; color:var(--h5-org);">32h</div><div style="font-size:10px; color:var(--h5-text-3);">本月</div></div>' +
+        '<div style="padding:8px; background:var(--h5-bg); border-radius:8px;"><div style="font-size:16px; font-weight:700; color:var(--h5-org);">A+</div><div style="font-size:10px; color:var(--h5-text-3);">评分</div></div>' +
+        '<div style="padding:8px; background:var(--h5-bg); border-radius:8px;"><div style="font-size:16px; font-weight:700; color:var(--h5-org);">128</div><div style="font-size:10px; color:var(--h5-text-3);">贡献分</div></div>' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">查看完整档案</button>';
+    H5.openModal('tipModal');
+  }
+
+  function openTip(t, d) {
+    const icon = t === '添加志愿者' ? '➕'
+      : t === '审核' ? '🔍'
+      : t === '已通过' ? '✅'
+      : t === '已拒绝' ? '🚫'
+      : '💡';
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px; margin-bottom:16px;">' + icon + '</div>' +
+      '<div style="font-size:15px; font-weight:600; margin-bottom:8px;">' + d + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>';
+    H5.openModal('tipModal');
+  }
+  function openSort() {
+    document.getElementById('tipTitle').textContent = '排序';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:left;">' +
+        '<div style="padding:14px 0; border-bottom:1px solid var(--h5-divider); display:flex; justify-content:space-between; align-items:center;"><span style="font-size:14px;">本月服务时长 ↓</span><span style="color:var(--h5-org);">✓</span></div>' +
+        '<div style="padding:14px 0; border-bottom:1px solid var(--h5-divider); font-size:14px;">综合评分 ↓</div>' +
+        '<div style="padding:14px 0; border-bottom:1px solid var(--h5-divider); font-size:14px;">注册时间（新→旧）</div>' +
+        '<div style="padding:14px 0; font-size:14px;">累计服务时长 ↓</div>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-section', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' });
+  });
+</script>
+</body>
+</html>

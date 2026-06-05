@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>响应项目 — 美心食品 · 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 流程提示 */
+  .h5-info-banner {
+    margin: 12px 16px 0;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(14,165,233,0.02));
+    border-left: 3px solid var(--h5-info);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--h5-text-2);
+    line-height: 1.6;
+  }
+  .h5-info-banner .t { font-weight: 600; color: var(--h5-info); margin-bottom: 2px; }
+  /* 横向滚动 tab */
+  .h5-pj-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-pj-tabs::-webkit-scrollbar { display: none; }
+  .h5-pj-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--h5-text-2);
+    background: var(--h5-bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .h5-pj-tab.active {
+    background: var(--h5-primary);
+    color: #fff;
+    font-weight: 600;
+  }
+  .h5-pj-tab .cnt {
+    margin-left: 4px;
+    font-size: 11px;
+    opacity: 0.75;
+  }
+  /* 项目卡 */
+  .h5-pj-card {
+    margin: 10px 16px 0;
+    background: var(--h5-card);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--h5-divider);
+  }
+  .h5-pj-card.emergency {
+    border-left: 4px solid var(--h5-danger);
+  }
+  .h5-pj-card .live-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--h5-danger);
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.3); }
+  }
+  .h5-pj-card .head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px 8px;
+  }
+  .h5-pj-card .title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    flex: 1;
+    margin-right: 8px;
+  }
+  .h5-pj-card .ic {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--h5-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .h5-pj-card .ic.emergency { background: rgba(220,38,38,0.1); }
+  .h5-pj-card .ic.education { background: rgba(14,165,233,0.1); }
+  .h5-pj-card .ic.food { background: rgba(245,158,11,0.12); }
+  .h5-pj-card .ic.medical { background: rgba(20,184,166,0.1); }
+  .h5-pj-card .ic.warm { background: rgba(196,132,42,0.12); }
+  .h5-pj-card .ic.continuous { background: rgba(124,58,237,0.1); }
+  .h5-pj-card .tags { padding: 0 14px 6px; }
+  .h5-pj-card .tags .h5-tag { margin-right: 4px; }
+  .h5-pj-card .stats {
+    display: flex; padding: 8px 14px;
+    background: var(--h5-bg);
+    margin: 0 14px;
+    border-radius: 8px;
+  }
+  .h5-pj-card .stats .stat {
+    flex: 1;
+    text-align: center;
+  }
+  .h5-pj-card .stats .stat .v {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--h5-primary);
+  }
+  .h5-pj-card .stats .stat .l {
+    font-size: 10px;
+    color: var(--h5-text-3);
+    margin-top: 1px;
+  }
+  .h5-pj-card .progress-row {
+    padding: 10px 14px 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .h5-pj-card .progress { flex: 1; }
+  .h5-pj-card .progress-text { font-size: 11px; color: var(--h5-text-3); white-space: nowrap; }
+  .h5-pj-card .need-section {
+    padding: 6px 14px 8px;
+  }
+  .h5-pj-card .need-section .lbl {
+    font-size: 11px; color: var(--h5-text-3);
+    margin-bottom: 6px;
+  }
+  .h5-pj-card .chips {
+    display: flex; flex-wrap: wrap; gap: 4px;
+  }
+  .h5-pj-card .chip {
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: var(--h5-primary-soft);
+    color: var(--h5-primary);
+  }
+  .h5-pj-card .actions {
+    display: flex; gap: 8px;
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--h5-divider);
+    margin-top: 8px;
+  }
+  .h5-pj-card .actions .h5-btn { flex: 1; }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">响应项目</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openFilter()">⚙</div>
+  </div>
+</div>
+
+<div class="h5-info-banner">
+  <div class="t">💡 流程二 / 流程三 · 项目响应</div>
+  响应慈善会或紧急救灾发布的项目，按需捐赠物资。原"企业主动发起"请到首页"发起捐赠"。
+</div>
+
+<div class="h5-pj-tabs">
+  <div class="h5-pj-tab active" data-tab="all" onclick="switchTab(this)">所有 <span class="cnt">5</span></div>
+  <div class="h5-pj-tab" data-tab="emergency" onclick="switchTab(this)">🚨 紧急救灾 <span class="cnt">1</span></div>
+  <div class="h5-pj-tab" data-tab="education" onclick="switchTab(this)">📚 教育助学 <span class="cnt">1</span></div>
+  <div class="h5-pj-tab" data-tab="warm" onclick="switchTab(this)">🌾 乡村振兴 <span class="cnt">1</span></div>
+  <div class="h5-pj-tab" data-tab="medical" onclick="switchTab(this)">🏥 医疗救助 <span class="cnt">1</span></div>
+  <div class="h5-pj-tab" data-tab="continuous" onclick="switchTab(this)">🌱 持续项目 <span class="cnt">1</span></div>
+</div>
+
+<div class="h5-page" style="padding-top:0;" id="projectList">
+
+  <!-- 紧急项目 -->
+  <div class="h5-pj-card emergency" data-cat="emergency">
+    <div class="head">
+      <div class="title"><span class="live-dot"></span>云南昭通 6.2 级地震紧急救援</div>
+      <div class="ic emergency">🚨</div>
+    </div>
+    <div class="tags">
+      <span class="h5-tag danger">紧急</span>
+      <span class="h5-tag warning">流程二/三</span>
+      <span class="h5-tag info">广东省慈善总会</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">60%</div><div class="l">已筹集</div></div>
+      <div class="stat"><div class="v">12</div><div class="l">参与企业</div></div>
+      <div class="stat"><div class="v">8,620</div><div class="l">受惠人</div></div>
+      <div class="stat"><div class="v">7 天</div><div class="l">剩余</div></div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar" data-width="60%"></div></div>
+      <div class="progress-text">¥482k / ¥800k</div>
+    </div>
+    <div class="need-section">
+      <div class="lbl">急需物资：</div>
+      <div class="chips">
+        <span class="chip">🍞 食品 1.2 万件</span>
+        <span class="chip">🛌 棉被 800 套</span>
+        <span class="chip">⛺ 帐篷 200 顶</span>
+        <span class="chip">💧 饮用水 5,000 箱</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="openDetail('云南昭通地震救援')">查看详情</button>
+      <button class="h5-btn h5-btn-primary h5-btn-sm" onclick="openRespond('云南昭通地震救援')">立即响应</button>
+    </div>
+  </div>
+
+  <!-- 教育项目 -->
+  <div class="h5-pj-card" data-cat="education">
+    <div class="head">
+      <div class="title">📚 "一书一希望"贵州山区图书角</div>
+      <div class="ic education">📚</div>
+    </div>
+    <div class="tags">
+      <span class="h5-tag info">教育助学</span>
+      <span class="h5-tag primary">流程二</span>
+      <span class="h5-tag gold">贵州省慈善总会</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">57%</div><div class="l">已筹集</div></div>
+      <div class="stat"><div class="v">23</div><div class="l">参与企业</div></div>
+      <div class="stat"><div class="v">5,600</div><div class="l">受惠学生</div></div>
+      <div class="stat"><div class="v">30 天</div><div class="l">剩余</div></div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar success" data-width="57%"></div></div>
+      <div class="progress-text">¥286.5k / ¥500k</div>
+    </div>
+    <div class="need-section">
+      <div class="lbl">急需物资：</div>
+      <div class="chips">
+        <span class="chip">📖 课外读物 8,000 册</span>
+        <span class="chip">✏ 文具礼盒 1,200 套</span>
+        <span class="chip">📚 书架 200 组</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="openDetail('一书一希望')">查看详情</button>
+      <button class="h5-btn h5-btn-secondary h5-btn-sm" onclick="openRespond('一书一希望')">响应</button>
+    </div>
+  </div>
+
+  <!-- 暖冬衣物 -->
+  <div class="h5-pj-card" data-cat="warm">
+    <div class="head">
+      <div class="title">🌾 "暖冬"西北留守儿童衣物</div>
+      <div class="ic warm">🌾</div>
+    </div>
+    <div class="tags">
+      <span class="h5-tag gold">乡村振兴</span>
+      <span class="h5-tag primary">流程三</span>
+      <span class="h5-tag info">陕西省慈善协会</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">56%</div><div class="l">已筹集</div></div>
+      <div class="stat"><div class="v">8</div><div class="l">参与企业</div></div>
+      <div class="stat"><div class="v">2,860</div><div class="l">受惠儿童</div></div>
+      <div class="stat"><div class="v">45 天</div><div class="l">剩余</div></div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar gold" data-width="56%"></div></div>
+      <div class="progress-text">¥168.2k / ¥300k</div>
+    </div>
+    <div class="need-section">
+      <div class="lbl">急需物资：</div>
+      <div class="chips">
+        <span class="chip">🧥 冬装 3,200 套</span>
+        <span class="chip">🧣 围巾 1,000 条</span>
+        <span class="chip">🧤 手套 800 双</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="openDetail('暖冬')">查看详情</button>
+      <button class="h5-btn h5-btn-secondary h5-btn-sm" onclick="openRespond('暖冬')">响应</button>
+    </div>
+  </div>
+
+  <!-- 医疗项目 -->
+  <div class="h5-pj-card" data-cat="medical">
+    <div class="head">
+      <div class="title">🏥 "健康乡村"青海医疗设备</div>
+      <div class="ic medical">🏥</div>
+    </div>
+    <div class="tags">
+      <span class="h5-tag trust">医疗救助</span>
+      <span class="h5-tag primary">流程二</span>
+      <span class="h5-tag info">青海省慈善总会</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">85%</div><div class="l">已筹集</div></div>
+      <div class="stat"><div class="v">6</div><div class="l">参与企业</div></div>
+      <div class="stat"><div class="v">12,860</div><div class="l">受惠人</div></div>
+      <div class="stat"><div class="v">15 天</div><div class="l">剩余</div></div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar trust" data-width="85%"></div></div>
+      <div class="progress-text">¥425k / ¥500k</div>
+    </div>
+    <div class="need-section">
+      <div class="lbl">急需物资：</div>
+      <div class="chips">
+        <span class="chip">🩺 血压计 200 台</span>
+        <span class="chip">🩹 急救包 500 套</span>
+        <span class="chip">💊 基础药品 3,000 份</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="openDetail('健康乡村')">查看详情</button>
+      <button class="h5-btn h5-btn-secondary h5-btn-sm" onclick="openRespond('健康乡村')">响应</button>
+    </div>
+  </div>
+
+  <!-- 持续项目 -->
+  <div class="h5-pj-card" data-cat="continuous">
+    <div class="head">
+      <div class="title">🌱 "临期 0 浪费"持续项目</div>
+      <div class="ic continuous">🌱</div>
+    </div>
+    <div class="tags">
+      <span class="h5-tag primary">持续</span>
+      <span class="h5-tag success">流程一</span>
+      <span class="h5-tag info">多区域联合</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">¥1,860 万</div><div class="l">累计</div></div>
+      <div class="stat"><div class="v">126</div><div class="l">参与企业</div></div>
+      <div class="stat"><div class="v">186,800</div><div class="l">受惠人次</div></div>
+      <div class="stat"><div class="v">365 天</div><div class="l">常年</div></div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar success" data-width="78%"></div></div>
+      <div class="progress-text">本年完成 78%</div>
+    </div>
+    <div class="need-section">
+      <div class="lbl">长期接受：</div>
+      <div class="chips">
+        <span class="chip">🍞 临期食品</span>
+        <span class="chip">🥛 新品食品</span>
+        <span class="chip">🧴 日化用品</span>
+        <span class="chip">📚 文教用品</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="h5-btn h5-btn-ghost h5-btn-sm" onclick="openDetail('临期 0 浪费')">查看详情</button>
+      <button class="h5-btn h5-btn-secondary h5-btn-sm" onclick="openRespond('临期 0 浪费')">参与</button>
+    </div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 响应确认 modal -->
+<div class="h5-modal-mask" id="respondModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title">响应项目</div>
+      <div class="close" onclick="H5.closeModal('respondModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" style="padding:16px 20px;">
+      <div style="text-align:center;padding:8px 0 16px;">
+        <div style="font-size:14px;color:var(--h5-text-3);">您正在响应</div>
+        <div style="font-size:17px;font-weight:600;margin-top:4px;" id="respondProjName">项目名</div>
+      </div>
+      <div class="h5-form-group">
+        <label class="h5-form-label">响应物资</label>
+        <select class="h5-select">
+          <option>🍞 临期面包糕点 1,200 件（¥18,600）</option>
+          <option>🥛 儿童牛奶 600 盒（¥32,400）</option>
+          <option>🧴 洗护用品 500 套（¥28,000）</option>
+          <option>📝 其他 / 自定义</option>
+        </select>
+      </div>
+      <div class="h5-form-group">
+        <label class="h5-form-label">响应留言（可选）</label>
+        <textarea class="h5-textarea" placeholder="请描述物资规格 / 物流方式"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="h5-btn h5-btn-ghost h5-btn-lg" style="flex:1;" onclick="H5.closeModal('respondModal')">取消</button>
+        <button class="h5-btn h5-btn-primary h5-btn-lg" style="flex:2;" onclick="confirmRespond()">确认响应</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='donate-publish.html'"><div class="tab-ic">📦</div><div class="tab-label">捐赠</div></div>
+  <div class="h5-tab active"><div class="tab-ic">🤝</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('company');
+
+  function switchTab(el) {
+    document.querySelectorAll('.h5-pj-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const cat = el.dataset.tab;
+    document.querySelectorAll('.h5-pj-card').forEach(c => {
+      const show = (cat === 'all' || c.dataset.cat === cat);
+      c.style.display = show ? '' : 'none';
+    });
+  }
+
+  function openRespond(name) {
+    document.getElementById('respondProjName').textContent = name;
+    H5.openModal('respondModal');
+  }
+
+  function confirmRespond() {
+    H5.closeModal('respondModal');
+    document.getElementById('tipTitle').textContent = '响应成功';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">🤝</div>' +
+      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">响应提交成功</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">' +
+      '项目方将在 24 小时内联系您<br>确认物流方式和发货时间' +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  function openDetail(name) {
+    openTip('项目详情', '📋', '【' + name + '】<br>完整详情请在 PC 端"项目管理"查看，包含项目背景、预算明细、合作协议等。');
+  }
+
+  function openFilter() {
+    openTip('筛选', '⚙️', '支持按属地、紧急程度、行业、预算区间筛选。原型仅展示 5 个推荐项目。');
+  }
+
+  function openTip(t, ic, body) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">' + ic + '</div>' +
+      '<div style="font-size:14px;color:var(--h5-text-2);line-height:1.7;">' + body + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (window.gsap) {
+      gsap.fromTo('.h5-pj-card', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.07, ease: 'power2.out' });
+    }
+    H5.animateProgress('.h5-progress-bar');
+  });
+</script>
+</body>
+</html>

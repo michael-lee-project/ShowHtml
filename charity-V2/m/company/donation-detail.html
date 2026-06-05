@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>捐赠详情 — CC-DON-2025-0682-0001 · 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 顶部状态条 */
+  .h5-status-banner {
+    margin: 0 16px;
+    padding: 14px;
+    background: linear-gradient(135deg, rgba(232,93,4,0.08), rgba(232,93,4,0.02));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .h5-status-banner .l .id {
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--h5-text-3);
+  }
+  .h5-status-banner .l .t {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .h5-status-banner .r {
+    text-align: right;
+  }
+  .h5-status-banner .r .pct {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--h5-primary);
+    line-height: 1;
+  }
+  .h5-status-banner .r .lbl {
+    font-size: 10px;
+    color: var(--h5-text-3);
+    margin-top: 2px;
+  }
+  /* 概要字段 */
+  .h5-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+    padding: 4px 0;
+  }
+  .h5-info-grid .cell {
+    display: flex; flex-direction: column;
+    padding: 8px 10px;
+    background: var(--h5-bg);
+    border-radius: 8px;
+  }
+  .h5-info-grid .cell .l {
+    font-size: 10px; color: var(--h5-text-3);
+  }
+  .h5-info-grid .cell .v {
+    font-size: 13px; font-weight: 600; color: var(--h5-text);
+    margin-top: 2px;
+  }
+  .h5-info-grid .cell .v.primary { color: var(--h5-primary); }
+  /* 时间线 */
+  .h5-timeline {
+    position: relative;
+    padding: 4px 0 4px 22px;
+  }
+  .h5-timeline::before {
+    content: "";
+    position: absolute;
+    left: 6px; top: 14px; bottom: 6px;
+    width: 2px;
+    background: var(--h5-divider);
+  }
+  .h5-tl-item {
+    position: relative;
+    padding: 0 0 18px 8px;
+  }
+  .h5-tl-item:last-child { padding-bottom: 0; }
+  .h5-tl-item::before {
+    content: "";
+    position: absolute;
+    left: -19px; top: 6px;
+    width: 12px; height: 12px;
+    border-radius: 6px;
+    background: var(--h5-divider);
+    border: 2px solid var(--h5-bg);
+    box-shadow: 0 0 0 2px var(--h5-divider);
+  }
+  .h5-tl-item.done::before {
+    background: var(--h5-success);
+    box-shadow: 0 0 0 2px var(--h5-success);
+  }
+  .h5-tl-item.active::before {
+    background: var(--h5-primary);
+    box-shadow: 0 0 0 2px var(--h5-primary);
+    animation: pulse-ring 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 0 2px var(--h5-primary), 0 0 0 4px rgba(232,93,4,0.2); }
+    50% { box-shadow: 0 0 0 2px var(--h5-primary), 0 0 0 8px rgba(232,93,4,0); }
+  }
+  .h5-tl-item .head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .h5-tl-item .ic {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: var(--h5-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .h5-tl-item .t {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+  }
+  .h5-tl-item .time {
+    font-size: 10px;
+    color: var(--h5-text-3);
+    white-space: nowrap;
+  }
+  .h5-tl-item .desc {
+    font-size: 11px;
+    color: var(--h5-text-3);
+    line-height: 1.5;
+  }
+  .h5-tl-item .evidence {
+    margin-top: 6px;
+    padding: 6px 8px;
+    background: var(--h5-bg);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--h5-text-2);
+  }
+  .h5-tl-item .evidence .l { color: var(--h5-text-3); }
+  .h5-tl-item.done .t { color: var(--h5-success); }
+  .h5-tl-item.active .t { color: var(--h5-primary); }
+  /* 反馈卡 */
+  .h5-feedback-card {
+    display: flex; gap: 10px;
+    padding: 10px;
+    background: var(--h5-bg);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .h5-feedback-card .avatar {
+    width: 36px; height: 36px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--h5-primary), var(--h5-primary-deep));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .h5-feedback-card .body { flex: 1; min-width: 0; }
+  .h5-feedback-card .name {
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .h5-feedback-card .name .meta {
+    font-size: 10px; color: var(--h5-text-3); font-weight: 400;
+  }
+  .h5-feedback-card .msg {
+    font-size: 12px; color: var(--h5-text-2);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  /* 凭证列表 */
+  .h5-cert-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-cert-item:last-child { border-bottom: 0; }
+  .h5-cert-item .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--h5-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .h5-cert-item .body { flex: 1; min-width: 0; }
+  .h5-cert-item .t { font-size: 13px; font-weight: 500; }
+  .h5-cert-item .d { font-size: 10px; color: var(--h5-text-3); margin-top: 1px; }
+  /* 操作栏 */
+  .h5-detail-actions {
+    display: flex; gap: 8px;
+    padding: 10px 16px 0;
+  }
+  .h5-detail-actions .h5-btn { flex: 1; }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">捐赠详情</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-text-btn" onclick="openShare()">分享</div>
+  </div>
+</div>
+
+<div class="h5-page" style="padding-top:0;">
+
+  <!-- 状态条 -->
+  <div class="h5-status-banner" style="margin-top:12px;">
+    <div class="l">
+      <div class="id">CC-DON-2025-0682-0001</div>
+      <div class="t">🍞 临期面包糕点 1,200 件</div>
+    </div>
+    <div class="r">
+      <div class="pct">65%</div>
+      <div class="lbl">派发中</div>
+    </div>
+  </div>
+
+  <!-- 概要字段 -->
+  <div class="h5-section" style="padding-top: 12px;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📋 基本信息</div>
+        <span class="h5-tag primary">派发中</span>
+      </div>
+      <div class="h5-info-grid">
+        <div class="cell"><div class="l">发起企业</div><div class="v">美心食品集团</div></div>
+        <div class="cell"><div class="l">受捐慈善会</div><div class="v">广东省慈善总会</div></div>
+        <div class="cell"><div class="l">协办组织</div><div class="v">深圳鹏星社工</div></div>
+        <div class="cell"><div class="l">受捐地区</div><div class="v">五华县水寨镇</div></div>
+        <div class="cell"><div class="l">物资类型</div><div class="v">🍞 临期食品</div></div>
+        <div class="cell"><div class="l">数量 / 重量</div><div class="v">1,200 件 / 1,440kg</div></div>
+        <div class="cell"><div class="l">评估价值</div><div class="v primary">¥18,600</div></div>
+        <div class="cell"><div class="l">已派发 / 受惠</div><div class="v">780 件 / 412 人</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 节点时间线 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🚚 物资全流程轨迹</div>
+        <span class="h5-tag success">实时</span>
+      </div>
+      <div class="h5-timeline">
+
+        <div class="h5-tl-item done">
+          <div class="head">
+            <div class="ic">📦</div>
+            <div class="t">企业发起</div>
+            <div class="time">05-28 14:30</div>
+          </div>
+          <div class="desc">美心食品集团完成 1,200 件临期面包糕点出库打包</div>
+          <div class="evidence">
+            <div><span class="l">操作人：</span>李经理（美心食品）</div>
+            <div><span class="l">凭证：</span>出库单 #OUT-2025-0528-0089</div>
+          </div>
+        </div>
+
+        <div class="h5-tl-item done">
+          <div class="head">
+            <div class="ic">🤝</div>
+            <div class="t">慈善会确认</div>
+            <div class="time">05-29 09:15</div>
+          </div>
+          <div class="desc">广东省慈善总会审核通过，匹配"临期 0 浪费"项目</div>
+          <div class="evidence">
+            <div><span class="l">操作人：</span>王主任（粤慈总）</div>
+            <div><span class="l">凭证：</span>捐赠协议 #CC-PRO-2025-0529-0042</div>
+          </div>
+        </div>
+
+        <div class="h5-tl-item done">
+          <div class="head">
+            <div class="ic">🏬</div>
+            <div class="t">到达区域仓</div>
+            <div class="time">05-30 16:20</div>
+          </div>
+          <div class="desc">物资到达五华县区域仓库，完成入库验收</div>
+          <div class="evidence">
+            <div><span class="l">操作人：</span>仓库管理员 张师傅</div>
+            <div><span class="l">凭证：</span>入库单 #IN-2025-0530-0156</div>
+          </div>
+        </div>
+
+        <div class="h5-tl-item done">
+          <div class="head">
+            <div class="ic">🙋</div>
+            <div class="t">志愿者接收</div>
+            <div class="time">06-01 10:30</div>
+          </div>
+          <div class="desc">深圳鹏星社工 3 名志愿者到仓领取，启动入户派发</div>
+          <div class="evidence">
+            <div><span class="l">操作人：</span>张伟、李梅、陈芳</div>
+            <div><span class="l">凭证：</span>领取登记表 #OUT-2025-0601-0028</div>
+          </div>
+        </div>
+
+        <div class="h5-tl-item active">
+          <div class="head">
+            <div class="ic">🚪</div>
+            <div class="t">入户派发中</div>
+            <div class="time">06-01 14:00 · 进行中</div>
+          </div>
+          <div class="desc">已派发 780 件 / 1,200 件，剩余 420 件预计 2 天内完成</div>
+          <div class="evidence">
+            <div><span class="l">进度：</span><b style="color:var(--h5-primary);">65% (780/1200)</b></div>
+            <div><span class="l">受惠户：</span>已送达 156 户</div>
+          </div>
+        </div>
+
+        <div class="h5-tl-item">
+          <div class="head">
+            <div class="ic">✅</div>
+            <div class="t">受捐者签收</div>
+            <div class="time">预计 06-03 18:00</div>
+          </div>
+          <div class="desc">全部物资完成入户签收后，此节点将自动标记完成</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 受捐者反馈 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">💬 受捐者反馈 <span class="h5-tag primary" style="margin-left:4px;">3</span></div>
+        <a class="more" onclick="openAllFeedback()">全部 →</a>
+      </div>
+
+      <div class="h5-feedback-card">
+        <div class="avatar">张</div>
+        <div class="body">
+          <div class="name">张阿姨 <span class="meta">67岁 · 五华县水寨镇</span></div>
+          <div class="msg">"面包很新鲜，志愿者送得很及时。两个孙子放学回家很开心，感谢美心！"</div>
+        </div>
+      </div>
+
+      <div class="h5-feedback-card">
+        <div class="avatar" style="background:linear-gradient(135deg,#0E5A6F,#0A4456);">李</div>
+        <div class="body">
+          <div class="name">李大爷 <span class="meta">72岁 · 五华县水寨镇</span></div>
+          <div class="msg">"上了年纪行动不便，志愿者送到家里太暖心了。"</div>
+        </div>
+      </div>
+
+      <div class="h5-feedback-card">
+        <div class="avatar" style="background:linear-gradient(135deg,#C4842A,#8B5A1A);">王</div>
+        <div class="body">
+          <div class="name">王大姐 <span class="meta">45岁 · 五华县河东镇</span></div>
+          <div class="msg">"家里 3 个孩子正需要，包装完好没坏，下次还要！"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 凭证 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📑 相关凭证</div>
+      </div>
+      <div class="h5-cert-item">
+        <div class="ic">📄</div>
+        <div class="body">
+          <div class="t">捐赠协议</div>
+          <div class="d">CC-PRO-2025-0529-0042 · 已签</div>
+        </div>
+        <span class="h5-tag success">已签</span>
+      </div>
+      <div class="h5-cert-item">
+        <div class="ic">📋</div>
+        <div class="body">
+          <div class="t">商检报告</div>
+          <div class="d">SF-2025-0528-0882 · 合格</div>
+        </div>
+        <span class="h5-tag success">合格</span>
+      </div>
+      <div class="h5-cert-item">
+        <div class="ic">🚚</div>
+        <div class="body">
+          <div class="t">物流凭证</div>
+          <div class="d">SF-Express #SF1234567890</div>
+        </div>
+        <span class="h5-tag success">已签收</span>
+      </div>
+      <div class="h5-cert-item">
+        <div class="ic">🧾</div>
+        <div class="body">
+          <div class="t">慈善捐赠票据</div>
+          <div class="d">受捐完成后可申请 · 12% 税前扣除</div>
+        </div>
+        <span class="h5-tag warning">待申请</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部操作 -->
+  <div class="h5-detail-actions">
+    <button class="h5-btn h5-btn-ghost" onclick="openReport()">📊 下载报告</button>
+    <button class="h5-btn h5-btn-primary" onclick="openApply()">🧾 申请票据</button>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab active" onclick="location.href='donation-list.html'"><div class="tab-ic">📦</div><div class="tab-label">捐赠</div></div>
+  <div class="h5-tab" onclick="location.href='donate-respond.html'"><div class="tab-ic">🤝</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('company');
+
+  function openShare() { openTip('分享', '🔗', '可通过微信 / 链接 / 海报 3 种方式分享本捐赠详情，含完整 6 节点时间线。'); }
+  function openReport() { openTip('下载报告', '📊', '完整报告含财务、ESG、影响力 3 章节，可导出 PDF。原型仅提示。'); }
+  function openApply() { openTip('申请票据', '🧾', '受捐完成后可申请慈善捐赠票据，享受 12% 税前扣除。'); }
+  function openAllFeedback() { openTip('全部反馈', '💬', '当前已收到 3 条受捐者反馈。PC 端支持导出 + 关键词分析。'); }
+
+  function openTip(t, ic, body) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">' + ic + '</div>' +
+      '<div style="font-size:14px;color:var(--h5-text-2);line-height:1.7;">' + body + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (window.gsap) {
+      gsap.fromTo('.h5-status-banner', { y: -8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
+      gsap.fromTo('.h5-tl-item', { x: -8, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, stagger: 0.06, delay: 0.2, ease: 'power2.out' });
+      gsap.fromTo('.h5-feedback-card', { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, delay: 0.4, ease: 'power2.out' });
+    }
+  });
+</script>
+</body>
+</html>

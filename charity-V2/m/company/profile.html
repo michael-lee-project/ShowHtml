@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>企业品宣 — 美心食品集团 · 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 渐变 hero */
+  .h5-profile-hero {
+    position: relative;
+    background: linear-gradient(135deg, var(--h5-primary) 0%, var(--h5-primary-deep) 100%);
+    color: #fff;
+    padding: 24px 20px 28px;
+    overflow: hidden;
+  }
+  .h5-profile-hero::before {
+    content: "🏢";
+    position: absolute;
+    right: -16px; top: 16px;
+    font-size: 160px;
+    opacity: 0.12;
+    line-height: 1;
+  }
+  .h5-profile-hero .logo {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.95);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700;
+    color: var(--h5-primary);
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative; z-index: 2;
+  }
+  .h5-profile-hero .name {
+    font-size: 22px;
+    font-weight: 700;
+    position: relative; z-index: 2;
+  }
+  .h5-profile-hero .slogan {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-top: 4px;
+    line-height: 1.5;
+    position: relative; z-index: 2;
+  }
+  .h5-profile-hero .tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 10px;
+    position: relative; z-index: 2;
+  }
+  .h5-profile-hero .tag {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  /* 5 项数据 */
+  .h5-pr-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: var(--h5-card);
+    border-radius: 12px;
+    margin: -16px 16px 0;
+    padding: 12px 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    position: relative; z-index: 3;
+  }
+  .h5-pr-hero-stats .item {
+    text-align: center;
+    position: relative;
+  }
+  .h5-pr-hero-stats .item + .item::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 1px;
+    background: var(--h5-divider);
+  }
+  .h5-pr-hero-stats .v {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--h5-primary);
+    line-height: 1.1;
+  }
+  .h5-pr-hero-stats .v .u { font-size: 10px; font-weight: 400; color: var(--h5-text-3); margin-left: 1px; }
+  .h5-pr-hero-stats .l {
+    font-size: 9px;
+    color: var(--h5-text-3);
+    margin-top: 4px;
+  }
+  /* 4 卡成就 - 横向滚动 */
+  .h5-pr-achv {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-pr-achv::-webkit-scrollbar { display: none; }
+  .h5-pr-achv .card {
+    flex-shrink: 0;
+    width: 110px;
+    padding: 12px 10px;
+    background: var(--h5-card);
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--h5-divider);
+  }
+  .h5-pr-achv .card .ic {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  .h5-pr-achv .card .t {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .h5-pr-achv .card .d {
+    font-size: 9px;
+    color: var(--h5-text-3);
+    margin-top: 2px;
+  }
+  /* ESG 2x2 */
+  .h5-pr-esg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .h5-pr-esg .cell {
+    background: var(--h5-bg);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .h5-pr-esg .v {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--h5-primary);
+    line-height: 1.1;
+  }
+  .h5-pr-esg .v .u { font-size: 11px; font-weight: 400; color: var(--h5-text-3); margin-left: 2px; }
+  .h5-pr-esg .l {
+    font-size: 11px;
+    color: var(--h5-text-3);
+    margin-top: 4px;
+  }
+  /* 历史 */
+  .h5-pr-history {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-pr-history:last-child { border-bottom: 0; }
+  .h5-pr-history .ic {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--h5-primary-soft), #FED7AA);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .h5-pr-history .body { flex: 1; min-width: 0; }
+  .h5-pr-history .t {
+    font-size: 13px;
+    font-weight: 600;
+    overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .h5-pr-history .d {
+    font-size: 11px; color: var(--h5-text-3);
+    margin-top: 2px;
+  }
+  .h5-pr-history .r {
+    text-align: right;
+  }
+  .h5-pr-history .r .v {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--h5-primary);
+  }
+  .h5-pr-history .r .l {
+    font-size: 10px;
+    color: var(--h5-text-3);
+    margin-top: 1px;
+  }
+  /* 资质荣誉列表 */
+  .h5-pr-cert {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-pr-cert:last-child { border-bottom: 0; }
+  .h5-pr-cert .ic {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--h5-primary-soft);
+    color: var(--h5-primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .h5-pr-cert .body { flex: 1; min-width: 0; }
+  .h5-pr-cert .t { font-size: 13px; font-weight: 500; }
+  .h5-pr-cert .d { font-size: 10px; color: var(--h5-text-3); margin-top: 1px; }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="location.href='dashboard.html'">‹</div>
+  <div class="h5-nav-title">企业品宣</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openShare()">📤</div>
+  </div>
+</div>
+
+<!-- 渐变 hero -->
+<div class="h5-profile-hero">
+  <div class="logo">美</div>
+  <div class="name">美心食品集团</div>
+  <div class="slogan">用食品传递温暖 · 让每一份美味都不被浪费</div>
+  <div class="tags">
+    <span class="tag">✓ 资质已认证</span>
+    <span class="tag">🏆 年度标杆</span>
+    <span class="tag">💚 五星企业</span>
+    <span class="tag">🌱 减碳先锋</span>
+    <span class="tag">📅 入驻 2 年</span>
+  </div>
+</div>
+
+<!-- 5 项数据 -->
+<div class="h5-pr-hero-stats">
+  <div class="item"><div class="v">¥1,860<span class="u">万</span></div><div class="l">累计捐赠</div></div>
+  <div class="item"><div class="v">12.68<span class="u">万</span></div><div class="l">受惠人次</div></div>
+  <div class="item"><div class="v">128</div><div class="l">捐赠次数</div></div>
+  <div class="item"><div class="v">32<span class="u">省</span></div><div class="l">覆盖区域</div></div>
+  <div class="item"><div class="v">98.6</div><div class="l">ESG 评分</div></div>
+</div>
+
+<div class="h5-page" style="padding-top: 12px;">
+
+  <!-- 4 卡成就 -->
+  <div class="h5-section">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🏆 公益成就</div>
+        <a class="more" onclick="openAchievement()">全部 →</a>
+      </div>
+      <div class="h5-pr-achv">
+        <div class="card">
+          <div class="ic">🥇</div>
+          <div class="t">年度标杆 TOP1</div>
+          <div class="d">2024</div>
+        </div>
+        <div class="card">
+          <div class="ic">⭐</div>
+          <div class="t">五星认证</div>
+          <div class="d">98.6 分</div>
+        </div>
+        <div class="card">
+          <div class="ic">🌱</div>
+          <div class="t">减碳先锋</div>
+          <div class="d">1,260 吨</div>
+        </div>
+        <div class="card">
+          <div class="ic">💰</div>
+          <div class="t">百万捐赠</div>
+          <div class="d">连续 2 年</div>
+        </div>
+        <div class="card">
+          <div class="ic">🏅</div>
+          <div class="t">优秀志愿</div>
+          <div class="d">1,260 人次</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 公司简介 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🏢 企业简介</div>
+      </div>
+      <div style="font-size:13px;line-height:1.7;color:var(--h5-text-2);">
+        美心食品集团创立于 <b>1956 年</b>，是中国领先的食品制造企业，专注于中西式糕点、节令食品及冷冻食品研发生产。集团秉持"用食品传递温暖"理念，连续 2 年成为慈商联营标杆企业，累计捐赠物资 <b style="color:var(--h5-primary);">¥1,860 万</b>，覆盖全国 32 个省级行政区。
+      </div>
+      <div style="display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--h5-divider);">
+        <div><div style="font-size:11px;color:var(--h5-text-3);">行业</div><div style="font-size:13px;font-weight:600;margin-top:2px;">食品制造</div></div>
+        <div><div style="font-size:11px;color:var(--h5-text-3);">规模</div><div style="font-size:13px;font-weight:600;margin-top:2px;">10,000+ 员工</div></div>
+        <div><div style="font-size:11px;color:var(--h5-text-3);">总部</div><div style="font-size:13px;font-weight:600;margin-top:2px;">广东 · 东莞</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESG 2x2 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🌿 ESG 影响力</div>
+        <a class="more" onclick="openESG()">报告 →</a>
+      </div>
+      <div class="h5-pr-esg">
+        <div class="cell">
+          <div class="v"><span class="counter" data-target="1260">0</span><span class="u">吨</span></div>
+          <div class="l">碳减排</div>
+        </div>
+        <div class="cell">
+          <div class="v"><span class="counter" data-target="32">0</span><span class="u">省</span></div>
+          <div class="l">覆盖城市</div>
+        </div>
+        <div class="cell">
+          <div class="v"><span class="counter" data-target="186">0</span></div>
+          <div class="l">合作慈善会</div>
+        </div>
+        <div class="cell">
+          <div class="v">98.6</div>
+          <div class="l">ESG 综合评分</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 捐赠历史精选 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">🎁 捐赠历史精选</div>
+        <a class="more" onclick="location.href='donation-list.html'">全部 128 →</a>
+      </div>
+      <div class="h5-pr-history">
+        <div class="ic">🥛</div>
+        <div class="body">
+          <div class="t">春节牛奶礼盒 2,000 份</div>
+          <div class="d">2025-01 · 儿童关爱</div>
+        </div>
+        <div class="r">
+          <div class="v">¥128,000</div>
+          <div class="l">12,000kg</div>
+        </div>
+      </div>
+      <div class="h5-pr-history">
+        <div class="ic" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">🍭</div>
+        <div class="body">
+          <div class="t">儿童节零食大礼包 1,500 份</div>
+          <div class="d">2024-06 · 儿童关爱</div>
+        </div>
+        <div class="r">
+          <div class="v">¥78,000</div>
+          <div class="l">3,200kg</div>
+        </div>
+      </div>
+      <div class="h5-pr-history">
+        <div class="ic" style="background:linear-gradient(135deg,#DBEAFE,#BFDBFE);">🥛</div>
+        <div class="body">
+          <div class="t">儿童牛奶 600 盒</div>
+          <div class="d">2024-09 · 山区助学</div>
+        </div>
+        <div class="r">
+          <div class="v">¥32,400</div>
+          <div class="l">720kg</div>
+        </div>
+      </div>
+      <div class="h5-pr-history">
+        <div class="ic" style="background:linear-gradient(135deg,#FCE7F3,#FBCFE8);">🍙</div>
+        <div class="body">
+          <div class="t">端午粽子礼盒 800 盒</div>
+          <div class="d">2024-06 · 老人关爱</div>
+        </div>
+        <div class="r">
+          <div class="v">¥56,000</div>
+          <div class="l">4,800kg</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 资质荣誉 -->
+  <div class="h5-section" style="padding-top: 0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📜 资质荣誉</div>
+      </div>
+      <div class="h5-pr-cert">
+        <div class="ic">🏆</div>
+        <div class="body">
+          <div class="t">2024 年度慈善标杆企业</div>
+          <div class="d">中国慈善联合会 · 2025-01</div>
+        </div>
+        <span class="h5-tag gold">国家级</span>
+      </div>
+      <div class="h5-pr-cert">
+        <div class="ic">⭐</div>
+        <div class="body">
+          <div class="t">慈商联营五星认证企业</div>
+          <div class="d">平台自评 · 2025-04</div>
+        </div>
+        <span class="h5-tag primary">平台</span>
+      </div>
+      <div class="h5-pr-cert">
+        <div class="ic">📋</div>
+        <div class="body">
+          <div class="t">ISO 22000 食品安全管理体系</div>
+          <div class="d">2023-06 取得 · 有效期 3 年</div>
+        </div>
+        <span class="h5-tag success">已认证</span>
+      </div>
+      <div class="h5-pr-cert">
+        <div class="ic">🌿</div>
+        <div class="body">
+          <div class="t">碳排放管理体系认证</div>
+          <div class="d">2024-03 取得</div>
+        </div>
+        <span class="h5-tag success">已认证</span>
+      </div>
+      <div class="h5-pr-cert">
+        <div class="ic">🤝</div>
+        <div class="body">
+          <div class="t">广东省食品工业协会 副会长</div>
+          <div class="d">2022-09 至今</div>
+        </div>
+        <span class="h5-tag info">行业</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部操作 -->
+  <div style="padding:8px 16px 16px;display:flex;gap:8px;">
+    <button class="h5-btn h5-btn-ghost h5-btn-lg" style="flex:1;" onclick="openShare()">📤 分享主页</button>
+    <button class="h5-btn h5-btn-primary h5-btn-lg" style="flex:1;" onclick="openEdit()">✏️ 编辑主页</button>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='donate-publish.html'"><div class="tab-ic">📦</div><div class="tab-label">捐赠</div></div>
+  <div class="h5-tab" onclick="location.href='donate-respond.html'"><div class="tab-ic">🤝</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab active"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('company');
+
+  function openShare() { openTip('分享主页', '📤', '可通过微信 / 链接 / 海报 3 种方式分享。生成的链接将带上企业的 ESG 评分 + 累计捐赠。'); }
+  function openEdit() { openTip('编辑主页', '✏️', '可编辑企业名、简介、Slogan、LOGO、背景图。原型仅展示。'); }
+  function openAchievement() { openTip('公益成就', '🏆', '原型仅展示 5 项核心成就，PC 端支持 16 项详细荣誉 + 时间线。'); }
+  function openESG() { openTip('ESG 报告', '🌿', '本年 ESG 综合评分 98.6，行业 TOP 5。完整报告可下载 PDF。'); }
+
+  function openTip(t, ic, body) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">' + ic + '</div>' +
+      '<div style="font-size:14px;color:var(--h5-text-2);line-height:1.7;">' + body + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (window.gsap) {
+      gsap.fromTo('.h5-profile-hero .logo', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.6)' });
+      gsap.fromTo('.h5-profile-hero > div:not(.logo)', { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.08, delay: 0.15, ease: 'power2.out' });
+      gsap.fromTo('.h5-pr-hero-stats', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, delay: 0.3, ease: 'power2.out' });
+    }
+    document.querySelectorAll('.counter').forEach(el => H5.countUp(el, el.dataset.target, 1.2));
+  });
+</script>
+</body>
+</html>

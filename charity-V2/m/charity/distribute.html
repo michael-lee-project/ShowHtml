@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>物资派发 — 慈善会 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* KPI 4 列（横滑） */
+  .h5-dstats {
+    display: flex;
+    gap: 8px;
+    margin: 12px 16px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .h5-dstats::-webkit-scrollbar { display: none; }
+  .h5-dstat {
+    flex-shrink: 0;
+    min-width: 95px;
+    padding: 12px;
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+  }
+  .h5-dstat .ic { font-size: 18px; margin-bottom: 4px; }
+  .h5-dstat .v {
+    font-size: 22px; font-weight: 700; line-height: 1.1;
+    font-family: -apple-system, sans-serif;
+  }
+  .h5-dstat .v .u { font-size: 12px; color: var(--h5-text-3); font-weight: 400; }
+  .h5-dstat .l { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+
+  /* tab */
+  .h5-dtabs {
+    display: flex; gap: 8px;
+    padding: 12px 16px;
+    background: var(--h5-bg);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+  }
+  .h5-dtabs::-webkit-scrollbar { display: none; }
+  .h5-dtab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: var(--h5-radius-pill);
+    background: var(--h5-card);
+    color: var(--h5-text-2);
+    font-size: 13px;
+    border: 1px solid var(--h5-border);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .h5-dtab.active {
+    background: var(--h5-primary);
+    color: #fff;
+    border-color: var(--h5-primary);
+    font-weight: 600;
+  }
+  .h5-dtab .cnt { margin-left: 4px; font-size: 11px; opacity: 0.7; }
+
+  /* 派发任务卡 */
+  .h5-dtask {
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .h5-dtask .head {
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .h5-dtask .ic {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .h5-dtask .body { flex: 1; min-width: 0; }
+  .h5-dtask .t {
+    font-size: 15px; font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  .h5-dtask .m {
+    font-size: 12px; color: var(--h5-text-3);
+    line-height: 1.5;
+  }
+  .h5-dtask .progress {
+    margin-top: 10px;
+  }
+  .h5-dtask .progress .row {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--h5-text-2);
+    margin-bottom: 4px;
+  }
+  .h5-dtask .progress .row .n {
+    font-size: 12px;
+    color: var(--h5-primary);
+    font-weight: 600;
+  }
+  .h5-dtask .bar {
+    width: 100%; height: 6px;
+    background: var(--h5-divider);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .h5-dtask .bar > div {
+    height: 100%;
+    background: var(--h5-primary);
+    border-radius: 3px;
+  }
+  .h5-dtask .bar > div.success { background: var(--h5-success); }
+  .h5-dtask .bar > div.warning { background: var(--h5-warning); }
+  .h5-dtask .tags {
+    display: flex; gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .h5-dtask .foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--h5-divider);
+    font-size: 11px;
+    color: var(--h5-text-3);
+  }
+  .h5-dtask .staff { display: flex; align-items: center; gap: 8px; }
+  .h5-dtask .avatars { display: flex; }
+  .h5-dtask .avatar {
+    width: 22px; height: 22px;
+    border-radius: 11px;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    border: 2px solid var(--h5-card);
+    margin-left: -6px;
+  }
+  .h5-dtask .avatar:first-child { margin-left: 0; }
+</style>
+</head>
+<body data-role="charity" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="location.href='./dashboard.html'">‹</div>
+  <div class="h5-nav-title">物资派发</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openScan()">📱</div>
+    <div class="h5-nav-icon" onclick="location.href='./messages.html'">🔔<span class="badge">3</span></div>
+  </div>
+</div>
+
+<div class="h5-page">
+
+  <!-- KPI 4 列横滑 -->
+  <div class="h5-dstats">
+    <div class="h5-dstat">
+      <div class="ic">📦</div>
+      <div class="v">18<span class="u">批</span></div>
+      <div class="l">待派发 · 5,860 件</div>
+    </div>
+    <div class="h5-dstat" style="background:linear-gradient(135deg, rgba(20,184,166,0.1) 0%, rgba(20,184,166,0.04) 100%);">
+      <div class="ic">🔄</div>
+      <div class="v">12</div>
+      <div class="l">派发中</div>
+    </div>
+    <div class="h5-dstat" style="background:linear-gradient(135deg, rgba(196,132,42,0.12) 0%, rgba(196,132,42,0.04) 100%);">
+      <div class="ic">✅</div>
+      <div class="v">8,620<span class="u">件</span></div>
+      <div class="l">本月已派发</div>
+    </div>
+    <div class="h5-dstat" style="background:linear-gradient(135deg, rgba(14,165,233,0.1) 0%, rgba(14,165,233,0.04) 100%);">
+      <div class="ic">📱</div>
+      <div class="v">98.6<span class="u">%</span></div>
+      <div class="l">扫码签收率 ↑1.2%</div>
+    </div>
+  </div>
+
+  <!-- Tab -->
+  <div class="h5-dtabs" id="tabs">
+    <div class="h5-dtab active" data-tab="all">全部 <span class="cnt">30</span></div>
+    <div class="h5-dtab" data-tab="pending">待派发 <span class="cnt">18</span></div>
+    <div class="h5-dtab" data-tab="dispatch">派发中 <span class="cnt">12</span></div>
+    <div class="h5-dtab" data-tab="done">已完成</div>
+  </div>
+
+  <!-- 任务列表 -->
+  <div class="h5-section" id="taskList">
+
+    <div class="h5-dtask" data-tab="all dispatch" style="border-left: 3px solid var(--h5-danger);">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg,#DC2626,#F59E0B);">🚁</div>
+        <div class="body">
+          <div class="t">云南昭通地震救援 · 帐篷棉被派发 <span class="h5-tag danger" style="margin-left:4px;">🚨 紧急</span></div>
+          <div class="m">320 顶帐篷 / 1,260 床棉被 · 鲁甸县龙头山镇</div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="row">
+          <span>已派发 320/500 户</span>
+          <span class="n">64%</span>
+        </div>
+        <div class="bar"><div style="width:64%"></div></div>
+      </div>
+      <div class="tags">
+        <span class="h5-tag primary">派发中</span>
+        <span class="h5-tag trust">流程二</span>
+        <span class="h5-tag warning">3 村 500 户</span>
+      </div>
+      <div class="foot">
+        <div class="staff">
+          <div class="avatars">
+            <div class="avatar" style="background:linear-gradient(135deg,#7C3AED,#E85D04);">王</div>
+            <div class="avatar" style="background:linear-gradient(135deg,#14B8A6,#0E5A6F);">陈</div>
+            <div class="avatar" style="background:linear-gradient(135deg,#3B82F6,#0E5A6F);">林</div>
+          </div>
+          <span>👤 王老师 + 12 志愿者</span>
+        </div>
+        <span class="h5-btn h5-btn-primary h5-btn-sm" onclick="openTraj('云南昭通地震救援')">查看轨迹</span>
+      </div>
+    </div>
+
+    <div class="h5-dtask" data-tab="all dispatch">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg,#FFE4D2,#FAEFD9);">🍞</div>
+        <div class="body">
+          <div class="t">美心临期面包 · 五华县派发任务</div>
+          <div class="m">1,200 件 / ¥18,600 · 河源市五华县</div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="row">
+          <span>已派发 720/1,200 件 · 56/86 户</span>
+          <span class="n">60%</span>
+        </div>
+        <div class="bar"><div class="warning" style="width:60%"></div></div>
+      </div>
+      <div class="tags">
+        <span class="h5-tag primary">派发中</span>
+        <span class="h5-tag trust">流程一</span>
+        <span class="h5-tag">5 村 86 户</span>
+      </div>
+      <div class="foot">
+        <div class="staff">
+          <div class="avatars">
+            <div class="avatar" style="background:linear-gradient(135deg,#E85D04,#C4842A);">李</div>
+            <div class="avatar" style="background:linear-gradient(135deg,#14B8A6,#0E5A6F);">张</div>
+          </div>
+          <span>👤 李梅 + 3 志愿者</span>
+        </div>
+        <span class="h5-btn h5-btn-primary h5-btn-sm" onclick="openTraj('美心临期面包')">扫码</span>
+      </div>
+    </div>
+
+    <div class="h5-dtask" data-tab="all dispatch">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg,#E5F0F4,#E0FAF5);">🥛</div>
+        <div class="body">
+          <div class="t">伊利儿童牛奶 · 河源派发任务</div>
+          <div class="m">600 盒 / ¥32,400 · 河源市 3 镇</div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="row">
+          <span>已派发 180/600 盒 · 18/60 户</span>
+          <span class="n">30%</span>
+        </div>
+        <div class="bar"><div class="warning" style="width:30%"></div></div>
+      </div>
+      <div class="tags">
+        <span class="h5-tag primary">派发中</span>
+        <span class="h5-tag trust">流程一</span>
+        <span class="h5-tag">3 镇 60 户</span>
+      </div>
+      <div class="foot">
+        <div class="staff">
+          <div class="avatars">
+            <div class="avatar" style="background:linear-gradient(135deg,#14B8A6,#0E5A6F);">张</div>
+          </div>
+          <span>👤 张大姐 + 5 志愿者</span>
+        </div>
+        <span class="h5-btn h5-btn-primary h5-btn-sm" onclick="openTraj('伊利儿童牛奶')">扫码</span>
+      </div>
+    </div>
+
+    <div class="h5-dtask" data-tab="all dispatch">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg,#F3E8FF,#FFE4D2);">🧴</div>
+        <div class="body">
+          <div class="t">安利洗护用品 · 肇庆派发任务</div>
+          <div class="m">500 套 · 肇庆市 2 街道</div>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="row">
+          <span>已派发 200/500 套</span>
+          <span class="n">40%</span>
+        </div>
+        <div class="bar"><div class="warning" style="width:40%"></div></div>
+      </div>
+      <div class="tags">
+        <span class="h5-tag primary">派发中</span>
+        <span class="h5-tag trust">流程一</span>
+        <span class="h5-tag">2 街道 500 户</span>
+      </div>
+      <div class="foot">
+        <div class="staff">
+          <div class="avatars">
+            <div class="avatar" style="background:linear-gradient(135deg,#C4842A,#0E5A6F);">陈</div>
+          </div>
+          <span>👤 陈社工 + 4 志愿者</span>
+        </div>
+        <span class="h5-btn h5-btn-primary h5-btn-sm" onclick="openTraj('安利洗护用品')">扫码</span>
+      </div>
+    </div>
+
+    <div class="h5-dtask" data-tab="all pending">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD);">🏥</div>
+        <div class="body">
+          <div class="t">鱼跃血压计 · 韶关派发</div>
+          <div class="m">86 台 / ¥23,000 · 待分配</div>
+        </div>
+        <span class="h5-tag warning">待派发</span>
+      </div>
+      <div class="tags">
+        <span class="h5-tag info">🩺 医疗</span>
+        <span class="h5-tag">未分配</span>
+      </div>
+      <div class="foot">
+        <div class="staff"><span>👤 待指派</span></div>
+        <span class="h5-btn h5-btn-primary h5-btn-sm" onclick="openAssign('鱼跃血压计')">指派</span>
+      </div>
+    </div>
+
+    <div class="h5-dtask" data-tab="all pending">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg,#FCE7F3,#FBCFE8);">📚</div>
+        <div class="body">
+          <div class="t">人教社课外读物 · 清远派发</div>
+          <div class="m">800 套 · 6 个学校</div>
+        </div>
+        <span class="h5-tag warning">待派发</span>
+      </div>
+      <div class="tags">
+        <span class="h5-tag warning">📚 教育</span>
+        <span class="h5-tag">未分配</span>
+      </div>
+      <div class="foot">
+        <div class="staff"><span>👤 待指派</span></div>
+        <span class="h5-btn h5-btn-primary h5-btn-sm" onclick="openAssign('人教社课外读物')">指派</span>
+      </div>
+    </div>
+
+    <div class="h5-dtask" data-tab="all done">
+      <div class="head">
+        <div class="ic" style="background:linear-gradient(135deg,#D1FAE5,#6EE7B7);">🍙</div>
+        <div class="body">
+          <div class="t">端午粽子礼盒 · 广州派发</div>
+          <div class="m">1,260 盒 / ¥50,400 · 5 月已签收</div>
+        </div>
+        <span class="h5-tag success">已完成</span>
+      </div>
+      <div class="progress">
+        <div class="row">
+          <span>1,260/1,260 · 100%</span>
+          <span class="n">100%</span>
+        </div>
+        <div class="bar"><div class="success" style="width:100%"></div></div>
+      </div>
+      <div class="foot">
+        <div class="staff"><span>👤 王老师 · 已结案</span></div>
+        <span class="h5-btn h5-btn-ghost h5-btn-sm" onclick="openTraj('端午粽子礼盒')">查看</span>
+      </div>
+    </div>
+
+    <div class="h5-text-center" style="padding: 20px; font-size: 12px; color: var(--h5-text-3);">
+      已加载 7 项 · 加载更多 ↓
+    </div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='./dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">工作台</div></div>
+  <div class="h5-tab" onclick="location.href='./project-list.html'"><div class="tab-ic">📋</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab active"><div class="tab-ic">🚚</div><div class="tab-label">派发</div></div>
+  <div class="h5-tab" onclick="location.href='./volunteer-manage.html'"><div class="tab-ic">🤝</div><div class="tab-label">志愿者</div></div>
+  <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center;padding:24px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('charity');
+
+  document.querySelectorAll('.h5-dtab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.h5-dtab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.h5-dtask').forEach(item => {
+        const tabs = (item.dataset.tab || '').split(/\s+/);
+        item.style.display = (target === 'all' || tabs.includes(target)) ? '' : 'none';
+      });
+    });
+  });
+
+  function openScan() {
+    document.getElementById('tipTitle').textContent = '扫码登记';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:64px;margin-bottom:12px;">📱</div>' +
+      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">扫码登记</div>' +
+      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">将二维码对准扫码框<br>系统将自动识别受捐者并完成签收</div>' +
+      '<div style="margin-top:20px;width:200px;height:200px;margin-left:auto;margin-right:auto;border:2px dashed var(--h5-primary);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--h5-text-3);">扫码框</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">取消</button>';
+    H5.openModal('tipModal');
+  }
+
+  function openTraj(name) {
+    document.getElementById('tipTitle').textContent = '派发轨迹';
+    document.getElementById('tipBody').innerHTML =
+      `<div style="text-align:left;font-size:13px;line-height:1.7;">` +
+      `<div style="text-align:center;font-size:48px;margin-bottom:12px;">🚚</div>` +
+      `<div style="text-align:center;font-size:16px;font-weight:600;margin-bottom:14px;">${name}</div>` +
+      `<div style="padding:10px 12px;background:var(--h5-bg);border-radius:8px;margin-bottom:6px;">` +
+      `<div style="font-weight:600;margin-bottom:4px;">✓ 05-30 14:00 物资出库</div>` +
+      `<div style="color:var(--h5-text-3);font-size:11px;">广州慈善会区域仓</div></div>` +
+      `<div style="padding:10px 12px;background:var(--h5-bg);border-radius:8px;margin-bottom:6px;">` +
+      `<div style="font-weight:600;margin-bottom:4px;">✓ 05-30 18:30 到达派发点</div>` +
+      `<div style="color:var(--h5-text-3);font-size:11px;">5 村 86 户 · 已通知受捐者</div></div>` +
+      `<div style="padding:10px 12px;background:var(--h5-bg);border-radius:8px;margin-bottom:6px;">` +
+      `<div style="font-weight:600;margin-bottom:4px;">🔄 06-04 12:00 派发中 60%</div>` +
+      `<div style="color:var(--h5-text-3);font-size:11px;">已完成 56 户 · 720/1,200 件</div></div>` +
+      `<div style="padding:10px 12px;background:var(--h5-bg);border-radius:8px;">` +
+      `<div style="color:var(--h5-text-3);">⏳ 预计 06-05 完成全部派发</div></div>` +
+      `</div>`;
+    H5.openModal('tipModal');
+  }
+
+  function openAssign(name) {
+    document.getElementById('tipTitle').textContent = '指派社工';
+    document.getElementById('tipBody').innerHTML =
+      `<div style="text-align:left;">` +
+      `<div style="text-align:center;font-size:42px;margin-bottom:12px;">👤</div>` +
+      `<div style="text-align:center;font-size:16px;font-weight:600;margin-bottom:14px;">指派 ${name}</div>` +
+      `<div style="font-size:13px;color:var(--h5-text-2);margin-bottom:8px;">选择责任社工：</div>` +
+      `<div style="max-height:240px;overflow-y:auto;">` +
+      ['李梅 · 注册社工 · 32h/月', '张大姐 · 志愿者 · 28h/月', '王老师 · 高级社工师 · 42h/月', '陈社工 · 社工师 · 26h/月', '林姐 · 志愿者 · 18h/月']
+        .map(s => `<div style="padding:12px;background:var(--h5-bg);border-radius:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:13px;"><span>${s}</span><span style="color:var(--h5-primary);">选择 ›</span></div>`).join('') +
+      `</div></div>`;
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.utils.toArray('.h5-dtask').forEach((item, i) => {
+      gsap.fromTo(item,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, delay: 0.1 + i * 0.06, ease: 'power2.out' }
+      );
+    });
+    gsap.utils.toArray('.h5-dtask .bar > div').forEach(b => {
+      const w = b.getAttribute('style')?.match(/width:(\d+%)/)?.[1] || '0%';
+      gsap.fromTo(b, { width: '0%' }, { width: w, duration: 1, delay: 0.3, ease: 'power2.out' });
+    });
+  });
+</script>
+</body>
+</html>

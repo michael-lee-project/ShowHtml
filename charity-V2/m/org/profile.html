@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>组织信息 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 资质证书行 */
+  .h5-cert-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-cert-row:last-child { border-bottom: 0; }
+  .h5-cert-row .ic {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(196, 132, 42, 0.12);
+    color: var(--h5-org);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .h5-cert-row .body { flex: 1; min-width: 0; }
+  .h5-cert-row .t { font-size: 14px; font-weight: 500; }
+  .h5-cert-row .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+  .h5-cert-row .r { display: flex; align-items: center; gap: 4px; }
+  .h5-cert-row .arrow { color: var(--h5-text-3); font-size: 16px; }
+
+  /* 管理员行 */
+  .h5-admin-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .h5-admin-row:last-child { border-bottom: 0; }
+  .h5-admin-row .av {
+    width: 36px; height: 36px;
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .h5-admin-row .body { flex: 1; min-width: 0; }
+  .h5-admin-row .t { font-size: 13px; font-weight: 500; }
+  .h5-admin-row .d { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+
+  /* 操作栏 fixed bottom */
+  .h5-profile-bottom {
+    position: fixed;
+    left: 50%; transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    bottom: 0;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--h5-divider);
+    display: flex; gap: 8px;
+    z-index: 99;
+  }
+  .h5-profile-bottom .h5-btn { flex: 1; }
+</style>
+</head>
+<body data-role="org" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">组织信息</div>
+  <div class="h5-nav-right">
+    <span class="h5-nav-text-btn" onclick="openTip('已保存','组织信息已更新')">保存</span>
+  </div>
+</div>
+
+<div class="h5-page" style="padding-top: 0;">
+
+  <!-- 顶部认证条 -->
+  <div style="background:linear-gradient(135deg, var(--h5-org) 0%, #8B5A1A 100%); color:#fff; padding:18px 16px 22px;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="width:48px; height:48px; border-radius:12px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:24px;">🏢</div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:17px; font-weight:700;">深圳市壹基金公益基金会</div>
+        <div style="font-size:12px; opacity:0.85; margin-top:2px;">基金会（公募） · 已认证</div>
+      </div>
+      <span style="padding:4px 10px; background:rgba(255,255,255,0.25); border-radius:999px; font-size:11px; font-weight:600;">✓ 资质齐全</span>
+    </div>
+  </div>
+
+  <!-- 基础信息 -->
+  <div class="h5-section">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📋 基础信息</div>
+        <span class="h5-tag gold">已认证</span>
+      </div>
+      <div class="h5-form-group">
+        <label class="h5-form-label">组织全称</label>
+        <input type="text" class="h5-input" value="深圳市壹基金公益基金会">
+      </div>
+      <div class="h5-form-group">
+        <label class="h5-form-label">统一社会信用代码</label>
+        <input type="text" class="h5-input" value="53440300502692001A" readonly>
+      </div>
+      <div class="h5-form-group">
+        <label class="h5-form-label">组织类型</label>
+        <select class="h5-select">
+          <option>基金会（公募）</option>
+          <option>基金会（非公募）</option>
+          <option>社会团体</option>
+          <option>社会服务机构</option>
+        </select>
+      </div>
+      <div class="h5-form-group">
+        <label class="h5-form-label">注册地址</label>
+        <input type="text" class="h5-input" value="广东省深圳市南山区高新南一道科兴科学园">
+      </div>
+      <div class="h5-form-group" style="margin-bottom:0;">
+        <label class="h5-form-label">业务范围</label>
+        <textarea class="h5-textarea" rows="2">资助贫困学生、赈灾救援、儿童关怀、公益行业支持等</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 资质证书 -->
+  <div class="h5-section" style="padding-top:0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📜 资质证书 <span class="h5-tag primary" style="margin-left:4px;">4</span></div>
+        <span class="more" onclick="openUpload()">+ 上传</span>
+      </div>
+      <div class="h5-cert-row" onclick="openTip('查看证书','基金会法人登记证书')">
+        <div class="ic">📄</div>
+        <div class="body">
+          <div class="t">基金会法人登记证书</div>
+          <div class="d">已上传 · 2024-12-15 更新</div>
+        </div>
+        <div class="r">
+          <span class="h5-tag success">有效</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+      <div class="h5-cert-row" onclick="openTip('查看证书','公开募捐资格证书')">
+        <div class="ic">📄</div>
+        <div class="body">
+          <div class="t">公开募捐资格证书</div>
+          <div class="d">已上传 · 2024-12-15</div>
+        </div>
+        <div class="r">
+          <span class="h5-tag success">有效</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+      <div class="h5-cert-row" onclick="openTip('查看证书','税务登记证')">
+        <div class="ic">📄</div>
+        <div class="body">
+          <div class="t">税务登记证</div>
+          <div class="d">已上传 · 长期有效</div>
+        </div>
+        <div class="r">
+          <span class="h5-tag success">有效</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+      <div class="h5-cert-row" onclick="openTip('查看证书','银行开户许可证')">
+        <div class="ic">📄</div>
+        <div class="body">
+          <div class="t">银行开户许可证</div>
+          <div class="d">已上传 · 招商银行</div>
+        </div>
+        <div class="r">
+          <span class="h5-tag success">有效</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 管理员账号 -->
+  <div class="h5-section" style="padding-top:0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">👥 管理员账号 <span class="h5-tag primary" style="margin-left:4px;">3</span></div>
+        <span class="more" onclick="openTip('添加管理员','请联系平台客服开通')">+ 添加</span>
+      </div>
+      <div class="h5-admin-row">
+        <div class="av" style="background:linear-gradient(135deg, var(--h5-org), #8B5A1A);">李</div>
+        <div class="body">
+          <div class="t">李秘书长 · 主账号</div>
+          <div class="d">138****8888 · 秘书长</div>
+        </div>
+        <span class="h5-tag gold">主</span>
+      </div>
+      <div class="h5-admin-row">
+        <div class="av" style="background:linear-gradient(135deg, #14B8A6, #0D8A7E);">王</div>
+        <div class="body">
+          <div class="t">王主任</div>
+          <div class="d">139****6666 · 物资管理员</div>
+        </div>
+        <span class="h5-tag success">已认证</span>
+      </div>
+      <div class="h5-admin-row">
+        <div class="av" style="background:linear-gradient(135deg, #0EA5E9, #0284C7);">张</div>
+        <div class="body">
+          <div class="t">张老师</div>
+          <div class="d">137****3333 · 项目管理员</div>
+        </div>
+        <span class="h5-tag success">已认证</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据小卡 -->
+  <div class="h5-section" style="padding-top:0;">
+    <div class="h5-card">
+      <div class="h5-card-title">
+        <div class="title">📊 资质概览</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+        <div style="text-align:center; padding:8px 0;">
+          <div style="font-size:22px; font-weight:700; color:var(--h5-org);">4</div>
+          <div style="font-size:11px; color:var(--h5-text-3);">证书齐全</div>
+        </div>
+        <div style="text-align:center; padding:8px 0; border-left:1px solid var(--h5-divider); border-right:1px solid var(--h5-divider);">
+          <div style="font-size:22px; font-weight:700; color:var(--h5-trust);">3</div>
+          <div style="font-size:11px; color:var(--h5-text-3);">已认证</div>
+        </div>
+        <div style="text-align:center; padding:8px 0;">
+          <div style="font-size:22px; font-weight:700; color:var(--h5-text-2);">2008</div>
+          <div style="font-size:11px; color:var(--h5-text-3);">注册年份</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:80px;"></div>
+</div>
+
+<!-- 底部操作栏 -->
+<div class="h5-profile-bottom">
+  <button class="h5-btn h5-btn-ghost" onclick="history.back()">取消</button>
+  <button class="h5-btn h5-btn-primary" onclick="openTip('已保存','组织信息已更新')">💾 保存修改</button>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='distribute.html'"><div class="tab-ic">🚚</div><div class="tab-label">派发</div></div>
+  <div class="h5-tab" onclick="location.href='statistics.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab active" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="text-align:center; padding:32px 20px;"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('org');
+
+  function openTip(t, d) {
+    const icon = t && t.includes('上传') ? '📤'
+      : t && t.includes('查看') ? '📄'
+      : t && t.includes('添加') ? '👥'
+      : t && t.includes('已保存') ? '✅'
+      : '💡';
+    document.getElementById('tipTitle').textContent = t || '提示';
+    document.getElementById('tipBody').innerHTML =
+      '<div style="font-size:48px; margin-bottom:16px;">' + icon + '</div>' +
+      '<div style="font-size:16px; font-weight:600; margin-bottom:8px;">' + (d || '') + '</div>' +
+      '<div style="font-size:13px; color:var(--h5-text-3); line-height:1.7;">' +
+        (t && t.includes('上传') ? '支持 PDF / JPG / PNG，单文件不超过 10MB' :
+         t && t.includes('添加') ? '请通过平台客服或邮件申请开通' :
+         t && t.includes('已保存') ? '组织信息、资质证书已更新' :
+         '点击查看完整信息') +
+      '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>';
+    H5.openModal('tipModal');
+  }
+  function openUpload() { openTip('上传证书','上传新资质证书'); }
+
+  window.addEventListener('load', () => {
+    if (!window.gsap) return;
+    gsap.fromTo('.h5-section', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' });
+  });
+</script>
+</body>
+</html>

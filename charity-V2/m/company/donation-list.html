@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>捐赠记录 — 美心食品 · 慈商联营</title>
+<link rel="stylesheet" href="../public/css/h5.css">
+<style>
+  /* 顶部统计 5 列横滑 */
+  .h5-stat-scroll {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-stat-scroll::-webkit-scrollbar { display: none; }
+  .h5-stat-mini {
+    flex-shrink: 0;
+    width: 92px;
+    background: var(--h5-bg);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .h5-stat-mini .v {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--h5-primary);
+    line-height: 1.1;
+  }
+  .h5-stat-mini .v .u { font-size: 11px; font-weight: 400; color: var(--h5-text-3); margin-left: 1px; }
+  .h5-stat-mini .l { font-size: 10px; color: var(--h5-text-3); margin-top: 4px; }
+  /* 筛选条 */
+  .h5-filter-bar {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-filter-bar::-webkit-scrollbar { display: none; }
+  .h5-filter-pill {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--h5-text-2);
+    background: var(--h5-bg);
+    border: 1px solid var(--h5-divider);
+    cursor: pointer;
+  }
+  .h5-filter-pill .ic { margin-right: 2px; }
+  /* 横向 tab */
+  .h5-rec-tabs {
+    display: flex;
+    background: var(--h5-card);
+    border-bottom: 1px solid var(--h5-divider);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .h5-rec-tabs::-webkit-scrollbar { display: none; }
+  .h5-rec-tab {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--h5-text-2);
+    position: relative;
+    cursor: pointer;
+  }
+  .h5-rec-tab.active {
+    color: var(--h5-primary);
+    font-weight: 600;
+  }
+  .h5-rec-tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 16px; right: 16px;
+    height: 2px;
+    background: var(--h5-primary);
+    border-radius: 1px;
+  }
+  .h5-rec-tab .cnt { font-size: 11px; opacity: 0.6; margin-left: 3px; }
+  /* 记录卡 */
+  .h5-rec-card {
+    margin: 10px 16px 0;
+    padding: 14px;
+    background: var(--h5-card);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--h5-divider);
+    cursor: pointer;
+  }
+  .h5-rec-card:active { background: var(--h5-bg); }
+  .h5-rec-card .head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .h5-rec-card .id {
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--h5-text-3);
+    letter-spacing: -0.3px;
+  }
+  .h5-rec-card .body { margin-bottom: 8px; }
+  .h5-rec-card .name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .h5-rec-card .meta {
+    font-size: 11px;
+    color: var(--h5-text-3);
+  }
+  .h5-rec-card .meta .sep { margin: 0 6px; opacity: 0.4; }
+  .h5-rec-card .progress-row {
+    display: flex; align-items: center; gap: 8px;
+    margin: 8px 0;
+  }
+  .h5-rec-card .progress-row .h5-progress { flex: 1; }
+  .h5-rec-card .progress-row .pt { font-size: 11px; color: var(--h5-text-3); white-space: nowrap; }
+  .h5-rec-card .foot {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--h5-divider);
+  }
+  .h5-rec-card .foot .l {
+    font-size: 11px; color: var(--h5-text-3);
+  }
+  .h5-rec-card .foot .r {
+    font-size: 11px; color: var(--h5-text-3);
+  }
+  .h5-rec-card .foot .arrow { color: var(--h5-text-3); margin-left: 4px; }
+  /* 加载更多 */
+  .h5-loadmore {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--h5-text-3);
+  }
+</style>
+</head>
+<body data-role="company" class="has-tabbar">
+
+<div class="h5-nav">
+  <div class="h5-nav-back" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">捐赠记录</div>
+  <div class="h5-nav-right">
+    <div class="h5-nav-icon" onclick="openFilter()">⚙</div>
+  </div>
+</div>
+
+<!-- 顶部 5 项横滑统计 -->
+<div class="h5-stat-scroll">
+  <div class="h5-stat-mini"><div class="v"><span class="counter" data-target="128">0</span></div><div class="l">总次数</div></div>
+  <div class="h5-stat-mini"><div class="v"><span class="counter" data-target="8">0</span></div><div class="l">进行中</div></div>
+  <div class="h5-stat-mini"><div class="v"><span class="counter" data-target="118">0</span></div><div class="l">已完成</div></div>
+  <div class="h5-stat-mini"><div class="v">¥<span class="counter" data-target="1860">0</span><span class="u">万</span></div><div class="l">累计价值</div></div>
+  <div class="h5-stat-mini"><div class="v"><span class="counter" data-target="12.68">0</span><span class="u">万</span></div><div class="l">受惠人次</div></div>
+</div>
+
+<!-- 筛选条 -->
+<div class="h5-filter-bar">
+  <div class="h5-filter-pill" onclick="openFilter()">📌 状态: 全部</div>
+  <div class="h5-filter-pill" onclick="openFilter()">📦 类型: 全部</div>
+  <div class="h5-filter-pill" onclick="openFilter()">🔁 流程: 全部</div>
+  <div class="h5-filter-pill" onclick="openFilter()">📅 时间: 近 30 天</div>
+  <div class="h5-filter-pill" onclick="openFilter()">🏛 慈善会</div>
+</div>
+
+<!-- 横向 tab -->
+<div class="h5-rec-tabs">
+  <div class="h5-rec-tab active" data-tab="all" onclick="switchTab(this)">全部 <span class="cnt">128</span></div>
+  <div class="h5-rec-tab" data-tab="pending" onclick="switchTab(this)">待审核 <span class="cnt">2</span></div>
+  <div class="h5-rec-tab" data-tab="sending" onclick="switchTab(this)">派发中 <span class="cnt">6</span></div>
+  <div class="h5-rec-tab" data-tab="done" onclick="switchTab(this)">已完成 <span class="cnt">118</span></div>
+  <div class="h5-rec-tab" data-tab="draft" onclick="switchTab(this)">草稿箱 <span class="cnt">2</span></div>
+</div>
+
+<div class="h5-page" style="padding-top:0;" id="recList">
+
+  <div class="h5-rec-card" data-status="sending" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-0682-0001</div>
+      <span class="h5-tag primary">派发中</span>
+    </div>
+    <div class="body">
+      <div class="name">🍞 临期面包糕点 1,200 件</div>
+      <div class="meta">流程一 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-primary);">¥18,600</b> <span class="sep">·</span> 1,440kg</div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar" data-width="65%"></div></div>
+      <div class="pt">65%</div>
+    </div>
+    <div class="foot">
+      <div class="l">🏛 广东省慈善总会</div>
+      <div class="r">06-02 14:30 <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <div class="h5-rec-card" data-status="sending" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-0681-0028</div>
+      <span class="h5-tag primary">派发中</span>
+    </div>
+    <div class="body">
+      <div class="name">🥛 儿童牛奶 600 盒</div>
+      <div class="meta">流程二 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-primary);">¥32,400</b> <span class="sep">·</span> 720kg</div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar" data-width="30%"></div></div>
+      <div class="pt">30%</div>
+    </div>
+    <div class="foot">
+      <div class="l">🏛 深圳市壹基金</div>
+      <div class="r">06-01 09:15 <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <div class="h5-rec-card" data-status="pending" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-0680-0045</div>
+      <span class="h5-tag warning">待审核</span>
+    </div>
+    <div class="body">
+      <div class="name">📚 课外读物 800 套</div>
+      <div class="meta">流程三 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-primary);">¥28,000</b> <span class="sep">·</span> 待发车</div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar warning" data-width="5%"></div></div>
+      <div class="pt">5%</div>
+    </div>
+    <div class="foot">
+      <div class="l">🏛 贵州省慈善总会</div>
+      <div class="r">05-31 16:20 <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <div class="h5-rec-card" data-status="done" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-0615-0028</div>
+      <span class="h5-tag success">已完成</span>
+    </div>
+    <div class="body">
+      <div class="name">🥛 儿童牛奶 2,000 盒</div>
+      <div class="meta">流程一 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-primary);">¥108,000</b> <span class="sep">·</span> 已签收 2,000</div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar success" data-width="100%"></div></div>
+      <div class="pt">100%</div>
+    </div>
+    <div class="foot">
+      <div class="l">🏛 东莞市慈善会</div>
+      <div class="r">05-28 10:00 <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <div class="h5-rec-card" data-status="done" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-0420-0156</div>
+      <span class="h5-tag success">已完成</span>
+    </div>
+    <div class="body">
+      <div class="name">🍙 端午粽子礼盒 800 盒</div>
+      <div class="meta">流程一 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-primary);">¥56,000</b> <span class="sep">·</span> 4,800kg</div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar success" data-width="100%"></div></div>
+      <div class="pt">100%</div>
+    </div>
+    <div class="foot">
+      <div class="l">🏛 深圳市壹基金</div>
+      <div class="r">04-22 14:00 <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <div class="h5-rec-card" data-status="pending" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-0310-0089</div>
+      <span class="h5-tag warning">待审核</span>
+    </div>
+    <div class="body">
+      <div class="name">🍭 儿童节零食大礼包 1,500 份</div>
+      <div class="meta">流程二 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-primary);">¥78,000</b> <span class="sep">·</span> 3,200kg</div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar warning" data-width="0%"></div></div>
+      <div class="pt">0%</div>
+    </div>
+    <div class="foot">
+      <div class="l">🏛 上海市慈善基金会</div>
+      <div class="r">03-10 11:20 <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <div class="h5-rec-card" data-status="draft" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-DRAFT-0012</div>
+      <span class="h5-tag info">草稿</span>
+    </div>
+    <div class="body">
+      <div class="name">🧴 洗护用品 500 套</div>
+      <div class="meta">流程一 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-text-3);">¥28,000</b> <span class="sep">·</span> 1,200kg</div>
+    </div>
+    <div class="foot">
+      <div class="l">📝 草稿 · 2025-06-04 17:00 保存</div>
+      <div class="r"><span class="h5-btn h5-btn-secondary h5-btn-sm" onclick="event.stopPropagation()">继续编辑</span> <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <div class="h5-rec-card" data-status="done" onclick="location.href='donation-detail.html'">
+    <div class="head">
+      <div class="id">CC-DON-2025-0115-0067</div>
+      <span class="h5-tag success">已完成</span>
+    </div>
+    <div class="body">
+      <div class="name">🥛 春节牛奶礼盒 2,000 份</div>
+      <div class="meta">流程三 <span class="sep">·</span> 评估价值 <b style="color:var(--h5-primary);">¥128,000</b> <span class="sep">·</span> 12,000kg</div>
+    </div>
+    <div class="progress-row">
+      <div class="h5-progress"><div class="h5-progress-bar success" data-width="100%"></div></div>
+      <div class="pt">100%</div>
+    </div>
+    <div class="foot">
+      <div class="l">🏛 中国青少年发展基金会</div>
+      <div class="r">01-20 09:30 <span class="arrow">›</span></div>
+    </div>
+  </div>
+
+  <!-- 加载更多 -->
+  <div class="h5-loadmore" id="loadMore" onclick="loadMore()">↓ 加载更多（共 128 条，已显示 8 条）</div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- 通用提示 modal -->
+<div class="h5-modal-mask" id="tipModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title" id="tipTitle">提示</div>
+      <div class="close" onclick="H5.closeModal('tipModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" id="tipBody" style="padding:20px;"></div>
+  </div>
+</div>
+
+<!-- 底部 tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='dashboard.html'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='donate-publish.html'"><div class="tab-ic">📦</div><div class="tab-label">捐赠</div></div>
+  <div class="h5-tab" onclick="location.href='donate-respond.html'"><div class="tab-ic">🤝</div><div class="tab-label">项目</div></div>
+  <div class="h5-tab" onclick="location.href='messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../public/js/h5.js"></script>
+<script>
+  H5.setRole('company');
+
+  function switchTab(el) {
+    document.querySelectorAll('.h5-rec-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const tab = el.dataset.tab;
+    document.querySelectorAll('.h5-rec-card').forEach(c => {
+      c.style.display = (c.dataset.status === tab || tab === 'all') ? '' : 'none';
+    });
+  }
+
+  function openFilter() {
+    openTip('筛选', '⚙️', '支持按状态 / 物资类型 / 流程 / 时间 / 慈善会多维筛选。原型仅展示默认 8 条 + 加载更多。');
+  }
+
+  function loadMore() {
+    openTip('加载更多', '📥', '原型仅展示 8 条核心记录，PC 端支持分页（1·2·3·...·16）浏览全部 128 条。');
+  }
+
+  function openTip(t, ic, body) {
+    document.getElementById('tipTitle').textContent = t;
+    document.getElementById('tipBody').innerHTML =
+      '<div style="text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:12px;">' + ic + '</div>' +
+      '<div style="font-size:14px;color:var(--h5-text-2);line-height:1.7;">' + body + '</div>' +
+      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:20px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>' +
+      '</div>';
+    H5.openModal('tipModal');
+  }
+
+  window.addEventListener('load', () => {
+    if (window.gsap) {
+      gsap.fromTo('.h5-stat-mini', { y: -8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.04, ease: 'power2.out' });
+      gsap.fromTo('.h5-rec-card', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, delay: 0.2, ease: 'power2.out' });
+    }
+    H5.animateProgress('.h5-progress-bar');
+    document.querySelectorAll('.counter').forEach(el => H5.countUp(el, el.dataset.target, 1.2));
+  });
+</script>
+</body>
+</html>
