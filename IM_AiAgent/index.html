@@ -9,7 +9,7 @@
   <title>UmakeX IM · AI Agent 原型</title>
   <link rel="stylesheet" href="css/base.css?v=17">
   <link rel="stylesheet" href="css/im.css?v=17">
-  <link rel="stylesheet" href="css/spa.css?v=18">
+  <link rel="stylesheet" href="css/spa.css?v=32">
   <style>
     /* hero：压缩为原型抬头，不再做营销大屏 */
     .hero {
@@ -142,13 +142,16 @@
           <!-- 内容区（视图注入点） -->
           <div class="phone-content" id="phoneContent"></div>
 
-          <!-- 4 tab 底栏 -->
-          <nav class="phone-tabbar">
+          <!-- 5 tab 底栏：AI Agent Center 为一级入口 -->
+          <nav class="phone-tabbar phone-tabbar-5">
             <div class="phone-tabbar-item active" data-tab="chat-list">
               <div class="pt-icon">💬</div><span>消息</span>
             </div>
             <div class="phone-tabbar-item" data-tab="contact">
               <div class="pt-icon">📒</div><span>通讯录</span>
+            </div>
+            <div class="phone-tabbar-item phone-tabbar-agent" data-tab="agent-center">
+              <div class="pt-icon">AI</div><span>Agent Center</span>
             </div>
             <div class="phone-tabbar-item" data-tab="meeting-list">
               <div class="pt-icon">📅</div><span>会议</span>
@@ -165,7 +168,7 @@
   <!-- JS (defer + cache buster: 避免脚本阻塞解析 / 浏览器强缓存) -->
   <script defer src="js/mock-data.js?v=18"></script>
   <script defer src="js/mock-ai.js?v=18"></script>
-  <script defer src="js/views-v20.js"></script>
+  <script defer src="js/views-v30.js"></script>
   <script defer src="js/spa-v22.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // spa.js — 一体式原型核心
-// 管理手机内 4 tab 切换 + 视图路由 + Agent 对话状态 + mock AI 集成
+// 管理手机内 5 tab 切换 + 视图路由 + Agent 对话状态 + mock AI 集成
 
 // 视图栈（支持返回）
 let viewStack = ['chat-list'];
@@ -9,9 +9,8 @@ let currentTitle = '消息';
 
 // Agent 对话历史
 const agentChats = {
-  'agent-grow': [],
-  'agent-customer': [], // legacy
-  'agent-sales': [],    // legacy
+  'agent-sales': [],
+  'agent-customer': [],
   'agent-meeting': []
 };
 
@@ -49,6 +48,11 @@ function renderCurrentView() {
   // 更新 tab 选中
   updateTabbar(viewName);
 
+  // AI 场景长演示：随消息出现自动轻滚动，增强“正在播放”的感觉
+  if (viewName === 'chat-demo') {
+    setTimeout(() => startAiScenarioAutoplay(arg), 120);
+  }
+
   // 滚动到底部（聊天场景）
   setTimeout(() => {
     const body = content.querySelector('[id^="chatBody-"], [id^="agentChatBody-"]');
@@ -78,6 +82,7 @@ function updateHeader(viewName, arg) {
     'ai-inbox': 'AI 已处理',
     'meeting-detail': '会议详情',
     'chat-single': getContact(arg)?.name || '对话',
+    'chat-demo': '场景演示',
     'agent-chat': getContact(arg)?.name || 'AI Agent',
     'agent-meeting': '会议纪要',
     'agent-config': getContact(AG_ID_MAP[arg] || arg)?.name || 'Agent 配置',
@@ -91,7 +96,7 @@ function updateHeader(viewName, arg) {
     back.style.display = 'none';
   }
   // 操作栏
-  if (viewName === 'chat-single' || viewName === 'agent-chat') {
+  if (viewName === 'chat-single' || viewName === 'chat-demo' || viewName === 'agent-chat') {
     action.innerHTML = '<span>📞</span><span>📹</span><span>⋮</span>';
     action.style.display = 'flex';
   } else if (viewName === 'meeting-detail') {
@@ -107,8 +112,8 @@ function updateHeader(viewName, arg) {
 }
 
 function updateTabbar(viewName) {
-  // tab 选中：4 个主 tab
-  const mainTabs = ['chat-list', 'contact', 'meeting-list', 'profile'];
+  // tab 选中：5 个主 tab
+  const mainTabs = ['chat-list', 'contact', 'agent-center', 'meeting-list', 'profile'];
   document.querySelectorAll('.phone-tabbar-item').forEach(el => {
     const tab = el.dataset.tab;
     el.classList.toggle('active', tab === viewName);
@@ -120,7 +125,7 @@ function updateTabbar(viewName) {
 }
 
 /* ============================================
-   4 tab 切换（主入口）
+   5 tab 切换（主入口）
    ============================================ */
 function bindTabbar() {
   document.querySelectorAll('.phone-tabbar-item').forEach(el => {
@@ -599,10 +604,10 @@ function updateTime() {
 
 // 短 id → 全 id（兼容 mockAIReply）
 const AG_ID_MAP = {
-  grow:  'agent-grow',
-  cust:  'agent-customer',  // legacy
-  sales: 'agent-sales',     // legacy
+  sales: 'agent-sales',
+  cust:  'agent-customer',
   meet:  'agent-meeting',
+  grow:  'agent-sales',      // legacy：旧客户增长入口先落到销售助手
   img:   'agent-img',
   write: 'agent-write',
   audio: 'agent-audio',
@@ -616,7 +621,7 @@ window.__toggleAgent = function(id) {
     state[id] = !state[id];
     localStorage.setItem('umakex_agent_state', JSON.stringify(state));
     renderCurrentView();
-    const NAMES = { grow:'客户增长', cust:'客服', sales:'AI 销冠', meet:'会议', img:'AI 生图', write:'AI 写作', audio:'AI 录音' };
+    const NAMES = { sales:'AI 销售', cust:'AI 客服', meet:'AI 会议', grow:'AI 销售', img:'AI 生图', write:'AI 写作', audio:'AI 录音' };
     const name = NAMES[id] || id;
     showPrototypeToast(state[id] ? `✅ ${name} Agent 已开通` : `${name} Agent 已关闭`, state[id] ? 'success' : 'info');
   } catch(e) {
@@ -734,6 +739,24 @@ document.addEventListener('keydown', (e) => {
     accSend(agentId, e.target.value);
   }
 });
+
+let aiScenarioAutoplayTimers = [];
+function startAiScenarioAutoplay(sid) {
+  aiScenarioAutoplayTimers.forEach(t => clearTimeout(t));
+  aiScenarioAutoplayTimers = [];
+  const stage = document.querySelector(`.ai-scene-demo[data-sid="${sid}"] .ai-demo-stage`);
+  if (!stage) return;
+  stage.scrollTop = 0;
+  const steps = [...stage.querySelectorAll('.demo-step')];
+  steps.forEach((step, idx) => {
+    const timer = setTimeout(() => {
+      if (!document.querySelector(`.ai-scene-demo[data-sid="${sid}"]`)) return;
+      const targetTop = Math.max(0, step.offsetTop - 130);
+      stage.scrollTo({ top: targetTop, behavior: 'smooth' });
+    }, 1200 + idx * 1350);
+    aiScenarioAutoplayTimers.push(timer);
+  });
+}
 
 /* ============================================
    启动

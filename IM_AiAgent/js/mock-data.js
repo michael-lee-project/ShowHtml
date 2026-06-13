@@ -4,34 +4,35 @@
 
 // === 联系人 ===
 const CONTACTS = [
-  { id: 'u01', name: '夏目', avatar: '夏', type: '私聊', dept: '客户部', unread: 2,
-    lastMsg: '那个 VIC 套餐帮我看看？', time: '14:23', isVip: true },
-  { id: 'u02', name: '产品经理-张', avatar: '张', type: '私聊', dept: '产品部',
-    lastMsg: 'PRD 已发你邮箱', time: '昨天' },
-  { id: 'u03', name: '王会计', avatar: '王', type: '私聊', dept: '财务部',
-    lastMsg: '报表我下午发你', time: '昨天' },
-  { id: 'u04', name: 'VIC 服务群', avatar: 'V', type: '群聊', dept: '7 人',
-    lastMsg: '[通知] 6 月活动方案 v2 已更新', time: '昨天', isGroup: true },
-  { id: 'u05', name: '技术部-小李', avatar: '李', type: '私聊', dept: '技术部',
-    lastMsg: '已修复，请重试', time: '周一' },
+  { id: 'u01', name: '林晓楠', avatar: '林', type: '私聊', dept: '新人 · 宝妈副业', unread: 2,
+    lastMsg: '如果先拿体验装，后面能补差价升级吗？', time: '09:42', isVip: true,
+    intent: '高意向', stage: '促单', score: 92, source: '视频号直播', agent: 'AI 销售助手' },
+  { id: 'u02', name: '周明远', avatar: '周', type: '私聊', dept: '项目方 · 社群主理人', unread: 1,
+    lastMsg: '佣金规则我看懂了，想知道团队怎么结算。', time: '10:18',
+    intent: '招商咨询', stage: '报价', score: 86, source: '朋友转介绍', agent: 'AI 销售助手' },
+  { id: 'u03', name: '陈婉婷', avatar: '陈', type: '私聊', dept: '老会员 · 售后', unread: 0,
+    lastMsg: '昨天拍的套装少了一个赠品。', time: '11:06',
+    intent: '售后安抚', stage: '客服介入', score: 68, source: '会员复购', agent: 'AI 客服助手' },
+  { id: 'u04', name: '私域新人 07 群', avatar: '群', type: '群聊', dept: '23 人 · 新人培育', unread: 7,
+    lastMsg: '[AI 销售助手] 已识别 3 个价格敏感用户', time: '11:32', isGroup: true,
+    intent: '群转化', stage: '培育', score: 79, source: '新人群', agent: 'AI 销售助手' },
+  { id: 'u05', name: '赵一鸣', avatar: '赵', type: '私聊', dept: '高净值 · 企业采购', unread: 1,
+    lastMsg: '我下午三点有空，你让 AI 先整理一下方案。', time: '13:15', isVip: true,
+    intent: '大单机会', stage: '约会', score: 95, source: '线下活动', agent: 'AI 销售助手' },
   { id: 'u06', name: '运营-阿明', avatar: '阿', type: '私聊', dept: '运营部',
-    lastMsg: '活动数据已出', time: '6/5' },
-  { id: 'agent-grow', name: '客户增长助手', avatar: '增', type: 'Agent',
-    tag: '增长', tagColor: 'rose', isAgent: true,
-    desc: '智能客服 + AI 销冠一体化，接待咨询到促成成交全流程',
-    welcome: '您好！我是您的客户增长助手。\n我同时承担客服（秒回咨询、处理售后）和销冠（挖掘需求、促单成交）的角色。有什么可以帮您？' },
-  { id: 'agent-meeting', name: '会议助手', avatar: '议', type: 'Agent',
+    lastMsg: '昨日 AI 营销战报已同步', time: '昨天' },
+  { id: 'agent-sales', name: 'AI 销售助手', avatar: '销', type: 'Agent',
+    tag: '销售', tagColor: 'red', isAgent: true,
+    desc: '主动沟通新人、推荐商品、推动下单成交',
+    welcome: '您好，我是 AI 销售助手。\n我可以根据客户资料、商品库、佣金规则和标签策略，主动跟进新人并推动成交。' },
+  { id: 'agent-customer', name: 'AI 客服助手', avatar: '客', type: 'Agent',
+    tag: '客服', tagColor: 'blue', isAgent: true,
+    desc: 'FAQ 问答、售后接待、情绪安抚、复购引导',
+    welcome: '您好，我是 AI 客服助手。\n我可以处理 FAQ、售后规则、智能回答、情绪安抚、复购引导和转人工。' },
+  { id: 'agent-meeting', name: 'AI 会议助手', avatar: '议', type: 'Agent',
     tag: '会议', tagColor: 'green', isAgent: true,
-    desc: '自动出纪要、总结文档', welcome: '我可以帮您做会议纪要、文档总结、行动项跟踪。' },
-  { id: 'agent-img', name: 'AI 生图·小艺', avatar: '🎨', type: 'Agent',
-    tag: '生图', tagColor: 'purple', isAgent: true,
-    desc: '文字转图片，秒出素材', welcome: '我是 AI 生图小艺 🎨\n\n告诉我您想画什么 —— 海报 / 产品图 / 头像 / 插画，一句话生成。' },
-  { id: 'agent-write', name: 'AI 写作·小笔', avatar: '✍️', type: 'Agent',
-    tag: '写作', tagColor: 'red', isAgent: true,
-    desc: '种草 / 详情页 / 周报 / 活动话术', welcome: '我是 AI 写作小笔 ✍️\n\n告诉我您要写什么、给谁看、什么场景 —— 我帮您起草。' },
-  { id: 'agent-audio', name: 'AI 录音·小记', avatar: '🎙️', type: 'Agent',
-    tag: '录音', tagColor: 'amber', isAgent: true,
-    desc: '录音转文字，30 秒看完 1 小时会议', welcome: '我是 AI 录音小记 🎙️\n\n上传录音或粘贴文字，我帮您提取要点 / 决策 / 待办。' }
+    desc: '会议录音、转文字、纪要、待办和意图分析',
+    welcome: '您好，我是 AI 会议助手。\n我可以帮您做会议录音、转文字、会议总结、会议纪要、待办事项和意图分析。' }
 ];
 
 // === helper：按 id 查联系人 ===
@@ -41,12 +42,16 @@ function getContact(id) {
 
 // === 会话列表 ===
 const CHATS = [
-  { id: 'c01', contactId: 'u01', lastMsg: '那个 VIC 套餐帮我看看？', time: '14:23', unread: 2, pinned: true },
-  { id: 'c02', contactId: 'u04', lastMsg: '[通知] 6 月活动方案 v2 已更新', time: '昨天', unread: 5, pinned: true },
-  { id: 'c03', contactId: 'u02', lastMsg: 'PRD 已发你邮箱', time: '昨天' },
-  { id: 'c04', contactId: 'u03', lastMsg: '报表我下午发你', time: '昨天' },
-  { id: 'c05', contactId: 'u06', lastMsg: '活动数据已出', time: '6/5' },
-  { id: 'c06', contactId: 'u05', lastMsg: '已修复，请重试', time: '周一' }
+  { id: 'c01', contactId: 'u01', lastMsg: '如果先拿体验装，后面能补差价升级吗？', time: '09:42', unread: 2, pinned: true,
+    aiNext: '发送“体验装可抵扣升级”话术，并推荐新人组合', aiTag: '高意向', aiAgent: '销售', score: 92 },
+  { id: 'c02', contactId: 'u05', lastMsg: '我下午三点有空，你让 AI 先整理一下方案。', time: '13:15', unread: 1, pinned: true,
+    aiNext: '整理企业采购方案，预约 15:00 跟进', aiTag: '大单机会', aiAgent: '销售', score: 95 },
+  { id: 'c03', contactId: 'u02', lastMsg: '佣金规则我看懂了，想知道团队怎么结算。', time: '10:18', unread: 1,
+    aiNext: '推送佣金结算图，并提示可申请项目方权益', aiTag: '招商咨询', aiAgent: '销售', score: 86 },
+  { id: 'c04', contactId: 'u04', lastMsg: '[AI 销售助手] 已识别 3 个价格敏感用户', time: '11:32', unread: 7,
+    aiNext: '群内发送低门槛体验装，对 3 人单独私聊', aiTag: '群转化', aiAgent: '销售', score: 79 },
+  { id: 'c05', contactId: 'u03', lastMsg: '昨天拍的套装少了一个赠品。', time: '11:06',
+    aiNext: '先道歉安抚，再补发赠品并送复购券', aiTag: '售后安抚', aiAgent: '客服', score: 68 }
 ];
 
 // === 通讯录分类 ===
@@ -57,13 +62,67 @@ const CONTACT_CATEGORIES = [
   { id: 'blacklist', name: '黑名单', count: 0, icon: '黑' }
 ];
 
-// === 消息模板（夏目单聊） ===
-const CHAT_WITH_NATSUME = [
-  { from: 'them', time: '14:20', text: '在吗？想了解一下 VIC 套餐' },
-  { from: 'them', time: '14:21', text: '客服说最近有活动，给我推个最划算的' },
-  { from: 'me',   time: '14:23', text: '稍等，我帮你看看' },
-  { from: 'me',   time: '14:23', text: '那个 VIC 套餐帮我看看？' }
-];
+// === AI 营销客户案例线程 ===
+const CUSTOMER_THREADS = {
+  u01: {
+    profile: '宝妈副业 · 预算 500 内 · 关注可退可升级',
+    insight: '先降低试错成本，再给“可升级抵扣”的确定性。',
+    product: '新人体验装 + VIC 入门套餐',
+    next: '发送体验装抵扣升级说明，补一句“今天下单赠 1 次顾问答疑”。',
+    messages: [
+      { from: 'them', time: '09:35', text: '我刚进群，想先试试，不太敢直接买大的。' },
+      { from: 'me', time: '09:37', text: '可以先从体验装开始，适合先确认效果。' },
+      { from: 'them', time: '09:42', text: '如果先拿体验装，后面能补差价升级吗？' }
+    ]
+  },
+  u02: {
+    profile: '社群主理人 · 有 600 人私域 · 关注佣金和结算',
+    insight: '不是普通消费者，应切项目方视角：团队收益、结算周期、素材支持。',
+    product: '项目方合作包 + 平台商品库',
+    next: '发送佣金结算规则和团队样例收益，邀请填写项目方资料。',
+    messages: [
+      { from: 'them', time: '10:11', text: '我这边有几个社群，想看看能不能一起卖。' },
+      { from: 'me', time: '10:13', text: '可以，项目方会有独立佣金规则和素材支持。' },
+      { from: 'them', time: '10:18', text: '佣金规则我看懂了，想知道团队怎么结算。' }
+    ]
+  },
+  u03: {
+    profile: '老会员 · 已购 3 次 · 当前负面情绪轻微',
+    insight: '先处理情绪，不急着销售；补偿完成后再引导复购。',
+    product: '赠品补发 + 复购券',
+    next: '客服助手先发补发承诺，24 小时后销售助手再跟进复购券。',
+    messages: [
+      { from: 'them', time: '11:02', text: '我这单昨天到了，但是赠品没看到。' },
+      { from: 'me', time: '11:04', text: '我先帮你核对订单，少发的话今天给你补。' },
+      { from: 'them', time: '11:06', text: '昨天拍的套装少了一个赠品。' }
+    ]
+  },
+  u04: {
+    profile: '新人群 · 23 人 · 价格敏感 3 人 · 观望 9 人',
+    insight: '群里不适合强销售，先用低门槛体验装破冰，再把高意向拉私聊。',
+    product: '新人体验装 / 团购券',
+    next: '群发体验装权益说明，并自动私聊 3 个价格敏感用户。',
+    messages: [
+      { from: 'them', time: '11:20', text: '这个是不是必须买套餐才有服务？' },
+      { from: 'them', time: '11:25', text: '有新人价吗？想先试试看。' },
+      { from: 'me', time: '11:32', text: '[AI 销售助手] 已识别 3 个价格敏感用户，建议先推体验装。' }
+    ]
+  },
+  u05: {
+    profile: '企业采购 · 预算高 · 需要方案和会议确认',
+    insight: '高客单不要碎片化聊天，转为方案 + 会议推进。',
+    product: '企业采购组合包',
+    next: 'AI 销售助手生成 1 页采购方案；会议助手准备下午 15:00 会议纪要模板。',
+    messages: [
+      { from: 'them', time: '13:02', text: '我们可能不是个人买，是给团队采购。' },
+      { from: 'me', time: '13:08', text: '那我按企业采购给你整理方案，重点放预算、交付和售后。' },
+      { from: 'them', time: '13:15', text: '我下午三点有空，你让 AI 先整理一下方案。' }
+    ]
+  }
+};
+
+// legacy fallback
+const CHAT_WITH_NATSUME = CUSTOMER_THREADS.u01.messages;
 
 // === 产品库（销冠 Agent 用）===
 const PRODUCTS = [

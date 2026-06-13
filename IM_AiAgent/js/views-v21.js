@@ -532,9 +532,9 @@ const VIEWS = {
         ['🎯', '跟进节奏', '跟进节奏配置', '首聊 / 培育 / 促单 / 复访', 'sales-followup'],
       ],
       cust: [
-        ['📚', 'FAQ 题库', 'FAQ 题库', '常见问题 / 标准答案', 'agent-kb'],
+        ['📚', 'FAQ 题库', 'FAQ 题库', '常见问题 / 标准答案 / 命中率', 'cust-faq'],
         ['📦', '售后规则', '售后规则', '退款 / 物流 / 发票 / 赔付', 'cust-after-sale-rules'],
-        ['💬', '智能回答', '智能回答配置', '语气 / 引用 / 禁用词', 'agent-persona'],
+        ['💬', '智能回答', '智能回答配置', '回答策略 / 引用规则 / 禁用词', 'cust-smart-reply'],
         ['🫶', '情绪安抚', '情绪安抚策略', '负面情绪 / 升级处理', 'cust-emotion-care'],
         ['🔁', '复购引导', '复购引导策略', '售后满意 / 二次推荐', 'cust-repurchase'],
         ['👤', '转人工规则', '转人工规则', '高风险 / 投诉 / 复杂问题', 'cust-human-handoff'],
@@ -1011,6 +1011,137 @@ const VIEWS = {
         <div class="sub-safe-space"></div>
       </div>
     `;
+  },
+
+
+  /* ============ 客服助手：FAQ 题库 ============ */
+  'cust-faq': () => {
+    const faqs = [
+      ['订单多久发货？', '付款后 24 小时内发货，预售品按商品页时间执行。', '物流咨询', '92%'],
+      ['可以退款吗？', '未发货可申请退款；已发货按售后规则核验。', '退款售后', '88%'],
+      ['赠品少发怎么办？', '先道歉并核验订单，确认后补发赠品或等值券。', '补发赔付', '81%'],
+      ['发票怎么开？', '收集抬头、税号、邮箱，1 个工作日内开具。', '发票财务', '79%'],
+    ];
+    const blocks = [
+      ['12', '已启用 FAQ', '覆盖订单、物流、退款、发票'],
+      ['86%', '今日命中率', '低于 80% 的问题进入待优化'],
+      ['7', '待补充问题', '来自最近 24 小时人工会话'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-faq">
+        <div class="cust-hero"><span>CUSTOMER SERVICE FAQ</span><strong>FAQ 题库</strong><em>客服助手先检索题库，再生成可发送回答；未命中进入待补充池。</em></div>
+        <div class="cust-kpis">${blocks.map(b=>`<div><strong>${b[0]}</strong><span>${b[1]}</span><em>${b[2]}</em></div>`).join('')}</div>
+        <div class="sub-toolbar cust-toolbar"><button>＋ 新增 FAQ</button><button>导入文档</button><button>训练题库</button></div>
+        <div class="cust-section-title"><span>高频问题</span><em>FAQ · LIVE</em></div>
+        <div class="cust-faq-list">
+          ${faqs.map((f,i)=>`<div class="cust-faq-row"><b>Q${i+1}</b><div><strong>${f[0]}</strong><p>${f[1]}</p><span>${f[2]}</span></div><em>${f[3]}</em></div>`).join('')}
+        </div>
+        <div class="cust-ai-note"><strong>沉淀给销售助手</strong><span>客户反复追问的商品、价格、售后顾虑，会同步为销售助手的「客户顾虑标签」。</span></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：售后规则 ============ */
+  'cust-after-sale-rules': () => {
+    const rules = [
+      ['退款', '未发货直接退款；已发货需核验签收状态', '涉及争议金额时转人工'],
+      ['物流', '48 小时无物流更新先安抚，再查询快递异常', '连续 2 次异常升级工单'],
+      ['发票', '收集抬头/税号/邮箱，不承诺立即开票', '对公特殊发票转财务'],
+      ['补偿', '少发/错发优先补发，无法补发给等值券', '超过 ¥50 需人工确认'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-after-sale-rules">
+        <div class="cust-hero"><span>AFTER-SALE RULES</span><strong>售后规则</strong><em>把退款、物流、发票、赔付边界写清楚，避免 AI 乱承诺。</em></div>
+        <div class="cust-case-strip"><div><strong>4</strong><span>规则类型</span></div><div><strong>18%</strong><span>人工介入率</span></div><div><strong>4.6</strong><span>满意度</span></div></div>
+        <div class="cust-section-title"><span>规则矩阵</span><em>BOUNDARY · NO HBAR</em></div>
+        <div class="cust-rule-matrix">
+          ${rules.map((r,i)=>`<div><b>${String(i+1).padStart(2,'0')}</b><strong>${r[0]}</strong><span>${r[1]}</span><em>${r[2]}</em></div>`).join('')}
+        </div>
+        <div class="cust-ticket-card"><span>示例工单</span><strong>陈婉婷 · 赠品少发</strong><p>AI 先道歉 → 核验订单 → 承诺补发 → 记录复购券机会，不直接推销。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：智能回答 ============ */
+  'cust-smart-reply': () => {
+    const modes = [
+      ['准确优先', '必须引用 FAQ 或售后规则后再回答', 'active'],
+      ['安抚优先', '客户情绪异常时先共情，再处理问题', ''],
+      ['复购友好', '售后完成且满意后才允许轻推荐', ''],
+      ['合规保守', '遇到退款、投诉、金额争议自动降级', ''],
+    ];
+    const samples = [
+      ['客户说：赠品没收到', '先道歉，我帮您核验订单。确认少发后今天给您安排补发。'],
+      ['客户说：你们怎么这么慢', '理解您着急，我先帮您查物流节点，如果异常会立即生成工单。'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-smart-reply">
+        <div class="cust-hero"><span>SMART REPLY</span><strong>智能回答</strong><em>控制 AI 客服的语气、引用依据、禁用承诺和复购插入时机。</em></div>
+        <div class="cust-reply-persona"><div class="cust-avatar">客</div><div><strong>小客 · 克制服务型</strong><span>先解决问题，再维护关系；不在情绪异常时销售。</span></div></div>
+        <div class="cust-section-title"><span>回答模式</span><em>4 MODES</em></div>
+        <div class="cust-mode-grid">${modes.map(m=>`<button class="${m[2]}"><strong>${m[0]}</strong><span>${m[1]}</span></button>`).join('')}</div>
+        <div class="cust-section-title"><span>回复预览</span><em>BEFORE SEND</em></div>
+        <div class="cust-reply-preview">${samples.map(s=>`<div><span>${s[0]}</span><p>${s[1]}</p></div>`).join('')}</div>
+        <div class="cust-forbidden"><strong>禁用承诺</strong><span>马上到账 · 一定赔付 · 绝对没问题 · 保证满意 · 内部处理</span></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：情绪安抚 ============ */
+  'cust-emotion-care': () => {
+    const levels = [
+      ['L1', '轻微不满', '先道歉 + 解释流程', '继续 AI 处理'],
+      ['L2', '明显焦虑', '承认情绪 + 给明确时间点', '生成待跟进'],
+      ['L3', '愤怒投诉', '停止争辩 + 生成工单', '转人工'],
+      ['L4', '威胁曝光', '不再自动承诺', '立即人工介入'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-emotion-care">
+        <div class="cust-hero"><span>EMOTION CARE</span><strong>情绪安抚</strong><em>识别负面情绪等级，决定继续 AI 接待、生成工单或立即转人工。</em></div>
+        <div class="cust-emotion-ledger"><strong>今日情绪风险</strong><b>05</b><span>3 条已安抚 · 2 条转人工</span></div>
+        <div class="cust-section-title"><span>情绪阶梯</span><em>非水平进度条</em></div>
+        <div class="cust-emotion-steps">${levels.map((l,i)=>`<div class="risk-${i}"><b>${l[0]}</b><strong>${l[1]}</strong><span>${l[2]}</span><em>${l[3]}</em></div>`).join('')}</div>
+        <div class="cust-script-box"><span>安抚话术原则</span><p>先承认客户感受，再给可验证动作；不解释过多，不甩锅，不在情绪未恢复前推荐商品。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：复购引导 ============ */
+  'cust-repurchase': () => {
+    const triggers = [
+      ['售后已解决', '客户回复满意 / 问题关闭 24 小时后', '发送复购券或使用建议'],
+      ['高频咨询', '连续询问同类商品或服务权益', '推荐适配商品，不强促单'],
+      ['老客回访', '30 天内购买 2 次以上', '提供会员权益和组合包'],
+      ['负面恢复', '投诉处理后评分 ≥4', '只做关系维护，延迟推荐'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-repurchase">
+        <div class="cust-hero"><span>REPURCHASE GUIDE</span><strong>复购引导</strong><em>售后不是终点，满意后把服务会话转成下一次购买机会。</em></div>
+        <div class="cust-repurchase-hero"><div><span>本周复购机会</span><strong>23</strong><em>来自客服会话沉淀</em></div><b>→ 销售助手</b></div>
+        <div class="cust-section-title"><span>触发条件</span><em>SERVICE → SALES</em></div>
+        <div class="cust-trigger-list">${triggers.map((t,i)=>`<div><b>${String(i+1).padStart(2,'0')}</b><div><strong>${t[0]}</strong><span>${t[1]}</span><p>${t[2]}</p></div></div>`).join('')}</div>
+        <div class="cust-data-flow"><strong>数据流向</strong><span>客服会话 → 满意度/问题类型/商品顾虑 → 客户标签 → AI 销售助手二次营销判断</span></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：转人工规则 ============ */
+  'cust-human-handoff': () => {
+    const handoffs = [
+      ['投诉/威胁曝光', '立即停止 AI 自动回复', 'P0'],
+      ['退款争议金额 > ¥50', '生成工单并附聊天摘要', 'P1'],
+      ['合同/发票/对公异常', '转财务或管理员确认', 'P1'],
+      ['AI 连续 2 次未解决', '自动邀请人工接管', 'P2'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-human-handoff">
+        <div class="cust-hero"><span>HUMAN HANDOFF</span><strong>转人工规则</strong><em>定义哪些场景必须停下 AI，交给人工处理，并把上下文带过去。</em></div>
+        <div class="cust-handoff-banner"><strong>人工接管不是失败</strong><span>高风险场景先保护客户关系，再让 AI 做摘要、标签和后续复盘。</span></div>
+        <div class="cust-section-title"><span>触发规则</span><em>RISK · PRIORITY</em></div>
+        <div class="cust-handoff-list">${handoffs.map(h=>`<div><em>${h[2]}</em><strong>${h[0]}</strong><span>${h[1]}</span></div>`).join('')}</div>
+        <div class="cust-handoff-summary"><span>转人工附带信息</span><p>客户身份、最近 10 条消息、命中 FAQ、情绪等级、AI 已承诺事项、建议人工处理动作。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
   },
 
   /* ============ 配置子页：客户标签 ============ */

@@ -168,110 +168,202 @@ const VIEWS = {
     `;
   },
 
-  /* ============ 通讯录 ============ */
+  /* ============ 通讯录：AI 营销客户资产 ============ */
   'contact': () => {
     const users = CONTACTS.filter(c => !c.isAgent);
+    const salesUsers = users.filter(c => c.agent === 'AI 销售助手').length;
+    const serviceUsers = users.filter(c => c.agent === 'AI 客服助手').length;
+    const highScore = users.filter(c => (c.score || 0) >= 85).length;
+    const avgScore = Math.round(users.reduce((sum,c)=>sum+(c.score||60),0) / Math.max(users.length,1));
     return `
-      <div class="phone-view" data-view="contact">
-        <div class="contact-hero">
+      <div class="phone-view contact-marketing-view" data-view="contact">
+        <div class="contact-mkt-hero">
           <div>
-            <span>CONTACTS</span>
+            <span>CUSTOMER ASSET</span>
             <strong>通讯录</strong>
+            <em>不是普通好友列表，是 AI 销售/客服共用的客户画像资料库。</em>
           </div>
-          <button class="contact-add">＋</button>
+          <b>${users.length}</b>
         </div>
-        <div class="top-search contact-search">
-          <input class="search-input" placeholder="🔍  搜索联系人 / 群聊 / AI Agent">
+        <div class="contact-mkt-search">
+          <input class="search-input" placeholder="🔍 搜客户 / 标签 / 意图 / 商品 / Agent">
         </div>
-        <div class="contact-section-title">
-          <span>AI AGENTS</span>
-          <em>3 个在线</em>
+        <div class="contact-mkt-stats">
+          <div><strong>${highScore}</strong><span>高价值客户</span></div>
+          <div><strong>${salesUsers}</strong><span>销售跟进</span></div>
+          <div><strong>${serviceUsers}</strong><span>客服沉淀</span></div>
+          <div><strong>${avgScore}</strong><span>平均评分</span></div>
         </div>
-        <div class="agent-stack">
-        <a class="agent-card-list cust" data-action="open-agent" data-agent="agent-customer">
-          <div class="ac-avatar">客</div>
-          <div class="ac-body">
-            <div class="ac-name">智能客服 <span class="kicker-tag blue" style="font-size:9px;padding:1px 5px;">客服</span></div>
-            <div class="ac-desc">7×24 在线 · 秒回咨询</div>
-          </div>
-          <div class="ac-arrow">›</div>
-        </a>
-        <a class="agent-card-list sales" data-action="open-agent" data-agent="agent-sales">
-          <div class="ac-avatar">销</div>
-          <div class="ac-body">
-            <div class="ac-name">AI 销冠·小销 <span class="kicker-tag orange" style="font-size:9px;padding:1px 5px;">销冠</span></div>
-            <div class="ac-desc">主动引导成交 · 5 阶段流水线</div>
-          </div>
-          <div class="ac-arrow">›</div>
-        </a>
-        <a class="agent-card-list meet" data-action="open-agent" data-agent="agent-meeting">
-          <div class="ac-avatar">议</div>
-          <div class="ac-body">
-            <div class="ac-name">会议助手 <span class="kicker-tag green" style="font-size:9px;padding:1px 5px;">会议</span></div>
-            <div class="ac-desc">会议纪要 · 文档总结</div>
-          </div>
-          <div class="ac-arrow">›</div>
-        </a>
+        <div class="contact-mkt-agents">
+          <div data-action="open-agent-config" data-agent="sales"><b>AI 销售助手</b><span>读取画像、标签、商品兴趣，自动判断下一步转化动作。</span></div>
+          <div data-action="open-agent-config" data-agent="cust"><b>AI 客服助手</b><span>读取售后状态、情绪等级、历史问题，维护关系并回流复购机会。</span></div>
         </div>
-        <div class="contact-section-title compact">
-          <span>GROUPS</span>
-          <em>联系人分类</em>
+        <div class="contact-section-title compact people-title contact-mkt-title">
+          <span>CUSTOMER PROFILES</span>
+          <em>${users.length} 份画像</em>
         </div>
-        <div class="cat-bar">
-          <div class="cat-btn"><div class="cat-icon">新</div><span class="cat-name">新朋友</span><span class="cat-count">3</span></div>
-          <div class="cat-btn"><div class="cat-icon" style="background:var(--umakex-purple);">私</div><span class="cat-name">私聊</span><span class="cat-count">12</span></div>
-          <div class="cat-btn"><div class="cat-icon" style="background:var(--umakex-green);">群</div><span class="cat-name">群聊</span><span class="cat-count">5</span></div>
-          <div class="cat-btn"><div class="cat-icon" style="background:#6b7280;">黑</div><span class="cat-name">黑名单</span><span class="cat-count">0</span></div>
+        <div class="contact-profile-list">
+          ${users.map(c => renderMarketingContactItem(c)).join('')}
         </div>
-        <div class="contact-section-title compact people-title">
-          <span>PEOPLE</span>
-          <em>${users.length} 位联系人</em>
-        </div>
-        ${users.map(c => renderContactItem(c)).join('')}
+        <div class="sub-safe-space"></div>
       </div>
     `;
   },
 
-  /* ============ 会议列表 ============ */
-  'meeting-list': () => {
+  /* ============ 通讯录：客户画像详情 ============ */
+  'contact-profile': (id) => {
+    const c = getContact(id) || CONTACTS.find(x => !x.isAgent);
+    const thread = CUSTOMER_THREADS[c.id] || { profile:c.dept || '资料待补充', insight:'暂无 AI 洞察，建议先补齐客户背景。', product:'待匹配', next:'补齐身份、预算、需求和禁忌后再让 AI 跟进。', messages:[] };
+    const tags = [c.intent || '待识别', c.stage || '未分层', c.source || '未知来源', c.agent || 'AI 待分配'];
+    const score = c.score || 60;
+    const owner = c.agent === 'AI 客服助手' ? 'AI 客服助手' : 'AI 销售助手';
     return `
-      <div class="phone-view" data-view="meeting-list">
-        <div class="meeting-action-panel">
-          <div class="meeting-primary-action">
-            <span>＋</span>
-            <div><strong>预定会议</strong><em>创建会议 · 邀请成员 · 自动提醒</em></div>
+      <div class="phone-view agent-subpage contact-profile-page" data-view="contact-profile" data-cid="${c.id}">
+        <div class="contact-profile-hero">
+          <div class="contact-profile-avatar ${c.isVip ? 'vip' : ''}">${c.avatar}</div>
+          <div>
+            <span>CUSTOMER PROFILE</span>
+            <strong>${c.name}</strong>
+            <em>${thread.profile}</em>
           </div>
-          <div class="meeting-join-action">
-            <span>#</span>
-            <div><strong>加入会议</strong><em>输入会议号 / 链接</em></div>
-          </div>
+          <b>${score}</b>
         </div>
-        <div class="meeting-ai-strip">
-          <span>AI MEETING</span>
-          <strong>会议助手已开启</strong>
-          <em>录音转写 · 自动纪要 · 行动项追踪</em>
+        <div class="contact-profile-tags">${tags.map(t=>`<span>${t}</span>`).join('')}</div>
+        <div class="contact-profile-score">
+          <div><strong>${score}</strong><span>客户价值评分</span></div>
+          <div><strong>${owner.replace('AI ','')}</strong><span>当前主跟进 Agent</span></div>
         </div>
-        ${MEETINGS.map(m => {
-          const statusTag = m.status === 'soon'
-            ? '<span class="meeting-tag soon">即将开始</span>'
-            : m.status === 'ended'
-              ? '<span class="meeting-tag ended">已结束</span>'
-              : '<span class="meeting-tag scheduled">待开始</span>';
-          const summaryTag = m.hasSummary
-            ? '<span class="meeting-tag summary">纪要已生成</span>'
-            : '';
-          return `
-            <a class="meeting-card ${m.status}" data-action="open-meeting" data-mid="${m.id}">
-              <div class="meeting-title">${m.title} ${statusTag} ${summaryTag}</div>
-              <div class="meeting-time">${m.startTime} → ${m.endTime}</div>
-              <div class="meeting-meta">
-                <span>👥 ${m.attendees} 人</span>
-                <span>·</span>
-                <span>${m.organizer}</span>
+        <div class="contact-detail-section"><span>AI 洞察</span><em>INSIGHT</em></div>
+        <div class="contact-insight-card"><strong>${thread.insight}</strong><p>${thread.next}</p></div>
+        <div class="contact-detail-section"><span>商品 / 服务匹配</span><em>MATCH</em></div>
+        <div class="contact-product-match"><b>${thread.product}</b><span>${c.lastMsg || '暂无最近消息'}</span></div>
+        <div class="contact-detail-section"><span>最近对话</span><em>CONTEXT</em></div>
+        <div class="contact-mini-chat">
+          ${(thread.messages || []).map(m=>`<div class="${m.from==='me'?'me':'them'}"><b>${m.time}</b><span>${m.text}</span></div>`).join('') || '<div><b>--</b><span>暂无对话记录，等待消息页同步。</span></div>'}
+        </div>
+        <div class="contact-agent-actions">
+          <button data-action="open" data-target="chat-single:${c.id}">进入对话</button>
+          <button data-action="open-agent-config" data-agent="${owner==='AI 客服助手'?'cust':'sales'}">配置${owner.replace('AI ','')}</button>
+        </div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 会议：AI 沟通沉淀工作流 ============ */
+  'meeting-list': () => {
+    const enriched = MEETINGS.map((m, index) => {
+      const summary = MEETING_SUMMARY[m.id] || {};
+      const meta = [
+        ['m01', '销售策略会', 'Q3 转化目标 / Agent 配置 / 预算确认', '销售会议', '高', 'AI 将自动生成 Q3 跟进计划', '陈志远', '15:30', 'meet-sales'],
+        ['m02', '产品协同会', '客户反馈 / Bug 优先级 / 下版节奏', '内部协同', '中', '等待产品经理确认 2 条需求', '产品经理-张', '18:00', 'meet-product'],
+        ['m03', '运营复盘会', '618 复盘 / 私域转化 / 待办追踪', '复盘沉淀', '已归档', '4 条待办已进入 Agent 跟进池', '运营-阿明', '11:30', 'meet-review']
+      ].find(x => x[0] === m.id) || [];
+      return { m, summary, meta, index };
+    });
+    const stats = [
+      ['本周沟通', '12', 'MEETINGS'],
+      ['AI 纪要', '9', 'SUMMARIES'],
+      ['待办沉淀', '27', 'ACTIONS'],
+      ['客户意图', '6', 'INTENTS']
+    ];
+    const pipeline = [
+      ['会前', '客户资料 / 议程 / 风险点', '准备'],
+      ['会中', '录音转写 / 发言分离 / 意图识别', '记录'],
+      ['会后', '纪要 / 待办 / 销售跟进同步', '沉淀']
+    ];
+    return `
+      <div class="phone-view meeting-ops-view" data-view="meeting-list">
+        <div class="meeting-ops-hero">
+          <span>MEETING INTELLIGENCE</span>
+          <strong>会议不是日程，是客户沟通资产</strong>
+          <em>销售会议、客户沟通、运营复盘由 AI 会议助手自动录音、总结、拆待办，并回流给销售/客服助手。</em>
+        </div>
+
+        <div class="meeting-ops-stats">
+          ${stats.map(([n,v,k]) => `<div><em>${k}</em><strong>${v}</strong><span>${n}</span></div>`).join('')}
+        </div>
+
+        <div class="meeting-ops-pipeline">
+          ${pipeline.map(([stage,desc,label], i) => `
+            <div class="meeting-pipe-step s${i+1}">
+              <b>${i+1}</b><strong>${stage}</strong><span>${desc}</span><em>${label}</em>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="meeting-ops-section-title"><span>SALES MEETING QUEUE</span><strong>会议沉淀队列</strong></div>
+        <div class="meeting-ops-list">
+          ${enriched.map(({m, summary, meta}) => `
+            <div class="meeting-ops-card ${meta[8]}" data-action="open" data-target="meeting-ops-detail:${m.id}">
+              <div class="meeting-ops-card-top">
+                <div><em>${meta[3]}</em><strong>${m.title}</strong></div>
+                <b>${meta[4]}</b>
               </div>
-            </a>
-          `;
-        }).join('')}
+              <p>${meta[2]}</p>
+              <div class="meeting-ops-meta">
+                <span>${m.startTime.slice(5,16)}</span><span>${m.duration} 分钟</span><span>${m.attendees} 人</span>
+              </div>
+              <div class="meeting-ops-ai">
+                <i>AI</i><span>${meta[5]}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="meeting-ops-actions">
+          <button data-action="open-agent-config" data-agent="meet">配置会议助手</button>
+          <button data-action="open" data-target="agent-center">Agent Center</button>
+        </div>
+        <div class="meeting-ops-safe"></div>
+      </div>
+    `;
+  },
+
+  /* ============ 会议沉淀详情 ============ */
+  'meeting-ops-detail': (mid) => {
+    const m = MEETINGS.find(x => x.id === mid) || MEETINGS[0];
+    const s = MEETING_SUMMARY[mid] || MEETING_SUMMARY.m03 || {};
+    const profile = {
+      m01: ['销售策略会', '客户转化策略', 'AI 销售助手', '会后 2 小时内生成 Q3 私域转化跟进表', '3 个销售决策待确认'],
+      m02: ['产品协同会', '需求与交付', 'AI 客服助手', '把客户反馈整理成 FAQ 与售后规则', '2 条产品风险需同步'],
+      m03: ['运营复盘会', '复盘与待办', 'AI 会议助手', '待办已进入 Agent 跟进池，按负责人追踪', '4 条行动项已沉淀']
+    }[m.id] || ['会议沉淀', '沟通记录', 'AI 会议助手', '会议资料待补齐', '待分析'];
+    const actions = (s.actions && s.actions.length ? s.actions : [
+      {task:'补齐客户背景与预算信息', owner:m.organizer, deadline:'会后 24 小时', priority:'P1'},
+      {task:'生成下一轮沟通话术', owner:'AI 销售助手', deadline:'自动', priority:'AI'}
+    ]).slice(0,4);
+    const points = (s.keyPoints && s.keyPoints.length ? s.keyPoints : m.agenda || []).slice(0,4);
+    return `
+      <div class="phone-view meeting-ops-detail" data-view="meeting-ops-detail" data-mid="${m.id}">
+        <div class="meeting-detail-hero">
+          <span>${profile[0]}</span>
+          <strong>${m.title}</strong>
+          <em>${m.startTime} · ${m.duration} 分钟 · ${m.attendees} 人</em>
+        </div>
+        <div class="meeting-detail-intent">
+          <div><span>COMMUNICATION TYPE</span><strong>${profile[1]}</strong></div>
+          <div><span>OWNER AGENT</span><strong>${profile[2]}</strong></div>
+        </div>
+        <div class="meeting-detail-card dark">
+          <span>AI FOLLOW-UP</span>
+          <strong>${profile[4]}</strong>
+          <p>${profile[3]}</p>
+        </div>
+        <div class="meeting-detail-section"><span>SUMMARY</span><strong>AI 会议摘要</strong></div>
+        <div class="meeting-detail-note">${s.overview || '会议摘要待生成，会议助手会在录音结束后自动整理关键议题、客户意图和待办。'}</div>
+        <div class="meeting-detail-section"><span>KEY POINTS</span><strong>关键讨论点</strong></div>
+        <div class="meeting-point-list">
+          ${points.map((p,i) => `<div><b>${String(i+1).padStart(2,'0')}</b><span>${p}</span></div>`).join('')}
+        </div>
+        <div class="meeting-detail-section"><span>ACTION ITEMS</span><strong>待办沉淀</strong></div>
+        <div class="meeting-action-list">
+          ${actions.map(a => `<div><b>${a.priority}</b><span>${a.task}</span><em>${a.owner} · ${a.deadline}</em></div>`).join('')}
+        </div>
+        <div class="meeting-detail-actions">
+          <button data-action="open-meeting-summary" data-mid="${m.id}">查看完整纪要</button>
+          <button data-action="open-agent-config" data-agent="meet">配置会议助手</button>
+        </div>
+        <div class="meeting-ops-safe"></div>
       </div>
     `;
   },
@@ -325,51 +417,93 @@ const VIEWS = {
     `;
   },
 
-  /* ============ 我的 ============ */
+  /* ============ 我的：私域运营工作台 ============ */
   'profile': () => {
     const d = PROFILE_DATA;
+    const agentState = (() => {
+      try { return JSON.parse(localStorage.getItem('umakex_agent_state') || '{}'); }
+      catch(e) { return {}; }
+    })();
+    const activeAgents = ['sales','cust','meet'].filter(k => agentState[k]).length || 3;
+    const ops = [
+      ['今日触达', '128', '+18', 'AI 已跟进 37 个新人'],
+      ['待处理客户', '9', 'P0', '3 个高意向需人工确认'],
+      ['复购机会', '24', '+6', '客服沉淀对话已回流销售'],
+      ['会议待办', '11', 'AUTO', '会议助手生成 6 条行动项']
+    ];
+    const agentRows = [
+      ['sales', 'AI 销售助手', '售前转化', '37 人跟进中', '新人资料 / 商品推荐 / 成交复盘'],
+      ['cust', 'AI 客服助手', '售后维护', '16 条待确认', 'FAQ / 情绪安抚 / 复购引导'],
+      ['meet', 'AI 会议助手', '会议沉淀', '3 场待总结', '录音 / 纪要 / 待办同步']
+    ];
     return `
-      <div class="phone-view" data-view="profile">
-        <div class="profile-header">
-          <div class="profile-avatar">${d.avatar}</div>
-          <div class="profile-info">
-            <div class="profile-name">${d.name}</div>
-            <div class="profile-account">${d.account} · ${d.dept}</div>
-            <div class="profile-meta">
-              <span class="profile-tag">${d.memberLevel}</span>
-              <span class="profile-points">${d.points.toLocaleString()} 积分</span>
+      <div class="phone-view profile-ops-view" data-view="profile">
+        <div class="profile-ops-hero">
+          <div class="profile-ops-kicker">PRIVATE DOMAIN OPS</div>
+          <div class="profile-ops-main">
+            <div class="profile-ops-avatar">${d.avatar}</div>
+            <div>
+              <h2>${d.name}</h2>
+              <p>${d.account} · ${d.dept} · 私域运营员</p>
+            </div>
+          </div>
+          <div class="profile-ops-summary">
+            <strong>${activeAgents}/3</strong>
+            <span>Agent 正在运行，销售、客服、会议数据统一沉淀到客户画像。</span>
+          </div>
+        </div>
+
+        <div class="profile-ops-stats">
+          ${ops.map(([label,num,tag,desc]) => `
+            <div class="profile-ops-stat">
+              <em>${label}</em>
+              <strong>${num}</strong>
+              <span>${tag}</span>
+              <p>${desc}</p>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="profile-ops-section profile-ops-agents">
+          <div class="profile-ops-title"><span>AGENT RUNNING STATUS</span><strong>Agent 运行状态</strong></div>
+          ${agentRows.map(([id,name,role,count,desc]) => `
+            <div class="profile-agent-row ${id}" data-action="open-agent-config" data-agent="${id}">
+              <div class="profile-agent-mark">${name.replace('AI ', '').slice(0,1)}</div>
+              <div class="profile-agent-copy">
+                <strong>${name}</strong>
+                <span>${role} · ${desc}</span>
+              </div>
+              <div class="profile-agent-count"><em>${count}</em><b>配置</b></div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="profile-ops-section profile-ops-assets">
+          <div class="profile-ops-title"><span>DATA ASSETS</span><strong>数据沉淀入口</strong></div>
+          <div class="profile-asset-grid">
+            <div class="profile-asset-card" data-action="open" data-target="contact">
+              <span>客户画像库</span><strong>6</strong><em>客户标签 / 购买意向 / 售后情绪</em>
+            </div>
+            <div class="profile-asset-card" data-action="open" data-target="chat-list">
+              <span>对话营销战报</span><strong>5</strong><em>新人沟通 / AI 建议 / 成交机会</em>
+            </div>
+            <div class="profile-asset-card" data-action="open" data-target="meeting-list">
+              <span>会议知识沉淀</span><strong>3</strong><em>纪要 / 待办 / 决策记录</em>
+            </div>
+            <div class="profile-asset-card hot" data-action="open" data-target="agent-center">
+              <span>Agent Center</span><strong>3</strong><em>销售 / 客服 / 会议助手</em>
             </div>
           </div>
         </div>
-        <div class="profile-actions">
-          <div class="action-btn">📱 二维码名片</div>
-          <div class="action-btn">✏️ 编辑资料</div>
+
+        <div class="profile-ops-section profile-ops-actions">
+          <button data-action="open" data-target="agent-center">进入 Agent Center</button>
+          <button data-action="open" data-target="contact">查看客户资产</button>
         </div>
-        <div class="profile-section">
-          <div class="profile-section-title">基础服务</div>
-          <div class="menu-grid">
-            <div class="menu-item"><div class="menu-icon">📦</div><div class="menu-name">订单</div><div class="menu-count">3</div></div>
-            <div class="menu-item"><div class="menu-icon">🎫</div><div class="menu-name">卡券</div><div class="menu-count">5</div></div>
-            <div class="menu-item"><div class="menu-icon">📁</div><div class="menu-name">收藏</div></div>
-            <div class="menu-item"><div class="menu-icon">📜</div><div class="menu-name">历史</div></div>
-          </div>
-        </div>
-        <div class="profile-section">
-          <div class="profile-section-title">应用中心</div>
-          <div class="app-grid">
-            <div class="app-item" data-action="open-agent-center"><div class="app-icon red">🤖</div><div class="app-name">AI Agent 中心</div><div class="app-new">NEW</div></div>
-            <div class="app-item"><div class="app-icon purple">🏢</div><div class="app-name">我的企业</div></div>
-            <div class="app-item"><div class="app-icon amber">👑</div><div class="app-name">会员中心</div></div>
-            <div class="app-item"><div class="app-icon green">📊</div><div class="app-name">数据中心</div></div>
-            <div class="app-item"><div class="app-icon">🎨</div><div class="app-name">模板</div></div>
-            <div class="app-item"><div class="app-icon gray">⚙️</div><div class="app-name">设置</div></div>
-          </div>
-        </div>
-        <div style="height: 60px;"></div>
+        <div class="profile-safe-space"></div>
       </div>
     `;
   },
-
 
   /* ============ AI Agent 中心：6 Agent 库 + 已开通区（方案 C）============ */
   'agent-center': () => {
@@ -485,9 +619,9 @@ const VIEWS = {
         caps:['FAQ 题库','售后规则','智能回答','情绪安抚','复购引导','转人工'],
       },
       meet: {
-        kicker:'P1 · MEETING TRANSCRIBER', title:'会议助手·小议', en:'AI MEETING · VOICE TO SUMMARY',
-        desc:'会议录音 → 文字转写 → 自动纪要 → 行动项跟踪。说话人识别、关键信息抽取、待办沉淀。30 分钟会议 30 秒看完。',
-        caps:['ASR 转写','说话人分离','关键决策','待办提取','中/英双语'],
+        kicker:'P1 · AI MEETING', title:'AI 会议助手', en:'AI MEETING · RECORD & SUMMARY',
+        desc:'会议录音、转写、纪要、行动项和意图分析 Agent。把销售会议、客户沟通和运营复盘沉淀成可追踪的客户沟通资产。',
+        caps:['会议录音','发言分离','关键决策','待办提取','日程同步','双语输出'],
       },
       img: {
         kicker:'P1 · IMAGE GENERATOR', title:'AI 生图·小艺', en:'AI IMAGE · TEXT TO PICTURE',
@@ -532,9 +666,9 @@ const VIEWS = {
         ['🎯', '跟进节奏', '跟进节奏配置', '首聊 / 培育 / 促单 / 复访', 'sales-followup'],
       ],
       cust: [
-        ['📚', 'FAQ 题库', 'FAQ 题库', '常见问题 / 标准答案', 'agent-kb'],
+        ['📚', 'FAQ 题库', 'FAQ 题库', '常见问题 / 标准答案 / 命中率', 'cust-faq'],
         ['📦', '售后规则', '售后规则', '退款 / 物流 / 发票 / 赔付', 'cust-after-sale-rules'],
-        ['💬', '智能回答', '智能回答配置', '语气 / 引用 / 禁用词', 'agent-persona'],
+        ['💬', '智能回答', '智能回答配置', '回答策略 / 引用规则 / 禁用词', 'cust-smart-reply'],
         ['🫶', '情绪安抚', '情绪安抚策略', '负面情绪 / 升级处理', 'cust-emotion-care'],
         ['🔁', '复购引导', '复购引导策略', '售后满意 / 二次推荐', 'cust-repurchase'],
         ['👤', '转人工规则', '转人工规则', '高风险 / 投诉 / 复杂问题', 'cust-human-handoff'],
@@ -590,18 +724,25 @@ const VIEWS = {
     };
     const visual = AGENT_VISUAL[agentId] || AGENT_VISUAL.cust;
 
+    const currentId = agentId === 'grow' ? 'sales' : agentId;
+    const themeName = currentId === 'meet' ? 'meeting' : currentId === 'cust' ? 'customer' : 'sales';
+    const moduleNoun = currentId === 'cust' ? '管理模块' : currentId === 'meet' ? '会议配置' : '销售配置';
+    const heroMetric = currentId === 'meet' ? '会议资料沉淀' : currentId === 'cust' ? '售后关系维护' : '售前营销转化';
     const capHTML = cfg.caps.map(t => `<span class="acc-cap">${t}</span>`).join('');
 
     return `
-      <div class="phone-view agent-subpage" data-view="agent-config" data-agent="${agentId}">
-        <!-- Hero：Agent 介绍卡 -->
-        <div class="acc-hero" style="border-left:3px solid ${visual.color}">
-          <div class="acc-hero-top">
-            <div class="acc-hero-icon" style="background:${visual.color}">${visual.avatar}</div>
-            <div class="acc-hero-id">
-              <span class="kicker-tag" style="background:${visual.soft};color:${visual.color}">${cfg.kicker}</span>
+      <div class="phone-view agent-subpage agent-config-app acc-theme-${themeName}" data-view="agent-config" data-agent="${currentId}" style="--acc-color:${visual.color};--acc-soft:${visual.soft}">
+        <div class="acc-app-hero">
+          <div class="acc-app-kicker">
+            <span>${cfg.kicker}</span>
+            <em>${subConfigs.length} MODULES</em>
+          </div>
+          <div class="acc-app-main">
+            <div class="acc-app-avatar">${visual.avatar}</div>
+            <div class="acc-app-titleblock">
               <h2 class="acc-hero-title">${cfg.title}</h2>
-              <div class="acc-hero-en">${cfg.en}</div>
+              <strong>${heroMetric}</strong>
+              <small>${cfg.en}</small>
             </div>
           </div>
           <p class="acc-hero-desc">${cfg.desc}</p>
@@ -611,15 +752,14 @@ const VIEWS = {
           </div>
         </div>
 
-        <!-- 子配置卡片（各 Agent 专属） -->
-        <div class="acc-section">
-          <div class="acc-section-label">
-            <span>${agentId === 'cust' ? '管理模块' : '功能配置'}</span>
-            <em>CONFIG · ${subConfigs.length} 项</em>
+        <div class="acc-section acc-app-section">
+          <div class="acc-section-label acc-app-section-label">
+            <span>${moduleNoun}</span>
+            <em>点击进入对应配置</em>
           </div>
-          <div class="acc-config-grid acc-config-editorial">
+          <div class="acc-config-list">
             ${subConfigs.map((c, idx) => `
-              <div class="acc-config-card ${idx === 0 ? 'is-primary' : ''}" data-action="open" data-target="${c[4]}">
+              <div class="acc-config-row ${idx === 0 ? 'is-primary' : ''}" data-action="open" data-target="${c[4]}">
                 <div class="acc-config-index">${String(idx + 1).padStart(2, '0')}</div>
                 <div class="acc-config-icon">${c[0]}</div>
                 <div class="acc-config-copy">
@@ -627,13 +767,13 @@ const VIEWS = {
                   <span>${c[2]}</span>
                   <em>${c[3]}</em>
                 </div>
-                <b>${idx === 0 ? '进入主配置 ›' : '打开 ›'}</b>
+                <b>›</b>
               </div>
             `).join('')}
           </div>
         </div>
 
-        <div style="height: 60px;"></div>
+        <div class="sub-safe-space"></div>
       </div>
     `;
   },
@@ -1011,6 +1151,137 @@ const VIEWS = {
         <div class="sub-safe-space"></div>
       </div>
     `;
+  },
+
+
+  /* ============ 客服助手：FAQ 题库 ============ */
+  'cust-faq': () => {
+    const faqs = [
+      ['订单多久发货？', '付款后 24 小时内发货，预售品按商品页时间执行。', '物流咨询', '92%'],
+      ['可以退款吗？', '未发货可申请退款；已发货按售后规则核验。', '退款售后', '88%'],
+      ['赠品少发怎么办？', '先道歉并核验订单，确认后补发赠品或等值券。', '补发赔付', '81%'],
+      ['发票怎么开？', '收集抬头、税号、邮箱，1 个工作日内开具。', '发票财务', '79%'],
+    ];
+    const blocks = [
+      ['12', '已启用 FAQ', '覆盖订单、物流、退款、发票'],
+      ['86%', '今日命中率', '低于 80% 的问题进入待优化'],
+      ['7', '待补充问题', '来自最近 24 小时人工会话'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-faq">
+        <div class="cust-hero"><span>CUSTOMER SERVICE FAQ</span><strong>FAQ 题库</strong><em>客服助手先检索题库，再生成可发送回答；未命中进入待补充池。</em></div>
+        <div class="cust-kpis">${blocks.map(b=>`<div><strong>${b[0]}</strong><span>${b[1]}</span><em>${b[2]}</em></div>`).join('')}</div>
+        <div class="sub-toolbar cust-toolbar"><button>＋ 新增 FAQ</button><button>导入文档</button><button>训练题库</button></div>
+        <div class="cust-section-title"><span>高频问题</span><em>FAQ · LIVE</em></div>
+        <div class="cust-faq-list">
+          ${faqs.map((f,i)=>`<div class="cust-faq-row"><b>Q${i+1}</b><div><strong>${f[0]}</strong><p>${f[1]}</p><span>${f[2]}</span></div><em>${f[3]}</em></div>`).join('')}
+        </div>
+        <div class="cust-ai-note"><strong>沉淀给销售助手</strong><span>客户反复追问的商品、价格、售后顾虑，会同步为销售助手的「客户顾虑标签」。</span></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：售后规则 ============ */
+  'cust-after-sale-rules': () => {
+    const rules = [
+      ['退款', '未发货直接退款；已发货需核验签收状态', '涉及争议金额时转人工'],
+      ['物流', '48 小时无物流更新先安抚，再查询快递异常', '连续 2 次异常升级工单'],
+      ['发票', '收集抬头/税号/邮箱，不承诺立即开票', '对公特殊发票转财务'],
+      ['补偿', '少发/错发优先补发，无法补发给等值券', '超过 ¥50 需人工确认'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-after-sale-rules">
+        <div class="cust-hero"><span>AFTER-SALE RULES</span><strong>售后规则</strong><em>把退款、物流、发票、赔付边界写清楚，避免 AI 乱承诺。</em></div>
+        <div class="cust-case-strip"><div><strong>4</strong><span>规则类型</span></div><div><strong>18%</strong><span>人工介入率</span></div><div><strong>4.6</strong><span>满意度</span></div></div>
+        <div class="cust-section-title"><span>规则矩阵</span><em>BOUNDARY · NO HBAR</em></div>
+        <div class="cust-rule-matrix">
+          ${rules.map((r,i)=>`<div><b>${String(i+1).padStart(2,'0')}</b><strong>${r[0]}</strong><span>${r[1]}</span><em>${r[2]}</em></div>`).join('')}
+        </div>
+        <div class="cust-ticket-card"><span>示例工单</span><strong>陈婉婷 · 赠品少发</strong><p>AI 先道歉 → 核验订单 → 承诺补发 → 记录复购券机会，不直接推销。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：智能回答 ============ */
+  'cust-smart-reply': () => {
+    const modes = [
+      ['准确优先', '必须引用 FAQ 或售后规则后再回答', 'active'],
+      ['安抚优先', '客户情绪异常时先共情，再处理问题', ''],
+      ['复购友好', '售后完成且满意后才允许轻推荐', ''],
+      ['合规保守', '遇到退款、投诉、金额争议自动降级', ''],
+    ];
+    const samples = [
+      ['客户说：赠品没收到', '先道歉，我帮您核验订单。确认少发后今天给您安排补发。'],
+      ['客户说：你们怎么这么慢', '理解您着急，我先帮您查物流节点，如果异常会立即生成工单。'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-smart-reply">
+        <div class="cust-hero"><span>SMART REPLY</span><strong>智能回答</strong><em>控制 AI 客服的语气、引用依据、禁用承诺和复购插入时机。</em></div>
+        <div class="cust-reply-persona"><div class="cust-avatar">客</div><div><strong>小客 · 克制服务型</strong><span>先解决问题，再维护关系；不在情绪异常时销售。</span></div></div>
+        <div class="cust-section-title"><span>回答模式</span><em>4 MODES</em></div>
+        <div class="cust-mode-grid">${modes.map(m=>`<button class="${m[2]}"><strong>${m[0]}</strong><span>${m[1]}</span></button>`).join('')}</div>
+        <div class="cust-section-title"><span>回复预览</span><em>BEFORE SEND</em></div>
+        <div class="cust-reply-preview">${samples.map(s=>`<div><span>${s[0]}</span><p>${s[1]}</p></div>`).join('')}</div>
+        <div class="cust-forbidden"><strong>禁用承诺</strong><span>马上到账 · 一定赔付 · 绝对没问题 · 保证满意 · 内部处理</span></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：情绪安抚 ============ */
+  'cust-emotion-care': () => {
+    const levels = [
+      ['L1', '轻微不满', '先道歉 + 解释流程', '继续 AI 处理'],
+      ['L2', '明显焦虑', '承认情绪 + 给明确时间点', '生成待跟进'],
+      ['L3', '愤怒投诉', '停止争辩 + 生成工单', '转人工'],
+      ['L4', '威胁曝光', '不再自动承诺', '立即人工介入'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-emotion-care">
+        <div class="cust-hero"><span>EMOTION CARE</span><strong>情绪安抚</strong><em>识别负面情绪等级，决定继续 AI 接待、生成工单或立即转人工。</em></div>
+        <div class="cust-emotion-ledger"><strong>今日情绪风险</strong><b>05</b><span>3 条已安抚 · 2 条转人工</span></div>
+        <div class="cust-section-title"><span>情绪阶梯</span><em>非水平进度条</em></div>
+        <div class="cust-emotion-steps">${levels.map((l,i)=>`<div class="risk-${i}"><b>${l[0]}</b><strong>${l[1]}</strong><span>${l[2]}</span><em>${l[3]}</em></div>`).join('')}</div>
+        <div class="cust-script-box"><span>安抚话术原则</span><p>先承认客户感受，再给可验证动作；不解释过多，不甩锅，不在情绪未恢复前推荐商品。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：复购引导 ============ */
+  'cust-repurchase': () => {
+    const triggers = [
+      ['售后已解决', '客户回复满意 / 问题关闭 24 小时后', '发送复购券或使用建议'],
+      ['高频咨询', '连续询问同类商品或服务权益', '推荐适配商品，不强促单'],
+      ['老客回访', '30 天内购买 2 次以上', '提供会员权益和组合包'],
+      ['负面恢复', '投诉处理后评分 ≥4', '只做关系维护，延迟推荐'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-repurchase">
+        <div class="cust-hero"><span>REPURCHASE GUIDE</span><strong>复购引导</strong><em>售后不是终点，满意后把服务会话转成下一次购买机会。</em></div>
+        <div class="cust-repurchase-hero"><div><span>本周复购机会</span><strong>23</strong><em>来自客服会话沉淀</em></div><b>→ 销售助手</b></div>
+        <div class="cust-section-title"><span>触发条件</span><em>SERVICE → SALES</em></div>
+        <div class="cust-trigger-list">${triggers.map((t,i)=>`<div><b>${String(i+1).padStart(2,'0')}</b><div><strong>${t[0]}</strong><span>${t[1]}</span><p>${t[2]}</p></div></div>`).join('')}</div>
+        <div class="cust-data-flow"><strong>数据流向</strong><span>客服会话 → 满意度/问题类型/商品顾虑 → 客户标签 → AI 销售助手二次营销判断</span></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 客服助手：转人工规则 ============ */
+  'cust-human-handoff': () => {
+    const handoffs = [
+      ['投诉/威胁曝光', '立即停止 AI 自动回复', 'P0'],
+      ['退款争议金额 > ¥50', '生成工单并附聊天摘要', 'P1'],
+      ['合同/发票/对公异常', '转财务或管理员确认', 'P1'],
+      ['AI 连续 2 次未解决', '自动邀请人工接管', 'P2'],
+    ];
+    return `
+      <div class="phone-view agent-subpage cust-config-page" data-view="cust-human-handoff">
+        <div class="cust-hero"><span>HUMAN HANDOFF</span><strong>转人工规则</strong><em>定义哪些场景必须停下 AI，交给人工处理，并把上下文带过去。</em></div>
+        <div class="cust-handoff-banner"><strong>人工接管不是失败</strong><span>高风险场景先保护客户关系，再让 AI 做摘要、标签和后续复盘。</span></div>
+        <div class="cust-section-title"><span>触发规则</span><em>RISK · PRIORITY</em></div>
+        <div class="cust-handoff-list">${handoffs.map(h=>`<div><em>${h[2]}</em><strong>${h[0]}</strong><span>${h[1]}</span></div>`).join('')}</div>
+        <div class="cust-handoff-summary"><span>转人工附带信息</span><p>客户身份、最近 10 条消息、命中 FAQ、情绪等级、AI 已承诺事项、建议人工处理动作。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
   },
 
   /* ============ 配置子页：客户标签 ============ */
@@ -1836,47 +2107,120 @@ const VIEWS = {
       </div>`;
   },
 
-  /* ============ 补齐子页精修版（会议/生图/写作） ============ */
-  /* ============ 补齐子页精修版（会议/生图/写作） ============ */
+  /* ============ 会议助手：录音设置 ============ */
   'meet-recording': () => {
+    const engines = [
+      ['标准转写', '普通会议 / 访谈 / 线上沟通', '实时标点 + 关键词'],
+      ['高精度转写', '客户会议 / 需求评审 / 重要谈判', '降噪 + 术语增强'],
+      ['只录音不转写', '内部留档 / 临时记录', '会后手动处理'],
+    ];
     return `
-      <div class="phone-view agent-subpage" data-view="meet-recording">
-        <div class="sub-hero" style="border-left:3px solid #10b981"><span>RECORDING SETTINGS</span><strong>录音设置</strong><em>ASR 引擎 / 语言 / 降噪 / 自动分段 — 会议 Agent 的耳朵</em></div>
-        <div class="sub-toolbar"><button>测试麦克风</button><button>保存配置</button></div>
-        <div class="sub-section-title"><span>音频处理</span><em>技术参数</em></div>
-        <div class="tech-matrix"><div><strong>识别引擎</strong><span>Deepgram Nova-2 · 98.3% 准确率</span></div><div><strong>识别语言</strong><span>中文普通话 + 英文混合，自动检测切换</span></div><div><strong>智能降噪</strong><span>会议室回声 · 键盘声 · 空调底噪 · 人声增强</span></div><div><strong>自动分段</strong><span>按发言停顿 + 议题切换 + 说话人变化，默认 15s 最小间隔</span></div></div>
-        <div class="sub-section-title"><span>高级规则</span><em>按需配置</em></div>
-        <div class="rule-sheet"><div><strong>静音过滤</strong><span>连续 5s 以上静音自动跳过，不生成空白段落。</span></div><div><strong>语速适配</strong><span>慢速说话保留完整自然停顿；快速说话自动收紧间距。</span></div></div>
+      <div class="phone-view agent-subpage meet-config-page" data-view="meet-recording">
+        <div class="meet-hero"><span>RECORDING SETUP</span><strong>录音设置</strong><em>配置 AI 会议助手如何录音、何时转写、哪些场景必须保留原始音频。</em></div>
+        <div class="meet-meter"><div><strong>48k</strong><span>采样率</span></div><div><strong>实时</strong><span>边录边转</span></div><div><strong>7天</strong><span>原音保留</span></div></div>
+        <div class="meet-section-title"><span>识别模式</span><em>ASR · MODE</em></div>
+        <div class="meet-mode-list">${engines.map((e,i)=>`<div class="${i===1?'active':''}"><b>${String(i+1).padStart(2,'0')}</b><strong>${e[0]}</strong><span>${e[1]}</span><em>${e[2]}</em></div>`).join('')}</div>
+        <div class="meet-rule-box"><strong>默认规则</strong><p>会议开始后自动提醒是否开启录音；客户会议默认高精度；检测到敏感词时保留原始音频，便于复核。</p></div>
         <div class="sub-safe-space"></div>
       </div>`;
   },
-  'meet-speakers': () => VIEWS['meeting-attendees'](),
-  'meet-template': () => VIEWS['meeting-summary-template'](),
-  'meet-todo': () => VIEWS['meeting-actions'](),
+
+  /* ============ 会议助手：发言分离 ============ */
+  'meet-speakers': () => {
+    const roles = [
+      ['主持人', '控制议程 / 推进结论', '自动识别高频发起问题者'],
+      ['客户方', '需求 / 异议 / 决策意见', '优先沉淀需求与风险'],
+      ['销售方', '承诺 / 报价 / 后续动作', '检查是否有过度承诺'],
+      ['技术方', '方案 / 排期 / 资源限制', '转为行动项和风险点'],
+    ];
+    return `
+      <div class="phone-view agent-subpage meet-config-page" data-view="meet-speakers">
+        <div class="meet-hero"><span>SPEAKER DIARIZATION</span><strong>发言分离</strong><em>把一段录音拆成不同说话人，并标注角色，纪要才不会混乱。</em></div>
+        <div class="meet-speaker-board"><div><strong>4</strong><span>默认角色</span></div><div><strong>92%</strong><span>角色识别</span></div></div>
+        <div class="meet-section-title"><span>角色规则</span><em>ROLE · LABEL</em></div>
+        <div class="meet-role-list">${roles.map((r,i)=>`<div><b>${String(i+1).padStart(2,'0')}</b><div><strong>${r[0]}</strong><span>${r[1]}</span><p>${r[2]}</p></div></div>`).join('')}</div>
+        <div class="meet-rule-box"><strong>低置信度处理</strong><p>同一声纹低于 70% 置信度时，纪要中先标为“待确认发言人”，不强行归属。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 会议助手：纪要模板 ============ */
+  'meet-template': () => {
+    const blocks = [
+      ['会议背景', '会议目的 / 参会角色 / 上下文'],
+      ['关键结论', '已确认事项 / 决策结果 / 共识'],
+      ['争议与风险', '未达成一致 / 资源不足 / 时间风险'],
+      ['客户意图', '采购意向 / 预算信号 / 顾虑点'],
+      ['行动项', '负责人 / 截止时间 / 依赖条件'],
+      ['销售跟进', '可同步给 AI 销售助手的下一步建议'],
+    ];
+    return `
+      <div class="phone-view agent-subpage meet-config-page" data-view="meet-template">
+        <div class="meet-hero"><span>MINUTES TEMPLATE</span><strong>纪要模板</strong><em>会议结束后不是生成流水账，而是输出可执行、可追踪、可复盘的结构化纪要。</em></div>
+        <div class="meet-template-paper"><strong>默认输出结构</strong><span>结论优先 · 风险单列 · 行动项独立编号</span></div>
+        <div class="meet-section-title"><span>模板字段</span><em>SUMMARY · BLOCKS</em></div>
+        <div class="meet-template-grid">${blocks.map((b,i)=>`<div><b>${String(i+1).padStart(2,'0')}</b><strong>${b[0]}</strong><span>${b[1]}</span></div>`).join('')}</div>
+        <div class="meet-rule-box"><strong>输出原则</strong><p>先写结论，再写过程；无法确认的内容标记“待确认”，禁止把推测写成事实。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 会议助手：行动项 ============ */
+  'meet-todo': () => {
+    const todos = [
+      ['确认报价边界', '销售负责人', '今天 18:00', '高'],
+      ['补充技术方案图', '技术同事', '明天 12:00', '中'],
+      ['客户发票抬头确认', '客服/财务', '2 天内', '中'],
+      ['下次会议议程', '主持人', '会前 1 天', '低'],
+    ];
+    return `
+      <div class="phone-view agent-subpage meet-config-page" data-view="meet-todo">
+        <div class="meet-hero"><span>ACTION ITEMS</span><strong>行动项</strong><em>把会议中的“回头再说”变成有负责人、有截止时间、有提醒的待办。</em></div>
+        <div class="meet-todo-stats"><div><strong>12</strong><span>待办模板</span></div><div><strong>3级</strong><span>优先级</span></div><div><strong>自动</strong><span>提醒</span></div></div>
+        <div class="meet-section-title"><span>提取样例</span><em>TODO · OWNER</em></div>
+        <div class="meet-todo-list">${todos.map(t=>`<div><em>${t[3]}</em><strong>${t[0]}</strong><span>${t[1]} · ${t[2]}</span></div>`).join('')}</div>
+        <div class="meet-rule-box"><strong>同步规则</strong><p>行动项确认后同步到会议详情和消息提醒；涉及客户转化的待办会同步给 AI 销售助手。</p></div>
+        <div class="sub-safe-space"></div>
+      </div>`;
+  },
+
+  /* ============ 会议助手：日程同步 ============ */
   'meet-calendar': () => {
-    const agenda=[{t:'今日 14:00',d:'产品方案会 · 自动开启录音提醒'},{t:'明日 10:30',d:'客户复盘会 · 自动准备上次纪要'},{t:'周五 16:00',d:'销售周会 · 输出行动项看板'},{t:'下周一 09:30',d:'产品评审 · 自动发送参会提醒'}];
+    const channels = [
+      ['IM 内会议', '自动读取参会人、群聊、会议链接', '已启用'],
+      ['系统日历', '同步日期、提醒、会议邀请', '待授权'],
+      ['客户跟进', '会后回访时间写入销售提醒', '已启用'],
+    ];
     return `
-      <div class="phone-view agent-subpage" data-view="meet-calendar">
-        <div class="sub-hero" style="border-left:3px solid #10b981"><span>CALENDAR SYNC</span><strong>日程同步</strong><em>同步会议 · 自动录音 · 纪要归档一条龙</em></div>
-        <div class="sub-toolbar"><button>连接日历</button><button>同步近 7 天</button></div>
-        <div class="sub-section-title"><span>即将到来的会议</span><em>联动 AI 自动准备</em></div>
-        <div class="agenda-list">${agenda.map(a=>`<div><strong>${a.t}</strong><span>${a.d}</span></div>`).join('')}</div>
-        <div class="rule-sheet"><div><strong>自动规则</strong><span>已授权的日历，AI 会在每次会议开始前 5 分钟自动启动录音和准备上次纪要。</span></div></div>
+      <div class="phone-view agent-subpage meet-config-page" data-view="meet-calendar">
+        <div class="meet-hero"><span>CALENDAR SYNC</span><strong>日程同步</strong><em>让会议助手知道会议从哪里来、什么时候提醒、会后跟进到哪里去。</em></div>
+        <div class="meet-calendar-card"><strong>下一场会议</strong><span>15:30 · VIC 客户需求评审</span><em>会前 10 分钟提醒开启录音</em></div>
+        <div class="meet-section-title"><span>同步通道</span><em>CHANNEL · STATUS</em></div>
+        <div class="meet-channel-list">${channels.map(c=>`<div><strong>${c[0]}</strong><span>${c[1]}</span><em>${c[2]}</em></div>`).join('')}</div>
+        <div class="meet-rule-box"><strong>权限边界</strong><p>只读取会议标题、时间、参会人和链接；不读取私人日历正文，不保存外部账号密钥。</p></div>
         <div class="sub-safe-space"></div>
       </div>`;
   },
+
+  /* ============ 会议助手：双语翻译 ============ */
   'meet-translate': () => {
+    const rows = [
+      ['中英双语纪要', '中文正文 + 英文摘要', '适合跨境客户会议'],
+      ['实时字幕', '会议中显示双语字幕', '适合多人远程会议'],
+      ['术语词库', '品牌名 / 产品名 / 行业词固定译法', '减少翻译误差'],
+      ['人工复核', '重要纪要导出前人工确认', '适合合同/报价场景'],
+    ];
     return `
-      <div class="phone-view agent-subpage" data-view="meet-translate">
-        <div class="sub-hero" style="border-left:3px solid #10b981"><span>BILINGUAL OUTPUT</span><strong>双语翻译</strong><em>中英双语字幕 + 纪要对译 + 术语保护</em></div>
-        <div class="sub-toolbar"><button>添加术语</button><button>翻译测试</button></div>
-        <div class="sub-section-title"><span>输出格式</span><em>默认配置</em></div>
-        <div class="tech-matrix"><div><strong>字幕</strong><span>中文原文 + 英文译文同步显示</span></div><div><strong>纪要</strong><span>中文完整版 + 英文摘要 + 关键决策双语对照</span></div><div><strong>术语保护</strong><span>品牌名、产品名、客户名保持原文，不自动翻译</span></div></div>
-        <div class="sub-section-title"><span>术语库</span><em>已录入 5 条</em></div>
-        <div class="keyword-cloud"><span>ARR</span><span>Pipeline</span><span>PoC</span><span>企业版</span><span>私域</span></div>
+      <div class="phone-view agent-subpage meet-config-page" data-view="meet-translate">
+        <div class="meet-hero"><span>BILINGUAL OUTPUT</span><strong>双语翻译</strong><em>跨境会议不只翻译文字，还要保留角色、结论、行动项和专业术语。</em></div>
+        <div class="meet-translate-split"><div><b>ZH</b><strong>客户希望下周确认报价边界。</strong></div><div><b>EN</b><strong>The client expects the pricing boundary to be confirmed next week.</strong></div></div>
+        <div class="meet-section-title"><span>输出模式</span><em>LANG · MODE</em></div>
+        <div class="meet-translate-list">${rows.map((r,i)=>`<div><b>${String(i+1).padStart(2,'0')}</b><strong>${r[0]}</strong><span>${r[1]}</span><em>${r[2]}</em></div>`).join('')}</div>
+        <div class="meet-rule-box"><strong>术语规则</strong><p>产品名、人名、品牌名优先使用词库；低置信度译文会标记“需确认”，不直接进入正式纪要。</p></div>
         <div class="sub-safe-space"></div>
       </div>`;
   },
+
   'img-sizes': () => {
     return `
       <div class="phone-view agent-subpage" data-view="img-sizes">
@@ -1964,45 +2308,53 @@ const VIEWS = {
       </div>`;
   },
 
-  /* ============ 真人单聊 ============ */
+  /* ============ 真人单聊：AI 自动沟通演示 ============ */
   'chat-single': (cid) => {
     const c = getContact(cid) || CONTACTS[0];
     const thread = (typeof CUSTOMER_THREADS !== 'undefined' && CUSTOMER_THREADS[c.id])
       ? CUSTOMER_THREADS[c.id]
       : { profile: c.dept || '客户资料待补充', insight: '暂无 AI 洞察', product: '待匹配商品', next: '继续跟进客户需求。', messages: CHAT_WITH_NATSUME };
     const relatedChat = CHATS.find(x => x.contactId === c.id) || {};
+    const demo = getAiDemoThread(c, thread, relatedChat);
     return `
-      <div class="phone-view marketing-chat-detail" data-view="chat-single" data-cid="${c.id}">
-        <div class="customer-ai-panel">
-          <div class="cap-head">
+      <div class="phone-view marketing-chat-detail ai-demo-chat" data-view="chat-single" data-cid="${c.id}">
+        <div class="ai-demo-brief">
+          <div class="demo-brief-head">
             <div>
-              <span>${c.intent || '客户意图'}</span>
+              <span>${demo.agent}</span>
               <strong>${c.name}</strong>
+              <em>${demo.scene}</em>
             </div>
-            <b>${c.score || relatedChat.score || '--'}</b>
+            <b>${demo.score}</b>
           </div>
-          <div class="cap-profile">${thread.profile}</div>
-          <div class="cap-grid">
-            <div><em>阶段</em><strong>${c.stage || '跟进'}</strong></div>
-            <div><em>来源</em><strong>${c.source || '私域'}</strong></div>
-            <div><em>推荐</em><strong>${thread.product}</strong></div>
+          <div class="demo-brief-tags">
+            ${demo.tags.map(t => `<i>${t}</i>`).join('')}
           </div>
-          <div class="cap-next"><span>AI 下一步</span>${thread.next}</div>
+          <div class="demo-brief-next"><span>AI 托管中</span>${demo.goal}</div>
         </div>
-        <div class="chat-page-body marketing-thread" id="chatBody-${c.id}" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
-          <div class="bubble-time">${relatedChat.time || '刚刚'} · ${c.agent || 'AI 助手'} 已分析</div>
-          <div class="ai-insight-card"><span>洞察</span>${thread.insight}</div>
-          ${thread.messages.map((m) => `
-            <div class="msg-row ${m.from === 'them' ? 'them' : 'me'}">
-              ${m.from === 'them' ? `<div class="msg-avatar">${c.avatar}</div>` : ''}
-              <div class="bubble ${m.from === 'them' ? 'them' : 'me'}">${m.text}</div>
-            </div>
-          `).join('')}
+
+        <div class="ai-demo-stage" id="aiDemoStage-${c.id}">
+          <div class="bubble-time demo-time">自动演示 · ${demo.agent} 正在替你沟通</div>
+          ${demo.steps.map((step, idx) => renderAiDemoStep(step, idx, c, demo)).join('')}
+          <div class="ai-thinking-card ai-core-scene demo-step" style="--d:3.9s;">
+            <span>CORE SCENE</span>
+            <strong>${demo.insight}</strong>
+            <em>AI 会读取资料、思考策略，再自动回复客户。</em>
+          </div>
+          <div class="ai-demo-done demo-step" style="--d:${demo.doneDelay}s;">
+            <span>AI 已完成本轮回复</span>
+            <strong>${demo.done}</strong>
+          </div>
+          <div class="sub-safe-space"></div>
         </div>
-        <div class="chat-input-bar marketing-input-bar" style="position:relative;bottom:0;">
-          <div class="icon-btn">🤖</div>
-          <input type="text" class="msg-input" id="msgInput-${c.id}" placeholder="输入消息，或让 AI 生成回复..." data-cid="${c.id}">
-          <div class="send-btn ai-send" data-action="send-chat" data-cid="${c.id}">发送</div>
+
+        <div class="ai-copilot-bar">
+          <div>
+            <span class="live-dot"></span>
+            <strong>${demo.agent} 托管中</strong>
+            <em>${demo.strategy}</em>
+          </div>
+          <button>人工接管</button>
         </div>
       </div>
     `;
@@ -2096,6 +2448,133 @@ const VIEWS = {
   }
 };
 
+
+function getAiDemoThread(c, thread, relatedChat) {
+  const base = {
+    agent: c.agent || relatedChat.aiAgent || 'AI 销售助手',
+    scene: c.dept || '私域客户沟通',
+    score: c.score || relatedChat.score || 72,
+    tags: [c.intent || relatedChat.aiTag || 'AI识别', c.stage || '跟进中', c.source || '私域'].slice(0,3),
+    strategy: relatedChat.aiNext || thread.next || '根据客户意图生成下一步话术',
+    insight: thread.insight || 'AI 正在读取客户画像并匹配沟通策略。',
+    goal: thread.next || '继续跟进客户需求。',
+    done: '已沉淀本轮客户意图，等待下一次客户回复。'
+  };
+  const demos = {
+    u01: {
+      agent:'AI 销售助手', scene:'体验装升级 · 宝妈副业', score:92,
+      tags:['高意向','宝妈','预算谨慎'], strategy:'信任建立型 + 低门槛促单',
+      insight:'AI 识别到客户想了解副业，但对投入和风险敏感。',
+      goal:'解释体验装可抵扣升级，降低首次尝试门槛。',
+      done:'客户已进入「高意向 · 可继续成交推进」队列。',
+      steps:[
+        {type:'customer', text:'我看你朋友圈发的那个副业项目，是怎么做的呀？'},
+        {type:'thinking', lines:['读取客户资料：宝妈 / 副业兴趣 / 预算谨慎','匹配策略：信任建立型 + 低门槛促单','回复目标：先建立安全感，不直接逼单']},
+        {type:'ai', text:'小夏，这个项目适合碎片时间做副业。你可以先从体验装开始，不用一开始投入很多。'},
+        {type:'customer', text:'如果先拿体验装，后面能补差价升级吗？'},
+        {type:'thinking', lines:['识别成交卡点：怕浪费 / 怕升级成本','调用规则：体验装金额可抵扣升级','下一步：给出明确承诺和升级路径']},
+        {type:'ai', text:'可以的，体验装金额后面能抵扣升级。你先体验流程，确定适合再升级，这样风险更低。'}
+      ]
+    },
+    u02: {
+      agent:'AI 销售助手', scene:'招商咨询 · 团队结算', score:86,
+      tags:['项目方','社群主理人','佣金规则'], strategy:'专家顾问型 + 规则解释',
+      insight:'AI 判断客户不是普通买家，而是在评估团队合作和项目方权益。',
+      goal:'解释团队结算方式，并引导申请项目方权益。',
+      done:'已生成招商跟进记录，建议推送项目方权益说明。',
+      steps:[
+        {type:'customer', text:'佣金规则我看懂了，想知道团队怎么结算。'},
+        {type:'thinking', lines:['读取身份：社群主理人 / 团队资源','匹配策略：先讲结算，再讲权益','回复目标：降低规则理解成本']},
+        {type:'ai', text:'周总，团队结算可以按个人业绩和团队分润两层看。我先把佣金比例、结算周期和项目方权益分开讲清楚。'},
+        {type:'customer', text:'如果我拉 20 个人进来，后台能看到每个人的数据吗？'},
+        {type:'thinking', lines:['识别需求：团队管理后台','匹配卖点：成员数据 / 订单 / 分润','下一步：引导预约项目方方案']},
+        {type:'ai', text:'可以看。后台会沉淀成员、订单、分润和跟进状态。您如果要带 20 人，我建议直接按项目方方案配置。'}
+      ]
+    },
+    u03: {
+      agent:'AI 客服助手', scene:'售后安抚 · 补发赠品', score:68,
+      tags:['售后问题','情绪安抚','复购券'], strategy:'先安抚 + 补偿 + 复购引导',
+      insight:'AI 客服识别到客户不满来自漏发赠品，适合先补发再轻推复购券。',
+      goal:'稳定客户情绪，完成补发，并把复购机会回流给销售助手。',
+      done:'售后已完成安抚，客户被标记为「可复购」。',
+      steps:[
+        {type:'customer', text:'昨天拍的套装少了一个赠品。'},
+        {type:'thinking', lines:['识别问题：漏发赠品 / 售后不满','匹配客服策略：先道歉，再给解决方案','调用规则：补发赠品 + 复购券']},
+        {type:'ai', text:'婉婷，不好意思，这个我马上帮你处理。赠品今天给你补发，同时给你补一张复购券。'},
+        {type:'customer', text:'那大概什么时候能发？'},
+        {type:'thinking', lines:['客户关注时效','查询售后 SOP：当日登记 / 次日发出','下一步：给明确时间，避免情绪升级']},
+        {type:'ai', text:'我现在就登记，正常明天发出。发出后我会把单号同步给你，这次不用你再重复提交信息。'}
+      ]
+    },
+    u04: {
+      agent:'AI 销售助手', scene:'群转化 · 价格敏感识别', score:79,
+      tags:['新人群','价格敏感','批量私聊'], strategy:'群内低门槛解释 + 重点客户私聊',
+      insight:'AI 在新人群里识别到 3 个价格敏感用户，适合群内统一解释，再私聊重点人群。',
+      goal:'群内发送低门槛体验装话术，并对 3 人单独私聊。',
+      done:'已识别 3 个私聊对象，并生成群内低门槛解释话术。',
+      steps:[
+        {type:'customer', text:'群里有人问：这个是不是一开始就要囤很多货？'},
+        {type:'thinking', lines:['扫描群聊：23 人新人培育群','识别关键词：囤货 / 投入 / 怕亏','策略：公开解释低门槛，再私聊高意向用户']},
+        {type:'ai', text:'大家不用一开始囤很多货。新人可以先从体验装开始，先熟悉流程和话术，再决定要不要升级。'},
+        {type:'customer', text:'有 3 个人又追问体验装价格。'},
+        {type:'thinking', lines:['标记 3 个价格敏感用户','生成私聊开场白','同步销售助手：逐个跟进']},
+        {type:'ai', text:'我已经标记这 3 位用户，会逐个私聊解释体验装、升级抵扣和适合人群，避免群里反复刷屏。'}
+      ]
+    },
+    u05: {
+      agent:'AI 销售助手', scene:'大单机会 · 企业采购方案', score:95,
+      tags:['高净值','企业采购','15:00 预约'], strategy:'方案整理 + 会议前预热',
+      insight:'AI 判断客户已进入大单决策阶段，重点是提前整理采购方案和 ROI 逻辑。',
+      goal:'在 15:00 前输出企业采购方案，并引导客户确认决策人。',
+      done:'企业采购方案已准备，建议 15:00 人工接管成交沟通。',
+      steps:[
+        {type:'customer', text:'我下午三点有空，你让 AI 先整理一下方案。'},
+        {type:'thinking', lines:['读取客户画像：高净值 / 企业采购','匹配策略：方案型成交','准备材料：采购清单 / ROI / 交付周期']},
+        {type:'ai', text:'赵总，可以。我先按企业采购场景整理一版方案，包含产品组合、预算区间和交付节奏。'},
+        {type:'customer', text:'重点帮我看一下团队使用和售后保障。'},
+        {type:'thinking', lines:['识别决策重点：团队使用 / 售后保障','调用资料：企业版服务承诺','下一步：确认决策人和会议时间']},
+        {type:'ai', text:'明白。我会把团队账号、培训支持和售后保障单独列出来。15:00 沟通时，也建议您把最终决策人一起拉上。'}
+      ]
+    }
+  };
+  const picked = demos[c.id] || {
+    ...base,
+    steps:[
+      {type:'customer', text:(thread.messages && thread.messages[0] && thread.messages[0].text) || c.lastMsg || '这个具体怎么操作？'},
+      {type:'thinking', lines:['读取客户画像与历史对话','匹配标签策略与商品卖点','生成本轮建议回复']},
+      {type:'ai', text:thread.next || '我先根据你的情况给你一个低门槛方案，你可以看完再决定是否继续。'},
+      {type:'customer', text:'可以，你先发我看看。'},
+      {type:'thinking', lines:['客户允许继续沟通','记录意向变化','准备下一轮跟进']},
+      {type:'ai', text:'好的，我把重点整理成 3 点发你：适合人群、前期投入和后续升级路径。你看完有疑问我再逐条解释。'}
+    ]
+  };
+  const steps = picked.steps || base.steps || [];
+  return {...base, ...picked, steps, doneDelay: (steps.length * .72 + .9).toFixed(1)};
+}
+
+function renderAiDemoStep(step, idx, c, demo) {
+  const delay = (idx * .72 + .18).toFixed(1);
+  if (step.type === 'thinking') {
+    return `
+      <div class="ai-thinking-card ai-demo-loading demo-step" style="--d:${delay}s;">
+        <span>${demo.agent} 正在思考</span>
+        <div class="ai-thinking-dots"><i></i><i></i><i></i></div>
+        ${step.lines.map(line => `<em>${line}</em>`).join('')}
+      </div>
+    `;
+  }
+  const isCustomer = step.type === 'customer';
+  return `
+    <div class="msg-row ${isCustomer ? 'them' : 'me'} ai-demo-msg demo-step" style="--d:${delay}s;">
+      ${isCustomer ? `<div class="msg-avatar">${c.avatar}</div>` : `<div class="msg-agent-badge">AI</div>`}
+      <div class="bubble ${isCustomer ? 'them' : 'me'}">
+        ${!isCustomer ? `<b>${demo.agent}</b>` : ''}
+        <span>${step.text}</span>
+      </div>
+    </div>
+  `;
+}
+
 /* === 视图辅助函数 === */
 function renderChatItem(chat) {
   const c = getContact(chat.contactId);
@@ -2121,9 +2600,27 @@ function renderChatItem(chat) {
         </div>
         <div class="item-msg">${chat.lastMsg}</div>
         <div class="ai-next-line"><span>${chat.aiAgent || c.agent || 'AI'}</span>${chat.aiNext || 'AI 已生成下一步建议'}</div>
+        <div class="ai-live-line"><i></i>AI 自动沟通演示 · 点击查看</div>
       </div>
       <div class="case-score"><b>${score || '--'}</b><em>意向</em></div>
-      ${chat.unread ? `<div class="unread">${chat.unread}</div>` : ''}
+    </a>
+  `;
+}
+
+
+function renderMarketingContactItem(c) {
+  const score = c.score || 60;
+  const scoreClass = score >= 90 ? 'hot' : score >= 80 ? 'warm' : score >= 70 ? 'care' : 'cold';
+  const agentClass = c.agent === 'AI 客服助手' ? 'service' : c.agent === 'AI 会议助手' ? 'meet' : 'sales';
+  return `
+    <a class="contact-profile-row ${scoreClass}" data-action="open" data-target="contact-profile:${c.id}">
+      <div class="contact-row-avatar ${c.isVip ? 'vip' : ''}">${c.avatar}</div>
+      <div class="contact-row-main">
+        <div class="contact-row-top"><strong>${c.name}</strong><span>${c.intent || c.type}</span></div>
+        <p>${c.dept || c.lastMsg || '客户资料待补充'}</p>
+        <div class="contact-row-tags"><em>${c.stage || '未分层'}</em><em>${c.source || '未知来源'}</em><em class="${agentClass}">${c.agent || 'AI 待分配'}</em></div>
+      </div>
+      <div class="contact-row-score"><b>${score}</b><span>SCORE</span></div>
     </a>
   `;
 }
