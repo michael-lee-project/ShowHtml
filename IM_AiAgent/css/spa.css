@@ -9596,3 +9596,1909 @@ body {
   overflow: hidden !important;
   -webkit-line-clamp: 2 !important;
 }
+
+/* === v37 AI Command Glass Skin: non-editorial visual layer, CSS-only ===
+ * Scope: visual skin only. No JS/routes/data-action changes.
+ * Tone: high-end AI operations console · dark glass · electric cyan/purple.
+ */
+:root{
+  --v37-bg-0:#05070d;
+  --v37-bg-1:#0b1020;
+  --v37-bg-2:#11182a;
+  --v37-panel:rgba(15,23,42,.78);
+  --v37-panel-2:rgba(24,33,55,.86);
+  --v37-line:rgba(148,163,184,.22);
+  --v37-line-strong:rgba(125,211,252,.42);
+  --v37-ink:#eef7ff;
+  --v37-muted:#9fb0c8;
+  --v37-dim:#708199;
+  --v37-cyan:#20d6ff;
+  --v37-blue:#4f7cff;
+  --v37-violet:#9b5cff;
+  --v37-green:#42f5a7;
+  --v37-amber:#ffd166;
+  --v37-red:#ff5c7a;
+  --v37-radius-lg:24px;
+  --v37-radius-md:18px;
+  --v37-radius-sm:12px;
+  --v37-font:Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  --v37-mono:"SF Mono", "JetBrains Mono", "DM Mono", ui-monospace, monospace;
+}
+
+html,body{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(32,214,255,.18), transparent 30%),
+    radial-gradient(circle at 84% 12%, rgba(155,92,255,.20), transparent 32%),
+    linear-gradient(135deg, #03050a 0%, #071020 48%, #05070d 100%) !important;
+  color:var(--v37-ink) !important;
+  font-family:var(--v37-font) !important;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(circle at center, #000 0%, transparent 76%);
+  opacity:.42;
+  z-index:0;
+}
+.phone-only-shell,
+.phone-prototype-stage{ position:relative; z-index:1; }
+.phone-prototype-stage{
+  min-height:100vh !important;
+  background:transparent !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:28px 0 !important;
+}
+.phone-frame{
+  background:linear-gradient(145deg, rgba(229,244,255,.92), rgba(58,72,105,.72) 18%, #05070d 58%, #01030a 100%) !important;
+  border:1px solid rgba(226,242,255,.35) !important;
+  box-shadow:
+    0 34px 90px rgba(0,0,0,.62),
+    0 0 0 10px rgba(255,255,255,.035),
+    0 0 70px rgba(32,214,255,.22) !important;
+  border-radius:42px !important;
+}
+.phone-frame::before{ opacity:.26 !important; background:linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent) !important; }
+.phone-screen{
+  background:
+    radial-gradient(circle at 50% -6%, rgba(32,214,255,.20), transparent 24%),
+    linear-gradient(180deg, #0e1628 0%, #080d18 46%, #05070d 100%) !important;
+  color:var(--v37-ink) !important;
+  border:1px solid rgba(255,255,255,.09) !important;
+  overflow:hidden !important;
+}
+.phone-statusbar,
+.phone-header{
+  background:rgba(6,10,18,.70) !important;
+  color:var(--v37-ink) !important;
+  border-color:rgba(148,163,184,.13) !important;
+  backdrop-filter:blur(18px) saturate(1.3) !important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.3) !important;
+  font-family:var(--v37-font) !important;
+}
+.phone-header{ box-shadow:0 12px 28px rgba(0,0,0,.22) !important; }
+.ph-title{ color:var(--v37-ink) !important; font-weight:800 !important; letter-spacing:-.02em !important; }
+.ph-back,.ph-action{ color:var(--v37-cyan) !important; }
+.phone-content{ background:transparent !important; }
+.phone-tabbar{
+  background:rgba(5,8,14,.88) !important;
+  border-top:1px solid rgba(125,211,252,.18) !important;
+  box-shadow:0 -18px 42px rgba(0,0,0,.42) !important;
+  backdrop-filter:blur(20px) saturate(1.35) !important;
+  -webkit-backdrop-filter:blur(20px) saturate(1.35) !important;
+}
+.phone-tabbar-item{ color:var(--v37-dim) !important; font-family:var(--v37-font) !important; }
+.phone-tabbar-item.active{ color:var(--v37-cyan) !important; }
+.phone-tabbar-item.active .pt-icon{
+  background:linear-gradient(135deg, rgba(32,214,255,.18), rgba(155,92,255,.24)) !important;
+  color:var(--v37-ink) !important;
+  box-shadow:0 0 24px rgba(32,214,255,.28) !important;
+}
+.phone-tabbar-agent .pt-icon{
+  background:linear-gradient(135deg, var(--v37-cyan), var(--v37-violet)) !important;
+  color:#03050a !important;
+  box-shadow:0 0 26px rgba(32,214,255,.45) !important;
+}
+
+/* Shared app surfaces */
+.phone-view,
+.chat-list-view,
+.ai-marketing-msg,
+.contact-marketing-view,
+.meeting-ops-view,
+.profile-ops-view,
+.ac-editorial,
+.agent-config-app,
+.ai-scene-demo,
+.contact-profile-page,
+.meeting-ops-detail{
+  background:transparent !important;
+  color:var(--v37-ink) !important;
+  font-family:var(--v37-font) !important;
+}
+.phone-view *{ font-family:inherit; }
+.phone-view h1,.phone-view h2,.phone-view h3,
+.ac-mag-titleline,.acc-hero-title,
+.msg-report-hero strong,
+.contact-mkt-hero strong,
+.meeting-ops-hero strong,
+.profile-ops-main strong{
+  font-family:var(--v37-font) !important;
+  letter-spacing:-.035em !important;
+  font-style:normal !important;
+  color:var(--v37-ink) !important;
+}
+.phone-view span[class*="kicker"],
+.msg-section-head span,
+.scene-head span,
+.contact-section-title span,
+.meeting-ops-section-title span,
+.profile-ops-kicker,
+.ac-mag-kicker,
+.acc-app-kicker,
+.acc-cap,
+.acc-section-label,
+.ac-section-label{
+  font-family:var(--v37-mono) !important;
+  color:var(--v37-cyan) !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+}
+
+/* Search */
+.top-search,
+.contact-mkt-search,
+.contact-search{
+  background:rgba(15,23,42,.72) !important;
+  border:1px solid rgba(125,211,252,.22) !important;
+  border-radius:18px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+.search-input,
+.top-search input{
+  background:transparent !important;
+  color:var(--v37-ink) !important;
+}
+.search-input::placeholder,.top-search input::placeholder{ color:rgba(159,176,200,.72) !important; }
+
+/* Message home */
+.msg-report-hero,
+.contact-mkt-hero,
+.meeting-ops-hero,
+.profile-ops-hero,
+.ac-mag-hero,
+.acc-app-hero,
+.contact-profile-hero,
+.meeting-detail-hero,
+.scene-demo-brief,
+.ai-demo-brief{
+  background:
+    linear-gradient(135deg, rgba(32,214,255,.13), rgba(155,92,255,.12)),
+    rgba(15,23,42,.76) !important;
+  border:1px solid rgba(125,211,252,.24) !important;
+  border-radius:var(--v37-radius-lg) !important;
+  color:var(--v37-ink) !important;
+  box-shadow:0 16px 34px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.10) !important;
+  backdrop-filter:blur(18px) !important;
+  -webkit-backdrop-filter:blur(18px) !important;
+}
+.msg-report-hero::before,
+.contact-mkt-hero::before,
+.meeting-ops-hero::before,
+.profile-ops-hero::before,
+.ac-mag-hero::before,
+.acc-app-hero::before{
+  background:radial-gradient(circle, rgba(32,214,255,.28), transparent 62%) !important;
+  opacity:.8 !important;
+}
+.msg-report-hero em,
+.contact-mkt-hero em,
+.meeting-ops-hero em,
+.profile-ops-summary,
+.acc-hero-desc,
+.ac-library-copy p,
+.ac-agent-copy p,
+.agent-card p{ color:var(--v37-muted) !important; }
+
+.msg-section-head strong,
+.scene-head strong,
+.contact-mkt-title,
+.meeting-ops-section-title strong,
+.profile-ops-title,
+.ac-section strong,
+.acc-app-section-label strong{ color:var(--v37-ink) !important; }
+.msg-section-head em,
+.scene-head em,
+.contact-section-title em,
+.meeting-ops-section-title em{ color:var(--v37-dim) !important; }
+
+.ai-scene-strip{
+  background:transparent !important;
+  border:0 !important;
+  scrollbar-color:rgba(32,214,255,.45) transparent;
+}
+.ai-scene-chip{
+  background:rgba(17,24,39,.82) !important;
+  border:1px solid rgba(125,211,252,.22) !important;
+  border-radius:18px !important;
+  color:var(--v37-ink) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 10px 22px rgba(0,0,0,.20) !important;
+}
+.ai-scene-chip strong{ color:var(--v37-ink) !important; }
+.ai-scene-chip span{ color:var(--v37-cyan) !important; font-family:var(--v37-mono) !important; }
+.ai-scene-chip em{ color:var(--v37-muted) !important; }
+.ai-scene-chip:active{ transform:scale(.985) !important; }
+
+.ai-inbox-item,
+.ac-open-row,
+.ac-library-row,
+.ac-core-card,
+.ac-scene-row,
+.acc-config-row,
+.contact-profile-row,
+.contact-insight-card,
+.contact-product-match,
+.contact-mini-chat,
+.meeting-ops-card,
+.meeting-detail-card,
+.meeting-detail-note,
+.profile-agent-row,
+.profile-asset-card,
+.customer-bg-row,
+.customer-bg-field,
+.persona-card{
+  background:rgba(15,23,42,.78) !important;
+  border:1px solid rgba(148,163,184,.18) !important;
+  border-radius:var(--v37-radius-md) !important;
+  color:var(--v37-ink) !important;
+  box-shadow:0 12px 26px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.07) !important;
+}
+.ai-inbox-title,
+.ac-library-copy strong,
+.ac-core-main strong,
+.acc-config-copy strong,
+.contact-row-top strong,
+.meeting-ops-card-top strong,
+.profile-agent-copy strong,
+.profile-asset-card strong{ color:var(--v37-ink) !important; }
+.ai-inbox-desc,
+.ac-library-meta,
+.acc-config-copy p,
+.contact-row-main p,
+.meeting-ops-meta,
+.meeting-ops-ai,
+.profile-agent-copy p,
+.profile-asset-card span{ color:var(--v37-muted) !important; }
+.ai-inbox-rank,
+.ac-library-no,
+.ac-core-index,
+.acc-config-index,
+.customer-bg-no{
+  color:var(--v37-cyan) !important;
+  border-color:rgba(32,214,255,.32) !important;
+  background:rgba(32,214,255,.08) !important;
+  font-family:var(--v37-mono) !important;
+}
+.ai-inbox-tag,
+.ac-library-btn,
+.ac-core-btn,
+.contact-agent-actions button,
+.meeting-ops-actions button,
+.meeting-detail-action,
+.profile-ops-actions button{
+  background:linear-gradient(135deg, rgba(32,214,255,.95), rgba(155,92,255,.95)) !important;
+  color:#03050a !important;
+  border:0 !important;
+  border-radius:999px !important;
+  font-weight:800 !important;
+  box-shadow:0 10px 24px rgba(32,214,255,.26) !important;
+}
+
+/* Avatars / marks */
+.ac-avatar,
+.ac-library-mark,
+.acc-app-avatar,
+.acc-config-icon,
+.contact-profile-avatar,
+.contact-row-avatar,
+.profile-ops-avatar,
+.profile-agent-mark,
+.msg-avatar.agent{
+  background:linear-gradient(135deg, rgba(32,214,255,.92), rgba(155,92,255,.92)) !important;
+  color:#03050a !important;
+  border:1px solid rgba(255,255,255,.24) !important;
+  box-shadow:0 0 22px rgba(32,214,255,.26) !important;
+}
+.contact-row-avatar,
+.msg-avatar:not(.agent){
+  background:linear-gradient(135deg, #1e293b, #334155) !important;
+  color:var(--v37-ink) !important;
+}
+
+/* Stats / chips */
+.contact-mkt-stats,
+.meeting-ops-stats,
+.profile-ops-stats,
+.ac-mag-stats,
+.acc-caps,
+.contact-profile-tags,
+.contact-row-tags,
+.demo-brief-tags{
+  color:var(--v37-muted) !important;
+}
+.contact-mkt-stats > *,
+.meeting-ops-stats > *,
+.profile-ops-stat,
+.ac-mag-stats > *,
+.acc-caps > *,
+.contact-profile-tags > *,
+.contact-row-tags > *,
+.demo-brief-tags i,
+.ai-tag,
+.msg-agent-badge,
+.meeting-tag{
+  background:rgba(32,214,255,.09) !important;
+  border:1px solid rgba(125,211,252,.22) !important;
+  color:var(--v37-cyan) !important;
+  border-radius:999px !important;
+  font-family:var(--v37-mono) !important;
+}
+.profile-ops-stat strong,
+.contact-profile-score strong{ color:var(--v37-green) !important; }
+
+/* Chat demo */
+.ai-demo-stage,
+.chat-page-body{
+  background:transparent !important;
+}
+.ai-demo-msg .bubble,
+.msg-row .bubble,
+.agent-msg-row .bubble{
+  background:rgba(30,41,59,.88) !important;
+  color:var(--v37-ink) !important;
+  border:1px solid rgba(148,163,184,.16) !important;
+  border-radius:18px !important;
+  box-shadow:0 10px 20px rgba(0,0,0,.18) !important;
+}
+.ai-demo-msg.agent .bubble,
+.agent-msg-row .bubble{
+  background:linear-gradient(135deg, rgba(32,214,255,.16), rgba(155,92,255,.15)), rgba(15,23,42,.90) !important;
+  border-color:rgba(125,211,252,.26) !important;
+}
+.ai-thinking-card,
+.ai-demo-loading{
+  background:rgba(4,12,24,.86) !important;
+  border:1px solid rgba(32,214,255,.25) !important;
+  border-radius:18px !important;
+  color:var(--v37-muted) !important;
+  box-shadow:0 0 24px rgba(32,214,255,.12) !important;
+}
+.ai-thinking-card span{ color:var(--v37-cyan) !important; font-family:var(--v37-mono) !important; }
+.ai-thinking-card em{
+  background:rgba(255,255,255,.045) !important;
+  border-left-color:var(--v37-cyan) !important;
+  color:var(--v37-ink) !important;
+}
+.ai-demo-result{
+  background:linear-gradient(135deg, rgba(34,197,94,.18), rgba(32,214,255,.12)), rgba(6,18,24,.92) !important;
+  border:1px solid rgba(66,245,167,.35) !important;
+  border-radius:20px !important;
+  color:var(--v37-ink) !important;
+  box-shadow:0 18px 36px rgba(0,0,0,.22), 0 0 26px rgba(66,245,167,.12) !important;
+}
+.ai-demo-result span{ color:var(--v37-green) !important; }
+.ai-demo-result strong{ color:var(--v37-ink) !important; }
+.ai-demo-result em{ background:rgba(66,245,167,.09) !important; border-color:rgba(66,245,167,.24) !important; color:var(--v37-green) !important; }
+.ai-copilot-bar,
+.chat-input-bar{
+  background:rgba(5,8,14,.90) !important;
+  border:1px solid rgba(125,211,252,.18) !important;
+  box-shadow:0 -14px 32px rgba(0,0,0,.32) !important;
+  backdrop-filter:blur(18px) !important;
+  -webkit-backdrop-filter:blur(18px) !important;
+}
+.msg-input,
+.ai-copilot-bar input{
+  background:rgba(15,23,42,.88) !important;
+  color:var(--v37-ink) !important;
+  border:1px solid rgba(148,163,184,.18) !important;
+}
+.ai-live-line,.ai-next-line{ color:var(--v37-cyan) !important; }
+
+/* Meetings: replace hbar feeling with lit steps */
+.meeting-pipe-step{
+  background:rgba(15,23,42,.72) !important;
+  border:1px solid rgba(148,163,184,.17) !important;
+  border-radius:16px !important;
+  color:var(--v37-muted) !important;
+}
+.meeting-pipe-step.active,
+.meeting-pipe-step.done{
+  border-color:rgba(32,214,255,.35) !important;
+  color:var(--v37-ink) !important;
+  background:linear-gradient(135deg, rgba(32,214,255,.13), rgba(155,92,255,.10)) !important;
+}
+
+/* Keep text readable under the skin */
+.phone-view p,
+.phone-view em,
+.phone-view small,
+.phone-view li{ color:var(--v37-muted); }
+.phone-view strong{ color:var(--v37-ink); }
+button,[data-action],[data-tab]{ -webkit-tap-highlight-color:transparent; }
+[data-action]:active,[data-tab]:active{ filter:brightness(1.08); }
+
+@media (prefers-reduced-motion: no-preference){
+  .ai-scene-chip,
+  .ai-inbox-item,
+  .ac-library-row,
+  .acc-config-row,
+  .meeting-ops-card,
+  .profile-agent-row{
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+  }
+  .ai-scene-chip:hover,
+  .ai-inbox-item:hover,
+  .ac-library-row:hover,
+  .acc-config-row:hover,
+  .meeting-ops-card:hover,
+  .profile-agent-row:hover{
+    transform:translateY(-1px) !important;
+    border-color:rgba(32,214,255,.42) !important;
+    box-shadow:0 16px 32px rgba(0,0,0,.24), 0 0 24px rgba(32,214,255,.12) !important;
+  }
+}
+
+/* === v37.1 Full dark surface + phone bottom safe-area repair === */
+.phone-view.active,
+.phone-view.chat-list-view,
+.phone-view.ai-marketing-msg,
+.phone-view.contact-marketing-view,
+.phone-view.meeting-ops-view,
+.phone-view.profile-ops-view,
+.phone-view.ac-editorial,
+.phone-view.agent-config-app,
+.phone-view.ai-scene-demo,
+.phone-view.contact-profile-page,
+.phone-view.meeting-ops-detail,
+.phone-view.customer-bg-page,
+.phone-view.agent-subpage{
+  background:
+    radial-gradient(circle at 18% 0%, rgba(32,214,255,.16), transparent 28%),
+    radial-gradient(circle at 92% 12%, rgba(155,92,255,.13), transparent 30%),
+    linear-gradient(180deg, #0b1221 0%, #07101d 42%, #05070d 100%) !important;
+  color:var(--v37-ink) !important;
+}
+.phone-view.active::before,
+.phone-view.chat-list-view::before,
+.phone-view.contact-marketing-view::before,
+.phone-view.meeting-ops-view::before,
+.phone-view.profile-ops-view::before,
+.phone-view.ac-editorial::before,
+.phone-view.agent-config-app::before,
+.phone-view.ai-scene-demo::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size:28px 28px;
+  opacity:.42;
+  z-index:0;
+}
+.phone-view.active > *{ position:relative; z-index:1; }
+.phone-view.profile-ops-view,
+.phone-view.contact-marketing-view,
+.phone-view.meeting-ops-view,
+.phone-view.ac-editorial,
+.phone-view.agent-config-app{
+  padding-bottom:136px !important;
+  box-sizing:border-box !important;
+}
+.profile-ops-section.profile-ops-agents{
+  margin-bottom:14px !important;
+}
+.profile-agent-row{
+  min-height:54px !important;
+  padding-top:9px !important;
+  padding-bottom:9px !important;
+  gap:9px !important;
+}
+.profile-agent-count{
+  min-width:72px !important;
+  width:72px !important;
+  text-align:right !important;
+}
+.profile-agent-count em{
+  font-size:10px !important;
+  white-space:nowrap !important;
+}
+.profile-agent-copy p{
+  max-width:172px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+.profile-safe-space,
+.meeting-ops-safe{
+  min-height:110px !important;
+  height:110px !important;
+}
+
+/* === v37.2 Specificity lock for dark skin + profile first-screen fit === */
+#phoneContent .phone-view.active,
+#phoneContent .phone-view.ac-editorial.ac-v3.active,
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active,
+#phoneContent .phone-view.contact-marketing-view.active,
+#phoneContent .phone-view.meeting-ops-view.active,
+#phoneContent .phone-view.profile-ops-view.active,
+#phoneContent .phone-view.agent-config-app.active,
+#phoneContent .phone-view.ai-scene-demo.active{
+  background:
+    radial-gradient(circle at 18% 0%, rgba(32,214,255,.16), transparent 28%),
+    radial-gradient(circle at 92% 12%, rgba(155,92,255,.13), transparent 30%),
+    linear-gradient(180deg, #0b1221 0%, #07101d 42%, #05070d 100%) !important;
+  color:var(--v37-ink) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-hero,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-core-card,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-row,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row{
+  background:rgba(15,23,42,.78) !important;
+  border-color:rgba(125,211,252,.22) !important;
+  color:var(--v37-ink) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-core-main strong,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-copy strong{
+  color:var(--v37-ink) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-hero p,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-copy p,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-meta{
+  color:var(--v37-muted) !important;
+}
+
+/* Profile page: keep the first Agent status row above the fixed tabbar without deleting content. */
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-hero{
+  padding-top:10px !important;
+  padding-bottom:9px !important;
+  min-height:0 !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-stats{
+  gap:7px !important;
+  margin-top:7px !important;
+  margin-bottom:7px !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-stat{
+  min-height:66px !important;
+  padding:8px 9px !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-stat strong{
+  font-size:20px !important;
+  line-height:1 !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-stat span,
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-stat em{
+  font-size:10px !important;
+  line-height:1.15 !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-section.profile-ops-agents{
+  margin-top:6px !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-agent-row{
+  min-height:48px !important;
+  padding-top:7px !important;
+  padding-bottom:7px !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-agent-mark{
+  width:34px !important;
+  height:34px !important;
+  min-width:34px !important;
+}
+
+/* === v37.3 Agent Center compact scene row readability === */
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-section{
+  margin-top:12px !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-section-label{
+  min-height:40px !important;
+  padding:7px 0 6px !important;
+  gap:8px !important;
+  align-items:flex-end !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-section-label strong{
+  font-size:15px !important;
+  line-height:1.1 !important;
+  white-space:nowrap !important;
+  color:var(--v37-ink) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-section-label em{
+  font-size:8.5px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  color:var(--v37-cyan) !important;
+  opacity:.9 !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-grid{
+  display:flex !important;
+  flex-direction:row !important;
+  gap:8px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  padding:1px 1px 7px !important;
+  scroll-snap-type:x proximity !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row{
+  flex:0 0 148px !important;
+  width:148px !important;
+  min-width:148px !important;
+  min-height:82px !important;
+  padding:9px 9px !important;
+  scroll-snap-align:start !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row strong{
+  font-size:12px !important;
+  line-height:1.24 !important;
+  display:block !important;
+  color:var(--v37-ink) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row p{
+  font-size:10px !important;
+  line-height:1.25 !important;
+  max-height:26px !important;
+  overflow:hidden !important;
+  color:var(--v37-muted) !important;
+}
+
+
+/* === v38 Red White Green Growth App Skin: light mobile app, CSS-only ===
+ * Project01 visual correction: no magazine style, no dark tone.
+ * Scope: additive CSS only; JS/routes/data-action untouched.
+ */
+:root{
+  --v38-paper:#ffffff;
+  --v38-paper-soft:#fafaf7;
+  --v38-paper-green:#ecfdf3;
+  --v38-paper-red:#fff1f2;
+  --v38-ink:#111827;
+  --v38-ink-soft:#374151;
+  --v38-muted:#6b7280;
+  --v38-line:#e5e7eb;
+  --v38-line-strong:#d1d5db;
+  --v38-red:#e53935;
+  --v38-red-deep:#b91c1c;
+  --v38-red-soft:#fee2e2;
+  --v38-green:#16a34a;
+  --v38-green-deep:#047857;
+  --v38-green-soft:#dcfce7;
+  --v38-shadow:0 14px 34px rgba(17,24,39,.08);
+  --v38-shadow-soft:0 8px 20px rgba(17,24,39,.06);
+  --v38-radius-lg:24px;
+  --v38-radius-md:18px;
+  --v38-radius-sm:13px;
+  --v38-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;
+  --v38-mono:"DM Mono","SFMono-Regular","Roboto Mono",monospace;
+}
+
+body,
+.phone-only-shell{
+  background:
+    radial-gradient(circle at 12% 8%, rgba(229,57,53,.08), transparent 24%),
+    radial-gradient(circle at 88% 18%, rgba(22,163,74,.09), transparent 28%),
+    linear-gradient(180deg,#fff 0%,#fafaf7 100%) !important;
+  color:var(--v38-ink) !important;
+}
+.phone-frame,
+.phone-screen,
+.phone-content{
+  background:var(--v38-paper) !important;
+  color:var(--v38-ink) !important;
+}
+.phone-frame{
+  box-shadow:0 26px 72px rgba(17,24,39,.16) !important;
+  border-color:rgba(17,24,39,.10) !important;
+}
+.phone-screen{ overflow:hidden !important; }
+
+#phoneContent .phone-view.active,
+#phoneContent .phone-view.ac-editorial.ac-v3.active,
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active,
+#phoneContent .phone-view.contact-marketing-view.active,
+#phoneContent .phone-view.meeting-ops-view.active,
+#phoneContent .phone-view.profile-ops-view.active,
+#phoneContent .phone-view.agent-config-app.active,
+#phoneContent .phone-view.ai-scene-demo.active,
+#phoneContent .phone-view.contact-profile-page.active,
+#phoneContent .phone-view.meeting-ops-detail.active,
+#phoneContent .phone-view.customer-bg-page.active,
+#phoneContent .phone-view.agent-subpage.active{
+  background:
+    radial-gradient(circle at 0% 0%, rgba(229,57,53,.10), transparent 26%),
+    radial-gradient(circle at 100% 6%, rgba(22,163,74,.12), transparent 30%),
+    linear-gradient(180deg,#ffffff 0%,#fafaf7 48%,#f7fbf5 100%) !important;
+  color:var(--v38-ink) !important;
+  font-family:var(--v38-font) !important;
+}
+#phoneContent .phone-view.active::before,
+#phoneContent .phone-view.chat-list-view::before,
+#phoneContent .phone-view.contact-marketing-view::before,
+#phoneContent .phone-view.meeting-ops-view::before,
+#phoneContent .phone-view.profile-ops-view::before,
+#phoneContent .phone-view.ac-editorial::before,
+#phoneContent .phone-view.agent-config-app::before,
+#phoneContent .phone-view.ai-scene-demo::before{
+  background:
+    linear-gradient(90deg, rgba(229,57,53,.055), transparent 28%, transparent 72%, rgba(22,163,74,.055)),
+    linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,0)) !important;
+  background-size:auto !important;
+  opacity:1 !important;
+}
+
+/* Type color reset after v37 dark skin */
+#phoneContent .phone-view p,
+#phoneContent .phone-view em,
+#phoneContent .phone-view small,
+#phoneContent .phone-view li,
+.ai-inbox-desc,
+.ac-library-meta,
+.acc-config-copy p,
+.contact-row-main p,
+.meeting-ops-meta,
+.meeting-ops-ai,
+.profile-agent-copy p,
+.profile-asset-card span,
+.ac-mag-hero p,
+.ac-library-copy p,
+.ai-demo-brief p,
+.demo-brief-copy,
+.ai-thinking-card,
+.ai-demo-loading{
+  color:var(--v38-muted) !important;
+}
+#phoneContent .phone-view strong,
+.ai-inbox-title,
+.ac-library-copy strong,
+.ac-core-main strong,
+.acc-config-copy strong,
+.contact-row-top strong,
+.meeting-ops-card-top strong,
+.profile-agent-copy strong,
+.profile-asset-card strong,
+.ac-mag-titleline,
+.ai-demo-result strong{
+  color:var(--v38-ink) !important;
+}
+
+/* Surfaces: light app cards, not magazine panels */
+.ai-marketing-hero,
+.ai-inbox-item,
+.ai-scene-chip,
+.ac-mag-hero,
+.ac-core-card,
+.ac-library-row,
+.ac-scene-row,
+.acc-app-hero,
+.acc-config-row,
+.acc-setting-card,
+.contact-mkt-hero,
+.contact-row,
+.contact-profile-hero,
+.contact-profile-card,
+.meeting-ops-hero,
+.meeting-ops-card,
+.meeting-detail-hero,
+.meeting-detail-card,
+.meeting-detail-note,
+.profile-ops-hero,
+.profile-agent-row,
+.profile-asset-card,
+.customer-bg-row,
+.customer-bg-field,
+.persona-card,
+.ai-demo-brief,
+.ai-demo-result,
+.ai-thinking-card,
+.ai-demo-loading{
+  background:rgba(255,255,255,.92) !important;
+  border:1px solid var(--v38-line) !important;
+  border-radius:var(--v38-radius-md) !important;
+  color:var(--v38-ink) !important;
+  box-shadow:var(--v38-shadow-soft) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+.ai-marketing-hero,
+.ac-mag-hero,
+.acc-app-hero,
+.contact-mkt-hero,
+.meeting-ops-hero,
+.profile-ops-hero,
+.contact-profile-hero,
+.meeting-detail-hero{
+  background:
+    linear-gradient(135deg, rgba(229,57,53,.10), rgba(255,255,255,.96) 42%, rgba(22,163,74,.12)) !important;
+  border-color:rgba(229,57,53,.14) !important;
+  box-shadow:var(--v38-shadow) !important;
+}
+
+/* Main action language: red = action/AI takeover, green = success/growth */
+.ai-inbox-tag,
+.ac-library-btn,
+.ac-core-btn,
+.contact-agent-actions button,
+.meeting-ops-actions button,
+.meeting-detail-action,
+.profile-ops-actions button,
+.ai-copilot-bar button,
+.chat-input-bar button{
+  background:linear-gradient(135deg,var(--v38-red),var(--v38-red-deep)) !important;
+  color:#fff !important;
+  border:0 !important;
+  border-radius:999px !important;
+  font-weight:800 !important;
+  box-shadow:0 10px 22px rgba(229,57,53,.20) !important;
+}
+.ai-inbox-tag:active,
+.ac-library-btn:active,
+.ac-core-btn:active,
+.contact-agent-actions button:active,
+.meeting-ops-actions button:active,
+.meeting-detail-action:active,
+.profile-ops-actions button:active{ transform:translateY(1px) !important; }
+
+.ai-inbox-rank,
+.ac-library-no,
+.ac-core-index,
+.acc-config-index,
+.customer-bg-no{
+  color:var(--v38-red) !important;
+  border-color:rgba(229,57,53,.20) !important;
+  background:var(--v38-red-soft) !important;
+  font-family:var(--v38-mono) !important;
+}
+.ac-avatar,
+.ac-library-mark,
+.acc-app-avatar,
+.acc-config-icon,
+.contact-profile-avatar,
+.contact-row-avatar,
+.profile-ops-avatar,
+.profile-agent-mark,
+.msg-avatar.agent{
+  background:linear-gradient(135deg,var(--v38-red),var(--v38-green)) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.72) !important;
+  box-shadow:0 10px 22px rgba(22,163,74,.16) !important;
+}
+.contact-row-avatar,
+.msg-avatar:not(.agent){
+  background:linear-gradient(135deg,#f3f4f6,#e5e7eb) !important;
+  color:var(--v38-ink) !important;
+  border:1px solid var(--v38-line) !important;
+}
+
+.contact-mkt-stats,
+.meeting-ops-stats,
+.profile-ops-stats,
+.ac-mag-stats,
+.acc-caps,
+.contact-profile-tags,
+.contact-row-tags,
+.demo-brief-tags{ color:var(--v38-muted) !important; }
+.contact-mkt-stats > *,
+.meeting-ops-stats > *,
+.profile-ops-stat,
+.ac-mag-stats > *,
+.acc-caps > *,
+.contact-profile-tags > *,
+.contact-row-tags > *,
+.demo-brief-tags i,
+.ai-tag,
+.msg-agent-badge,
+.meeting-tag{
+  background:var(--v38-green-soft) !important;
+  border:1px solid rgba(22,163,74,.20) !important;
+  color:var(--v38-green-deep) !important;
+  border-radius:999px !important;
+  font-family:var(--v38-mono) !important;
+}
+.profile-ops-stat strong,
+.contact-profile-score strong,
+.ai-demo-result span{ color:var(--v38-green) !important; }
+
+/* AI AUTO TALK SCENES: keep horizontal theatre, improve light app feel */
+#phoneContent .ai-scene-strip,
+#phoneContent .ai-scene-grid,
+#phoneContent .ac-scene-grid{
+  scrollbar-color:rgba(22,163,74,.34) transparent !important;
+}
+#phoneContent .ai-scene-chip{
+  height:92px !important;
+  min-height:92px !important;
+  background:linear-gradient(135deg,#fff,rgba(236,253,243,.88)) !important;
+  border-color:rgba(22,163,74,.22) !important;
+  box-shadow:0 9px 20px rgba(17,24,39,.055) !important;
+}
+#phoneContent .ai-scene-chip.active,
+#phoneContent .ai-scene-chip:hover{
+  border-color:rgba(229,57,53,.34) !important;
+  box-shadow:0 12px 26px rgba(229,57,53,.10) !important;
+}
+
+/* Chat demo bubbles: customer left white, AI right red-green action */
+.ai-demo-stage,
+.chat-page-body{ background:transparent !important; }
+.ai-demo-msg .bubble,
+.msg-row .bubble,
+.agent-msg-row .bubble{
+  background:#fff !important;
+  color:var(--v38-ink) !important;
+  border:1px solid var(--v38-line) !important;
+  border-radius:18px !important;
+  box-shadow:0 8px 18px rgba(17,24,39,.06) !important;
+}
+.ai-demo-msg.agent .bubble,
+.agent-msg-row .bubble{
+  background:linear-gradient(135deg, rgba(229,57,53,.96), rgba(22,163,74,.94)) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+  box-shadow:0 10px 22px rgba(229,57,53,.16) !important;
+}
+.ai-demo-msg.agent .bubble p,
+.ai-demo-msg.agent .bubble em,
+.agent-msg-row .bubble p,
+.agent-msg-row .bubble em{ color:rgba(255,255,255,.90) !important; }
+.ai-thinking-card,
+.ai-demo-loading{
+  background:linear-gradient(135deg,#fff,var(--v38-paper-green)) !important;
+  border-color:rgba(22,163,74,.22) !important;
+  color:var(--v38-muted) !important;
+  box-shadow:0 8px 22px rgba(22,163,74,.08) !important;
+}
+.ai-thinking-card span{ color:var(--v38-green-deep) !important; font-family:var(--v38-mono) !important; }
+.ai-thinking-card em{
+  background:#fff !important;
+  border-left-color:var(--v38-red) !important;
+  color:var(--v38-ink-soft) !important;
+}
+.ai-demo-result{
+  background:linear-gradient(135deg,var(--v38-paper-green),#fff 54%,var(--v38-paper-red)) !important;
+  border-color:rgba(22,163,74,.24) !important;
+  box-shadow:0 16px 32px rgba(22,163,74,.10) !important;
+}
+.ai-demo-result em{
+  background:#fff !important;
+  border-color:rgba(22,163,74,.20) !important;
+  color:var(--v38-green-deep) !important;
+}
+.ai-copilot-bar,
+.chat-input-bar{
+  background:rgba(255,255,255,.96) !important;
+  border:1px solid var(--v38-line) !important;
+  box-shadow:0 -12px 28px rgba(17,24,39,.10) !important;
+  backdrop-filter:blur(12px) !important;
+  -webkit-backdrop-filter:blur(12px) !important;
+}
+.msg-input,
+.ai-copilot-bar input{
+  background:#f9fafb !important;
+  color:var(--v38-ink) !important;
+  border:1px solid var(--v38-line) !important;
+}
+.ai-live-line{ color:var(--v38-green-deep) !important; }
+.ai-next-line{ color:var(--v38-red) !important; }
+
+/* Bottom tabs: light, app-like, center Agent remains prominent */
+.phone-tabbar,
+.bottom-nav{
+  background:rgba(255,255,255,.96) !important;
+  border-top:1px solid var(--v38-line) !important;
+  box-shadow:0 -10px 26px rgba(17,24,39,.08) !important;
+  backdrop-filter:blur(12px) !important;
+  -webkit-backdrop-filter:blur(12px) !important;
+}
+.tab-item,
+.nav-item{ color:var(--v38-muted) !important; }
+.tab-item.active,
+.nav-item.active,
+[data-tab].active{ color:var(--v38-red) !important; }
+.tab-item.active .tab-icon,
+.nav-item.active .nav-icon,
+[data-tab="agent-center"].active .tab-icon,
+[data-tab="agent-center"].active .nav-icon{
+  background:linear-gradient(135deg,var(--v38-red),var(--v38-green)) !important;
+  color:#fff !important;
+  box-shadow:0 10px 22px rgba(229,57,53,.18) !important;
+}
+
+/* Agent Center specificity lock: override v37 dark cards */
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-hero,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-core-card,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-row,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row{
+  background:#fff !important;
+  border-color:var(--v38-line) !important;
+  color:var(--v38-ink) !important;
+  box-shadow:var(--v38-shadow-soft) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row{
+  background:linear-gradient(135deg,#fff,var(--v38-paper-green)) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-section-label strong,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row strong,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-core-main strong,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-copy strong{
+  color:var(--v38-ink) !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-section-label em,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-no{ color:var(--v38-red) !important; }
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-hero p,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-copy p,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-library-meta,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row p{
+  color:var(--v38-muted) !important;
+}
+
+/* Meeting pipeline: steps, not horizontal bar */
+.meeting-pipe-step{
+  background:#fff !important;
+  border:1px solid var(--v38-line) !important;
+  border-radius:16px !important;
+  color:var(--v38-muted) !important;
+  box-shadow:0 7px 16px rgba(17,24,39,.05) !important;
+}
+.meeting-pipe-step.active,
+.meeting-pipe-step.done{
+  border-color:rgba(22,163,74,.30) !important;
+  color:var(--v38-ink) !important;
+  background:linear-gradient(135deg,var(--v38-paper-green),#fff) !important;
+}
+.meeting-pipe-step.active{ border-color:rgba(229,57,53,.28) !important; }
+
+button,[data-action],[data-tab]{ -webkit-tap-highlight-color:transparent; }
+[data-action]:active,[data-tab]:active{ filter:brightness(.98); }
+@media (prefers-reduced-motion: no-preference){
+  .ai-scene-chip,
+  .ai-inbox-item,
+  .ac-library-row,
+  .acc-config-row,
+  .meeting-ops-card,
+  .profile-agent-row{
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+  }
+  .ai-scene-chip:hover,
+  .ai-inbox-item:hover,
+  .ac-library-row:hover,
+  .acc-config-row:hover,
+  .meeting-ops-card:hover,
+  .profile-agent-row:hover{
+    transform:translateY(-1px) !important;
+    border-color:rgba(229,57,53,.30) !important;
+    box-shadow:0 14px 28px rgba(17,24,39,.09) !important;
+  }
+}
+
+
+/* === v38.1 Light top/header/report polish: remove dark leftovers === */
+.phone-statusbar{
+  background:rgba(255,255,255,.88) !important;
+  color:var(--v38-ink) !important;
+  border-bottom:1px solid rgba(229,231,235,.72) !important;
+  box-shadow:0 4px 14px rgba(17,24,39,.04) !important;
+  backdrop-filter:blur(12px) !important;
+  -webkit-backdrop-filter:blur(12px) !important;
+}
+.phone-statusbar *{ color:var(--v38-ink) !important; }
+.top-search.marketing-search{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding-top:10px !important;
+}
+.top-search.marketing-search .search-input,
+.search-input{
+  background:#fff !important;
+  color:var(--v38-ink) !important;
+  border:1px solid var(--v38-line) !important;
+  box-shadow:0 8px 18px rgba(17,24,39,.055) !important;
+}
+.top-search.marketing-search .search-input::placeholder,
+.search-input::placeholder{ color:#9ca3af !important; }
+.add-btn{
+  background:linear-gradient(135deg,var(--v38-green),var(--v38-green-deep)) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.82) !important;
+  box-shadow:0 10px 22px rgba(22,163,74,.20) !important;
+}
+.msg-report-hero{
+  background:
+    linear-gradient(135deg, rgba(229,57,53,.11), rgba(255,255,255,.98) 44%, rgba(22,163,74,.13)) !important;
+  color:var(--v38-ink) !important;
+  border:1px solid rgba(229,57,53,.14) !important;
+  border-radius:var(--v38-radius-lg) !important;
+  box-shadow:var(--v38-shadow) !important;
+}
+.msg-report-hero .mr-kicker{
+  color:var(--v38-red) !important;
+  font-family:var(--v38-mono) !important;
+  letter-spacing:.08em !important;
+}
+.msg-report-hero .mr-main strong,
+.msg-report-hero .mr-stats b{ color:var(--v38-ink) !important; }
+.msg-report-hero .mr-main span,
+.msg-report-hero .mr-stats em{ color:var(--v38-muted) !important; }
+.msg-report-hero .mr-stats > div{
+  background:#fff !important;
+  border:1px solid var(--v38-line) !important;
+  border-radius:14px !important;
+  box-shadow:0 7px 16px rgba(17,24,39,.045) !important;
+}
+.msg-report-hero .mr-stats > div:nth-child(1) b{ color:var(--v38-red) !important; }
+.msg-report-hero .mr-stats > div:nth-child(2) b,
+.msg-report-hero .mr-stats > div:nth-child(3) b{ color:var(--v38-green) !important; }
+
+.phone-tabbar-item.phone-tabbar-agent,
+[data-tab="agent-center"].phone-tabbar-agent,
+.phone-tabbar-agent{
+  color:var(--v38-ink) !important;
+}
+.phone-tabbar-agent .tab-icon,
+.phone-tabbar-agent .nav-icon,
+[data-tab="agent-center"] .tab-icon,
+[data-tab="agent-center"] .nav-icon{
+  background:linear-gradient(135deg,var(--v38-red),var(--v38-green)) !important;
+  color:#fff !important;
+  box-shadow:0 12px 26px rgba(229,57,53,.18) !important;
+}
+.phone-tabbar-item span,
+.phone-tabbar-item em,
+.phone-tabbar-item small{ color:inherit !important; }
+
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active,
+#phoneContent .phone-view.contact-marketing-view.active,
+#phoneContent .phone-view.meeting-ops-view.active,
+#phoneContent .phone-view.profile-ops-view.active,
+#phoneContent .phone-view.ac-editorial.ac-v3.active,
+#phoneContent .phone-view.agent-config-app.active{
+  padding-bottom:148px !important;
+}
+.marketing-chat-stack.pinned-cases{ padding-bottom:18px !important; }
+
+
+/* === v38.2 Header/tabbar final light lock + home safe area === */
+.phone-header{
+  background:rgba(255,255,255,.92) !important;
+  color:var(--v38-ink) !important;
+  border-bottom:1px solid rgba(229,231,235,.86) !important;
+  box-shadow:0 6px 16px rgba(17,24,39,.045) !important;
+  backdrop-filter:blur(12px) !important;
+  -webkit-backdrop-filter:blur(12px) !important;
+}
+.phone-header .ph-title,
+.phone-header .ph-back,
+.phone-header .ph-action{
+  color:var(--v38-ink) !important;
+}
+.phone-header .ph-back,
+.phone-header .ph-action{ color:var(--v38-green-deep) !important; }
+
+/* Remove the last black pill feeling from scene tags and the middle Agent tab. */
+.ai-scene-chip span,
+.ai-scene-chip b,
+.ai-scene-chip strong,
+.ai-scene-chip em{
+  color:var(--v38-ink) !important;
+}
+.ai-scene-chip span{
+  background:var(--v38-green-soft) !important;
+  border:1px solid rgba(22,163,74,.18) !important;
+  color:var(--v38-green-deep) !important;
+  border-radius:999px !important;
+}
+.ai-scene-chip b{
+  background:var(--v38-red-soft) !important;
+  border:1px solid rgba(229,57,53,.18) !important;
+  color:var(--v38-red) !important;
+  border-radius:999px !important;
+}
+.phone-tabbar-item.phone-tabbar-agent::before,
+.phone-tabbar-item.phone-tabbar-agent::after,
+.phone-tabbar-agent::before,
+.phone-tabbar-agent::after,
+[data-tab="agent-center"]::before,
+[data-tab="agent-center"]::after{
+  background:linear-gradient(135deg,var(--v38-red),var(--v38-green)) !important;
+  border-color:rgba(255,255,255,.82) !important;
+  box-shadow:0 12px 26px rgba(229,57,53,.16) !important;
+}
+.phone-tabbar-item.phone-tabbar-agent,
+.phone-tabbar-agent,
+[data-tab="agent-center"]{
+  background:transparent !important;
+  color:var(--v38-ink) !important;
+}
+.phone-tabbar-item.phone-tabbar-agent .tab-ico,
+.phone-tabbar-item.phone-tabbar-agent .tab-icon,
+.phone-tabbar-agent .tab-ico,
+.phone-tabbar-agent .tab-icon,
+[data-tab="agent-center"] .tab-ico,
+[data-tab="agent-center"] .tab-icon{
+  background:linear-gradient(135deg,var(--v38-red),var(--v38-green)) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.82) !important;
+  box-shadow:0 12px 26px rgba(229,57,53,.16) !important;
+}
+
+/* Home list safe area: keep last visible case away from fixed tabbar. */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active{
+  padding-bottom:176px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-chat-stack.pinned-cases{
+  padding-bottom:108px !important;
+  margin-bottom:18px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item:last-child{
+  margin-bottom:34px !important;
+}
+
+
+/* === v38.3 Home first-screen fit: compact, no deletion === */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active{
+  padding-bottom:128px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .top-search.marketing-search{
+  height:40px !important;
+  min-height:40px !important;
+  margin-top:2px !important;
+  margin-bottom:2px !important;
+  padding-top:7px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .search-input{
+  height:28px !important;
+  min-height:28px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .add-btn{
+  width:32px !important;
+  height:32px !important;
+  min-width:32px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .msg-report-hero{
+  min-height:78px !important;
+  height:82px !important;
+  padding:6px 8px !important;
+  margin-top:3px !important;
+  margin-bottom:4px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-kicker{
+  font-size:8.5px !important;
+  line-height:1 !important;
+  margin-bottom:3px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-main{
+  min-height:22px !important;
+  line-height:1.1 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-main strong{
+  font-size:13px !important;
+  line-height:1.05 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-main span{
+  font-size:9.5px !important;
+  line-height:1.08 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats{
+  height:28px !important;
+  gap:5px !important;
+  margin-top:3px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats > div{
+  height:25px !important;
+  padding:2px 6px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats b{ font-size:12px !important; line-height:1 !important; }
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats em{ font-size:8.5px !important; line-height:1 !important; }
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .msg-section-head{
+  height:15px !important;
+  min-height:15px !important;
+  margin-top:4px !important;
+  margin-bottom:2px !important;
+  padding-bottom:1px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:90px !important;
+  min-height:90px !important;
+  padding-bottom:4px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  height:88px !important;
+  min-height:88px !important;
+  padding:7px 8px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-chat-stack.pinned-cases{
+  padding-bottom:18px !important;
+  margin-bottom:8px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item{
+  min-height:60px !important;
+  padding-top:7px !important;
+  padding-bottom:7px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item:last-child{
+  margin-bottom:8px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item .item-msg,
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item .item-ai{
+  line-height:1.22 !important;
+}
+
+
+/* === v38.4 Text completeness repair: keep red-white-green, no JS/function changes ===
+ * Fix vertical clipping introduced by v38.3 compacting. Preserve horizontal AI scenes.
+ */
+
+/* Message home: report card should breathe enough for all stats. */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .msg-report-hero{
+  height:92px !important;
+  min-height:92px !important;
+  padding:8px 9px !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-main{
+  min-height:28px !important;
+  line-height:1.18 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-main span{
+  line-height:1.18 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats{
+  height:32px !important;
+  min-height:32px !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats > div{
+  height:30px !important;
+  min-height:30px !important;
+  padding:3px 6px !important;
+  overflow:visible !important;
+}
+
+/* Keep scene strip horizontal; increase height enough for two-line descriptions. */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:104px !important;
+  min-height:104px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  padding-bottom:6px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  height:100px !important;
+  min-height:100px !important;
+  padding:8px 8px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip em{
+  -webkit-line-clamp:3 !important;
+  line-clamp:3 !important;
+  max-height:39px !important;
+  min-height:36px !important;
+  line-height:13px !important;
+  overflow:hidden !important;
+}
+
+/* Pinned cases: keep visible above tabbar after giving text room back. */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-chat-stack.pinned-cases{
+  padding-bottom:24px !important;
+  margin-bottom:10px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item{
+  min-height:66px !important;
+  padding-top:8px !important;
+  padding-bottom:8px !important;
+}
+
+/* Contact / meeting / profile pages: content is scrollable; don't treat below-tab content as clipping. Add safe area. */
+#phoneContent .phone-view.contact-marketing-view.active,
+#phoneContent .phone-view.meeting-ops-view.active,
+#phoneContent .phone-view.profile-ops-view.active,
+#phoneContent .phone-view.ac-editorial.ac-v3.active{
+  padding-bottom:168px !important;
+}
+.contact-profile-list,
+.meeting-ops-list,
+.profile-ops-section.profile-ops-agents,
+.ac-open-rail{
+  margin-bottom:72px !important;
+}
+
+/* Agent Center: hero title line was vertically clipped. */
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline{
+  min-height:68px !important;
+  height:auto !important;
+  overflow:visible !important;
+  align-items:flex-start !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline strong,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline span,
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline em{
+  line-height:1.12 !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-grid{
+  padding-bottom:12px !important;
+  margin-bottom:8px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-section-label{
+  min-height:46px !important;
+  height:auto !important;
+  overflow:visible !important;
+}
+
+/* Profile: prevent 26px digits from clipping at baseline and remove tiny horizontal overflow. */
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-stat strong{
+  line-height:1.12 !important;
+  min-height:30px !important;
+  display:block !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-agent-row{
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.profile-ops-view.active .profile-agent-copy span{
+  -webkit-line-clamp:2 !important;
+  line-clamp:2 !important;
+  max-height:28px !important;
+  line-height:13.5px !important;
+}
+
+/* Chat demo detail: header and next-scene copy should not be clipped. */
+#phoneContent .phone-view.ai-scene-demo.active .demo-brief-head{
+  min-height:46px !important;
+  height:auto !important;
+  overflow:visible !important;
+  align-items:flex-start !important;
+}
+#phoneContent .phone-view.ai-scene-demo.active .demo-brief-head strong,
+#phoneContent .phone-view.ai-scene-demo.active .demo-brief-head span,
+#phoneContent .phone-view.ai-scene-demo.active .demo-brief-head em{
+  line-height:1.15 !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.ai-scene-demo.active .demo-brief-next{
+  min-height:34px !important;
+  height:auto !important;
+  -webkit-line-clamp:3 !important;
+  line-clamp:3 !important;
+  line-height:12.5px !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.ai-scene-demo.active .ai-demo-stage{
+  padding-bottom:128px !important;
+}
+#phoneContent .phone-view.ai-scene-demo.active .ai-copilot-bar{
+  z-index:6 !important;
+}
+
+
+/* === v38.5 Text fit final: wider horizontal scene cards, safer first screen ===
+ * Keep red-white-green and horizontal AI AUTO TALK SCENES.
+ */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .msg-report-hero{
+  height:88px !important;
+  min-height:88px !important;
+  padding:7px 9px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats{
+  height:30px !important;
+  min-height:30px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats > div{
+  height:28px !important;
+  min-height:28px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:98px !important;
+  min-height:98px !important;
+  gap:8px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  flex:0 0 150px !important;
+  width:150px !important;
+  min-width:150px !important;
+  height:94px !important;
+  min-height:94px !important;
+  padding:8px 9px !important;
+  box-sizing:border-box !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip strong{
+  font-size:12px !important;
+  line-height:1.16 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip span{
+  font-size:8px !important;
+  line-height:1 !important;
+  padding:3px 6px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip em{
+  font-size:9.2px !important;
+  line-height:12px !important;
+  -webkit-line-clamp:3 !important;
+  line-clamp:3 !important;
+  max-height:36px !important;
+  min-height:34px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-chat-stack.pinned-cases{
+  padding-bottom:10px !important;
+  margin-bottom:6px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item{
+  min-height:62px !important;
+  padding-top:7px !important;
+  padding-bottom:7px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item .item-msg{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item .ai-live-line{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+#phoneContent .phone-view.profile-ops-view.active .profile-ops-stat strong{
+  line-height:30px !important;
+  min-height:30px !important;
+}
+
+
+/* === v38.6 Text fit final lock: wider scene chips + safe pinned cases ===
+ * Wider horizontal cards reduce wrapping without deleting copy or changing routes.
+ */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .top-search.marketing-search{
+  height:38px !important;
+  min-height:38px !important;
+  margin-top:1px !important;
+  margin-bottom:1px !important;
+  padding-top:6px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .msg-report-hero{
+  height:84px !important;
+  min-height:84px !important;
+  padding:6px 9px !important;
+  margin-top:2px !important;
+  margin-bottom:3px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-main{
+  min-height:25px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .mr-stats{
+  height:29px !important;
+  min-height:29px !important;
+  margin-top:2px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .msg-section-head{
+  margin-top:3px !important;
+  margin-bottom:1px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:94px !important;
+  min-height:94px !important;
+  gap:9px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  flex:0 0 190px !important;
+  width:190px !important;
+  min-width:190px !important;
+  height:92px !important;
+  min-height:92px !important;
+  padding:8px 10px !important;
+  gap:4px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip strong{
+  font-size:12px !important;
+  line-height:14px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip span{
+  font-size:8px !important;
+  line-height:10px !important;
+  padding:2px 6px !important;
+  width:max-content !important;
+  max-width:100% !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip em{
+  font-size:9px !important;
+  line-height:12px !important;
+  -webkit-line-clamp:2 !important;
+  line-clamp:2 !important;
+  max-height:24px !important;
+  min-height:24px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-chat-stack.pinned-cases{
+  padding-bottom:6px !important;
+  margin-bottom:4px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item{
+  min-height:60px !important;
+  padding-top:6px !important;
+  padding-bottom:6px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-case-item:last-child{
+  margin-bottom:14px !important;
+}
+
+
+/* === v38.7 Agent Center bottom-safe text repair === */
+#phoneContent .phone-view.ac-editorial.ac-v3.active{
+  padding-bottom:220px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-hero{
+  margin-bottom:8px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-core-card{
+  margin-bottom:8px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-section{
+  margin-top:8px !important;
+  padding-bottom:96px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-grid{
+  padding-bottom:18px !important;
+  margin-bottom:24px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-row{
+  min-height:92px !important;
+  height:92px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-open-rail{
+  margin-bottom:124px !important;
+}
+
+
+/* === v38.8 Agent Center first-screen fit: compact hero, preserve text cards === */
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-hero{
+  min-height:156px !important;
+  height:164px !important;
+  padding:9px 11px 10px !important;
+  margin-bottom:6px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-kicker{
+  font-size:8px !important;
+  line-height:1 !important;
+  margin-bottom:4px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline{
+  min-height:48px !important;
+  height:50px !important;
+  margin-bottom:5px !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline strong{
+  font-size:23px !important;
+  line-height:24px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-titleline em{
+  font-size:30px !important;
+  line-height:32px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-hero p{
+  font-size:10px !important;
+  line-height:12px !important;
+  max-height:24px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-stats{
+  margin-top:6px !important;
+  gap:5px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-mag-stats > *{
+  min-height:36px !important;
+  height:36px !important;
+  padding:5px 6px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-core-card{
+  min-height:66px !important;
+  height:70px !important;
+  padding:7px 9px !important;
+  margin-top:6px !important;
+  margin-bottom:5px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-core-main p{
+  font-size:9.5px !important;
+  line-height:12px !important;
+  max-height:24px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-section{
+  margin-top:5px !important;
+  padding-bottom:112px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-section-label{
+  min-height:34px !important;
+  height:36px !important;
+  padding:5px 0 4px !important;
+}
+#phoneContent .phone-view.ac-editorial.ac-v3.active .ac-scene-grid{
+  padding-bottom:10px !important;
+}
+
+
+/* === v38.9 AI scene strip title visibility repair ===
+ * Boss: ai-scene-strip height can increase; scene title like “沉默唤醒” must be visible.
+ * Scope: homepage AI AUTO TALK SCENES only. No JS/function changes.
+ */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:118px !important;
+  min-height:118px !important;
+  padding-top:2px !important;
+  padding-bottom:4px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  align-items:stretch !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  flex:0 0 190px !important;
+  width:190px !important;
+  min-width:190px !important;
+  height:110px !important;
+  min-height:110px !important;
+  padding:9px 10px !important;
+  gap:5px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip b{
+  flex:0 0 auto !important;
+  height:12px !important;
+  min-height:12px !important;
+  line-height:12px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip strong{
+  display:block !important;
+  flex:0 0 auto !important;
+  height:auto !important;
+  min-height:18px !important;
+  max-height:none !important;
+  font-size:14px !important;
+  line-height:18px !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  color:#111827 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip span{
+  flex:0 0 auto !important;
+  min-height:16px !important;
+  line-height:12px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip em{
+  flex:0 0 auto !important;
+  font-size:9.5px !important;
+  line-height:13px !important;
+  -webkit-line-clamp:3 !important;
+  line-clamp:3 !important;
+  min-height:39px !important;
+  max-height:39px !important;
+}
+
+
+/* === v38.10 AI scene strip readable height final ===
+ * Let the scene theatre breathe. Keep horizontal layout; page can scroll if needed.
+ */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active{
+  padding-bottom:132px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:136px !important;
+  min-height:136px !important;
+  padding-top:3px !important;
+  padding-bottom:7px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  height:124px !important;
+  min-height:124px !important;
+  padding:10px 11px !important;
+  gap:6px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip strong{
+  min-height:20px !important;
+  line-height:20px !important;
+  font-size:15px !important;
+  overflow:visible !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip span{
+  min-height:18px !important;
+  line-height:13px !important;
+  padding:3px 7px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip em{
+  min-height:42px !important;
+  max-height:42px !important;
+  line-height:14px !important;
+  -webkit-line-clamp:3 !important;
+  line-clamp:3 !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .marketing-chat-stack:last-of-type{
+  margin-bottom:120px !important;
+}
+
+
+/* === v38.11 AI scene strip no-clipping lock ===
+ * Final height pass for AI AUTO TALK SCENES: title + tag + 3-line copy fully visible.
+ */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:164px !important;
+  min-height:164px !important;
+  padding-top:4px !important;
+  padding-bottom:8px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  height:148px !important;
+  min-height:148px !important;
+  padding:12px 12px !important;
+  gap:7px !important;
+  overflow:hidden !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip b{
+  height:13px !important;
+  min-height:13px !important;
+  line-height:13px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip strong{
+  min-height:22px !important;
+  line-height:22px !important;
+  font-size:16px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip span{
+  min-height:19px !important;
+  line-height:13px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip em{
+  min-height:48px !important;
+  max-height:48px !important;
+  line-height:16px !important;
+  font-size:10px !important;
+  -webkit-line-clamp:3 !important;
+  line-clamp:3 !important;
+}
+
+
+/* === v38.12 AI scene strip extra breathing room ===
+ * Add final vertical slack so title/tag/copy are not clipped by font rendering differences.
+ */
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-strip{
+  height:188px !important;
+  min-height:188px !important;
+  padding-top:5px !important;
+  padding-bottom:10px !important;
+}
+#phoneContent .phone-view.chat-list-view.ai-marketing-msg.active .ai-scene-chip{
+  height:170px !important;
+  min-height:170px !important;
+  padding:13px 12px !important;
+}
