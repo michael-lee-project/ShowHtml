@@ -30,7 +30,17 @@
     font-size: 200px; opacity: 0.08; pointer-events: none;
   }
   .mall-hero h2 { font-size: 36px; margin-bottom: 12px; line-height: 1.2; }
-  .mall-hero p { font-size: 16px; color: var(--color-text-2); margin-bottom: 24px; max-width: 480px; }
+  .mall-hero p { font-size: 16px; color: var(--color-text-2); margin-bottom: 16px; max-width: 480px; }
+  .mall-hero .compliance-note {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(14, 90, 111, 0.06);
+    border: 1px solid rgba(14, 90, 111, 0.2);
+    color: var(--color-trust-dark, #0E5A6F);
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .mall-hero .compliance-note .ic { font-size: 14px; }
   .mall-hero .donation-tag {
     display: inline-flex; align-items: center; gap: 12px;
     background: linear-gradient(135deg, var(--color-primary), var(--color-gold));
@@ -107,6 +117,10 @@
       <a href="category.html">运动户外</a>
       <a href="category.html">地方特产</a>
     </div>
+    <a href="stations.html" class="btn" style="background:linear-gradient(135deg, #C4842A 0%, #B45309 100%);color:#fff;font-weight:700;border:0;display:inline-flex;align-items:center;gap:6px;">
+      🏠 附近驿站
+      <span style="background:rgba(255,255,255,0.25);font-size:10px;padding:1px 6px;border-radius:999px;">186 家</span>
+    </a>
     <a href="cart.html" class="btn btn-ghost btn-sm">🛒 购物车 (3)</a>
   </div>
 </div>
@@ -117,11 +131,15 @@
   <div class="mall-hero">
     <div>
       <div class="donation-tag">
-        <span class="num">0.5%</span>
+        <span class="num">5%</span>
         <span>每笔订单自动捐赠</span>
       </div>
       <h2>消费即公益<br>每单都有温度</h2>
-      <p>慈商联营商城是经严格审核的爱心商家集合。所有商品保质保价，每完成一单，平台自动捐赠订单额的 0.5%，捐赠记录全流程可追溯。</p>
+      <p>慈商联营商城是经严格审核的爱心商家集合。所有商品保质保价，每完成一单，平台自动捐赠订单额的 5%，捐赠记录全流程可追溯。</p>
+      <div class="compliance-note">
+        <span class="ic">🛡️</span>
+        <span>本商城为<strong>商品销售</strong>，5% 部分由商家自动捐赠物资，非资金公募</span>
+      </div>
       <div class="flex gap-3">
         <a href="#hot" class="btn btn-primary">立即选购</a>
         <a href="checkout.html?mode=gift" class="btn" style="background:linear-gradient(135deg,#14B8A6 0%,#0D9488 100%);color:#fff;border:0;">🎁 赠送给受灾项目</a>
@@ -131,7 +149,7 @@
     <div>
       <div class="card" style="padding:20px;">
         <div class="fw-600 mb-3">💝 商城本月已捐赠</div>
-        <div class="text-3xl fw-800 text-primary mb-2">¥ 41,326.5</div>
+        <div class="text-3xl fw-800 text-primary mb-2">¥ 413,265.0</div>
         <div class="text-sm text-muted mb-3">累计订单 18,260 单 · 捐赠 913 单</div>
         <div class="flex-between text-sm">
           <span class="text-muted">本月目标</span>
@@ -161,7 +179,7 @@
           <span style="text-decoration:line-through;color:var(--color-text-3);font-size:13px;">¥ 89</span>
         </div>
         <div class="sales">月销 1.2 万 · 评价 8,260</div>
-        <div class="donate-info">每单捐赠 ¥ 0.20</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 2.00</div>
       </div>
     </a>
     <a href="detail.html" class="product-card">
@@ -176,7 +194,7 @@
           <span style="text-decoration:line-through;color:var(--color-text-3);font-size:13px;">¥ 79</span>
         </div>
         <div class="sales">月销 8,620 · 评价 5,820</div>
-        <div class="donate-info">每单捐赠 ¥ 0.30</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 3.00</div>
       </div>
     </a>
     <a href="detail.html" class="product-card">
@@ -191,7 +209,7 @@
           <span style="text-decoration:line-through;color:var(--color-text-3);font-size:13px;">¥ 68</span>
         </div>
         <div class="sales">月销 3,860 · 评价 2,820</div>
-        <div class="donate-info">每单捐赠 ¥ 0.23</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 2.30</div>
       </div>
     </a>
     <a href="detail.html" class="product-card">
@@ -206,7 +224,7 @@
           <span style="text-decoration:line-through;color:var(--color-text-3);font-size:13px;">¥ 599</span>
         </div>
         <div class="sales">月销 1,860 · 评价 1,260</div>
-        <div class="donate-info">每单捐赠 ¥ 1.50</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 15.00</div>
       </div>
     </a>
     <a href="detail.html" class="product-card">
@@ -221,7 +239,7 @@
           <span style="text-decoration:linethrough;color:var(--color-text-3);font-size:13px;">¥ 198</span>
         </div>
         <div class="sales">月销 2,620 · 评价 1,820</div>
-        <div class="donate-info">每单捐赠 ¥ 0.64</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 6.40</div>
       </div>
     </a>
     <a href="detail.html" class="product-card">
@@ -235,7 +253,7 @@
           <span style="text-decoration:line-through;color:var(--color-text-3);font-size:13px;">¥ 228</span>
         </div>
         <div class="sales">月销 1,260 · 评价 820</div>
-        <div class="donate-info">每单捐赠 ¥ 0.84</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 8.40</div>
       </div>
     </a>
     <a href="detail.html" class="product-card">
@@ -249,7 +267,7 @@
           <span style="text-decoration:line-through;color:var(--color-text-3);font-size:13px;">¥ 168</span>
         </div>
         <div class="sales">月销 3,260 · 评价 2,160</div>
-        <div class="donate-info">每单捐赠 ¥ 0.44</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 4.40</div>
       </div>
     </a>
     <a href="detail.html" class="product-card">
@@ -264,7 +282,7 @@
           <span style="text-decoration:line-through;color:var(--color-text-3);font-size:13px;">¥ 398</span>
         </div>
         <div class="sales">月销 1,820 · 评价 1,260</div>
-        <div class="donate-info">每单捐赠 ¥ 1.34</div>
+        <div class="donate-info">每单商家自动捐物资 ¥ 13.40</div>
       </div>
     </a>
   </div>

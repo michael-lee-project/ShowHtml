@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国家图书馆发展基金会 · 战略合作门户 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<style>
+  body { background: var(--color-bg); }
+  .partner-hero {
+    background: linear-gradient(135deg, #1E293B 0%, #334155 60%, #475569 100%);
+    color: #fff; border-radius: var(--radius-lg);
+    padding: 40px; margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .partner-hero::after { content: '🏛️'; position: absolute; right: 60px; top: -20px; font-size: 220px; opacity: 0.08; }
+  .partner-hero .badge-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .partner-hero .badge { background: rgba(255,255,255,0.18); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .partner-hero h1 { font-size: 32px; margin-bottom: 8px; }
+  .partner-hero .lead { font-size: 15px; opacity: 0.92; max-width: 720px; line-height: 1.7; }
+
+  .nav-tabs {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 8px;
+    display: flex; gap: 4px; margin-bottom: 24px; overflow-x: auto;
+  }
+  .nav-tabs a {
+    padding: 10px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; color: var(--color-text-2);
+    text-decoration: none; white-space: nowrap;
+  }
+  .nav-tabs a:hover { background: var(--color-bg); color: var(--color-primary); }
+  .nav-tabs a.active { background: linear-gradient(135deg, var(--color-primary), var(--color-gold)); color: #fff; }
+
+  .section-title { font-size: 18px; margin: 32px 0 12px; display: flex; align-items: center; gap: 8px; }
+
+  /* 子系统入口卡（旧书回收/古籍修复等） */
+  .sub-system-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 880px) { .sub-system-grid { grid-template-columns: 1fr 1fr; } }
+  .sub-card {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 24px;
+    transition: all .2s; cursor: pointer; position: relative; overflow: hidden;
+  }
+  .sub-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .sub-card .ic {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .sub-card .t { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .sub-card .d { font-size: 12px; color: var(--color-text-2); line-height: 1.5; }
+  .sub-card .stats { display: flex; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--color-border); }
+  .sub-card .stats .s .v { font-size: 16px; font-weight: 800; color: var(--color-primary); }
+  .sub-card .stats .s .l { font-size: 10px; color: var(--color-text-3); }
+
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-mini { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 20px; text-align: center; }
+  .stat-mini .v { font-size: 28px; font-weight: 900; line-height: 1; }
+  .stat-mini .l { font-size: 12px; color: var(--color-text-3); margin-top: 4px; }
+  .stat-mini.primary .v { color: var(--color-primary); }
+  .stat-mini.trust .v { color: var(--color-trust); }
+  .stat-mini.gold .v { color: var(--color-gold); }
+
+  /* 旧书回收子系统样例 */
+  .book-recycle-card {
+    background: linear-gradient(135deg, #FAEFD9 0%, #FFE4D2 100%);
+    border-radius: 14px; padding: 24px; margin-bottom: 16px;
+  }
+  .book-step { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px; }
+  .book-step .n { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #C4842A, #92400E); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+  .book-step .t { font-size: 13px; font-weight: 700; }
+  .book-step .d { font-size: 11px; color: var(--color-text-2); margin-top: 2px; }
+
+  .impact-panel {
+    background: linear-gradient(135deg, #E0FAF5 0%, #CCFBF1 100%);
+    border-radius: 14px; padding: 24px; margin-bottom: 24px;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px;
+  }
+  @media (max-width: 880px) { .impact-panel { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container" style="padding: 24px 0 60px;">
+
+  <div class="partner-hero">
+    <div style="position:relative;z-index:1;">
+      <div class="text-sm" style="opacity:0.85;margin-bottom:8px;">
+        <a href="../index.html" style="color:rgba(255,255,255,0.85);">首页</a> /
+        <a href="../pages/transparency.html" style="color:rgba(255,255,255,0.85);">透明公示</a> /
+        战略合作机构 / 国家图书馆发展基金会
+      </div>
+      <div class="badge-row">
+        <span class="badge">🤝 战略合作</span>
+        <span class="badge">📅 2023-08 签约</span>
+        <span class="badge">🏆 三星公益伙伴</span>
+        <span class="badge">📚 旧书专项</span>
+      </div>
+      <h1>🏛️ 国家图书馆发展基金会</h1>
+      <div class="lead">
+        国家图书馆发展基金会是慈商联营的战略合作机构，<strong>享有专属门户 + 物资项目管理子系统</strong>。合作涵盖旧书回收 / 古籍修复资助 / 阅读推广 / 文化扶贫等 6 大业务，2024 年累计接收物资 <strong>¥ 286 万</strong>，惠及 32 个省市自治区 <strong>1,260 所学校</strong>。
+      </div>
+      <div class="flex gap-2 mt-3" style="flex-wrap:wrap;">
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📚 旧书专项</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🖨️ 古籍修复</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🎓 阅读推广</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🏘️ 文化扶贫</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子门户导航 -->
+  <div class="nav-tabs">
+    <a href="#overview" class="active">📊 概览</a>
+    <a href="#subsystem">🛠️ 业务子系统</a>
+    <a href="#book-recycle">📚 旧书回收专项</a>
+    <a href="#projects">📋 合作项目</a>
+    <a href="#reports">📈 影响报告</a>
+    <a href="#partners">🤝 子机构</a>
+  </div>
+
+  <h3 class="section-title" id="overview">📊 战略合作核心数据</h3>
+  <div class="stat-row">
+    <div class="stat-mini primary">
+      <div class="v">¥ 286<span style="font-size:14px;font-weight:600;">万</span></div>
+      <div class="l">2024 累计接收物资</div>
+    </div>
+    <div class="stat-mini trust">
+      <div class="v">1,260</div>
+      <div class="l">惠及学校</div>
+    </div>
+    <div class="stat-mini gold">
+      <div class="v">86,400</div>
+      <div class="l">回收旧书（册）</div>
+    </div>
+    <div class="stat-mini">
+      <div class="v" style="color:#7C3AED;">12</div>
+      <div class="l">战略合作年数</div>
+    </div>
+  </div>
+
+  <!-- 6 大业务子系统入口 -->
+  <h3 class="section-title" id="subsystem">🛠️ 6 大业务子系统</h3>
+  <p style="font-size:12px;color:var(--color-text-3);margin-bottom:14px;margin-top:-8px;">每项业务配备独立子系统 · 含项目发布 / 物资调拨 / 签收追溯 / 影响报告</p>
+
+  <div class="sub-system-grid">
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #FAEFD9, #FFE4D2);">📚</div>
+      <div class="t">旧书回收专项</div>
+      <div class="d">企业 / 个人捐赠的旧书统一收集 + 分类 + 翻新 + 配送到山区学校</div>
+      <div class="stats">
+        <div class="s"><div class="v">86,400</div><div class="l">册</div></div>
+        <div class="s"><div class="v">1,260</div><div class="l">学校</div></div>
+      </div>
+    </div>
+
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #E0FAF5, #CCFBF1);">🖨️</div>
+      <div class="t">古籍修复资助</div>
+      <div class="d">资助国家级古籍修复项目 + 物资采购 + 修复师培训</div>
+      <div class="stats">
+        <div class="s"><div class="v">¥ 86<span style="font-size:11px;">万</span></div><div class="l">2024 资助</div></div>
+        <div class="s"><div class="v">128</div><div class="l">卷修复</div></div>
+      </div>
+    </div>
+
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #FFE4D2, #FFD9C0);">🎓</div>
+      <div class="t">阅读推广活动</div>
+      <div class="d">校园阅读节 / 作家进校园 / 读书会 / 数字化阅读推广</div>
+      <div class="stats">
+        <div class="s"><div class="v">86</div><div class="l">场活动</div></div>
+        <div class="s"><div class="v">12,860</div><div class="l">参与学生</div></div>
+      </div>
+    </div>
+
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #F3E8FF, #E9D5FF);">🏘️</div>
+      <div class="t">文化扶贫</div>
+      <div class="d">为贫困村社援建图书室 / 文化广场 / 数字阅读设备</div>
+      <div class="stats">
+        <div class="s"><div class="v">186</div><div class="l">村社</div></div>
+        <div class="s"><div class="v">¥ 56<span style="font-size:11px;">万</span></div><div class="l">设备</div></div>
+      </div>
+    </div>
+
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #FEF3C7, #FDE68A);">📖</div>
+      <div class="t">数字资源开放</div>
+      <div class="d">国家图书馆数字资源 + 古籍数据库 + 在线课程免费开放</div>
+      <div class="stats">
+        <div class="s"><div class="v">860<span style="font-size:11px;">万</span></div><div class="l">资源册</div></div>
+        <div class="s"><div class="v">286<span style="font-size:11px;">万</span></div><div class="l">月活</div></div>
+      </div>
+    </div>
+
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #DC2626, #991B1B);color:#fff;">📜</div>
+      <div class="t">志愿者培训</div>
+      <div class="d">图书管理员 / 古籍修复师 / 数字资源讲解员培训认证</div>
+      <div class="stats">
+        <div class="s"><div class="v">2,860</div><div class="l">认证志愿者</div></div>
+        <div class="s"><div class="v">32</div><div class="l">培训基地</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 旧书回收专项子系统样例 -->
+  <h3 class="section-title" id="book-recycle">📚 旧书回收专项 · 子系统流程</h3>
+  <div class="book-recycle-card">
+    <div style="font-size:14px;font-weight:700;color:#92400E;margin-bottom:14px;">♻️ 一本旧书从捐赠到送达的完整 6 步</div>
+    <div class="book-step">
+      <div class="n">1</div>
+      <div>
+        <div class="t">📦 捐赠登记</div>
+        <div class="d">企业 / 个人通过国家图书馆发展基金会专属页面提交，平台自动生成捐赠编号 + 二维码</div>
+      </div>
+    </div>
+    <div class="book-step">
+      <div class="n">2</div>
+      <div>
+        <div class="t">🚚 上门揽收</div>
+        <div class="d">慈商联营物流合作伙伴 48 小时内上门，1 本起收</div>
+      </div>
+    </div>
+    <div class="book-step">
+      <div class="n">3</div>
+      <div>
+        <div class="t">📋 分类 + 翻新</div>
+        <div class="d">国家图书馆分馆专业团队：按品类 / 完好度分类，可翻新的修复后入库，破损的再生纸</div>
+      </div>
+    </div>
+    <div class="book-step">
+      <div class="n">4</div>
+      <div>
+        <div class="t">🏫 智能匹配学校</div>
+        <div class="d">系统按学校年级 + 已有藏书 + 需求清单智能匹配，避免重复</div>
+      </div>
+    </div>
+    <div class="book-step">
+      <div class="n">5</div>
+      <div>
+        <div class="t">📚 配送 + 签收</div>
+        <div class="d">物流到学校 · 校方扫码签收 · 捐赠方收到签收凭证 + 学生反馈照片</div>
+      </div>
+    </div>
+    <div class="book-step">
+      <div class="n">6</div>
+      <div>
+        <div class="t">📈 影响报告</div>
+        <div class="d">季度向捐赠方出具"我这批书惠及多少学生"完整报告</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 影响报告样例 -->
+  <h3 class="section-title" id="reports">📈 2025 上半年影响报告</h3>
+  <div class="impact-panel">
+    <div>
+      <h3 style="font-size:18px;color:#0E5A6F;margin-bottom:12px;">📊 美心集团捐赠 8,000 册旧书影响追踪</h3>
+      <div style="font-size:13px;line-height:1.8;color:var(--color-text);">
+        <p>美心集团 2025-03 捐赠 8,000 册员工家庭闲置旧书，通过国家图书馆发展基金会专项处理：</p>
+        <p>✅ <strong>2,400 册</strong>（30%）翻新后送达 8 所山区学校<br>✅ <strong>4,200 册</strong>（52%）状态良好直接转赠 16 所打工子弟学校<br>✅ <strong>1,200 册</strong>（15%）再生纸处理，变现 ¥ 3,860 回捐国家图书馆古籍修复基金<br>✅ <strong>200 册</strong>（3%）破损丢弃</p>
+        <p style="margin-top:8px;">📚 累计惠及 <strong>2,860 名学生</strong>，产生阅读笔记 1,260 篇，学生反馈视频 86 段。</p>
+      </div>
+    </div>
+    <div>
+      <div style="background:#fff;border-radius:10px;padding:18px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🌟 关键指标</div>
+        <div style="font-size:12px;line-height:2;">
+          <div class="flex-between"><span>📚 翻新率</span><strong style="color:var(--color-trust);">82%</strong></div>
+          <div class="flex-between"><span>🏫 覆盖学校</span><strong>24 所</strong></div>
+          <div class="flex-between"><span>👦 惠及学生</span><strong>2,860 人</strong></div>
+          <div class="flex-between"><span>💚 满意度</span><strong style="color:var(--color-trust);">4.9/5.0</strong></div>
+          <div class="flex-between"><span>♻️ 再生回捐</span><strong>¥ 3,860</strong></div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:6px;">
+        <button class="btn btn-primary btn-sm" style="flex:1;">📥 下载完整报告</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;">📤 分享给捐赠方</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 子机构 -->
+  <h3 class="section-title" id="partners">🤝 子机构 · 32 家</h3>
+  <div class="sub-system-grid">
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #FFE4D2, #FFD9C0);">🏛️</div>
+      <div class="t">国家图书馆 · 北京总馆</div>
+      <div class="d">古籍修复中心 · 数字资源部 · 阅读推广部</div>
+    </div>
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #E0FAF5, #CCFBF1);">📚</div>
+      <div class="t">国家图书馆 · 分馆联盟</div>
+      <div class="d">32 家省市级分馆 + 2,860 家县级图书馆</div>
+    </div>
+    <div class="sub-card">
+      <div class="ic" style="background:linear-gradient(135deg, #FEF3C7, #FDE68A);">🏫</div>
+      <div class="t">校园图书馆联盟</div>
+      <div class="d">1,260 所合作学校 · 校园阅读推广主战场</div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;background:linear-gradient(135deg, #1E293B 0%, #334155 100%);border-radius:14px;padding:24px;color:#fff;">
+    <h3 style="font-size:18px;margin-bottom:8px;">🤝 您所在机构也想成为战略合作机构？</h3>
+    <p style="opacity:0.85;margin-bottom:16px;">战略合作机构享有：专属门户 · 业务子系统定制 · 5% 平台利润分成 · 联名品牌曝光 · 资源优先匹配</p>
+    <div class="flex gap-2">
+      <button class="btn btn-lg" style="background:#fff;color:#1E293B;font-weight:700;">📋 申请战略合作</button>
+      <button class="btn btn-ghost btn-lg" style="color:#fff;border:1px solid rgba(255,255,255,0.3);">📞 战略合作部联系</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>CS.renderHeader(); CS.renderFooter();</script>
+</body>
+</html>

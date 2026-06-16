@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>捐赠证书 · 美心食品集团 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<link rel="stylesheet" href="../public/css/dashboard.css">
+<style>
+  body { background: linear-gradient(135deg, #F5F7FA 0%, #E0FAF5 50%, #FAEFD9 100%); min-height: 100vh; }
+
+  .cert-page {
+    max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px;
+  }
+  .cert-actions {
+    display: flex; gap: 12px; justify-content: space-between; align-items: center; margin-bottom: 24px;
+  }
+
+  /* 证书主体 — 高端烫金效果 */
+  .cert-frame {
+    background: linear-gradient(135deg, #FFF9F0 0%, #FAEFD9 100%);
+    border: 8px solid transparent;
+    border-image: linear-gradient(135deg, #C4842A 0%, #E85D04 50%, #C44569 100%) 1;
+    border-radius: 12px;
+    padding: 60px 80px;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(196, 132, 42, 0.25);
+    overflow: hidden;
+  }
+  .cert-frame::before {
+    content: '';
+    position: absolute; inset: 16px;
+    border: 2px solid #C4842A;
+    border-radius: 6px;
+    pointer-events: none;
+  }
+  .cert-frame::after {
+    content: '🏛️';
+    position: absolute; right: 60px; top: 60px;
+    font-size: 180px; opacity: 0.06;
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+  .cert-watermark {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 200px; opacity: 0.04; pointer-events: none;
+    color: var(--color-trust);
+  }
+
+  .cert-content { position: relative; z-index: 1; text-align: center; }
+
+  .cert-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; color: #C4842A; font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .cert-eyebrow::before, .cert-eyebrow::after {
+    content: ''; width: 40px; height: 1px; background: #C4842A;
+  }
+
+  .cert-title {
+    font-size: 56px; font-weight: 900; line-height: 1.1;
+    background: linear-gradient(135deg, #C4842A 0%, #E85D04 50%, #C44569 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px; letter-spacing: 8px;
+  }
+  .cert-en {
+    font-size: 14px; letter-spacing: 6px; color: #C4842A;
+    margin-bottom: 40px; text-transform: uppercase; font-weight: 600;
+  }
+
+  .cert-line {
+    font-size: 18px; line-height: 2.2; color: #1E293B;
+    margin-bottom: 24px;
+  }
+  .cert-line .name {
+    display: inline-block; padding: 0 12px; margin: 0 6px;
+    font-size: 26px; font-weight: 800; color: #0E5A6F;
+    border-bottom: 2px solid #C4842A;
+  }
+  .cert-line .amount {
+    display: inline-block; padding: 0 12px; margin: 0 6px;
+    font-size: 32px; font-weight: 900; color: #E85D04;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cert-detail-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin: 36px 0; padding: 24px 0;
+    border-top: 1px dashed #C4842A;
+    border-bottom: 1px dashed #C4842A;
+  }
+  .cert-detail { text-align: center; }
+  .cert-detail .l { font-size: 12px; color: #6B7280; margin-bottom: 4px; }
+  .cert-detail .v { font-size: 16px; font-weight: 700; color: #1E293B; }
+
+  .cert-stamp-area {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 50px;
+  }
+  .cert-id {
+    text-align: left; font-size: 11px; color: #6B7280; line-height: 1.8;
+    font-family: var(--font-mono);
+  }
+  .cert-stamp {
+    text-align: center;
+  }
+  .cert-stamp .seal {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; margin: 0 auto;
+    border: 3px double #fff;
+    box-shadow: 0 0 0 2px #DC2626, inset 0 0 0 2px #DC2626, 0 4px 12px rgba(220, 38, 38, 0.4);
+    line-height: 1.2;
+    transform: rotate(-8deg);
+  }
+  .cert-stamp .sub {
+    font-size: 11px; color: #6B7280; margin-top: 4px;
+  }
+  .cert-date {
+    text-align: right; font-size: 14px; color: #1E293B; line-height: 1.8;
+  }
+  .cert-date .d { font-size: 18px; font-weight: 700; }
+  .cert-date .s { font-size: 12px; color: #6B7280; margin-top: 2px; }
+
+  /* 徽章/勋章带 */
+  .cert-medals {
+    display: flex; gap: 16px; justify-content: center; margin-top: 24px;
+  }
+  .cert-medal {
+    width: 70px; height: 70px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 32px;
+    background: linear-gradient(135deg, #FFF 0%, #FAEFD9 100%);
+    border: 2px solid #C4842A;
+    box-shadow: 0 4px 12px rgba(196, 132, 42, 0.3);
+    position: relative;
+  }
+  .cert-medal::after {
+    content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+    width: 16px; height: 8px; background: #C44569; border-radius: 2px;
+  }
+
+  /* 配套操作 */
+  .cert-side-cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .cert-side-card {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 18px;
+  }
+  .cert-side-card h4 { font-size: 14px; margin-bottom: 8px; }
+  .cert-side-card p { font-size: 12px; color: var(--color-text-2); line-height: 1.6; margin-bottom: 12px; }
+
+  .cert-layout { display: grid; grid-template-columns: 1fr 280px; gap: 24px; }
+  @media (max-width: 980px) { .cert-layout { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="cert-page">
+  <div class="cert-actions">
+    <a href="donation-detail.html" class="btn btn-ghost">← 返回捐赠详情</a>
+    <div class="flex gap-2">
+      <button class="btn btn-ghost">📤 分享到企业微信</button>
+      <button class="btn btn-ghost">📋 复制证书编号</button>
+      <button class="btn btn-primary">🖨️ 打印 / 下载 PDF</button>
+    </div>
+  </div>
+
+  <div class="cert-layout">
+    <div>
+      <div class="cert-frame">
+        <div class="cert-watermark">慈</div>
+        <div class="cert-content">
+          <div class="cert-eyebrow">CISHANG UNION</div>
+          <div class="cert-title">捐 赠 证 书</div>
+          <div class="cert-en">CERTIFICATE OF DONATION</div>
+
+          <div class="cert-line">
+            兹有 <span class="name">美心食品集团</span> 通过慈商联营平台
+          </div>
+          <div class="cert-line">
+            向云南省鲁甸地震灾区捐赠物资价值人民币
+            <span class="amount">¥ 18,600</span> 元
+          </div>
+          <div class="cert-line" style="font-size:16px;">
+            （共 <strong>1,200 件临期面包糕点</strong>），经受捐者现场签收确认。
+          </div>
+
+          <div class="cert-detail-grid">
+            <div class="cert-detail">
+              <div class="l">捐赠编号</div>
+              <div class="v">DON-2026-0512-018</div>
+            </div>
+            <div class="cert-detail">
+              <div class="l">物资类别</div>
+              <div class="v">食品 · 临期</div>
+            </div>
+            <div class="cert-detail">
+              <div class="l">覆盖地区</div>
+              <div class="v">云南 · 鲁甸</div>
+            </div>
+            <div class="cert-detail">
+              <div class="l">受惠人次</div>
+              <div class="v">500 户</div>
+            </div>
+            <div class="cert-detail">
+              <div class="l">合作慈善组织</div>
+              <div class="v">云南省慈善总会</div>
+            </div>
+            <div class="cert-detail">
+              <div class="l">签收完成率</div>
+              <div class="v">100%</div>
+            </div>
+          </div>
+
+          <div class="cert-medals">
+            <div class="cert-medal" title="百万捐赠企业">🏆</div>
+            <div class="cert-medal" title="五星公益伙伴">⭐</div>
+            <div class="cert-medal" title="连续 3 年公益伙伴">🌟</div>
+          </div>
+
+          <div class="cert-stamp-area">
+            <div class="cert-id">
+              证书唯一编号<br>
+              CS-DON-2026-0512-018-CERT<br>
+              <span style="opacity:0.7;">区块链存证 hash: 0x8f3a...b27d</span>
+            </div>
+            <div class="cert-stamp">
+              <div class="seal">慈商联营<br>物资认证</div>
+              <div class="sub">（官方认证章）</div>
+            </div>
+            <div class="cert-date">
+              <div class="d">2026 年 5 月 28 日</div>
+              <div class="s">签发于 海口 · 海南亚洲公益研究院</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="cert-side-cards">
+        <div class="cert-side-card" style="background:linear-gradient(135deg, #E0FAF5 0%, #fff 100%);">
+          <h4>🎁 证书的用途</h4>
+          <p>· <strong>企业 CSR 报告</strong>：直接引用证书编号 + 物资数据<br>· <strong>税前扣除凭证</strong>：配合捐赠票据使用<br>· <strong>招聘 / 品牌官网</strong>：公益荣誉展示<br>· <strong>政府采购加分</strong>：部分招标认可</p>
+        </div>
+        <div class="cert-side-card" style="background:linear-gradient(135deg, #FFF1E5 0%, #fff 100%);">
+          <h4>📜 已签发证书（6 张）</h4>
+          <div style="font-size:12px;line-height:2;">
+            <div>📄 <a href="#">2026-05-28 · 临期面包</a></div>
+            <div>📄 <a href="#">2026-04-12 · 儿童羽绒服</a></div>
+            <div>📄 <a href="#">2026-03-08 · 米面粮油</a></div>
+            <div>📄 <a href="#">2026-02-15 · 春节礼包</a></div>
+            <div>📄 <a href="#">2026-01-20 · 救灾物资</a></div>
+            <div>📄 <a href="#">2025-12-10 · 年度大礼包</a></div>
+          </div>
+        </div>
+        <div class="cert-side-card">
+          <h4>💌 受捐者感谢信</h4>
+          <p>本次捐赠收到 <strong>386 份</strong> 受捐者反馈（含语音感谢信 86 条、手写 124 份）。</p>
+          <a href="thanks-letter.html" class="btn btn-primary btn-block btn-sm">查看感谢信 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>CS.renderHeader(); CS.renderFooter();</script>
+</body>
+</html>

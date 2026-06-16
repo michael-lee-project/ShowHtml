@@ -75,7 +75,13 @@
         <div class="value">¥ 1,860</div>
         <div class="trend">累计</div>
       </div>
-      <div class="dash-stat theme-gold">
+      <div class="dash-stat theme-gold" style="cursor:pointer;" onclick="CS.modal({title:'📝 写感谢信',body:`<div style='line-height:1.8;'><p>您可以给以下任一捐赠方写感谢信：</p><div style='background:#FFF1E5;padding:12px;border-radius:8px;margin:12px 0;'><div style='font-weight:700;'>🍞 美心临期面包</div><div style='font-size:12px;color:var(--color-text-2);margin-top:4px;'>由<strong>美心食品集团</strong>捐赠 · 8 件 · 2025-06-01</div></div><div style='background:#E5F0F4;padding:12px;border-radius:8px;margin:12px 0;'><div style='font-weight:700;'>🥛 伊利儿童牛奶</div><div style='font-size:12px;color:var(--color-text-2);margin-top:4px;'>由<strong>伊利集团</strong>捐赠 · 6 盒 · 2025-05-15</div></div><div style='background:#F3E8FF;padding:12px;border-radius:8px;margin:12px 0;'><div style='font-weight:700;'>🍙 端午粽子礼盒</div><div style='font-size:12px;color:var(--color-text-2);margin-top:4px;'>由<strong>五芳斋集团</strong>捐赠 · 2 盒 · 2025-04-20</div></div><p style='color:var(--color-text-2);font-size:12px;margin-top:8px;'>💌 您的感谢信会到达企业的"受捐者感谢信"模块，企业可下载到 CSR 报告。</p></div><textarea class='form-control' style='width:100%;min-height:120px;margin-top:8px;' placeholder='写下您对捐赠企业的感谢...（可手写、语音、文字）'></textarea>`,okText:'📤 发送感谢信',onOk:function(){CS.toast('✅ 感谢信已发送！企业会在 1 小时内收到。')}})">
+        <div class="ic-deco">💌</div>
+        <div class="label">待写感谢信</div>
+        <div class="value">3<span class="unit">单</span></div>
+        <div class="trend">美心 / 伊利 / 五芳斋</div>
+      </div>
+      <div class="dash-stat theme-primary">
         <div class="ic-deco">⭐</div>
         <div class="label">反馈次数</div>
         <div class="value">8</div>
@@ -91,33 +97,39 @@
 
     <div class="dash-card mt-6">
       <div class="card-head">
-        <h3>📋 近期领取记录</h3>
+        <h3>📋 近期领取记录 · 给捐赠企业写感谢信</h3>
         <a href="history.html" class="more">全部 →</a>
       </div>
       <div class="dash-list">
-        <div class="dash-list-item">
+        <div class="dash-list-item" style="background:linear-gradient(90deg, rgba(232,93,4,0.04), transparent);border-left:3px solid var(--color-primary);">
           <div class="icon" style="background:linear-gradient(135deg,#FFE4D2,#FAEFD9);font-size:24px;">🍞</div>
           <div class="body">
-            <div class="title">美心临期面包</div>
-            <div class="meta">8 件 · 2025-06-01 · 五华县水寨镇</div>
+            <div class="title">美心临期面包 <span class="tag" style="background:#FEE2E2;color:#991B1B;font-size:10px;margin-left:4px;">📌 待写感谢信</span></div>
+            <div class="meta">8 件 · 2025-06-01 · 由 <strong>美心食品集团</strong> 捐赠</div>
           </div>
-          <span class="tag tag-success">已签收</span>
+          <div class="flex gap-2">
+            <button class="btn btn-primary btn-sm" onclick="CS.modal({title:'💌 写感谢信给美心食品集团',body:`<p>捐赠物资：<strong>美心临期面包 × 8 件</strong></p><p>签收日期：2025-06-01</p><p>志愿者：张伟</p><textarea class='form-control' style='width:100%;min-height:140px;margin-top:12px;' placeholder='写下您的感谢...&#10;例：志愿者把面包送到家里陪我聊家常，心里特别暖...'></textarea><p style='color:var(--color-text-2);font-size:11px;margin-top:8px;'>🛡️ 您的姓名和联系方式对捐赠企业不可见，仅以"李华"（姓保留）显示</p>`,okText:'📤 发送',onOk:function(){CS.toast('✅ 感谢信已发送！企业 1 小时内收到。')}}">💌 写感谢信</button>
+          </div>
         </div>
         <div class="dash-list-item">
           <div class="icon" style="background:linear-gradient(135deg,#E5F0F4,#E0FAF5);font-size:24px;">🥛</div>
           <div class="body">
-            <div class="title">伊利儿童牛奶</div>
-            <div class="meta">6 盒 · 2025-05-15 · 五华县水寨镇</div>
+            <div class="title">伊利儿童牛奶 <span class="tag tag-success" style="font-size:10px;margin-left:4px;">✅ 已感谢</span></div>
+            <div class="meta">6 盒 · 2025-05-15 · 由 <strong>伊利集团</strong> 捐赠</div>
           </div>
-          <span class="tag tag-success">已签收</span>
+          <div class="flex gap-2">
+            <button class="btn btn-ghost btn-sm" disabled>✅ 2025-05-16 已发送</button>
+          </div>
         </div>
         <div class="dash-list-item">
           <div class="icon" style="background:linear-gradient(135deg,#F3E8FF,#FFE4D2);font-size:24px;">🍙</div>
           <div class="body">
-            <div class="title">端午粽子礼盒</div>
-            <div class="meta">2 盒 · 2025-04-20 · 五华县水寨镇</div>
+            <div class="title">端午粽子礼盒 <span class="tag tag-success" style="font-size:10px;margin-left:4px;">✅ 已感谢</span></div>
+            <div class="meta">2 盒 · 2025-04-20 · 由 <strong>五芳斋集团</strong> 捐赠</div>
           </div>
-          <span class="tag tag-success">已签收</span>
+          <div class="flex gap-2">
+            <button class="btn btn-ghost btn-sm" disabled>✅ 2025-04-22 已发送</button>
+          </div>
         </div>
       </div>
     </div>

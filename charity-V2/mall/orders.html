@@ -36,6 +36,15 @@
   .order-card .foot { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--color-border-light); }
   .order-card .foot .total { font-size: 14px; }
   .order-card .foot .total .v { font-size: 20px; font-weight: 800; color: var(--color-primary); }
+  /* P1-6 订单类型 */
+  .order-card.gift { background: linear-gradient(135deg, #E0FAF5 0%, #fff 100%); border-color: var(--color-trust); }
+  .order-type-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 700;
+  }
+  .order-type-tag.self { background: var(--color-primary-soft); color: var(--color-primary); }
+  .order-type-tag.gift { background: #CCFBF1; color: #0D9488; }
 </style>
 </head>
 <body>
@@ -92,7 +101,10 @@
   <!-- 订单卡片 -->
   <div class="order-card">
     <div class="head">
-      <div class="meta">订单号：<strong>CC2025060100123</strong> · 下单时间：2025-06-01 14:30</div>
+      <div class="meta">
+        <span class="order-type-tag self">🛒 自购</span>
+        订单号：<strong>CC2025060100123</strong> · 下单时间：2025-06-01 14:30
+      </div>
       <span class="tag tag-success">已完成</span>
     </div>
     <div class="body">
@@ -100,7 +112,7 @@
       <div class="info">
         <div class="name">美心临期面包礼盒 1.2kg · 8 种口味</div>
         <div class="spec">1.2kg 礼盒装 · 混合 8 种 · × 2</div>
-        <div class="donate">💝 本订单捐赠 ¥ 0.40 · 已用于云南山区儿童营养餐</div>
+        <div class="donate">💝 本订单捐赠 ¥ 4.00 · 已用于云南山区儿童营养餐</div>
       </div>
       <div class="text-right">
         <div class="price">¥ 79.8</div>
@@ -108,11 +120,44 @@
       </div>
     </div>
     <div class="foot">
-      <div class="total">实付：<span class="v">¥ 79.8</span>（含捐赠 ¥ 0.40）</div>
+      <div class="total">实付：<span class="v">¥ 79.8</span>（含捐赠 ¥ 4.00）</div>
       <div class="flex gap-2">
         <button class="btn btn-ghost btn-sm">查看详情</button>
         <button class="btn btn-ghost btn-sm">再次购买</button>
         <button class="btn btn-primary btn-sm">评价晒单</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- P1-6 捐物资订单（赠送给受灾项目）示例卡 -->
+  <div class="order-card gift">
+    <div class="head">
+      <div class="meta">
+        <span class="order-type-tag gift">💝 捐物资</span>
+        订单号：<strong>CC2025052800086</strong> · 下单时间：2025-05-28 10:15
+        <span style="color:#0D9488;font-weight:600;margin-left:6px;">→ 赠送给【云南鲁甸地震救灾项目】</span>
+      </div>
+      <span class="tag tag-success">已签收</span>
+    </div>
+    <div class="body">
+      <div class="cover">🍞</div>
+      <div class="info">
+        <div class="name">美心临期面包礼盒 1.2kg · 8 种口味 × 4</div>
+        <div class="spec">1.2kg 礼盒装 · 混合 8 种 · × 4</div>
+        <div class="donate">🎁 <strong>您不收货</strong> · 商品已送达云南省慈善总会区域仓 · 由志愿者派发到户</div>
+        <div class="text-xs mt-2" style="color:var(--color-trust);font-weight:600;">📊 物资轨迹：派发 286/500 户 · 受捐者签收率 57%</div>
+      </div>
+      <div class="text-right">
+        <div class="price">¥ 159.6</div>
+        <div class="text-xs text-muted">× 4</div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="total">实付：<span class="v">¥ 159.6</span>（<strong>100% 物资捐赠</strong>，无 5% 商家自动捐赠）</div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm">📍 查看物资轨迹</button>
+        <button class="btn btn-ghost btn-sm">📜 受捐者感谢信</button>
+        <button class="btn btn-primary btn-sm">🏆 下载捐赠证书</button>
       </div>
     </div>
   </div>
@@ -127,7 +172,7 @@
       <div class="info">
         <div class="name">伊利高钙牛奶 250ml × 24 盒</div>
         <div class="spec">250ml × 24 盒 · × 1</div>
-        <div class="donate">💝 本订单将捐赠 ¥ 0.30</div>
+        <div class="donate">💝 本订单将捐赠 ¥ 3.00</div>
       </div>
       <div class="text-right">
         <div class="price">¥ 59</div>
@@ -135,7 +180,7 @@
       </div>
     </div>
     <div class="foot">
-      <div class="total">实付：<span class="v">¥ 59</span>（含捐赠 ¥ 0.30）</div>
+      <div class="total">实付：<span class="v">¥ 59</span>（含捐赠 ¥ 3.00）</div>
       <div class="flex gap-2">
         <button class="btn btn-ghost btn-sm">查看物流</button>
         <button class="btn btn-ghost btn-sm">延长收货</button>

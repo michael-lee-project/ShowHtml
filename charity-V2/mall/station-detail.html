@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>南山区科技园驿站 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<style>
+  body { background: var(--color-bg); }
+  .st-hero {
+    background: linear-gradient(135deg, #C4842A 0%, #B45309 50%, #92400E 100%);
+    color: #fff; border-radius: var(--radius-lg);
+    padding: 40px; margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .st-hero::after { content: '🏠'; position: absolute; right: 60px; top: -20px; font-size: 200px; opacity: 0.10; }
+
+  .st-info { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; margin-bottom: 24px; }
+  @media (max-width: 880px) { .st-info { grid-template-columns: 1fr; } }
+
+  .panel { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 16px; }
+  .panel h3 { font-size: 16px; margin-bottom: 12px; }
+  .panel p, .panel .desc { font-size: 13px; color: var(--color-text-2); line-height: 1.7; }
+
+  .info-list { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+  .info-list .row { display: flex; align-items: center; gap: 8px; }
+  .info-list .row .lbl { color: var(--color-text-3); min-width: 70px; }
+  .info-list .row .val { font-weight: 600; }
+
+  .service-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .service-mini { padding: 14px; background: var(--color-bg); border-radius: 8px; }
+  .service-mini .ic { font-size: 22px; margin-bottom: 4px; }
+  .service-mini .t { font-size: 13px; font-weight: 700; }
+  .service-mini .d { font-size: 11px; color: var(--color-text-3); margin-top: 2px; }
+
+  .product-card-mini {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: 8px; padding: 12px; display: flex; gap: 10px; align-items: center;
+    transition: all .15s; cursor: pointer;
+  }
+  .product-card-mini:hover { border-color: var(--color-primary); }
+  .product-card-mini .cover { width: 56px; height: 56px; border-radius: 8px; background: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .product-card-mini .name { font-size: 13px; font-weight: 600; }
+  .product-card-mini .meta { font-size: 11px; color: var(--color-text-3); }
+  .product-card-mini .price { font-weight: 800; color: var(--color-primary); font-size: 14px; }
+  .product-card-mini .price .old { text-decoration: line-through; color: var(--color-text-3); font-weight: 400; font-size: 11px; margin-left: 4px; }
+  .product-card-mini .self-pickup { background: #E0FAF5; color: #0D9488; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+
+  .activity-card { display: flex; gap: 14px; padding: 12px; background: var(--color-bg); border-radius: 8px; margin-bottom: 8px; }
+  .activity-card .date { width: 56px; flex-shrink: 0; text-align: center; background: linear-gradient(135deg, #E85D04, #C44569); color: #fff; border-radius: 8px; padding: 8px; }
+  .activity-card .date .d { font-size: 18px; font-weight: 800; line-height: 1; }
+  .activity-card .date .m { font-size: 10px; opacity: 0.9; }
+  .activity-card .body { flex: 1; }
+  .activity-card .t { font-size: 14px; font-weight: 700; }
+  .activity-card .meta { font-size: 11px; color: var(--color-text-3); margin-top: 2px; }
+
+  .map-placeholder { background: linear-gradient(135deg, #E0FAF5, #CCFBF1); height: 240px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--color-trust); font-size: 18px; font-weight: 700; position: relative; overflow: hidden; }
+  .map-placeholder::before { content: '🗺️'; position: absolute; left: 20px; top: 20px; font-size: 60px; opacity: 0.3; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container" style="padding: 24px 0 60px;">
+
+  <div class="st-hero">
+    <div style="position:relative;z-index:1;">
+      <div class="text-sm" style="opacity:0.85;margin-bottom:8px;">
+        <a href="../index.html" style="color:rgba(255,255,255,0.85);">首页</a> /
+        <a href="stations.html" style="color:rgba(255,255,255,0.85);">慈善驿站</a> /
+        南山区科技园驿站
+      </div>
+      <h1>🏠 南山区科技园驿站 <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📌 旗舰</span></h1>
+      <div class="lead" style="font-size:14px;opacity:0.92;margin-top:8px;">
+        村社闲置空间改造的公益客厅，集严选咖啡 / 物资自提 / 旧物回收 / 公益活动于一体。村社基金账户自动归集利润，<strong>0 管理费</strong>，全部用于社区治理。
+      </div>
+      <div class="flex gap-2 mt-3" style="flex-wrap:wrap;">
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🟢 营业中</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">⭐ 4.9 · 1,260 评价</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📍 0.8 km</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🏆 2024 年度五星级驿站</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="st-info">
+    <div>
+      <!-- 严选自提商品 -->
+      <div class="panel">
+        <div class="flex-between mb-3">
+          <h3>🛒 严选自提商品 · 厂家直供</h3>
+          <a href="category.html" class="text-primary text-sm">查看全部 →</a>
+        </div>
+        <div style="font-size:11px;color:var(--color-text-3);margin-bottom:12px;line-height:1.5;">
+          所有商品均为厂家直供，<strong>避免比价和假货</strong>。订单可选择"线下自提"或"快递到家"。
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="product-card-mini">
+            <div class="cover">☕</div>
+            <div style="flex:1;">
+              <div class="name">美式咖啡（中杯）</div>
+              <div class="meta">热/冰 · 自提优惠 30%</div>
+            </div>
+            <div>
+              <div class="price">¥ 12<span class="old">¥ 18</span></div>
+              <span class="self-pickup">📍 自提</span>
+            </div>
+          </div>
+          <div class="product-card-mini">
+            <div class="cover">🍞</div>
+            <div style="flex:1;">
+              <div class="name">美心临期面包 1.2kg</div>
+              <div class="meta">厂家直供 · 当日新鲜</div>
+            </div>
+            <div>
+              <div class="price">¥ 29.9<span class="old">¥ 39.9</span></div>
+              <span class="self-pickup">📍 自提</span>
+            </div>
+          </div>
+          <div class="product-card-mini">
+            <div class="cover">🌾</div>
+            <div style="flex:1;">
+              <div class="name">助农产品 · 云南红米</div>
+              <div class="meta">村社直采 · 5kg 装</div>
+            </div>
+            <div>
+              <div class="price">¥ 68</div>
+              <span class="self-pickup">📍 自提</span>
+            </div>
+          </div>
+          <div class="product-card-mini">
+            <div class="cover">📚</div>
+            <div style="flex:1;">
+              <div class="name">儿童绘本 5 册套装</div>
+              <div class="meta">国家图书馆推荐</div>
+            </div>
+            <div>
+              <div class="price">¥ 86<span class="old">¥ 128</span></div>
+              <span class="self-pickup">📍 自提</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;background:linear-gradient(135deg, #E0FAF5 0%, #fff 100%);padding:10px 14px;border-radius:8px;font-size:12px;color:var(--color-text-2);">
+          💎 严选商品每单 <strong>5%</strong> 自动归集到 <strong>南山区科技园社区基金</strong>，用于社区治理支出
+        </div>
+      </div>
+
+      <!-- 近期活动 -->
+      <div class="panel">
+        <div class="flex-between mb-3">
+          <h3>📅 近期公益活动 · 7 月</h3>
+          <a href="#" class="text-primary text-sm">活动日历 →</a>
+        </div>
+        <div class="activity-card">
+          <div class="date"><div class="d">15</div><div class="m">7月</div></div>
+          <div class="body">
+            <div class="t">🎓 儿童防溺水安全课堂</div>
+            <div class="meta">📍 驿站二楼 · 14:00-16:00 · 限 30 个家庭 · 免费报名</div>
+          </div>
+          <button class="btn btn-primary btn-sm" style="align-self:center;">立即报名</button>
+        </div>
+        <div class="activity-card">
+          <div class="date"><div class="d">18</div><div class="m">7月</div></div>
+          <div class="body">
+            <div class="t">♻️ 旧衣物回收日 · 兑换积分</div>
+            <div class="meta">📍 驿站门口 · 10:00-17:00 · 0.5 元/公斤 · 兑换生活用品</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="align-self:center;">查看详情</button>
+        </div>
+        <div class="activity-card">
+          <div class="date" style="background:linear-gradient(135deg, #14B8A6, #0D9488);"><div class="d">22</div><div class="m">7月</div></div>
+          <div class="body">
+            <div class="t">☕ 咖啡拉花体验课</div>
+            <div class="meta">📍 驿站一楼 · 19:00-21:00 · ¥ 68 / 人 · 限 12 人</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="align-self:center;">报名</button>
+        </div>
+        <div class="activity-card">
+          <div class="date" style="background:linear-gradient(135deg, #7C3AED, #C44569);"><div class="d">28</div><div class="m">7月</div></div>
+          <div class="body">
+            <div class="t">❤️ 老人智能手机使用课堂</div>
+            <div class="meta">📍 驿站二楼 · 10:00-12:00 · 60 岁以上免费</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="align-self:center;">已报满</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- 驿站信息 -->
+      <div class="panel">
+        <h3>📍 驿站信息</h3>
+        <div class="info-list">
+          <div class="row"><span class="lbl">📍 地址</span><span class="val">深圳市南山区科苑南路 88 号 1 楼</span></div>
+          <div class="row"><span class="lbl">⏰ 营业</span><span class="val" style="color:var(--color-trust);">09:00 - 21:00</span></div>
+          <div class="row"><span class="lbl">📞 电话</span><span class="val">0755-8666-0888</span></div>
+          <div class="row"><span class="lbl">🚇 交通</span><span class="val">地铁 1 号线高新园站 B 出口</span></div>
+          <div class="row"><span class="lbl">🅿️ 停车</span><span class="val">驿站门口 5 个公益车位</span></div>
+          <div class="row"><span class="lbl">🏠 面积</span><span class="val">280 m²（2 层）</span></div>
+          <div class="row"><span class="lbl">👥 雇员</span><span class="val">3 名本地兼职（小时薪）</span></div>
+        </div>
+      </div>
+
+      <!-- 4 类服务 -->
+      <div class="panel">
+        <h3>🎯 驿站 4 大服务</h3>
+        <div class="service-grid">
+          <div class="service-mini">
+            <div class="ic">☕</div>
+            <div class="t">严选咖啡</div>
+            <div class="d">厂家直供 · 月售 1,200 杯</div>
+          </div>
+          <div class="service-mini">
+            <div class="ic">📦</div>
+            <div class="t">物资自提</div>
+            <div class="d">受捐物资分批送达自提</div>
+          </div>
+          <div class="service-mini">
+            <div class="ic">♻️</div>
+            <div class="t">旧物回收</div>
+            <div class="d">衣物 0.5 元/公斤 · 纸张 1 元</div>
+          </div>
+          <div class="service-mini">
+            <div class="ic">🎓</div>
+            <div class="t">公益活动</div>
+            <div class="d">月均 8 场 · 居民免费参与</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 月度贡献 -->
+      <div class="panel" style="background:linear-gradient(135deg, #FFF1E5 0%, #FAEFD9 100%);">
+        <h3>📊 本月贡献</h3>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;font-size:13px;">
+          <div style="text-align:center;padding:10px;background:#fff;border-radius:8px;">
+            <div style="font-size:20px;font-weight:800;color:var(--color-primary);">¥ 18,260</div>
+            <div style="font-size:10px;color:var(--color-text-3);">商品销售额</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:#fff;border-radius:8px;">
+            <div style="font-size:20px;font-weight:800;color:var(--color-trust);">¥ 913</div>
+            <div style="font-size:10px;color:var(--color-text-3);">归集社区基金</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:#fff;border-radius:8px;">
+            <div style="font-size:20px;font-weight:800;color:#7C3AED;">1,260</div>
+            <div style="font-size:10px;color:var(--color-text-3);">接待人次</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:#fff;border-radius:8px;">
+            <div style="font-size:20px;font-weight:800;color:#D97706;">186</div>
+            <div style="font-size:10px;color:var(--color-text-3);">物资自提单</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:11px;color:var(--color-text-2);text-align:center;">
+          💎 利润 100% 归集到 <strong>南山区科技园社区基金</strong>，无管理费
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 地图 -->
+  <div class="panel">
+    <h3>🗺️ 地图位置</h3>
+    <div class="map-placeholder">深圳市南山区科苑南路 88 号 1 楼</div>
+  </div>
+
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>CS.renderHeader('mall'); CS.renderFooter();</script>
+</body>
+</html>

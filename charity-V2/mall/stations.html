@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>慈善驿站 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<style>
+  body { background: var(--color-bg); }
+  .station-hero {
+    background: linear-gradient(135deg, #C4842A 0%, #B45309 50%, #92400E 100%);
+    color: #fff; border-radius: var(--radius-lg);
+    padding: 40px; margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .station-hero::after { content: '🏠'; position: absolute; right: 60px; top: -20px; font-size: 220px; opacity: 0.10; }
+  .station-hero h1 { font-size: 32px; margin-bottom: 8px; }
+  .station-hero .lead { font-size: 15px; opacity: 0.92; max-width: 580px; }
+
+  .search-bar {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 16px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 768px) { .search-bar { grid-template-columns: 1fr; } }
+
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-mini { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 18px; display: flex; gap: 12px; align-items: center; }
+  .stat-mini .ic { width: 40px; height: 40px; border-radius: 10px; background: var(--color-primary-soft); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .stat-mini .v { font-size: 22px; font-weight: 800; line-height: 1; }
+  .stat-mini .l { font-size: 11px; color: var(--color-text-3); margin-top: 2px; }
+
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-bar .chip { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--color-text-2); }
+  .filter-bar .chip.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+  .station-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 768px) { .station-grid { grid-template-columns: 1fr; } }
+
+  .station-card {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 20px;
+    transition: all .2s; cursor: pointer;
+  }
+  .station-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: var(--color-primary); }
+  .station-card .head { display: flex; gap: 14px; margin-bottom: 12px; }
+  .station-card .logo {
+    width: 56px; height: 56px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+    background: linear-gradient(135deg, #FFE4D2, #FAEFD9); flex-shrink: 0;
+  }
+  .station-card .body { flex: 1; }
+  .station-card .name { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .station-card .addr { font-size: 12px; color: var(--color-text-2); }
+  .station-card .distance { font-size: 11px; color: var(--color-primary); font-weight: 700; margin-top: 2px; }
+  .station-card .services { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .station-card .services .s { background: var(--color-bg); padding: 3px 8px; border-radius: 4px; font-size: 10px; color: var(--color-text-2); }
+  .station-card .services .s.heat { background: var(--color-primary-soft); color: var(--color-primary); }
+  .station-card .foot { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px dashed var(--color-border); font-size: 12px; }
+  .station-card .foot .hours { color: var(--color-trust); font-weight: 600; }
+  .station-card .foot .rating { color: #F59E0B; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container" style="padding: 24px 0 60px;">
+
+  <div class="station-hero">
+    <div style="position:relative;z-index:1;">
+      <h1>🏠 慈善驿站 · 村社的公益客厅</h1>
+      <div class="lead">线下空间 + 严选商品 + 物资自提 + 社区服务。共 186 家驿站，覆盖 32 个城市、1,260 个村社，<strong>每家驿站月均接待 800+ 人次</strong>，是慈商联营"线上 + 线下"协同的核心入口。</div>
+      <div class="flex gap-2 mt-3">
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">☕ 严选咖啡 / 茶饮</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">♻️ 旧物回收</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📦 物资自提</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🎓 公益活动</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" class="form-control" placeholder="🔍 搜索驿站名 / 地址 / 城市">
+    <select class="form-control">
+      <option>📍 当前位置 · 深圳市南山区</option>
+      <option>北京</option><option>上海</option><option>广州</option><option>成都</option>
+    </select>
+    <select class="form-control">
+      <option>距离最近</option><option>评分最高</option><option>商品最丰富</option>
+    </select>
+    <button class="btn btn-primary">🔍 搜索</button>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-mini">
+      <div class="ic">🏠</div>
+      <div>
+        <div class="v">186</div>
+        <div class="l">已开业驿站</div>
+      </div>
+    </div>
+    <div class="stat-mini" style="border-left:3px solid var(--color-trust);">
+      <div class="ic" style="background:linear-gradient(135deg, #E0FAF5, #CCFBF1);color:var(--color-trust);">📍</div>
+      <div>
+        <div class="v">32</div>
+        <div class="l">覆盖城市</div>
+      </div>
+    </div>
+    <div class="stat-mini" style="border-left:3px solid var(--color-primary);">
+      <div class="ic" style="background:linear-gradient(135deg, #FFE4D2, #FFD9C0);color:var(--color-primary);">☕</div>
+      <div>
+        <div class="v">¥ 1,860</div>
+        <div class="l">月均营业额 / 单店</div>
+      </div>
+    </div>
+    <div class="stat-mini" style="border-left:3px solid #7C3AED;">
+      <div class="ic" style="background:linear-gradient(135deg, #F3E8FF, #E9D5FF);color:#7C3AED;">🛒</div>
+      <div>
+        <div class="v">1,260</div>
+        <div class="l">月均接待人次 / 单店</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="chip active">全部</span>
+    <span class="chip">📍 1km 内</span>
+    <span class="chip">☕ 含咖啡</span>
+    <span class="chip">♻️ 含旧物回收</span>
+    <span class="chip">📦 含物资自提</span>
+    <span class="chip">⭐ 4.5+</span>
+    <span class="chip">🆕 新开业</span>
+  </div>
+
+  <div class="station-grid">
+    <div class="station-card" onclick="location.href='station-detail.html?id=sz-ns-001'">
+      <div class="head">
+        <div class="logo">🏠</div>
+        <div class="body">
+          <div class="name">南山区科技园驿站 <span class="tag" style="background:linear-gradient(135deg, #DC2626, #B91C1C);color:#fff;font-size:10px;">📌 旗舰</span></div>
+          <div class="addr">深圳市南山区科苑南路 88 号 1 楼</div>
+          <div class="distance">📍 0.8 km · 步行 11 分钟</div>
+        </div>
+      </div>
+      <div class="services">
+        <span class="s heat">☕ 严选咖啡</span>
+        <span class="s heat">📦 物资自提</span>
+        <span class="s heat">♻️ 旧物回收</span>
+        <span class="s">🎓 公益讲座</span>
+        <span class="s">📚 图书借阅</span>
+      </div>
+      <div class="foot">
+        <span class="hours">🟢 营业中 · 09:00 - 21:00</span>
+        <span class="rating">⭐ 4.9 · 1,260 评价</span>
+      </div>
+    </div>
+
+    <div class="station-card" onclick="location.href='station-detail.html?id=sz-fh-002'">
+      <div class="head">
+        <div class="logo" style="background:linear-gradient(135deg, #E0FAF5, #CCFBF1);">🏠</div>
+        <div class="body">
+          <div class="name">福田区香蜜湖驿站</div>
+          <div class="addr">深圳市福田区香梅路 1003 号</div>
+          <div class="distance">📍 2.3 km · 公交 25 分钟</div>
+        </div>
+      </div>
+      <div class="services">
+        <span class="s heat">☕ 严选咖啡</span>
+        <span class="s">📦 物资自提</span>
+        <span class="s">🎓 公益课堂</span>
+        <span class="s">👴 老人关爱</span>
+      </div>
+      <div class="foot">
+        <span class="hours">🟢 营业中 · 09:00 - 19:00</span>
+        <span class="rating">⭐ 4.7 · 856 评价</span>
+      </div>
+    </div>
+
+    <div class="station-card" onclick="location.href='station-detail.html?id=sz-lh-003'">
+      <div class="head">
+        <div class="logo" style="background:linear-gradient(135deg, #F3E8FF, #E9D5FF);">🏠</div>
+        <div class="body">
+          <div class="name">龙华区民乐村驿站 <span class="tag" style="background:#D1FAE5;color:#065F46;font-size:10px;">🆕 新开</span></div>
+          <div class="addr">深圳市龙华区民乐村文化广场旁</div>
+          <div class="distance">📍 5.2 km · 地铁 4 号线</div>
+        </div>
+      </div>
+      <div class="services">
+        <span class="s heat">♻️ 旧物回收</span>
+        <span class="s heat">📦 物资自提</span>
+        <span class="s">🌾 助农产品</span>
+        <span class="s">👨‍🌾 村民议事</span>
+      </div>
+      <div class="foot">
+        <span class="hours">🟢 营业中 · 10:00 - 20:00</span>
+        <span class="rating">⭐ 4.8 · 286 评价</span>
+      </div>
+    </div>
+
+    <div class="station-card" onclick="location.href='station-detail.html?id=gz-th-004'">
+      <div class="head">
+        <div class="logo" style="background:linear-gradient(135deg, #FAEFD9, #FFE4D2);">🏠</div>
+        <div class="body">
+          <div class="name">广州市天河区石牌驿站</div>
+          <div class="addr">广州市天河区石牌东路 168 号</div>
+          <div class="distance">📍 6.8 km · 地铁 3 号线</div>
+        </div>
+      </div>
+      <div class="services">
+        <span class="s heat">☕ 严选咖啡</span>
+        <span class="s heat">♻️ 旧物回收</span>
+        <span class="s">📚 图书角</span>
+        <span class="s">🎨 文创市集</span>
+      </div>
+      <div class="foot">
+        <span class="hours">🟢 营业中 · 09:30 - 21:30</span>
+        <span class="rating">⭐ 4.6 · 412 评价</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:32px;color:var(--color-text-3);font-size:13px;">
+    显示前 4 家 · 完整 186 家 <a href="#" style="color:var(--color-primary);font-weight:600;">查看更多驿站 →</a>
+  </div>
+
+  <!-- 公益驿站合作邀请 -->
+  <div style="background:linear-gradient(135deg, #FFF1E5 0%, #FAEFD9 100%);border-radius:14px;padding:32px;margin-top:24px;text-align:center;">
+    <h2 style="font-size:22px;margin-bottom:8px;">🤝 您的村社也能开一家慈善驿站</h2>
+    <p style="color:var(--color-text-2);margin-bottom:16px;">村委提供闲置场地 + 慈商联营提供严选商品 + 物流支持 + 数字化系统<br>村社基金账户自动归集利润，<strong>0 管理费</strong>，全部留给基层</p>
+    <div class="flex gap-2" style="justify-content:center;">
+      <button class="btn btn-primary btn-lg">📋 申请开设驿站</button>
+      <button class="btn btn-ghost">📞 咨询招商经理</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>CS.renderHeader('mall'); CS.renderFooter();</script>
+</body>
+</html>

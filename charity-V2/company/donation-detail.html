@@ -65,7 +65,8 @@
       <div class="flex gap-2">
         <a href="donation-list.html" class="btn btn-ghost">← 返回列表</a>
         <button class="btn btn-ghost">📤 分享</button>
-        <button class="btn btn-primary">📥 下载完整报告</button>
+        <button class="btn btn-primary" onclick="CS.toast('✅ 票据申请已提交！');">🧾 申请捐赠票据</button>
+        <button class="btn btn-ghost">📥 下载完整报告</button>
       </div>
     </div>
 
@@ -100,6 +101,7 @@
           <div class="card-head">
             <h3>🔍 物资全流程轨迹</h3>
             <span class="text-sm text-muted">共 6 个节点 · 历时 5 天</span>
+            <a href="../pages/track.html" class="btn btn-ghost btn-sm" style="margin-left:auto;">↗ 在公共查询页打开</a>
           </div>
           <div class="timeline-trace">
             <div class="trace-node done">
@@ -238,13 +240,13 @@
               </div>
               <a href="#" class="btn-link text-xs">下载</a>
             </div>
-            <div class="dash-list-item">
-              <div class="icon" style="background:var(--color-bg-alt);color:var(--color-text-2);">🏅</div>
+            <div class="dash-list-item" style="background:linear-gradient(135deg, #FFF1E5 0%, #fff 100%);border:1px solid #FFD9C0;">
+              <div class="icon" style="background:linear-gradient(135deg, #E85D04, #C4842A);color:#fff;font-size:18px;">🧾</div>
               <div class="body">
-                <div class="title text-sm">慈善捐赠票据</div>
-                <div class="text-xs text-muted">待生成</div>
+                <div class="title text-sm fw-700">慈善捐赠票据 <span class="text-xs" style="color:#D97706;font-weight:600;">(税前扣除核心凭证)</span></div>
+                <div class="text-xs text-muted">5 个工作日内由慈善组织出具</div>
               </div>
-              <a href="#" class="btn-link text-xs">申请</a>
+              <button class="btn btn-primary btn-sm" onclick="CS.toast('✅ 票据申请已提交！慈善组织 5 个工作日内将出具财政部门统一监制的捐赠票据');">申请开票</button>
             </div>
           </div>
         </div>

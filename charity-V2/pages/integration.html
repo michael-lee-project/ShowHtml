@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统对接评估 · 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<style>
+  body { background: linear-gradient(180deg, #F5F7FA 0%, #fff 100%); }
+  .integration-hero {
+    background: linear-gradient(135deg, #1E293B 0%, #334155 50%, #475569 100%);
+    color: #fff; border-radius: var(--radius-lg);
+    padding: 40px; margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .integration-hero::after { content: '🔌'; position: absolute; right: 60px; top: -20px; font-size: 220px; opacity: 0.10; }
+  .integration-hero h1 { font-size: 32px; margin-bottom: 8px; }
+  .integration-hero .lead { font-size: 15px; opacity: 0.92; max-width: 720px; }
+
+  .system-card {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 24px; margin-bottom: 16px;
+    display: grid; grid-template-columns: 1fr 200px; gap: 20px; align-items: center;
+  }
+  .system-card .left .head { display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+  .system-card .left .head .logo {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: linear-gradient(135deg, #FFE4D2, #FAEFD9);
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+  }
+  .system-card .left .head .name { font-size: 18px; font-weight: 800; }
+  .system-card .left .head .meta { font-size: 12px; color: var(--color-text-3); }
+  .system-card .left .desc { font-size: 13px; color: var(--color-text-2); line-height: 1.6; margin-bottom: 12px; }
+  .system-card .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .system-card .tags .t { background: var(--color-bg); padding: 4px 10px; border-radius: 4px; font-size: 11px; color: var(--color-text-2); }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+  }
+  .status-pill.ready { background: #D1FAE5; color: #065F46; }
+  .status-pill.dev { background: #FEF3C7; color: #92400E; }
+  .status-pill.feasible { background: #E0E7FF; color: #3730A3; }
+  .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .compat-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compat-table th { background: var(--color-bg); padding: 12px 10px; text-align: left; font-size: 12px; font-weight: 600; color: var(--color-text-2); border-bottom: 1px solid var(--color-border); }
+  .compat-table td { padding: 12px 10px; border-bottom: 1px solid var(--color-border-light); }
+  .compat-table .check { color: var(--color-trust); font-weight: 800; }
+  .compat-table .warn { color: #D97706; font-weight: 800; }
+  .compat-table .fail { color: #DC2626; font-weight: 800; }
+
+  .roadmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .roadmap-step { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px; position: relative; }
+  .roadmap-step .n { font-size: 28px; font-weight: 900; line-height: 1; color: var(--color-primary); }
+  .roadmap-step .t { font-size: 14px; font-weight: 700; margin: 6px 0 4px; }
+  .roadmap-step .d { font-size: 11px; color: var(--color-text-3); line-height: 1.5; }
+  .roadmap-step .date { font-size: 11px; color: var(--color-trust); font-weight: 700; margin-top: 6px; }
+  .roadmap-step::after { content: '→'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--color-text-3); z-index: 1; background: #fff; padding: 0 4px; }
+  .roadmap-step:last-child::after { display: none; }
+
+  .api-doc {
+    background: #0F172A; color: #E2E8F0; padding: 18px 20px; border-radius: 8px;
+    font-family: var(--font-mono, "SF Mono", monospace); font-size: 12px; line-height: 1.7;
+    overflow-x: auto; white-space: pre-wrap;
+  }
+  .api-doc .c { color: #64748B; }
+  .api-doc .k { color: #C084FC; }
+  .api-doc .s { color: #5EEAD4; }
+  .api-doc .n { color: #FCD34D; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container" style="padding: 24px 0 60px;">
+
+  <div class="integration-hero">
+    <div style="position:relative;z-index:1;">
+      <div class="text-sm" style="opacity:0.85;margin-bottom:8px;">
+        <a href="../index.html" style="color:rgba(255,255,255,0.85);">首页</a> / 系统对接评估
+      </div>
+      <h1>🔌 旧系统对接评估 · 让平台可融入既有生态</h1>
+      <div class="lead">慈商联营不是孤立平台——已对国内 5 大公益 / 慈善系统做接口调研，让慈善组织可平滑迁移、数据互通、业务协同。</div>
+      <div class="flex gap-2 mt-3">
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">✅ 2 个系统已就绪</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🛠️ 3 个系统开发中</span>
+        <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📞 技术对接会 7-22</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:18px;margin-bottom:12px;">📊 5 大系统对接状态</h3>
+
+  <div class="system-card">
+    <div class="left">
+      <div class="head">
+        <div class="logo">🏛️</div>
+        <div>
+          <div class="name">公益宝系统</div>
+          <div class="meta">村社公益基金平台 · 5 万+ 村社基金 · 湖北等省使用 · 体制内最大</div>
+        </div>
+      </div>
+      <div class="desc">公益宝是国内最大的村社公益基金管理系统，<strong>接入 5 万+ 村社基金账户</strong>，但大量"僵尸账户"因无利益分配而失活。慈商联营通过 0 管理费分润 + 村社基金自动归集能力，可为公益宝账户重新注入活力。</div>
+      <div class="tags">
+        <span class="t">🔌 API: REST + Webhook</span>
+        <span class="t">📊 数据: 基金账户 / 流水 / 捐赠人</span>
+        <span class="t">🔒 认证: OAuth 2.0</span>
+        <span class="t">⏰ 同步: 实时</span>
+        <span class="t">🛠️ 对接方: 中科大一附院公益宝团队</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="status-pill dev">
+        <span class="dot"></span>🛠️ 接口开发中
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--color-text-3);text-align:center;">
+        预计 2026 Q4 上线
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px;">查看 API 文档</button>
+    </div>
+  </div>
+
+  <div class="system-card">
+    <div class="left">
+      <div class="head">
+        <div class="logo" style="background:linear-gradient(135deg, #E0FAF5, #CCFBF1);">📋</div>
+        <div>
+          <div class="name">慈善中国 · 全国慈善信息公开平台</div>
+          <div class="meta">民政部 · 法定信息披露平台 · 必对接</div>
+        </div>
+      </div>
+      <div class="desc">民政部主管的法定慈善信息公开平台，所有慈善组织年度报告必须在此公示。<strong>法定对接义务</strong>，慈商联营自动生成符合民政部规范的 XML 报告文件并按季度推送。</div>
+      <div class="tags">
+        <span class="t">🔌 API: XML / SOAP</span>
+        <span class="t">📊 数据: 慈善组织年报 / 募捐信息 / 审计</span>
+        <span class="t">🔒 认证: 数字证书</span>
+        <span class="t">⏰ 同步: 季度</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="status-pill ready">
+        <span class="dot"></span>✅ 已就绪
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--color-text-3);text-align:center;">
+        2026 Q1 已完成对接
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px;">查看对接记录</button>
+    </div>
+  </div>
+
+  <div class="system-card">
+    <div class="left">
+      <div class="head">
+        <div class="logo" style="background:linear-gradient(135deg, #F3E8FF, #E9D5FF);">💳</div>
+        <div>
+          <div class="name">中国银行公益专户系统</div>
+          <div class="meta">慈善资金专户管理 · 财务合规硬要求</div>
+        </div>
+      </div>
+      <div class="desc">合作银行（不绑定特定银行）的公益资金专户管理系统，按《慈善法》要求必须专户管理、专款专用、独立核算。<strong>慈商联营分润流水 + 票据 + 审计报告自动同步到银行</strong>。</div>
+      <div class="tags">
+        <span class="t">🔌 API: REST + ISO 20022</span>
+        <span class="t">📊 数据: 资金流水 / 余额 / 票据</span>
+        <span class="t">🔒 认证: 银行级 UKey</span>
+        <span class="t">⏰ 同步: 实时（T+0）</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="status-pill ready">
+        <span class="dot"></span>✅ 已就绪
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--color-text-3);text-align:center;">
+        2026 Q2 已完成 · 工商银行 / 招商银行 / 平安银行
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px;">查看对接记录</button>
+    </div>
+  </div>
+
+  <div class="system-card">
+    <div class="left">
+      <div class="head">
+        <div class="logo" style="background:linear-gradient(135deg, #FAEFD9, #FFE4D2);">🏢</div>
+        <div>
+          <div class="name">国家政务服务平台 · 信用核查</div>
+          <div class="meta">企业资质核验 · 法定代表人 · 信用记录</div>
+        </div>
+      </div>
+      <div class="desc">企业入驻慈商联营时，需要核验营业执照、法人身份、信用记录等。慈商联营接入国家政务服务平台的"信用核查 API"，企业提交资料后 <strong>5 秒内自动完成全量核验</strong>，无需人工审核。</div>
+      <div class="tags">
+        <span class="t">🔌 API: REST + OAuth 2.0</span>
+        <span class="t">📊 数据: 工商 / 法人 / 信用 / 失信</span>
+        <span class="t">🔒 认证: 政务证书</span>
+        <span class="t">⏰ 同步: 实时</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="status-pill dev">
+        <span class="dot"></span>🛠️ 接口开发中
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--color-text-3);text-align:center;">
+        预计 2026 Q3 上线
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px;">查看 API 文档</button>
+    </div>
+  </div>
+
+  <div class="system-card">
+    <div class="left">
+      <div class="head">
+        <div class="logo" style="background:linear-gradient(135deg, #FEE2E2, #FECACA);">📱</div>
+        <div>
+          <div class="name">全国志愿服务信息系统</div>
+          <div class="meta">志愿者时长国家认证 · 民政部主管</div>
+        </div>
+      </div>
+      <div class="desc">志愿者服务时长需要在该平台同步认证才能计入个人档案。慈商联营每次志愿者完成任务后，<strong>自动同步时长 + 服务记录</strong>到国家系统，志愿者无需重复登记。</div>
+      <div class="tags">
+        <span class="t">🔌 API: REST</span>
+        <span class="t">📊 数据: 志愿者档案 / 服务时长 / 培训记录</span>
+        <span class="t">🔒 认证: 志愿者注册号</span>
+        <span class="t">⏰ 同步: 实时</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="status-pill dev">
+        <span class="dot"></span>🛠️ 接口开发中
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--color-text-3);text-align:center;">
+        预计 2026 Q4 上线
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px;">查看 API 文档</button>
+    </div>
+  </div>
+
+  <!-- 兼容矩阵 -->
+  <h3 style="font-size:18px;margin:32px 0 12px;">🔍 数据兼容矩阵</h3>
+  <div class="dash-card" style="padding:0;overflow:hidden;">
+    <table class="compat-table">
+      <thead>
+        <tr>
+          <th>对接系统</th>
+          <th>组织信息</th>
+          <th>项目数据</th>
+          <th>捐赠流水</th>
+          <th>受捐者信息</th>
+          <th>志愿者档案</th>
+          <th>审计报告</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>公益宝</strong></td>
+          <td class="check">✅</td>
+          <td class="check">✅</td>
+          <td class="check">✅</td>
+          <td class="warn">⚠️ 脱敏</td>
+          <td class="warn">⚠️ 待开发</td>
+          <td class="check">✅</td>
+        </tr>
+        <tr>
+          <td><strong>慈善中国</strong></td>
+          <td class="check">✅</td>
+          <td class="check">✅</td>
+          <td class="check">✅</td>
+          <td class="fail">❌ 不涉及</td>
+          <td class="fail">❌ 不涉及</td>
+          <td class="check">✅</td>
+        </tr>
+        <tr>
+          <td><strong>银行专户</strong></td>
+          <td class="fail">❌</td>
+          <td class="fail">❌</td>
+          <td class="check">✅</td>
+          <td class="fail">❌</td>
+          <td class="fail">❌</td>
+          <td class="check">✅</td>
+        </tr>
+        <tr>
+          <td><strong>国家政务</strong></td>
+          <td class="check">✅</td>
+          <td class="fail">❌</td>
+          <td class="fail">❌</td>
+          <td class="fail">❌</td>
+          <td class="fail">❌</td>
+          <td class="fail">❌</td>
+        </tr>
+        <tr>
+          <td><strong>志愿系统</strong></td>
+          <td class="fail">❌</td>
+          <td class="check">✅</td>
+          <td class="fail">❌</td>
+          <td class="fail">❌</td>
+          <td class="check">✅</td>
+          <td class="fail">❌</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- API 文档样例 -->
+  <h3 style="font-size:18px;margin:32px 0 12px;">📡 API 接口样例（公益宝）</h3>
+  <div class="api-doc">
+<span class="c"># 同步村社基金账户</span>
+<span class="k">POST</span> <span class="s">https://api.cishang.cn/v1/integration/gongyibao/fund-account/sync</span>
+<span class="k">Authorization</span>: <span class="s">Bearer {oauth_token}</span>
+<span class="k">Content-Type</span>: <span class="s">application/json</span>
+
+{
+  <span class="k">"village_fund_id"</span>: <span class="s">"GD-SZ-NS-001"</span>,
+  <span class="k">"village_name"</span>: <span class="s">"南山区科技园社区基金"</span>,
+  <span class="k">"balance"</span>: <span class="n">86260.18</span>,
+  <span class="k">"currency"</span>: <span class="s">"CNY"</span>,
+  <span class="k">"last_sync_at"</span>: <span class="s">"2026-06-15T24:00:00+08:00"</span>,
+  <span class="k">"transfers_today"</span>: [
+    { <span class="k">"type"</span>: <span class="s">"in"</span>, <span class="k">"amount"</span>: <span class="n">1260.18</span>, <span class="k">"source"</span>: <span class="s">"mall_revenue"</span> },
+    { <span class="k">"type"</span>: <span class="s">"in"</span>, <span class="k">"amount"</span>: <span class="n">386.50</span>, <span class="k">"source"</span>: <span class="s">"station_coffee"</span> }
+  ]
+}
+
+<span class="c"># 返回 200 OK</span>
+{ <span class="k">"code"</span>: <span class="n">0</span>, <span class="k">"message"</span>: <span class="s">"sync_success"</span>, <span class="k">"records_synced"</span>: <span class="n">2</span> }
+  </div>
+
+  <!-- 路线图 -->
+  <h3 style="font-size:18px;margin:32px 0 12px;">🗓️ 对接路线图</h3>
+  <div class="roadmap">
+    <div class="roadmap-step">
+      <div class="n">1</div>
+      <div class="t">需求对齐</div>
+      <div class="d">公益方 + 技术方核对数据口径 + 合规要求 + 字段映射</div>
+      <div class="date">✅ 2026-06 完成</div>
+    </div>
+    <div class="roadmap-step">
+      <div class="n">2</div>
+      <div class="t">接口设计</div>
+      <div class="d">REST API + OAuth 2.0 + Webhook 回调 + 字段加密</div>
+      <div class="date">🛠️ 2026-07 进行中</div>
+    </div>
+    <div class="roadmap-step">
+      <div class="n">3</div>
+      <div class="t">联调测试</div>
+      <div class="d">沙盒环境对接 + 字段核对 + 异常处理 + 性能压测</div>
+      <div class="date">📅 2026-08 计划</div>
+    </div>
+    <div class="roadmap-step">
+      <div class="n">4</div>
+      <div class="t">灰度上线</div>
+      <div class="d">5% 流量灰度 → 50% → 100%，监控异常 + 回滚预案</div>
+      <div class="date">📅 2026 Q4</div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;background:linear-gradient(135deg, #F3E8FF 0%, #FFE4D2 100%);border-radius:14px;padding:24px;text-align:center;">
+    <h3 style="font-size:18px;margin-bottom:8px;">🤝 您所在机构想对接慈商联营？</h3>
+    <p style="color:var(--color-text-2);margin-bottom:16px;">提供 API 文档 + 沙盒环境 + 5 个工作日内完成技术对接 · 7 月 22 日召开专项对接会</p>
+    <div class="flex gap-2" style="justify-content:center;">
+      <button class="btn btn-primary btn-lg">📋 申请 API 接入</button>
+      <button class="btn btn-ghost">📅 预约 7-22 专项对接会</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>CS.renderHeader(); CS.renderFooter();</script>
+</body>
+</html>

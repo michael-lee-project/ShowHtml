@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分润管理 · 广东省慈善总会 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<link rel="stylesheet" href="../public/css/dashboard.css">
+<style>
+  body { background: var(--color-bg); }
+  .welcome-card {
+    background: linear-gradient(135deg, #14B8A6 0%, #0D9488 50%, #0B6B5E 100%);
+    color: #fff;
+    border-radius: var(--radius-md); padding: 32px; margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .welcome-card::after { content: '💰'; position: absolute; right: 60px; top: -20px; font-size: 200px; opacity: 0.10; }
+
+  /* 4 角色分润饼 */
+  .split-card {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 20px;
+    display: grid; grid-template-columns: 200px 1fr; gap: 24px;
+    margin-bottom: 24px;
+  }
+  .pie { position: relative; width: 180px; height: 180px; }
+  .pie svg { transform: rotate(-90deg); }
+  .pie .center {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .pie .center .v { font-size: 20px; font-weight: 800; color: #1E293B; }
+  .pie .center .l { font-size: 10px; color: var(--color-text-3); }
+
+  .split-list { display: flex; flex-direction: column; gap: 10px; }
+  .split-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--color-bg); border-radius: 8px; }
+  .split-row .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .split-row .body { flex: 1; }
+  .split-row .body .t { font-size: 13px; font-weight: 700; }
+  .split-row .body .d { font-size: 11px; color: var(--color-text-3); margin-top: 2px; }
+  .split-row .pct { font-size: 18px; font-weight: 800; }
+  .split-row .amt { font-size: 13px; color: var(--color-text-2); margin-left: 6px; }
+
+  /* KPI */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .kpi { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 18px; }
+  .kpi .v { font-size: 24px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+  .kpi .l { font-size: 12px; color: var(--color-text-3); }
+  .kpi.primary .v { color: var(--color-primary); }
+  .kpi.trust .v { color: var(--color-trust); }
+  .kpi.gold .v { color: var(--color-gold); }
+  .kpi .trend { font-size: 11px; color: var(--color-trust); margin-top: 4px; }
+
+  /* 流水表 */
+  .flow-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .flow-table th { background: var(--color-bg); padding: 12px 10px; text-align: left; font-size: 12px; font-weight: 600; color: var(--color-text-2); border-bottom: 1px solid var(--color-border); }
+  .flow-table td { padding: 12px 10px; border-bottom: 1px solid var(--color-border-light); }
+  .flow-table .time { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-3); }
+  .flow-table .amt-in { color: var(--color-trust); font-weight: 700; }
+  .flow-table .amt-out { color: #DC2626; font-weight: 700; }
+  .flow-table .source { display: flex; align-items: center; gap: 6px; }
+
+  .village-fund {
+    background: linear-gradient(135deg, #F3E8FF 0%, #FFE4D2 100%);
+    border-radius: 14px; padding: 24px; margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center;
+  }
+  .village-fund .v { font-size: 36px; font-weight: 900; line-height: 1; color: #7C3AED; }
+  .village-fund .l { font-size: 13px; color: var(--color-text-2); margin-top: 4px; }
+  .village-fund .actions { display: flex; flex-direction: column; gap: 8px; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="dash-wrap">
+  <div id="dash-side"></div>
+  <main class="dash-main">
+
+    <div class="welcome-card">
+      <div style="position:relative;z-index:1;">
+        <h1>💰 分润管理 · 村社基金账户</h1>
+        <div class="sub" style="color:rgba(255,255,255,0.92);">所有平台利润按规则自动归集到 32 个村社基金账户 · 慈善组织 <strong>0 管理费</strong>，全额留给基层</div>
+        <div class="flex gap-2 mt-2">
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🛡️ 透明分润</span>
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">⏰ 每日 24:00 自动结算</span>
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📊 月度公开报表</span>
+        </div>
+      </div>
+      <div style="position:relative;z-index:1;text-align:right;">
+        <div style="font-size:12px;opacity:0.85;margin-bottom:4px;">本月归集总额</div>
+        <div style="font-size:36px;font-weight:900;line-height:1;">¥ 286,180</div>
+        <div style="font-size:12px;opacity:0.85;margin-top:2px;">较上月 +18.2%</div>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi primary">
+        <div class="v">¥ 286,180</div>
+        <div class="l">本月归集</div>
+        <div class="trend">↑ +18.2% vs 上月</div>
+      </div>
+      <div class="kpi trust">
+        <div class="v">32</div>
+        <div class="l">村社基金账户</div>
+        <div class="trend">全部已激活</div>
+      </div>
+      <div class="kpi gold">
+        <div class="v">¥ 1,860</div>
+        <div class="l">单店月均贡献</div>
+        <div class="trend">↑ 持续增长</div>
+      </div>
+      <div class="kpi">
+        <div class="v">0</div>
+        <div class="l">慈善组织管理费</div>
+        <div class="trend">永久为 0</div>
+      </div>
+    </div>
+
+    <!-- 4 角色分润饼 -->
+    <div class="split-card">
+      <div class="pie">
+        <svg viewBox="0 0 36 36" width="180" height="180">
+          <circle cx="18" cy="18" r="15.915" fill="#fff" stroke="#F1F5F9" stroke-width="3.5"/>
+          <circle cx="18" cy="18" r="15.915" fill="none" stroke="#7C3AED" stroke-width="3.5" stroke-dasharray="60 100" stroke-dashoffset="0"/>
+          <circle cx="18" cy="18" r="15.915" fill="none" stroke="#14B8A6" stroke-width="3.5" stroke-dasharray="25 100" stroke-dashoffset="-60"/>
+          <circle cx="18" cy="18" r="15.915" fill="none" stroke="#E85D04" stroke-width="3.5" stroke-dasharray="10 100" stroke-dashoffset="-85"/>
+          <circle cx="18" cy="18" r="15.915" fill="none" stroke="#C4842A" stroke-width="3.5" stroke-dasharray="5 100" stroke-dashoffset="-95"/>
+        </svg>
+        <div class="center">
+          <div class="v">100%</div>
+          <div class="l">平台利润分配</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:15px;margin-bottom:12px;">📊 平台利润 4 角色分润规则</h3>
+        <div class="split-list">
+          <div class="split-row">
+            <div class="dot" style="background:#7C3AED;"></div>
+            <div class="body">
+              <div class="t">🏘️ 村社基金账户（主）</div>
+              <div class="d">自动归集到所在村社，用于社区治理支出 · 0 管理费</div>
+            </div>
+            <div class="pct">60%</div>
+            <div class="amt">¥ 171,708 / 月</div>
+          </div>
+          <div class="split-row">
+            <div class="dot" style="background:#14B8A6;"></div>
+            <div class="body">
+              <div class="t">🤝 慈善组织运营</div>
+              <div class="d">慈善会日常运营成本，含人员 / 物资调拨 / 项目管理</div>
+            </div>
+            <div class="pct">25%</div>
+            <div class="amt">¥ 71,545 / 月</div>
+          </div>
+          <div class="split-row">
+            <div class="dot" style="background:#E85D04;"></div>
+            <div class="body">
+              <div class="t">🏢 平台技术运营</div>
+              <div class="d">含系统开发 / 服务器 / 客服 / 物流 / 第三方支付</div>
+            </div>
+            <div class="pct">10%</div>
+            <div class="amt">¥ 28,618 / 月</div>
+          </div>
+          <div class="split-row">
+            <div class="dot" style="background:#C4842A;"></div>
+            <div class="body">
+              <div class="t">💼 战略合作机构</div>
+              <div class="d">国家图书馆等战略合作机构分成，用于其专项业务</div>
+            </div>
+            <div class="pct">5%</div>
+            <div class="amt">¥ 14,309 / 月</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 村社基金账户（突出） -->
+    <div class="village-fund">
+      <div>
+        <div style="font-size:13px;color:var(--color-text-2);margin-bottom:4px;">🏘️ 您所在的村社基金账户</div>
+        <div class="v">¥ 86,260.18</div>
+        <div class="l">南山区科技园社区基金 · 累计余额（可申请支取用于社区治理）</div>
+        <div style="font-size:11px;color:var(--color-text-3);margin-top:8px;">
+          ⏰ 上次结算：2026-06-15 24:00 · 今日 +¥ 1,260.18
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary">💸 申请支取</button>
+        <button class="btn btn-ghost btn-sm">📊 账户流水</button>
+        <button class="btn btn-ghost btn-sm">📜 支取记录</button>
+      </div>
+    </div>
+
+    <div class="dash-card" style="padding:0;overflow:hidden;">
+      <div class="card-head" style="padding:16px 20px;margin:0;">
+        <h3>📋 资金流水 · 最近 30 天</h3>
+        <span class="text-sm text-muted">所有金额可审计可查</span>
+      </div>
+      <table class="flow-table">
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>来源/去向</th>
+            <th>类型</th>
+            <th>金额</th>
+            <th>归集账户</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="time">2026-06-15 24:00</td>
+            <td><div class="source">🛒 商城订单 86 单</div></td>
+            <td><span class="tag" style="background:#E0FAF5;color:#065F46;font-size:10px;">归集</span></td>
+            <td class="amt-in">+ ¥ 1,260.18</td>
+            <td>科技园社区基金</td>
+            <td><button class="btn btn-ghost btn-sm">明细</button></td>
+          </tr>
+          <tr>
+            <td class="time">2026-06-15 18:32</td>
+            <td><div class="source">🏠 驿站咖啡 / 茶饮</div></td>
+            <td><span class="tag" style="background:#E0FAF5;color:#065F46;font-size:10px;">归集</span></td>
+            <td class="amt-in">+ ¥ 386.50</td>
+            <td>科技园社区基金</td>
+            <td><button class="btn btn-ghost btn-sm">明细</button></td>
+          </tr>
+          <tr>
+            <td class="time">2026-06-15 14:08</td>
+            <td><div class="source">🤝 美心食品捐赠入账</div></td>
+            <td><span class="tag" style="background:#FEF3C7;color:#92400E;font-size:10px;">物资</span></td>
+            <td class="amt-in">+ ¥ 18,600.00</td>
+            <td>广东省慈善总会</td>
+            <td><button class="btn btn-ghost btn-sm">明细</button></td>
+          </tr>
+          <tr>
+            <td class="time">2026-06-14 10:25</td>
+            <td><div class="source">♻️ 旧物回收 33 万次</div></td>
+            <td><span class="tag" style="background:#E0FAF5;color:#065F46;font-size:10px;">归集</span></td>
+            <td class="amt-in">+ ¥ 28,180.00</td>
+            <td>科技园社区基金</td>
+            <td><button class="btn btn-ghost btn-sm">明细</button></td>
+          </tr>
+          <tr>
+            <td class="time">2026-06-12 16:00</td>
+            <td><div class="source">💸 社区活动经费支取</div></td>
+            <td><span class="tag" style="background:#FEE2E2;color:#991B1B;font-size:10px;">支取</span></td>
+            <td class="amt-out">- ¥ 12,860.00</td>
+            <td>科技园社区基金</td>
+            <td><button class="btn btn-ghost btn-sm">凭证</button></td>
+          </tr>
+          <tr>
+            <td class="time">2026-06-10 09:15</td>
+            <td><div class="source">🛒 商城订单 213 单</div></td>
+            <td><span class="tag" style="background:#E0FAF5;color:#065F46;font-size:10px;">归集</span></td>
+            <td class="amt-in">+ ¥ 3,860.50</td>
+            <td>科技园社区基金</td>
+            <td><button class="btn btn-ghost btn-sm">明细</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:24px;background:linear-gradient(135deg, #FFF1E5 0%, #FAEFD9 100%);border-radius:14px;padding:20px 24px;">
+      <h3 style="font-size:15px;margin-bottom:10px;">📜 分润模式说明</h3>
+      <div style="font-size:13px;line-height:1.8;color:var(--color-text);">
+        <p>① <strong>四方分润</strong>：平台利润 100% 在村社基金 / 慈善组织 / 平台 / 战略合作机构 4 角色间分摊，<strong>不存在第 5 方截留</strong>。</p>
+        <p>② <strong>0 管理费原则</strong>：慈善组织不为"提供分润"额外收费，所有分润规则平台代码公开（GitHub 公开仓库），村社可审计。</p>
+        <p>③ <strong>资金流可追溯</strong>：每笔归集 / 支取都有时间戳 + 流水号 + 凭证链，季度公开报表 + 第三方审计报告。</p>
+        <p>④ <strong>村社基金账户独立</strong>：村社基金账户由慈善会代管，支取需村委 + 慈善会双签，平台无任何支取权限。</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>
+  CS.renderDashHeader('慈善会', '王主任');
+  CS.renderSidebar('charity', 'profit-share');
+  CS.renderFooter();
+</script>
+</body>
+</html>

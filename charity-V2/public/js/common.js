@@ -366,7 +366,7 @@
       { id: 'm3', type: 'feedback', icon: '❤️', title: '受捐者反馈已上传', summary: '张阿姨 / 李大爷 / 王大姐等 12 位受捐者上传了签收反馈照片和文字。点击查看完整反馈。', time: '昨天 19:10', unread: true, tag: '反馈消息' },
       { id: 'm4', type: 'system', icon: '📢', title: '系统 V2.6.0 上线公告', summary: '新增"批量发起捐赠"、"票据一键导出"功能；优化派发路线算法。点击查看更新详情。', time: '3 天前', unread: false, tag: '平台通知' },
       { id: 'm5', type: 'biz', icon: '🚚', title: '物资已到达区域仓', summary: '您发起的"儿童节文具礼包 600 套"已到达梅州五华县区域仓，承运方：顺丰公益物流。', time: '5 天前', unread: false, tag: '业务通知' },
-      { id: 'm6', type: 'system', icon: '🎁', title: '商城月度捐赠结算单已生成', summary: '2025-05 月度商城 0.5% 自动捐赠金额 ¥12,860 已结算，票据可下载。', time: '6 天前', unread: false, tag: '平台通知' },
+      { id: 'm6', type: 'system', icon: '🎁', title: '商城月度捐赠结算单已生成', summary: '2025-05 月度商城 5% 自动捐赠金额 ¥12,860 已结算，票据可下载。', time: '6 天前', unread: false, tag: '平台通知' },
     ],
     charity: [
       { id: 'm1', type: 'audit', icon: '✅', title: '注册申请已通过审核', summary: '广东省慈善总会入驻申请已通过平台复审，工作台权限已开通。', time: '1 天前', unread: true, tag: '审核消息' },
@@ -811,6 +811,8 @@
       <a href="donate-respond.html" class="${active==='donate-respond'?'active':''}"><span class="ic">🤝</span>响应捐赠项目 <span class="badge-mini">5</span></a>
       <a href="donation-list.html" class="${active==='donation-list'?'active':''}"><span class="ic">📋</span>捐赠记录</a>
       <a href="donation-detail.html" class="${active==='donation-detail'?'active':''}"><span class="ic">🔍</span>物资轨迹详情</a>
+      <a href="donation-certificate.html" class="${active==='donation-certificate'?'active':''}"><span class="ic">🏆</span>捐赠证书 <span class="badge-mini">6</span></a>
+      <a href="thanks-letter.html" class="${active==='thanks-letter'?'active':''}"><span class="ic">💌</span>受捐者感谢信 <span class="badge-mini">386</span></a>
     </div>
   </div>
   <div class="side-section">
@@ -861,7 +863,10 @@
     <div class="side-title">人员与报告</div>
     <div class="side-menu">
       <a href="volunteer-manage.html" class="${active==='volunteer-manage'?'active':''}"><span class="ic">👥</span>志愿者管理</a>
+      <a href="receipts.html" class="${active==='receipts'?'active':''}"><span class="ic">🧾</span>捐赠票据 <span class="badge-mini" style="background:#D97706;color:#fff;">12</span></a>
+      <a href="profit-share.html" class="${active==='profit-share'?'active':''}"><span class="ic">💰</span>分润管理</a>
       <a href="reports.html" class="${active==='reports'?'active':''}"><span class="ic">📈</span>数据报告</a>
+      <a href="audit-log.html" class="${active==='audit-log'?'active':''}"><span class="ic">🛡️</span>审计日志 <span class="badge-mini" style="background:#DC2626;color:#fff;">3</span></a>
     </div>
   </div>
 </aside>`,
@@ -1083,5 +1088,154 @@
     if (m.querySelector('.modal-ok')) m.querySelector('.modal-ok').onclick = () => { opts.onOk && opts.onOk(); m.remove(); };
     if (opts.onShow) opts.onShow(m);
   };
+
+  // ============================================
+  // 5. AI 助手浮层
+  // ============================================
+  window.CS.openAiAssistant = function() {
+    // 已有则显示并聚焦输入框
+    const existing = document.getElementById('ai-assistant-layer');
+    if (existing) { existing.classList.add('show'); document.getElementById('ai-input')?.focus(); return; }
+
+    const layer = document.createElement('div');
+    layer.id = 'ai-assistant-layer';
+    layer.className = 'ai-layer';
+    layer.innerHTML = `
+<style>
+  .ai-layer { position: fixed; right: 24px; bottom: 24px; z-index: 9998; width: 400px; max-width: calc(100vw - 32px); height: 600px; max-height: calc(100vh - 48px); background: #fff; border-radius: 16px; box-shadow: 0 24px 80px rgba(0,0,0,0.25); display: flex; flex-direction: column; overflow: hidden; transform: translateY(20px); opacity: 0; transition: all .25s ease; }
+  .ai-layer.show { transform: translateY(0); opacity: 1; }
+  .ai-layer.collapsed { height: 56px; }
+  .ai-layer.collapsed .ai-body, .ai-layer.collapsed .ai-input { display: none; }
+  .ai-head { padding: 14px 18px; background: linear-gradient(135deg, #7C3AED, #C44569); color: #fff; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  .ai-head .avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .ai-head .name { font-weight: 700; font-size: 14px; }
+  .ai-head .status { font-size: 11px; opacity: 0.85; display: flex; align-items: center; gap: 4px; }
+  .ai-head .status .dot { width: 6px; height: 6px; background: #5EEAD4; border-radius: 50%; }
+  .ai-head .actions { margin-left: auto; display: flex; gap: 4px; }
+  .ai-head .ic-btn { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.15); color: #fff; border: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; }
+  .ai-head .ic-btn:hover { background: rgba(255,255,255,0.25); }
+  .ai-body { flex: 1; padding: 16px; overflow-y: auto; background: var(--color-bg, #FAF8F4); }
+  .ai-body .msg { display: flex; gap: 8px; margin-bottom: 12px; }
+  .ai-body .msg.user { flex-direction: row-reverse; }
+  .ai-body .msg .av { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .ai-body .msg.bot .av { background: linear-gradient(135deg, #7C3AED, #C44569); color: #fff; }
+  .ai-body .msg.user .av { background: var(--color-primary-soft, #FFE4D2); color: var(--color-primary); }
+  .ai-body .msg .b { max-width: 78%; padding: 10px 12px; border-radius: 12px; font-size: 13px; line-height: 1.55; }
+  .ai-body .msg.bot .b { background: #fff; border: 1px solid var(--color-border); border-top-left-radius: 4px; }
+  .ai-body .msg.user .b { background: linear-gradient(135deg, var(--color-primary), #C44569); color: #fff; border-top-right-radius: 4px; }
+  .ai-body .quick { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .ai-body .quick button { background: #fff; border: 1px solid var(--color-border); padding: 5px 10px; border-radius: 999px; font-size: 11px; cursor: pointer; }
+  .ai-body .quick button:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .ai-body .card-mini { margin-top: 8px; padding: 10px; background: #fff; border: 1px solid var(--color-border); border-radius: 6px; }
+  .ai-body .card-mini .t { font-weight: 700; font-size: 12px; margin-bottom: 2px; }
+  .ai-body .card-mini .d { font-size: 11px; color: var(--color-text-2); }
+  .ai-body .card-mini .l { font-size: 11px; color: var(--color-primary); font-weight: 600; margin-top: 4px; }
+  .ai-input { border-top: 1px solid var(--color-border); padding: 10px 12px; display: flex; gap: 6px; align-items: center; background: #fff; }
+  .ai-input input { flex: 1; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 999px; font-size: 13px; outline: none; }
+  .ai-input input:focus { border-color: #7C3AED; }
+  .ai-input .send { padding: 8px 14px; background: linear-gradient(135deg, #7C3AED, #C44569); color: #fff; border: 0; border-radius: 999px; font-size: 13px; cursor: pointer; font-weight: 600; }
+  .ai-quick-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 12px 16px; background: #fff; border-top: 1px dashed var(--color-border); }
+  .ai-quick-row button { padding: 8px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 8px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .ai-quick-row button:hover { border-color: #7C3AED; color: #7C3AED; }
+</style>
+<div class="ai-head">
+  <div class="avatar">🤖</div>
+  <div style="flex:1;">
+    <div class="name">小慈 AI 助手</div>
+    <div class="status"><span class="dot"></span>在线 · 平均响应 1.2s</div>
+  </div>
+  <div class="actions">
+    <button class="ic-btn" id="ai-toggle" title="收起">▾</button>
+    <button class="ic-btn" id="ai-close" title="关闭">✕</button>
+  </div>
+</div>
+<div class="ai-body">
+  <div class="msg bot">
+    <div class="av">🤖</div>
+    <div class="b">您好！我是小慈，慈商联营的 AI 智能助手。👋<br><br>我可以帮您：<br>· 查询物资流转轨迹<br>· 解释捐赠票据申请流程<br>· 介绍 AI 智能匹配规则<br>· 解答隐私保护疑问<br>· 任何平台操作问题<br><br>请直接描述您的问题：
+      <div class="quick">
+        <button data-q="🧾 怎么申请捐赠票据？">🧾 怎么申请捐赠票据？</button>
+        <button data-q="📦 物资去哪了？">📦 物资去哪了？</button>
+        <button data-q="🔒 隐私怎么保护？">🔒 隐私怎么保护？</button>
+      </div>
+    </div>
+  </div>
+  <div class="msg bot">
+    <div class="av">🤖</div>
+    <div class="b">根据《慈善法》及相关税务规定，慈善组织收到您的捐赠后，<strong>5 个工作日内</strong>必须为您出具财政部门统一监制的捐赠票据。📜<br><br><strong>具体流程：</strong><br>① 您在捐赠详情页点击"🧾 申请开票"<br>② 提交开票信息（企业抬头 + 税号 + 接收邮箱）<br>③ 慈善组织审核 + 出具票据<br>④ 票据扫描件上传至您的"捐赠凭证"区<br>⑤ 系统通知 + 邮件送达<br><br>💡 <strong>提示：</strong>该票据是您企业所得税前扣除的核心凭证。
+      <div class="card-mini">
+        <div class="t">📄 美心食品集团 · 票据进度</div>
+        <div class="d">DON-2026-0612-018 · ¥ 18,600</div>
+        <div class="l">查看完整进度 →</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ai-quick-row">
+  <button data-q="🎁 怎么发起捐物资？">🎁 发起捐物资</button>
+  <button data-q="📊 如何看 AI 推荐？">📊 AI 推荐</button>
+  <button data-q="🏆 捐赠证书在哪？">🏆 证书下载</button>
+  <button data-q="📤 联系人工客服">📤 人工客服</button>
+</div>
+<div class="ai-input">
+  <input type="text" id="ai-input" placeholder="输入您的问题..." />
+  <button class="send" id="ai-send">发送</button>
+</div>`;
+    document.body.appendChild(layer);
+    requestAnimationFrame(() => layer.classList.add('show'));
+
+    // 关闭
+    document.getElementById('ai-close').onclick = () => layer.remove();
+    // 收起/展开
+    document.getElementById('ai-toggle').onclick = (e) => {
+      e.stopPropagation();
+      layer.classList.toggle('collapsed');
+      e.currentTarget.textContent = layer.classList.contains('collapsed') ? '▴' : '▾';
+    };
+    // 发送
+    const send = () => {
+      const input = document.getElementById('ai-input');
+      const q = input.value.trim();
+      if (!q) return;
+      appendUser(q);
+      input.value = '';
+      setTimeout(() => botReply(q), 600);
+    };
+    document.getElementById('ai-send').onclick = send;
+    document.getElementById('ai-input').onkeydown = (e) => { if (e.key === 'Enter') send(); };
+    // 快捷问题
+    layer.querySelectorAll('[data-q]').forEach(b => {
+      b.onclick = () => { appendUser(b.dataset.q); setTimeout(() => botReply(b.dataset.q), 600); };
+    });
+
+    document.getElementById('ai-input').focus();
+  };
+
+  function appendUser(text) {
+    const body = document.querySelector('#ai-assistant-layer .ai-body');
+    if (!body) return;
+    const m = document.createElement('div');
+    m.className = 'msg user';
+    m.innerHTML = `<div class="av">👤</div><div class="b">${text}</div>`;
+    body.appendChild(m);
+    body.scrollTop = body.scrollHeight;
+  }
+  function botReply(q) {
+    const body = document.querySelector('#ai-assistant-layer .ai-body');
+    if (!body) return;
+    let html = '收到您的问题。我会持续学习并完善知识库，您可以尝试更具体的问题描述。';
+    if (q.indexOf('票据') >= 0) html = '5 个工作日内由慈善组织出具。详情请在捐赠详情页点击"🧾 申请开票"。';
+    else if (q.indexOf('物资') >= 0) html = '物资全程 6 节点可追溯：企业 → 慈善会 → 区域仓 → 志愿者 → 入户 → 签收。🔍';
+    else if (q.indexOf('隐私') >= 0) html = '受捐者信息按角色分级可见，详见透明公示大厅的"🔒 数据隔离与隐私保护原则"专区。';
+    else if (q.indexOf('证书') >= 0) html = '企业工作台 → 捐赠详情 → "🏆 下载捐赠证书" 按钮，支持 PDF 导出。';
+    else if (q.indexOf('AI') >= 0 || q.indexOf('推荐') >= 0) html = '企业发起捐赠时系统 AI 智能匹配前 3 名慈善组织（基于属地 + 资源 + 响应速度 5 维度）。';
+    else if (q.indexOf('捐物资') >= 0 || q.indexOf('赠送') >= 0) html = '商城详情页选择"💝 捐物资"模式，商品直接送达受灾项目，100% 转为物资捐赠。';
+    else if (q.indexOf('人工') >= 0) html = '已为您转接人工客服（9:00-21:00）—— 请稍候，客服小张将在 30 秒内接入。';
+    const m = document.createElement('div');
+    m.className = 'msg bot';
+    m.innerHTML = `<div class="av">🤖</div><div class="b">${html}</div>`;
+    body.appendChild(m);
+    body.scrollTop = body.scrollHeight;
+  }
 
 })();

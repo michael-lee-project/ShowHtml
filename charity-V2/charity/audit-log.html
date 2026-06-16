@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>审计日志 · 广东省慈善总会 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<link rel="stylesheet" href="../public/css/dashboard.css">
+<link rel="stylesheet" href="../public/css/messages.css">
+<style>
+  .welcome-card {
+    background: linear-gradient(135deg, #1E293B 0%, #334155 50%, #475569 100%);
+    color: #fff;
+    border-radius: var(--radius-md); padding: 32px; margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .welcome-card::after { content: '🛡️'; position: absolute; right: 80px; top: -20px; font-size: 200px; opacity: 0.10; }
+  .welcome-card h1 { font-size: 28px; margin-bottom: 8px; }
+  .welcome-card .sub { color: rgba(255,255,255,0.85); font-size: 15px; margin-bottom: 16px; }
+
+  /* 异常告警条 */
+  .alert-bar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 20px; border-radius: var(--radius-md); margin-bottom: 16px;
+    font-size: 14px; font-weight: 600;
+  }
+  .alert-bar.danger { background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%); border: 1px solid #DC2626; color: #991B1B; }
+  .alert-bar.warning { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border: 1px solid #D97706; color: #92400E; }
+  .alert-bar.success { background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%); border: 1px solid #059669; color: #065F46; }
+  .alert-bar .ic { font-size: 22px; }
+  .alert-bar .body { flex: 1; }
+  .alert-bar .body .t { font-weight: 700; }
+  .alert-bar .body .s { font-size: 12px; font-weight: 400; opacity: 0.85; margin-top: 2px; }
+  .alert-bar .count { background: #DC2626; color: #fff; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+
+  /* 审计 KPI */
+  .audit-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .audit-kpi {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 20px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .audit-kpi .v { font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+  .audit-kpi .l { font-size: 12px; color: var(--color-text-3); }
+  .audit-kpi.danger .v { color: #DC2626; }
+  .audit-kpi.warning .v { color: #D97706; }
+  .audit-kpi.trust .v { color: var(--color-trust); }
+  .audit-kpi.primary .v { color: var(--color-primary); }
+  .audit-kpi .ic {
+    position: absolute; right: 12px; top: 12px; font-size: 28px; opacity: 0.18;
+  }
+
+  /* 日志表格 */
+  .log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .log-table th {
+    background: var(--color-bg); padding: 12px 10px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--color-text-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .log-table td {
+    padding: 12px 10px; border-bottom: 1px solid var(--color-border-light);
+    vertical-align: top;
+  }
+  .log-table tr:hover td { background: var(--color-bg); }
+  .log-table .time { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-3); white-space: nowrap; }
+  .log-table .op { font-weight: 600; }
+  .log-table .op.create { color: var(--color-trust); }
+  .log-table .op.update { color: #D97706; }
+  .log-table .op.delete { color: #DC2626; }
+  .log-table .op.sign { color: var(--color-primary); }
+  .log-table .op.upload { color: #7C3AED; }
+  .log-table .op.audit { color: #1E293B; }
+  .log-table .op.claim { color: #0E5A6F; }
+  .log-table .op.distribute { color: #C44569; }
+  .log-table .op.realtime { color: #059669; }
+  .log-table .op.manual { color: #DC2626; }
+  .log-table .op.cached { color: #D97706; }
+  .log-table .op.pending { color: #6B7280; }
+  .log-table .op.expired { color: #991B1B; }
+  .log-table .actor { display: flex; align-items: center; gap: 6px; }
+  .log-table .actor .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary-soft); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .log-table .actor .role { font-size: 11px; color: var(--color-text-3); }
+  .log-table .target { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-2); }
+  .log-table .badge-mini {
+    display: inline-block; padding: 1px 8px; border-radius: 4px;
+    font-size: 10px; font-weight: 600;
+  }
+  .badge-mini.realtime { background: #D1FAE5; color: #065F46; }
+  .badge-mini.cached { background: #FEF3C7; color: #92400E; }
+  .badge-mini.flagged { background: #FEE2E2; color: #991B1B; }
+  .badge-mini.normal { background: #F1F5F9; color: #475569; }
+
+  /* filter bar */
+  .filter-bar {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 16px;
+  }
+  .filter-bar .chip {
+    padding: 6px 12px; border-radius: 999px; border: 1px solid var(--color-border);
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    background: #fff; color: var(--color-text-2);
+  }
+  .filter-bar .chip:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .filter-bar .chip.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .filter-bar .divider { width: 1px; height: 18px; background: var(--color-border); }
+  .filter-bar .search { flex: 1; min-width: 200px; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="dash-wrap">
+  <div id="dash-side"></div>
+  <main class="dash-main">
+
+    <div class="welcome-card">
+      <div>
+        <h1>🛡️ 审计日志中心</h1>
+        <div class="sub">全流程操作留痕 · 反舞弊追溯 · 第三方审计可查</div>
+        <div class="flex gap-2">
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🔒 数据只增不改</span>
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">⏰ 保留 10 年</span>
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📤 可导出 CSV</span>
+        </div>
+        <!-- P1-1 慈善组织身份说明 -->
+        <div style="margin-top:14px;padding:10px 14px;background:rgba(94,234,212,0.15);border:1px solid rgba(94,234,212,0.4);border-radius:8px;display:flex;gap:10px;align-items:center;font-size:12px;">
+          <span style="font-size:16px;">🏛️</span>
+          <div>
+            <div style="color:#fff;font-weight:600;">本工作台为"慈善组织"身份（公募 / 非公募可切换）</div>
+            <div style="color:rgba(255,255,255,0.75);font-size:11px;margin-top:2px;">原"慈善会"与"基金会"已合并为统一身份，仅按公募资质区分权限 · 广东省慈善总会持有公募资格</div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px;opacity:0.85;margin-bottom:4px;">最近更新</div>
+        <div style="font-size:14px;font-weight:700;font-family:var(--font-mono);">2026-06-15 22:18:33</div>
+        <button class="btn" style="background:rgba(255,255,255,0.18);color:#fff;margin-top:8px;border:1px solid rgba(255,255,255,0.3);">📤 导出 30 天日志</button>
+      </div>
+    </div>
+
+    <!-- 异常告警条 -->
+    <div class="alert-bar danger">
+      <span class="ic">🚨</span>
+      <div class="body">
+        <div class="t">3 条签收记录超时未上传 · 需立即核查</div>
+        <div class="s">涉及 1 个项目 · 3 户受捐者 · 距今已超 24 小时</div>
+      </div>
+      <span class="count">3</span>
+      <button class="btn" style="background:#DC2626;color:#fff;font-weight:700;">立即处理 →</button>
+    </div>
+
+    <div class="alert-bar warning">
+      <span class="ic">⚠️</span>
+      <div class="body">
+        <div class="t">1 名志愿者账号异地登录 · 建议核实</div>
+        <div class="s">李梅 · IP 切换为 36.102.x.x（云南） · 原常用 IP 广东深圳</div>
+      </div>
+      <span class="count">1</span>
+      <button class="btn" style="background:#D97706;color:#fff;font-weight:700;">查看详情</button>
+    </div>
+
+    <div class="alert-bar success">
+      <span class="ic">✅</span>
+      <div class="body">
+        <div class="t">今日 86 条签收 · 100% 实时上传 · 无异常</div>
+        <div class="s">最近一次签收：2026-06-15 21:45:12 · 五华县水寨镇 · 张阿姨</div>
+      </div>
+    </div>
+
+    <!-- 审计 KPI -->
+    <div class="audit-kpis">
+      <div class="audit-kpi trust">
+        <div class="ic">📤</div>
+        <div class="v">1,286</div>
+        <div class="l">本月实时上传</div>
+      </div>
+      <div class="audit-kpi danger">
+        <div class="ic">🚨</div>
+        <div class="v">3</div>
+        <div class="l">超时未上传（>24h）</div>
+      </div>
+      <div class="audit-kpi warning">
+        <div class="ic">📦</div>
+        <div class="v">12</div>
+        <div class="l">本地缓存待补传</div>
+      </div>
+      <div class="audit-kpi primary">
+        <div class="ic">🛡️</div>
+        <div class="v">3</div>
+        <div class="l">异常账号预警</div>
+      </div>
+    </div>
+
+    <!-- 筛选条 -->
+    <div class="filter-bar">
+      <span class="chip active">全部</span>
+      <span class="chip">🚨 异常</span>
+      <span class="chip">⏰ 超时</span>
+      <span class="chip">📤 实时上传</span>
+      <span class="chip">📦 缓存补传</span>
+      <span class="chip">🔐 权限变更</span>
+      <span class="divider"></span>
+      <span class="chip">最近 24h</span>
+      <span class="chip">最近 7 天</span>
+      <span class="chip">最近 30 天</span>
+      <input type="text" class="form-control search" placeholder="🔍 搜索操作人 / 物资编号 / 节点">
+      <button class="btn btn-ghost btn-sm">⚙️ 高级筛选</button>
+    </div>
+
+    <!-- 日志表格 -->
+    <div class="dash-card" style="padding:0;overflow:hidden;">
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>操作类型</th>
+            <th>操作人</th>
+            <th>对象</th>
+            <th>详情</th>
+            <th>上传状态</th>
+            <th>审计标记</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="time">22:18:33<br><span style="color:var(--color-text-3);">2026-06-15</span></td>
+            <td><span class="op sign">🔏 签收</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar">张</div>
+                <div>
+                  <div>张伟</div>
+                  <div class="role">志愿者</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">WZL-2026-0615-086<br>(张阿姨 · 五华县)</td>
+            <td>受捐者现场扫码签收 · 8 件面包</td>
+            <td><span class="badge-mini realtime">实时上传 ✓</span></td>
+            <td><span class="badge-mini normal">正常</span></td>
+          </tr>
+          <tr>
+            <td class="time">22:14:08<br><span style="color:var(--color-text-3);">2026-06-15</span></td>
+            <td><span class="op sign">🔏 签收</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar">张</div>
+                <div>
+                  <div>张伟</div>
+                  <div class="role">志愿者</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">WZL-2026-0615-085<br>(李大爷 · 五华县)</td>
+            <td>受捐者现场扫码签收 · 8 件面包</td>
+            <td><span class="badge-mini realtime">实时上传 ✓</span></td>
+            <td><span class="badge-mini normal">正常</span></td>
+          </tr>
+          <tr style="background:#FEF2F2;">
+            <td class="time">21:30:12<br><span style="color:var(--color-text-3);">2026-06-14</span></td>
+            <td><span class="op sign">🔏 签收</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar">陈</div>
+                <div>
+                  <div>陈社工</div>
+                  <div class="role">社工组织</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">BS-2026-0610-220<br>(黔东南 · 杨家)</td>
+            <td>已扫码登记 30h + · 待补传</td>
+            <td><span class="badge-mini cached">缓存待补</span></td>
+            <td><span class="badge-mini flagged">⚠️ 超时未传</span></td>
+          </tr>
+          <tr>
+            <td class="time">20:45:33<br><span style="color:var(--color-text-3);">2026-06-15</span></td>
+            <td><span class="op distribute">🚚 派发</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar" style="background:var(--color-trust-soft);color:var(--color-trust);">广</div>
+                <div>
+                  <div>广东省慈善总会</div>
+                  <div class="role">慈善会</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">BATCH-MX-0615-01<br>1,200 件面包</td>
+            <td>系统派发任务 · 6 名志愿者接收</td>
+            <td><span class="badge-mini realtime">实时上传 ✓</span></td>
+            <td><span class="badge-mini normal">正常</span></td>
+          </tr>
+          <tr>
+            <td class="time">18:22:08<br><span style="color:var(--color-text-3);">2026-06-15</span></td>
+            <td><span class="op claim">📋 领取</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar" style="background:var(--color-trust-soft);color:var(--color-trust);">广</div>
+                <div>
+                  <div>广东省慈善总会</div>
+                  <div class="role">慈善会</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">DON-2026-0615-018<br>美心食品 · ¥18,600</td>
+            <td>领取企业捐赠 · 锁定 1,200 件面包</td>
+            <td><span class="badge-mini realtime">实时上传 ✓</span></td>
+            <td><span class="badge-mini normal">正常</span></td>
+          </tr>
+          <tr>
+            <td class="time">16:00:00<br><span style="color:var(--color-text-3);">2026-06-15</span></td>
+            <td><span class="op audit">🔐 权限</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar" style="background:#FEE2E2;color:#991B1B;">王</div>
+                <div>
+                  <div>王管理员</div>
+                  <div class="role">平台运营</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">机构 #GD-2024-001</td>
+            <td>新增副管理员 · 张总监（财务）</td>
+            <td><span class="badge-mini realtime">实时上传 ✓</span></td>
+            <td><span class="badge-mini normal">正常</span></td>
+          </tr>
+          <tr>
+            <td class="time">14:18:42<br><span style="color:var(--color-text-3);">2026-06-15</span></td>
+            <td><span class="op upload">📤 上传</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar">陈</div>
+                <div>
+                  <div>陈社工</div>
+                  <div class="role">社工组织</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">BATCH-BSD-0612-03<br>反馈照片 12 张</td>
+            <td>补传昨日现场反馈 · 12 张照片 + GPS</td>
+            <td><span class="badge-mini realtime">已补传 ✓</span></td>
+            <td><span class="badge-mini normal">正常</span></td>
+          </tr>
+          <tr>
+            <td class="time">12:00:00<br><span style="color:var(--color-text-3);">2026-06-15</span></td>
+            <td><span class="op audit">📊 日报</span></td>
+            <td>
+              <div class="actor">
+                <div class="avatar" style="background:#0E5A6F;color:#fff;">系</div>
+                <div>
+                  <div>系统</div>
+                  <div class="role">自动任务</div>
+                </div>
+              </div>
+            </td>
+            <td class="target">日报 #20260615</td>
+            <td>自动生成运营日报 · 推送至 12 名管理员</td>
+            <td><span class="badge-mini realtime">实时上传 ✓</span></td>
+            <td><span class="badge-mini normal">正常</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex-between mt-4 text-sm text-muted">
+      <span>共 8,326 条记录 · 当前显示 8 条</span>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm">← 上一页</button>
+        <button class="btn btn-primary btn-sm">1</button>
+        <button class="btn btn-ghost btn-sm">2</button>
+        <button class="btn btn-ghost btn-sm">3</button>
+        <button class="btn btn-ghost btn-sm">...</button>
+        <button class="btn btn-ghost btn-sm">1042</button>
+        <button class="btn btn-ghost btn-sm">下一页 →</button>
+      </div>
+    </div>
+
+    <!-- 反舞弊规则说明 -->
+    <div class="dash-card" style="margin-top:24px;background:linear-gradient(135deg,#FEF3C7 0%, #FEF9E7 100%);border-color:#D97706;">
+      <h3 style="font-size:16px;color:#92400E;margin-bottom:12px;">🛡️ 反舞弊规则说明</h3>
+      <div style="font-size:13px;line-height:1.8;color:#78350F;">
+        <p><strong>① 实时上传强制</strong>：志愿者扫码登记后必须实时上传系统（含 GPS + 时间戳 + 设备指纹），禁止事后补录。离线时本地缓存 + 上线后立即补传。</p>
+        <p><strong>② 超时告警</strong>：签收超过 24h 未上传，慈善组织 Dashboard 顶部红色告警条；超过 48h 自动冻结该志愿者当日派发权限。</p>
+        <p><strong>③ 异常账号预警</strong>：异地登录、短时间内大量操作、敏感时段活动自动告警，慈善组织 2 小时内核实。</p>
+        <p><strong>④ 数据只增不改</strong>：审计日志采用 append-only 结构，任何操作不可删除或修改，保留 10 年供第三方审计。</p>
+        <p><strong>⑤ 受捐者双评分</strong>：志愿者 + 受捐者双向评分，任意一方异常（如 1 星 + 备注疑似代签）进入复审队列。</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>
+  CS.renderDashHeader('慈善会', '广东省慈善总会');
+  CS.renderSidebar('charity', 'audit-log');
+  CS.renderFooter();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 智能助手 — 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<style>
+  body { background: linear-gradient(180deg, #F5F7FA 0%, #fff 100%); }
+  .ai-redirect { max-width: 560px; margin: 80px auto; text-align: center; padding: 32px; }
+  .ai-redirect .ic { font-size: 80px; margin-bottom: 16px; }
+  .ai-redirect h1 { font-size: 24px; margin-bottom: 12px; }
+  .ai-redirect p { color: var(--color-text-2); margin-bottom: 16px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="ai-redirect">
+  <div class="ic">🤖</div>
+  <h1>AI 智能助手已迁移到悬浮层</h1>
+  <p>小慈 AI 助手现在以<strong>悬浮层</strong>形式挂在每页右下角。<br>点击右下角紫色圆形按钮即可唤起，无需跳转页面。</p>
+  <button class="btn btn-primary btn-lg" onclick="CS.openAiAssistant()">✨ 立即唤起 AI 助手</button>
+  <div style="margin-top:24px;"><a href="../index.html" class="text-primary">← 返回首页</a></div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>CS.renderHeader(); CS.renderFooter();</script>
+</body>
+</html>

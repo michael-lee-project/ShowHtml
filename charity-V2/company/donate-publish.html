@@ -340,10 +340,15 @@
     <!-- 慈善会匹配 -->
     <div class="dash-card mt-6">
       <div class="flex-between mb-4">
-        <h3 style="font-size:18px;">🏛️ 第三步：系统智能匹配慈善会</h3>
-        <span class="tag tag-info">已为您匹配 <strong>12</strong> 家属地慈善会</span>
+        <h3 style="font-size:18px;">🏛️ 第三步：AI 智能匹配慈善会</h3>
+        <span class="tag tag-info" style="background:linear-gradient(135deg, #7C3AED, #C44569);color:#fff;border:none;">🤖 AI 已匹配 12 家</span>
       </div>
-      <p class="text-muted mb-3" style="font-size:13px;">基于您填写的"物资所在地（广东东莞）"，系统按<strong>属地匹配度 + 资源规模 + 历史响应速度</strong>推荐前 3 名。点击卡片即可切换。</p>
+      <p class="text-muted mb-3" style="font-size:13px;">基于您填写的"物资所在地（广东东莞）"，AI 综合 <strong>属地匹配度 + 资源规模 + 历史响应速度 + 物资类型匹配度 + 受惠地区覆盖</strong> 5 维度评分，前 3 名推荐。点击卡片即可切换。</p>
+      <!-- AI 匹配理由 -->
+      <div style="background:linear-gradient(135deg, #F3E8FF 0%, #fff 100%);border:1px solid #7C3AED;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;line-height:1.6;color:#1E293B;">
+        <strong style="color:#7C3AED;">🤖 AI 匹配理由：</strong>
+        <span style="color:var(--color-text-2);">检测到您是<strong>食品类（临期面包）</strong>物资 · 所在地广东东莞 · 紧急度"普通" · 体积较小 · 智能推荐 1: <strong>广东省慈善总会</strong>（属地匹配 100% + 食品类处理经验 86 批次 + 平均响应 4.2h）</span>
+      </div>
 
       <!-- 前 3 名推荐 -->
       <div class="charity-recommend">

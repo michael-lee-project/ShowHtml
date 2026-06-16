@@ -282,7 +282,7 @@
       <div class="mode-ico">🎁</div>
       <div class="mode-body">
         <div class="mode-title">赠送给受灾项目</div>
-        <div class="mode-desc">商品直接送到项目受捐人，您将获得捐赠证书 + 0.5% 平台配捐</div>
+        <div class="mode-desc">商品直接送到项目受捐人，您将获得捐赠证书 + 5% 平台配捐</div>
       </div>
       <span class="mode-tag">每单都有温度</span>
       <div class="mode-tick">✓</div>
@@ -462,10 +462,16 @@
             <span class="ic">💝</span>
             <div style="flex:1;">
               <div class="t">本订单慈商联营将捐赠</div>
-              <div class="v">¥ 0.74</div>
+              <div class="v">¥ 7.40</div>
             </div>
           </div>
-          <div class="text-xs text-muted mt-2">捐赠金额 = 订单实付 × 0.5%，用于山区儿童营养餐项目</div>
+          <div class="text-xs text-muted mt-2">捐赠金额 = 订单实付 × 5%，用于山区儿童营养餐项目</div>
+        </div>
+
+        <div style="background:rgba(14,90,111,0.05);border:1px solid rgba(14,90,111,0.18);border-radius:8px;padding:10px 14px;margin-bottom:12px;">
+          <div style="font-size:11px;color:#0E5A6F;line-height:1.5;">
+            🛡️ <strong>合规声明</strong>：本平台不直接收取捐赠款，5% 由商家在订单结算时自动转为物资捐赠，资金流由平台代为记录与披露。
+          </div>
         </div>
 
         <div class="flex-between" style="padding-top:12px;border-top:1px dashed var(--color-border);">
@@ -544,7 +550,7 @@
       if (deliveryNote) deliveryNote.textContent = '由属地慈善会 + 志愿者直接派发到受捐人，无需您收件';
       if (submitNote) {
         submitNote.style.display = '';
-        submitNote.innerHTML = '🎁 <strong>赠送给受灾项目</strong>订单提交后：<br>· 商品直接送达项目受捐人，不经过您的地址<br>· 您将获得 <strong>捐赠证书</strong> + <strong>0.5% 平台配捐额度</strong>（可下次抵用）<br>· 物流轨迹实时同步到项目页，可追踪';
+        submitNote.innerHTML = '🎁 <strong>赠送给受灾项目</strong>订单提交后：<br>· 商品直接送达项目受捐人，不经过您的地址<br>· 您将获得 <strong>捐赠证书</strong> + <strong>5% 平台配捐额度</strong>（可下次抵用）<br>· 物流轨迹实时同步到项目页，可追踪';
       }
     } else {
       sectionAddr.style.display = '';

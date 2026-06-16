@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>捐赠票据管理 · 广东省慈善总会 | 慈商联营</title>
+<link rel="stylesheet" href="../public/css/style.css">
+<link rel="stylesheet" href="../public/css/dashboard.css">
+<link rel="stylesheet" href="../public/css/messages.css">
+<style>
+  body { background: var(--color-bg); }
+  .welcome-card {
+    background: linear-gradient(135deg, #C44569 0%, #E85D04 50%, #C4842A 100%);
+    color: #fff;
+    border-radius: var(--radius-md); padding: 32px; margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .welcome-card::after { content: '🧾'; position: absolute; right: 60px; top: -20px; font-size: 200px; opacity: 0.10; }
+
+  .receipt-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .receipt-kpi {
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 20px;
+    position: relative; overflow: hidden;
+  }
+  .receipt-kpi .v { font-size: 28px; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+  .receipt-kpi .l { font-size: 12px; color: var(--color-text-3); }
+  .receipt-kpi.pending .v { color: #D97706; }
+  .receipt-kpi.issuing .v { color: #7C3AED; }
+  .receipt-kpi.done .v { color: var(--color-trust); }
+  .receipt-kpi.overdue .v { color: #DC2626; }
+  .receipt-kpi .ic { position: absolute; right: 12px; top: 12px; font-size: 24px; opacity: 0.15; }
+
+  .receipt-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .receipt-tab {
+    padding: 8px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--color-border); background: #fff;
+    font-size: 13px; font-weight: 600; color: var(--color-text-2);
+  }
+  .receipt-tab.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .receipt-tab .count { background: rgba(255,255,255,0.25); padding: 1px 7px; border-radius: 999px; font-size: 11px; margin-left: 4px; }
+  .receipt-tab:not(.active) .count { background: var(--color-bg-alt); color: var(--color-text-3); }
+
+  .receipt-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .receipt-table th {
+    background: var(--color-bg); padding: 12px 10px; text-align: left;
+    font-size: 12px; font-weight: 600; color: var(--color-text-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .receipt-table td { padding: 14px 10px; border-bottom: 1px solid var(--color-border-light); }
+  .receipt-table tr:hover td { background: var(--color-bg); }
+  .receipt-table tr.urgent td { background: #FEF2F2; }
+  .receipt-table .company { display: flex; align-items: center; gap: 8px; }
+  .receipt-table .company .avatar { width: 32px; height: 32px; border-radius: 6px; background: var(--color-primary-soft); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .receipt-table .amount { font-weight: 700; color: var(--color-primary); font-variant-numeric: tabular-nums; }
+  .receipt-table .tax-id { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-2); }
+
+  .receipt-status {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 11px; font-weight: 600;
+  }
+  .receipt-status.pending { background: #FEF3C7; color: #92400E; }
+  .receipt-status.issuing { background: #F3E8FF; color: #6B21A8; }
+  .receipt-status.done { background: #D1FAE5; color: #065F46; }
+  .receipt-status.overdue { background: #FEE2E2; color: #991B1B; }
+  .receipt-status .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .receipt-status.pending .dot, .receipt-status.overdue .dot { animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .deadline-cell { font-size: 11px; color: var(--color-text-3); }
+  .deadline-cell .overdue-tag { color: #DC2626; font-weight: 700; }
+
+  .action-group { display: flex; gap: 4px; }
+  .action-group .btn { padding: 4px 10px; font-size: 12px; }
+
+  .receipt-rule {
+    background: linear-gradient(135deg, #E0FAF5 0%, #fff 100%);
+    border: 1px solid var(--color-trust);
+    border-radius: var(--radius-md); padding: 20px; margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="dash-wrap">
+  <div id="dash-side"></div>
+  <main class="dash-main">
+
+    <div class="welcome-card">
+      <div style="position:relative;z-index:1;">
+        <h1>🧾 捐赠票据管理</h1>
+        <div class="sub" style="color:rgba(255,255,255,0.92);">5 个工作日内必须为捐赠方出具财政部门指定的捐赠票据 · 这是企业税前扣除的核心凭证</div>
+        <div class="flex gap-2 mt-2">
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">🛡️ 合规硬要求</span>
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">⏰ 5 工作日时效</span>
+          <span class="tag" style="background:rgba(255,255,255,0.18);color:#fff;border:none;">📊 季度汇总上报</span>
+        </div>
+      </div>
+      <div style="position:relative;z-index:1;">
+        <div style="font-size:12px;opacity:0.85;margin-bottom:4px;text-align:right;">本月已开</div>
+        <div style="font-size:36px;font-weight:900;line-height:1;text-align:right;">86 张</div>
+        <div style="font-size:12px;opacity:0.85;text-align:right;margin-top:2px;">累计金额 ¥ 1,860 万</div>
+      </div>
+    </div>
+
+    <div class="receipt-kpis">
+      <div class="receipt-kpi pending">
+        <div class="ic">⏰</div>
+        <div class="v">12</div>
+        <div class="l">待开具（5 工作日内）</div>
+      </div>
+      <div class="receipt-kpi issuing">
+        <div class="ic">🖨️</div>
+        <div class="v">5</div>
+        <div class="l">开具中（已出库）</div>
+      </div>
+      <div class="receipt-kpi done">
+        <div class="ic">✅</div>
+        <div class="v">86</div>
+        <div class="l">本月已完成</div>
+      </div>
+      <div class="receipt-kpi overdue">
+        <div class="ic">🚨</div>
+        <div class="v">2</div>
+        <div class="l">超期未开（需立即处理）</div>
+      </div>
+    </div>
+
+    <div class="receipt-tabs">
+      <span class="receipt-tab active">全部 <span class="count">105</span></span>
+      <span class="receipt-tab">⏰ 待开具 <span class="count">12</span></span>
+      <span class="receipt-tab">🖨️ 开具中 <span class="count">5</span></span>
+      <span class="receipt-tab">🚨 超期未开 <span class="count">2</span></span>
+      <span class="receipt-tab">✅ 已完成 <span class="count">86</span></span>
+      <div style="flex:1;"></div>
+      <input type="text" class="form-control" style="width:240px;" placeholder="🔍 搜索企业 / 票据号">
+      <button class="btn btn-ghost btn-sm">📤 批量导出</button>
+    </div>
+
+    <div class="dash-card" style="padding:0;overflow:hidden;">
+      <table class="receipt-table">
+        <thead>
+          <tr>
+            <th>捐赠企业</th>
+            <th>税号</th>
+            <th>开票金额</th>
+            <th>对应捐赠</th>
+            <th>申请时间</th>
+            <th>状态</th>
+            <th>5 日截止</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="urgent">
+            <td>
+              <div class="company">
+                <div class="avatar">国</div>
+                <div>
+                  <div style="font-weight:600;">国药控股</div>
+                  <div style="font-size:11px;color:var(--color-text-3);">医疗类 · 紧急</div>
+                </div>
+              </div>
+            </td>
+            <td class="tax-id">9131000076******XG</td>
+            <td class="amount">¥ 286,000</td>
+            <td style="font-size:11px;">DON-2026-0608-018<br>医疗物资</td>
+            <td style="font-size:11px;">2026-06-12 10:30</td>
+            <td><span class="receipt-status overdue"><span class="dot"></span> 超期 3 天</span></td>
+            <td class="deadline-cell"><span class="overdue-tag">已过期</span></td>
+            <td>
+              <div class="action-group">
+                <button class="btn btn-primary">立即开具</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="company">
+                <div class="avatar">美</div>
+                <div>
+                  <div style="font-weight:600;">美心食品集团</div>
+                  <div style="font-size:11px;color:var(--color-text-3);">食品类</div>
+                </div>
+              </div>
+            </td>
+            <td class="tax-id">9144030070******XY</td>
+            <td class="amount">¥ 18,600</td>
+            <td style="font-size:11px;">DON-2026-0612-018<br>临期面包</td>
+            <td style="font-size:11px;">2026-06-12 14:30</td>
+            <td><span class="receipt-status pending"><span class="dot"></span> 待开具</span></td>
+            <td class="deadline-cell">3 天后<br>2026-06-17</td>
+            <td>
+              <div class="action-group">
+                <button class="btn btn-primary">立即开具</button>
+                <button class="btn btn-ghost">详情</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="company">
+                <div class="avatar" style="background:#D1FAE5;color:#065F46;">安</div>
+                <div>
+                  <div style="font-weight:600;">安利（中国）</div>
+                  <div style="font-size:11px;color:var(--color-text-3);">日用家清</div>
+                </div>
+              </div>
+            </td>
+            <td class="tax-id">9144010171******AB</td>
+            <td class="amount">¥ 56,800</td>
+            <td style="font-size:11px;">DON-2026-0611-005<br>洗洁精礼包</td>
+            <td style="font-size:11px;">2026-06-11 16:08</td>
+            <td><span class="receipt-status issuing"><span class="dot"></span> 开具中</span></td>
+            <td class="deadline-cell">2 天后<br>2026-06-16</td>
+            <td>
+              <div class="action-group">
+                <button class="btn btn-ghost">查看进度</button>
+                <button class="btn btn-ghost">取消</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="company">
+                <div class="avatar" style="background:#FAEFD9;color:#92400E;">波</div>
+                <div>
+                  <div style="font-weight:600;">波司登集团</div>
+                  <div style="font-size:11px;color:var(--color-text-3);">衣物类</div>
+                </div>
+              </div>
+            </td>
+            <td class="tax-id">9132050076******CD</td>
+            <td class="amount">¥ 86,200</td>
+            <td style="font-size:11px;">DON-2026-0610-022<br>儿童羽绒服</td>
+            <td style="font-size:11px;">2026-06-10 09:15</td>
+            <td><span class="receipt-status done"><span class="dot"></span> 已完成</span></td>
+            <td class="deadline-cell">已上传<br>📄 REC-2026-...-003</td>
+            <td>
+              <div class="action-group">
+                <button class="btn btn-ghost">📥 下载票据</button>
+                <button class="btn btn-ghost">📤 重新发送</button>
+              </div>
+            </td>
+          </tr>
+          <tr class="urgent">
+            <td>
+              <div class="company">
+                <div class="avatar">立</div>
+                <div>
+                  <div style="font-weight:600;">立白集团</div>
+                  <div style="font-size:11px;color:var(--color-text-3);">日用家清</div>
+                </div>
+              </div>
+            </td>
+            <td class="tax-id">9144010156******EF</td>
+            <td class="amount">¥ 36,800</td>
+            <td style="font-size:11px;">DON-2026-0607-012<br>洗衣液礼包</td>
+            <td style="font-size:11px;">2026-06-07 11:20</td>
+            <td><span class="receipt-status overdue"><span class="dot"></span> 超期 2 天</span></td>
+            <td class="deadline-cell"><span class="overdue-tag">已过期</span></td>
+            <td>
+              <div class="action-group">
+                <button class="btn btn-primary">立即开具</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="receipt-rule">
+      <h3 style="font-size:15px;color:#0E5A6F;margin-bottom:10px;">📋 捐赠票据管理规则</h3>
+      <div style="font-size:13px;line-height:1.8;color:#1E293B;">
+        <p>① <strong>法定时限</strong>：根据《慈善法》及相关税务规定，慈善组织收到捐赠后 <strong>5 个工作日内</strong>必须为捐赠方出具财政部门统一监制的捐赠票据。这是企业税前扣除的核心凭证。</p>
+        <p>② <strong>系统自动追踪</strong>：超期未开票的企业在企业端显示警告，影响该慈善组织的"开票及时率"KPI 评分（连续 3 次超期进入审计复审）。</p>
+        <p>③ <strong>三方信息一致</strong>：开具票据时，捐赠方抬头 / 税号 / 金额必须与企业端的申请信息完全一致，差异 0.01 元也会触发审核。</p>
+        <p>④ <strong>季度汇总上报</strong>：平台每季度自动汇总所有开票数据，上报民政部门 + 财政部门，作为合规审计依据。</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../public/js/common.js"></script>
+<script>
+  CS.renderDashHeader('慈善会', '王主任');
+  CS.renderSidebar('charity', 'receipts');
+  CS.renderFooter();
+</script>
+</body>
+</html>

@@ -97,6 +97,42 @@
 
   /* 赠送给受灾项目 按钮（强制换行，独立占满一行） */
   .detail-actions { flex-wrap: wrap; }
+
+  /* P1-6 模式选择 Tab */
+  .purchase-mode {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    background: #fff; border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px;
+  }
+  .purchase-mode-tab {
+    padding: 12px 14px; border-radius: var(--radius); cursor: pointer;
+    border: 2px solid var(--color-border); background: #fff;
+    display: flex; align-items: center; gap: 10px;
+    transition: all .2s;
+  }
+  .purchase-mode-tab:hover { border-color: var(--color-primary-soft, #FFD9C0); }
+  .purchase-mode-tab.active {
+    border-color: var(--color-primary);
+    background: linear-gradient(135deg, #FFFAF5 0%, #fff 60%);
+    box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.10);
+  }
+  .purchase-mode-tab.mode-gift.active {
+    border-color: var(--color-trust);
+    background: linear-gradient(135deg, #E0FAF5 0%, #fff 60%);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
+  }
+  .purchase-mode-tab .ic {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    background: var(--color-primary-soft, #FFE4D2);
+  }
+  .purchase-mode-tab.mode-gift .ic { background: #CCFBF1; }
+  .purchase-mode-tab .t { font-size: 13px; font-weight: 700; }
+  .purchase-mode-tab .d { font-size: 11px; color: var(--color-text-3); margin-top: 2px; }
+  .purchase-mode-tab .body { flex: 1; }
+  .purchase-mode-tab .check { font-size: 16px; color: transparent; }
+  .purchase-mode-tab.active .check { color: var(--color-primary); }
+  .purchase-mode-tab.mode-gift.active .check { color: var(--color-trust); }
   .btn-gift {
     flex: 0 0 100%;
     background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
@@ -168,6 +204,26 @@
       </div>
 
       <h1>🍞 美心临期面包礼盒 1.2kg · 8 种口味</h1>
+
+      <!-- P1-6 购买模式选择 -->
+      <div class="purchase-mode">
+        <div class="purchase-mode-tab active">
+          <div class="ic">🛒</div>
+          <div class="body">
+            <div class="t">🛒 自购</div>
+            <div class="d">商品送到您家，5% 自动转为商家物资捐赠</div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div class="purchase-mode-tab mode-gift">
+          <div class="ic">🎁</div>
+          <div class="body">
+            <div class="t">💝 捐物资</div>
+            <div class="d">商品直接送到受灾项目，您不收货</div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+      </div>
       <div class="flex gap-2 mb-3">
         <span class="tag tag-danger">爆款</span>
         <span class="tag tag-primary">临期特惠</span>
@@ -184,8 +240,8 @@
       <div class="donate-badge">
         <span class="ic">💝</span>
         <div>
-          <div class="t">每购买一单，平台自动捐赠订单额的 <strong>0.5%</strong></div>
-          <div class="v mt-1">本商品每单捐赠 ¥ 0.20 · 用于山区儿童营养餐</div>
+          <div class="t">每购买一单，平台自动捐赠订单额的 <strong>5%</strong></div>
+          <div class="v mt-1">本商品每单捐赠 ¥ 2.00 · 用于山区儿童营养餐</div>
         </div>
       </div>
 
@@ -228,7 +284,7 @@
         <button class="btn btn-ghost btn-lg" onclick="alert('已加入购物车')">🛒 加入购物车</button>
         <button class="btn btn-primary btn-lg" onclick="location.href='checkout.html'">立即购买 →</button>
         <button class="btn btn-lg btn-gift" onclick="location.href='checkout.html?mode=gift'">🎁 赠送给受灾项目</button>
-        <div class="gift-hint">每单都有温度 · 直接送达受捐人 · 获捐赠证书 + 0.5% 平台配捐</div>
+        <div class="gift-hint">每单都有温度 · 直接送达受捐人 · 获捐赠证书 + 5% 平台配捐</div>
       </div>
 
       <div class="alert alert-info mt-4" style="font-size:13px;">

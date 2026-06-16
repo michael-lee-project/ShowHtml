@@ -7,6 +7,73 @@
 <link rel="stylesheet" href="../public/css/style.css">
 <link rel="stylesheet" href="../public/css/dashboard.css">
 <style>
+  /* P1-2 分类 tab + 审计 + AI 年报 */
+  .cat-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .cat-tab {
+    padding: 8px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--color-border); background: #fff;
+    font-size: 13px; font-weight: 600; color: var(--color-text-2);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .cat-tab:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .cat-tab.active { background: linear-gradient(135deg, var(--color-primary), var(--color-gold)); color: #fff; border-color: transparent; }
+  .cat-tab .ic { font-size: 14px; }
+
+  .audit-zone {
+    background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+    color: #fff; border-radius: var(--radius-md); padding: 24px;
+    margin-bottom: 24px; display: grid; grid-template-columns: 1fr 320px; gap: 24px;
+    position: relative; overflow: hidden;
+  }
+  .audit-zone::after { content: '🛡️'; position: absolute; right: 320px; top: -10px; font-size: 200px; opacity: 0.06; }
+  @media (max-width: 980px) { .audit-zone { grid-template-columns: 1fr; } }
+  .audit-zone h3 { font-size: 18px; margin-bottom: 8px; }
+  .audit-zone .sub { color: rgba(255,255,255,0.85); font-size: 13px; margin-bottom: 16px; }
+  .audit-list { display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+  .audit-row {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .audit-row .ic { font-size: 24px; }
+  .audit-row .body { flex: 1; }
+  .audit-row .body .t { font-size: 13px; font-weight: 700; }
+  .audit-row .body .s { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+  .audit-row .btn-mini {
+    background: rgba(255,255,255,0.15); color: #fff;
+    padding: 6px 12px; border-radius: 6px; font-size: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .audit-upload-card {
+    background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.3);
+    border-radius: 8px; padding: 20px; text-align: center;
+    position: relative; z-index: 1;
+  }
+  .audit-upload-card .ic { font-size: 32px; margin-bottom: 8px; }
+  .audit-upload-card .t { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .audit-upload-card .s { font-size: 11px; opacity: 0.75; margin-bottom: 12px; }
+
+  .ai-zone {
+    background: linear-gradient(135deg, #7C3AED 0%, #C44569 50%, #E85D04 100%);
+    color: #fff; border-radius: var(--radius-md); padding: 32px;
+    margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .ai-zone::after { content: '🤖'; position: absolute; right: 380px; top: -20px; font-size: 220px; opacity: 0.10; }
+  @media (max-width: 980px) { .ai-zone { grid-template-columns: 1fr; } }
+  .ai-zone h3 { font-size: 24px; margin-bottom: 8px; }
+  .ai-zone .sub { font-size: 14px; opacity: 0.95; margin-bottom: 16px; max-width: 580px; }
+  .ai-features { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .ai-features .pill {
+    background: rgba(255,255,255,0.18); color: #fff;
+    padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  }
+  .ai-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+  .ai-actions .btn { background: #fff; color: #7C3AED; font-weight: 700; }
+  .ai-actions .btn-ghost { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+
   .year-stat-card {
     background: linear-gradient(135deg, #0E5A6F 0%, #164E63 100%);
     color: #fff; border-radius: var(--radius-lg); padding: 32px;
@@ -133,7 +200,8 @@
       </div>
       <div class="flex gap-2">
         <select class="form-select" style="width:160px;"><option>2025 年</option><option>2024 年</option><option>2023 年</option></select>
-        <button class="btn btn-ghost">📥 下载报告</button>
+        <button class="btn btn-ghost">📥 导出 PDF</button>
+        <button class="btn btn-primary">🤖 AI 生成年报</button>
       </div>
     </div>
 
@@ -153,6 +221,122 @@
       <div class="item">
         <div class="num">1,260</div>
         <div class="lbl">活跃志愿者</div>
+      </div>
+    </div>
+
+    <!-- P1-2 物资分类切换（按品类生成专报） -->
+    <div class="dash-card">
+      <div class="card-head">
+        <h3>📦 物资分类年报 · 按品类切换</h3>
+        <span class="text-sm text-muted">大型物资项目可生成专项报告</span>
+      </div>
+      <div class="cat-tabs">
+        <span class="cat-tab active"><span class="ic">📊</span> 全部</span>
+        <span class="cat-tab"><span class="ic">🍞</span> 食品</span>
+        <span class="cat-tab"><span class="ic">👕</span> 衣物</span>
+        <span class="cat-tab"><span class="ic">📚</span> 文具</span>
+        <span class="cat-tab"><span class="ic">💊</span> 医疗</span>
+        <span class="cat-tab"><span class="ic">🏠</span> 家清</span>
+        <span class="cat-tab"><span class="ic">📦</span> 其他</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div style="padding:16px;background:linear-gradient(135deg, #FFE4D2, #FFF1E5);border-radius:10px;">
+          <div style="font-size:12px;color:var(--color-text-2);margin-bottom:4px;">食品类 · 物资价值</div>
+          <div style="font-size:24px;font-weight:800;color:var(--color-primary);">¥ 3,260 万</div>
+          <div style="font-size:11px;color:var(--color-text-3);margin-top:4px;">占 39.5% · 同比 +28%</div>
+        </div>
+        <div style="padding:16px;background:linear-gradient(135deg, #E5F0F4, #E0FAF5);border-radius:10px;">
+          <div style="font-size:12px;color:var(--color-text-2);margin-bottom:4px;">衣物类 · 物资价值</div>
+          <div style="font-size:24px;font-weight:800;color:var(--color-trust);">¥ 1,860 万</div>
+          <div style="font-size:11px;color:var(--color-text-3);margin-top:4px;">占 22.5% · 同比 +42%</div>
+        </div>
+        <div style="padding:16px;background:linear-gradient(135deg, #FEF3C7, #FAEFD9);border-radius:10px;">
+          <div style="font-size:12px;color:var(--color-text-2);margin-bottom:4px;">文具类 · 物资价值</div>
+          <div style="font-size:24px;font-weight:800;color:#D97706;">¥ 1,260 万</div>
+          <div style="font-size:11px;color:var(--color-text-3);margin-top:4px;">占 15.3% · 同比 +15%</div>
+        </div>
+        <div style="padding:16px;background:linear-gradient(135deg, #F3E8FF, #FFE4D2);border-radius:10px;">
+          <div style="font-size:12px;color:var(--color-text-2);margin-bottom:4px;">医疗类 · 物资价值</div>
+          <div style="font-size:24px;font-weight:800;color:#7C3AED;">¥ 1,860 万</div>
+          <div style="font-size:11px;color:var(--color-text-3);margin-top:4px;">占 22.7% · 同比 -8%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P1-2 第三方审计报告 -->
+    <div class="audit-zone">
+      <div>
+        <h3>🛡️ 第三方审计报告 · 独立可查</h3>
+        <div class="sub">平台不直接做审计 · 展示第三方审计机构按季度出具的专业报告 · 含物资清单 / 财务核对 / 签收凭证随机抽检</div>
+        <div class="audit-list">
+          <div class="audit-row">
+            <div class="ic">📄</div>
+            <div class="body">
+              <div class="t">2025 Q2 物资流转审计报告</div>
+              <div class="s">出具方：中审众环会计师事务所（特殊普通合伙）· 2025-07-15 · 32 页</div>
+            </div>
+            <button class="btn-mini">📥 下载</button>
+            <button class="btn-mini">🔗 公示</button>
+          </div>
+          <div class="audit-row">
+            <div class="ic">📄</div>
+            <div class="body">
+              <div class="t">2025 Q1 物资流转审计报告</div>
+              <div class="s">出具方：中审众环会计师事务所（特殊普通合伙）· 2025-04-12 · 28 页</div>
+            </div>
+            <button class="btn-mini">📥 下载</button>
+            <button class="btn-mini">🔗 公示</button>
+          </div>
+          <div class="audit-row">
+            <div class="ic">📄</div>
+            <div class="body">
+              <div class="t">2024 年度审计报告</div>
+              <div class="s">出具方：中审众环会计师事务所（特殊普通合伙）· 2025-02-08 · 86 页</div>
+            </div>
+            <button class="btn-mini">📥 下载</button>
+            <button class="btn-mini">🔗 公示</button>
+          </div>
+          <div class="audit-row">
+            <div class="ic">📄</div>
+            <div class="body">
+              <div class="t">2025 上半年专项审计 · 食品类</div>
+              <div class="s">出具方：信永中和会计师事务所 · 2025-07-22 · 18 页</div>
+            </div>
+            <button class="btn-mini">📥 下载</button>
+            <button class="btn-mini">🔗 公示</button>
+          </div>
+        </div>
+      </div>
+      <div class="audit-upload-card">
+        <div class="ic">📤</div>
+        <div class="t">上传新审计报告</div>
+        <div class="s">支持 PDF · 单文件 ≤ 20MB<br>上传后自动展示下载链接</div>
+        <button class="btn" style="background:#fff;color:#1E293B;font-weight:700;width:100%;margin-top:8px;">选择文件上传</button>
+        <div style="font-size:10px;opacity:0.7;margin-top:8px;">合规要求：每季度至少 1 份</div>
+      </div>
+    </div>
+
+    <!-- P1-2 AI 年报生成 -->
+    <div class="ai-zone">
+      <div style="position:relative;z-index:1;">
+        <h3>🤖 AI 一键生成年报</h3>
+        <div class="sub">上传一年关键数据 + 机构基本信息 · AI 自动生成图文并茂的年度报告（含数据图表 + 文字叙述 + 受捐者故事 + 财务汇总），小微公益组织也能源源不断输出专业年报</div>
+        <div class="ai-features">
+          <span class="pill">📊 12 张自动图表</span>
+          <span class="pill">📝 5,000 字专业叙述</span>
+          <span class="pill">📷 智能配图推荐</span>
+          <span class="pill">🎨 3 套官方模板</span>
+          <span class="pill">📄 一键导出 PDF</span>
+          <span class="pill">🔒 脱敏 + 审计可查</span>
+        </div>
+        <div style="font-size:12px;opacity:0.85;line-height:1.6;">
+          <strong>已为 12 家小微公益组织生成 2024 年度报告</strong> · 平均节省 18 小时人工 · 满意度 96%
+        </div>
+      </div>
+      <div class="ai-actions">
+        <button class="btn btn-lg">✨ 一键生成 2025 年报</button>
+        <button class="btn btn-ghost btn-sm">📋 选择往年模板</button>
+        <button class="btn btn-ghost btn-sm">🎓 AI 使用教程</button>
       </div>
     </div>
 
