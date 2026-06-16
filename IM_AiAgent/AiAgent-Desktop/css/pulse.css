@@ -1,0 +1,91 @@
+/* ========================================
+   pulse.css — C 数据流方案
+   ======================================== */
+
+/* === 脉冲层（数据流容器） === */
+.pulse-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1500;
+  overflow: hidden;
+}
+
+/* === 数据流 SVG 容器 === */
+.data-flow-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* === 抵达爆裂：金色光圈 + 内部脉冲 === */
+.flow-arrival {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+.flow-arrival::before,
+.flow-arrival::after {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  width: 0; height: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.flow-arrival::before {
+  background: radial-gradient(circle, #FFD700 0%, var(--c, #4a90e2) 50%, transparent 70%);
+  box-shadow: 0 0 24px #FFD700;
+}
+.flow-arrival::after {
+  border: 2px solid #FFD700;
+}
+.flow-arrival.fire { animation: flowArrivalShow 0.9s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) forwards; }
+.flow-arrival.fire::before { animation: flowArrivalCore 0.9s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) forwards; }
+.flow-arrival.fire::after  { animation: flowArrivalRing 0.9s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) forwards; }
+
+@keyframes flowArrivalShow {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes flowArrivalCore {
+  0%   { width: 4px;  height: 4px;  opacity: 0; }
+  30%  { width: 28px; height: 28px; opacity: 1; }
+  100% { width: 60px; height: 60px; opacity: 0; }
+}
+@keyframes flowArrivalRing {
+  0%   { width: 8px;   height: 8px;   opacity: 0; border-width: 2px; }
+  30%  { width: 40px;  height: 40px;  opacity: 1; border-width: 2px; }
+  100% { width: 100px; height: 100px; opacity: 0; border-width: 0.5px; }
+}
+
+/* === 中央大屏闪烁 === */
+.screen-flicker {
+  animation: screenFlicker 0.4s ease-in-out;
+}
+@keyframes screenFlicker {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.5) saturate(1.4); }
+}
+
+/* === Agent 立绘动效 === */
+.ws-agent.working .ws-agent-avatar { animation: agentWork 1.2s ease-in-out infinite; }
+@keyframes agentWork {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-2px) rotate(-1deg); }
+}
+
+.ws-agent.celebrate .ws-agent-avatar { animation: agentCelebrate 0.8s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1)); }
+@keyframes agentCelebrate {
+  0%   { transform: scale(1) rotate(0); }
+  30%  { transform: scale(1.15) rotate(-3deg) translateY(-6px); }
+  60%  { transform: scale(1.1) rotate(3deg) translateY(-8px); }
+  100% { transform: scale(1) rotate(0) translateY(0); }
+}

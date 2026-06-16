@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>AI Agent 办公室 · 桌面端原型</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="css/main.css?v=5">
+  <link rel="stylesheet" href="css/sidebar.css?v=5">
+  <link rel="stylesheet" href="css/office.css?v=28">
+  <link rel="stylesheet" href="css/chat-panel.css?v=7">
+  <link rel="stylesheet" href="css/pulse.css?v=6">
+  <link rel="stylesheet" href="css/messages.css?v=12">
+  <link rel="stylesheet" href="css/agent-center.css?v=7">
+</head>
+<body>
+
+  <!-- ====== Top Bar ====== -->
+  <header class="app-topbar">
+    <div class="app-brand">
+      <span class="app-logo">◇</span>
+      <div class="app-brand-text">
+        <span class="app-brand-name">AI AGENT OFFICE</span>
+        <span class="app-brand-sub mono">智能体协同工作台 · v1.0</span>
+      </div>
+    </div>
+    <div class="app-topbar-meta mono">
+      <span class="meta-pill"><i class="dot dot-green"></i>6 AGENTS ONLINE</span>
+      <span class="meta-pill" id="liveClock">--:--</span>
+      <span class="meta-user">
+        <span class="meta-avatar">M</span>
+        <span>Michael</span>
+      </span>
+    </div>
+  </header>
+
+  <!-- ====== App Shell ====== -->
+  <div class="app-shell">
+
+    <!-- ====== Left Sidebar ====== -->
+    <aside class="app-sidebar" id="appSidebar">
+      <!-- Tab Switcher (B方案：左栏顶部tab) -->
+      <nav class="side-tabs">
+        <button class="side-tab is-active" data-side-tab="office">
+          <span class="side-tab-icon">⌂</span>
+          <span>办公室</span>
+        </button>
+        <button class="side-tab" data-side-tab="messages">
+          <span class="side-tab-icon">✉</span>
+          <span>消息</span>
+          <em class="side-tab-badge">12</em>
+        </button>
+      </nav>
+
+      <!-- ===== OFFICE PANEL ===== -->
+      <div class="side-panel" data-side-panel="office">
+        <div class="side-section">
+          <div class="side-section-head">
+            <span class="kicker-tag">AGENTS · 6</span>
+            <span class="side-section-hint mono">配置 / 对话</span>
+          </div>
+          <ul class="agent-list" id="agentList"><!-- JS 渲染 --></ul>
+        </div>
+
+        <div class="side-section">
+          <div class="side-section-head">
+            <span class="kicker-tag">TASKS</span>
+            <span class="side-section-hint mono">历史任务</span>
+          </div>
+          <ul class="task-history">
+            <li><span class="task-dot" style="--c:var(--agent-sales)"></span><span class="task-text">销售 · 新客李 XX 报价</span><span class="task-time mono">12:04</span></li>
+            <li><span class="task-dot" style="--c:var(--agent-design)"></span><span class="task-text">设计 · 618 海报 v2</span><span class="task-time mono">11:38</span></li>
+            <li><span class="task-dot" style="--c:var(--agent-meeting)"></span><span class="task-text">会议 · Q3 复盘纪要</span><span class="task-time mono">10:15</span></li>
+            <li><span class="task-dot" style="--c:var(--agent-video)"></span><span class="task-text">视频 · 产品介绍分镜</span><span class="task-time mono">09:42</span></li>
+          </ul>
+        </div>
+
+        <div class="side-footer">
+          <button class="side-foot-btn" data-side-foot="me"><span>👤</span>我的</button>
+          <button class="side-foot-btn" data-side-foot="agent-center"><span>✦</span>Agent中心</button>
+        </div>
+      </div>
+
+      <!-- ===== MESSAGES PANEL ===== -->
+      <div class="side-panel is-hidden" data-side-panel="messages">
+        <div class="side-section">
+          <div class="side-section-head">
+            <span class="kicker-tag">CUSTOMERS</span>
+            <span class="side-section-hint mono">客户对话</span>
+          </div>
+          <ul class="msg-list" id="msgList"><!-- JS 渲染 --></ul>
+        </div>
+        <div class="side-footer">
+          <button class="side-foot-btn" data-side-foot="me"><span>👤</span>我的</button>
+          <button class="side-foot-btn" data-side-foot="agent-center"><span>✦</span>Agent中心</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====== Main Stage ====== -->
+    <main class="app-stage" id="appStage">
+
+      <!-- Office View -->
+      <section class="stage-view stage-office is-active" data-stage="office">
+        <div class="stage-toolbar mono">
+          <span class="kicker">AGENT OFFICE · LIVE</span>
+          <span class="stage-toolbar-right">
+            <button class="stage-tool" id="btnRoomView">俯视</button>
+            <button class="stage-tool is-active" id="btnIsoView">等距</button>
+            <button class="stage-tool" id="btnFocusAll">聚焦全员</button>
+          </span>
+        </div>
+
+        <!-- Office Scene -->
+        <div class="office-scene" id="officeScene">
+          <!-- 等距地板网格 -->
+          <div class="iso-grid"></div>
+          <!-- 6个Agent工位 + 中央大屏 -->
+          <div class="iso-stage" id="isoStage"><!-- JS 渲染 --></div>
+        </div>
+
+        <!-- 底部状态条 -->
+        <div class="stage-status mono">
+          <span><i class="dot dot-green"></i>6 AGENTS</span>
+          <span><i class="dot dot-red"></i>3 RUNNING</span>
+          <span><i class="dot"></i>2 IDLE</span>
+          <span class="stage-status-spacer"></span>
+          <span>TODAY · 24 TASKS</span>
+          <span class="stage-status-spacer"></span>
+          <span style="color: var(--ink-3)">提示：点击 Agent 工位 → 右侧配置 / 对话</span>
+        </div>
+      </section>
+
+      <!-- Messages View (独立tab内容) -->
+      <section class="stage-view stage-messages" data-stage="messages">
+        <div class="stage-toolbar mono">
+          <span class="kicker">CUSTOMER MESSAGES · AI AGENT 接管中</span>
+          <span class="stage-toolbar-right">
+            <span class="msg-stat"><strong>12</strong> 待处理</span>
+            <span class="msg-stat"><strong>37</strong> 今日</span>
+          </span>
+        </div>
+        <div class="msg-board" id="msgBoard"><!-- JS 渲染 --></div>
+        <div class="msg-detail" id="msgDetail" style="display:none"><!-- JS 渲染 --></div>
+      </section>
+
+      <!-- Agent Center View -->
+      <section class="stage-view stage-agent-center" data-stage="agent-center">
+        <div class="stage-toolbar mono">
+          <span class="kicker">AGENT CENTER · FUNCTION CONFIG</span>
+          <span class="stage-toolbar-right">
+            <span class="msg-stat"><strong>6</strong> Agent</span>
+            <span class="msg-stat"><strong>FUNC</strong> 功能配置</span>
+          </span>
+        </div>
+        <div class="agent-center-shell" id="agentCenterRoot"><!-- JS 渲染 --></div>
+      </section>
+
+    </main>
+
+    <!-- ====== Chat Panel (右侧滑出) ====== -->
+    <aside class="chat-panel" id="chatPanel">
+      <header class="chat-panel-head">
+        <div class="chat-panel-agent" id="chatPanelAgent"><!-- JS 渲染 --></div>
+        <button class="chat-panel-close" id="chatPanelClose" aria-label="关闭">×</button>
+      </header>
+      <div class="chat-panel-body" id="chatPanelBody">
+        <!-- 欢迎语 -->
+        <div class="chat-welcome" id="chatWelcome"></div>
+        <!-- 历史消息 -->
+        <div class="chat-thread" id="chatThread"></div>
+      </div>
+      <footer class="chat-panel-input">
+        <div class="chat-quick-row" id="chatQuickRow"></div>
+        <div class="chat-input-bar">
+          <button class="chat-input-attach" aria-label="附件">📎</button>
+          <input type="text" class="chat-input-field" id="chatInput" placeholder="输入任务或问题…">
+          <button class="chat-input-send" id="chatSend">发送</button>
+        </div>
+      </footer>
+    </aside>
+  </div>
+
+  <!-- ====== 脉冲层（欢呼动效） ====== -->
+  <div class="pulse-layer" id="pulseLayer"></div>
+
+  <!-- ====== Scripts ====== -->
+  <script src="js/agents.js?v=5"></script>
+  <script src="js/office.js?v=16"></script>
+  <script src="js/chat-panel.js?v=8"></script>
+  <script src="js/pulse.js?v=7"></script>
+  <script src="js/agent-center.js?v=7"></script>
+  <script src="js/app.js?v=12"></script>
+</body>
+</html>

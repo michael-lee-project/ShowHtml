@@ -80,6 +80,8 @@ function updateHeader(viewName, arg) {
     'agent-workflow-detail': '工作流详情',
     'agent-tags': '客户标签',
     'ai-inbox': 'AI 已处理',
+    'company-channel': '公司公众号',
+    'company-article': '文章详情',
     'meeting-detail': '会议详情',
     'chat-single': getContact(arg)?.name || '对话',
     'chat-demo': '场景演示',
