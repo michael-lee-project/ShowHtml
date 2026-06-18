@@ -70,7 +70,6 @@
     flex-shrink: 0;
   }
 
-  /* 移动端响应式（≤768 改单列 / 字号缩小） */
   @media (max-width: 768px) {
     .top-stat-row { grid-template-columns: 1fr 1fr; gap: 12px; }
     .ts-card { padding: 16px 14px; }
@@ -78,7 +77,7 @@
     .ts-card .value .unit { font-size: 12px; }
     .filter-bar { flex-direction: column; gap: 12px; }
     .filter-bar .form-group { width: 100%; }
-    .filter-bar .btn { width: 100%; }
+    .filter-bar .btn { width: 100; }
     .project-card { padding: 16px; }
     .audit-section .grid-3 { grid-template-columns: 1fr; }
   }
@@ -107,29 +106,29 @@
     <!-- 顶部 5 大数据 -->
     <div class="top-stat-row">
       <div class="ts-card">
-        <div class="label">累计捐赠物资价值</div>
-        <div class="value"><span data-target="2.86" data-suffix="亿" data-prefix="¥ ">¥ 2.86</span><span class="unit">亿</span></div>
-        <div class="trend">↑ 较去年同期 +38.2%</div>
+        <div class="label">累计物资捐赠</div>
+        <div class="value" data-target="3286000" data-suffix=" 件" data-prefix="">3,286,000</div>
+        <div class="trend">↑ 覆盖 31 个省市</div>
       </div>
       <div class="ts-card theme-2">
         <div class="label">受惠人次</div>
-        <div class="value" data-target="1268000" data-suffix="">1,268,000</div>
-        <div class="trend">↑ 覆盖 31 个省市</div>
+        <div class="value" data-target="1268000" data-suffix=" 人次" data-prefix="">1,268,000</div>
+        <div class="trend">↑ 较去年同期 +38.2%</div>
       </div>
       <div class="ts-card theme-3">
-        <div class="label">爱心企业入驻</div>
-        <div class="value"><span data-target="3680" data-suffix="">3,680</span><span class="unit">家</span></div>
+        <div class="label">入驻爱心企业</div>
+        <div class="value" data-target="3680" data-suffix=" 家" data-prefix="">3,680</div>
         <div class="trend">↑ 本月新增 86 家</div>
       </div>
       <div class="ts-card theme-4">
         <div class="label">完成项目数</div>
-        <div class="value" data-target="1486" data-suffix="">1,486</div>
+        <div class="value" data-target="1486" data-suffix=" 个" data-prefix="">1,486</div>
         <div class="trend">完成率 91.2%</div>
       </div>
       <div class="ts-card theme-5">
         <div class="label">活跃志愿者</div>
-        <div class="value" data-target="12860" data-suffix="">12,860</div>
-        <div class="trend">↑ 月活跃 8,420</div>
+        <div class="value" data-target="12860" data-suffix=" 人" data-prefix="">12,860</div>
+        <div class="trend">↑ 月活跃 8,420 人</div>
       </div>
     </div>
 
@@ -200,14 +199,14 @@
           <div class="text-xs text-muted mt-2">60% · 剩余 23 天</div>
         </div>
         <div class="item">
-          <div class="lbl">已筹集</div>
-          <div class="val amount">¥ 482,300</div>
-          <div class="text-xs text-muted">/ 目标 ¥ 800,000</div>
+          <div class="lbl">物资到位</div>
+          <div class="val amount">32,860 件</div>
+          <div class="text-xs text-muted">/ 目标 50,000 件</div>
         </div>
         <div class="item">
           <div class="lbl">参与企业</div>
           <div class="val">12 家</div>
-          <div class="text-xs text-muted">含美心、伊利等</div>
+          <div class="text-xs text-muted">含美心、顺丰等</div>
         </div>
         <div class="item">
           <div class="lbl">受惠人次</div>
@@ -238,9 +237,9 @@
           <div class="text-xs text-muted mt-2">57% · 剩余 45 天</div>
         </div>
         <div class="item">
-          <div class="lbl">已筹集</div>
-          <div class="val amount">¥ 286,500</div>
-          <div class="text-xs text-muted">/ 目标 ¥ 500,000</div>
+          <div class="lbl">物资到位</div>
+          <div class="val amount">8,600 套</div>
+          <div class="text-xs text-muted">/ 目标 15,000 套</div>
         </div>
         <div class="item">
           <div class="lbl">参与企业</div>
@@ -250,7 +249,7 @@
         <div class="item">
           <div class="lbl">受惠人次</div>
           <div class="val">5,600</div>
-          <div class="text-xs text-muted">已发放 4,820 件</div>
+          <div class="text-xs text-muted">已发放 4,820 套</div>
         </div>
       </div>
     </div>
@@ -276,9 +275,9 @@
           <div class="text-xs text-muted mt-2">56% · 剩余 60 天</div>
         </div>
         <div class="item">
-          <div class="lbl">已筹集</div>
-          <div class="val amount">¥ 168,200</div>
-          <div class="text-xs text-muted">/ 目标 ¥ 300,000</div>
+          <div class="lbl">物资到位</div>
+          <div class="val amount">4,200 件</div>
+          <div class="text-xs text-muted">/ 目标 7,500 件</div>
         </div>
         <div class="item">
           <div class="lbl">参与企业</div>
@@ -314,9 +313,9 @@
           <div class="text-xs text-muted mt-2">85% · 即将完成</div>
         </div>
         <div class="item">
-          <div class="lbl">已筹集</div>
-          <div class="val amount">¥ 425,000</div>
-          <div class="text-xs text-muted">/ 目标 ¥ 500,000</div>
+          <div class="lbl">物资到位</div>
+          <div class="val amount">48 套</div>
+          <div class="text-xs text-muted">/ 目标 56 套</div>
         </div>
         <div class="item">
           <div class="lbl">参与企业</div>
@@ -352,8 +351,8 @@
           <div class="text-xs text-muted mt-2">持续项目 · 月均 1.2 万件</div>
         </div>
         <div class="item">
-          <div class="lbl">累计价值</div>
-          <div class="val amount">¥ 1,860万</div>
+          <div class="lbl">累计物资</div>
+          <div class="val amount">86 万件</div>
           <div class="text-xs text-muted">本年完成</div>
         </div>
         <div class="item">
@@ -412,7 +411,6 @@
   </div>
 </section>
 
-<!-- Fix3 · P1-3 隐私保护原则移到页面底部，作为政策补充说明 -->
 <section style="background:linear-gradient(135deg, #E0FAF5 0%, #E5F0F4 50%, #F0F9FF 100%);padding:48px 0;">
   <div class="container">
     <div style="background:#fff;border-radius:14px;padding:32px;box-shadow:0 12px 40px rgba(14,90,111,0.10);">
@@ -534,7 +532,6 @@
     // 数字滚动（每个 ts-card 的 .value / .value span）
     const valueEls = document.querySelectorAll('.ts-card .value, .ts-card .value span');
     valueEls.forEach((el, i) => {
-      // 跳过 .unit (子 span) — 用 hasAttribute 过滤
       if (!el.dataset || !el.dataset.target) return;
       const target = parseFloat(el.dataset.target);
       const prefix = el.dataset.prefix || '';
@@ -563,20 +560,13 @@
       });
     }
 
-    // 4) 5 张 project-card stagger + 内部 emoji 弹性
-    const projectCards = document.querySelectorAll('.project-card');
-    if (projectCards.length) {
-      gsap.set(projectCards, { opacity: 0, y: 30 });
-      gsap.to(projectCards, {
+    // 4) 5 张 project-row stagger + 内部 emoji 弹性
+    const projectRows = document.querySelectorAll('.project-row');
+    if (projectRows.length) {
+      gsap.set(projectRows, { opacity: 0, y: 30 });
+      gsap.to(projectRows, {
         opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.4)', stagger: 0.1,
-        scrollTrigger: { trigger: projectCards[0], start: 'top 85%', once: true }
-      });
-      // 标签 emoji 弹性
-      const projectTags = document.querySelectorAll('.project-card .tag');
-      gsap.set(projectTags, { scale: 0 });
-      gsap.to(projectTags, {
-        scale: 1, duration: 0.4, ease: 'back.out(2)', stagger: 0.02, delay: 0.3,
-        scrollTrigger: { trigger: projectCards[0], start: 'top 85%', once: true }
+        scrollTrigger: { trigger: projectRows[0], start: 'top 85%', once: true }
       });
     }
 
@@ -594,7 +584,6 @@
         opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.4)', stagger: 0.12,
         scrollTrigger: { trigger: '.audit-section', start: 'top 80%', once: true }
       });
-      // 📋 图标缩放弹性
       const auditIcons = document.querySelectorAll('.audit-card .ic');
       gsap.set(auditIcons, { scale: 0, rotation: -180 });
       gsap.to(auditIcons, {
