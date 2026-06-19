@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>透明公示 · 慈商联营</title>
+<link rel="stylesheet" href="./public/css/h5.css?v=2">
+<link rel="stylesheet" href="./public/css/h5-app.css?v=2">
+<style>
+.h5-trans-section { padding: 0 16px 16px; }
+.h5-trans-section-title {
+  font-size: 13px; font-weight: 700; color: var(--h5-text);
+  margin-bottom: 10px; padding-top: 4px;
+}
+.h5-trans-card {
+  background: var(--h5-card); border: 1px solid var(--h5-border);
+  border-radius: var(--h5-radius); padding: 14px;
+  margin-bottom: 10px;
+}
+.h5-trans-card .tc-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 8px;
+}
+.h5-trans-card .tc-title { font-size: 13px; font-weight: 700; color: var(--h5-text); line-height: 1.3; flex: 1; }
+.h5-trans-card .tc-badge {
+  flex-shrink: 0; margin-left: 8px;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 5px;
+  font-size: 11px; font-weight: 700;
+}
+.h5-trans-card .tc-badge.pass { background: #DCFCE7; color: #16A34A; }
+.h5-trans-card .tc-badge.processing { background: #FEF3C7; color: #B45309; }
+.h5-trans-card .tc-badge.pub { background: #E0F2FE; color: #0277BD; }
+.h5-trans-card .tc-badge.inactive { background: var(--h5-bg); color: var(--h5-text-3); }
+.h5-trans-card .tc-meta { font-size: 11px; color: var(--h5-text-3); margin-bottom: 6px; }
+.h5-trans-card .tc-data { display: flex; gap: 8px; flex-wrap: wrap; }
+.h5-trans-card .tc-data-item {
+  background: var(--h5-bg); border-radius: 6px; padding: 6px 10px;
+  font-size: 12px;
+}
+.h5-trans-card .tc-data-item .v { font-weight: 700; color: var(--h5-text); }
+.h5-trans-card .tc-data-item .l { color: var(--h5-text-3); font-size: 10px; }
+.h5-trans-card .tc-actions {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.h5-trans-card .tc-btn {
+  flex: 1; text-align: center; padding: 8px 0;
+  border-radius: var(--h5-radius-sm); font-size: 12px; font-weight: 600;
+  cursor: pointer; border: none; display: block;
+}
+.h5-trans-card .tc-btn-primary { background: var(--h5-primary); color: #fff; }
+.h5-trans-card .tc-btn-ghost { background: transparent; color: var(--h5-text-2); border: 1px solid var(--h5-border); }
+
+/* 平台数据汇总条 */
+.h5-trans-summary {
+  margin: 12px 16px;
+  background: linear-gradient(135deg, #0E5A6F 0%, #073D4D 100%);
+  border-radius: var(--h5-radius); padding: 14px 16px;
+  color: #fff;
+}
+.h5-trans-summary .ts-head {
+  font-size: 12px; font-weight: 600; opacity: 0.8; margin-bottom: 8px;
+}
+.h5-trans-summary .ts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.h5-trans-summary .ts-item { text-align: center; }
+.h5-trans-summary .ts-item .v { font-size: 16px; font-weight: 800; }
+.h5-trans-summary .ts-item .l { font-size: 10px; opacity: 0.7; margin-top: 2px; }
+</style>
+</head>
+<body class="has-tabbar has-status-bar">
+
+<div class="h5-status-bar light">
+  <span class="time" id="statusTime">9:41</span>
+  <span class="right">📶 🔋</span>
+</div>
+
+<div class="h5-nav">
+  <div class="h5-nav-left" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">透明公示</div>
+  <div class="h5-nav-right"></div>
+</div>
+
+<div class="h5-page">
+  <!-- 平台数据汇总 -->
+  <div class="h5-trans-summary">
+    <div class="ts-head">平台累计数据 · 实时更新</div>
+    <div class="ts-grid">
+      <div class="ts-item"><div class="v">328 万件</div><div class="l">物资总量</div></div>
+      <div class="ts-item"><div class="v">286 万人次</div><div class="l">受惠人数</div></div>
+      <div class="ts-item"><div class="v">3,680 家</div><div class="l">合作企业</div></div>
+      <div class="ts-item"><div class="v">32 省</div><div class="l">覆盖地区</div></div>
+    </div>
+  </div>
+
+  <!-- 财务审计 -->
+  <div class="h5-trans-section">
+    <div class="h5-trans-section-title">📊 独立第三方财务审计</div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">Q2 2026 财务审计 · 普华永道</div>
+        <span class="tc-badge processing">🔄 审计中</span>
+      </div>
+      <div class="tc-meta">预计 2026-07-15 发布 · 季度独立审计</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">Q2</span> <span class="l">审计周期</span></div>
+        <div class="tc-data-item"><span class="v">普华永道</span> <span class="l">审计机构</span></div>
+        <div class="tc-data-item"><span class="v">2026-07-15</span> <span class="l">预计发布</span></div>
+      </div>
+    </div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">Q1 2026 财务审计 · 普华永道</div>
+        <span class="tc-badge pass">✓ 通过</span>
+      </div>
+      <div class="tc-meta">2026-04-15 发布 · 无保留意见 · 收支合规</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">Q1</span> <span class="l">审计周期</span></div>
+        <div class="tc-data-item"><span class="v">无保留意见</span> <span class="l">审计结论</span></div>
+        <div class="tc-data-item"><span class="v">¥1,860 万</span> <span class="l">物资价值</span></div>
+        <div class="tc-data-item"><span class="v">128 个</span> <span class="l">审计项目</span></div>
+      </div>
+      <div class="tc-actions">
+        <div class="tc-btn tc-btn-ghost">📄 查看报告全文</div>
+        <div class="tc-btn tc-btn-primary">📥 下载 PDF</div>
+      </div>
+    </div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">2025 年度财务审计 · 德勤</div>
+        <span class="tc-badge pass">✓ 通过</span>
+      </div>
+      <div class="tc-meta">2026-01-20 发布 · 无保留意见</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">2025 全年</span> <span class="l">审计周期</span></div>
+        <div class="tc-data-item"><span class="v">无保留意见</span> <span class="l">审计结论</span></div>
+        <div class="tc-data-item"><span class="v">¥6,280 万</span> <span class="l">物资价值</span></div>
+      </div>
+      <div class="tc-actions">
+        <div class="tc-btn tc-btn-ghost">📄 查看报告全文</div>
+        <div class="tc-btn tc-btn-primary">📥 下载 PDF</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 物资公示 -->
+  <div class="h5-trans-section">
+    <div class="h5-trans-section-title">📦 物资流向公示</div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">Q2 2026 物资流向公示</div>
+        <span class="tc-badge processing">🔄 编制中</span>
+      </div>
+      <div class="tc-meta">预计 2026-07-20 完成 · 86 个项目 · 实时数据接入中</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">86 个</span> <span class="l">进行中项目</span></div>
+        <div class="tc-data-item"><span class="v">预计 92%</span> <span class="l">预计到位率</span></div>
+        <div class="tc-data-item"><span class="v">2026-07-20</span> <span class="l">预计发布</span></div>
+      </div>
+    </div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">Q1 2026 物资流向公示</div>
+        <span class="tc-badge pub">📋 公示中</span>
+      </div>
+      <div class="tc-meta">2026-04-30 发布 · 128 个项目 · 完整数据可查</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">328 万件</span> <span class="l">物资总量</span></div>
+        <div class="tc-data-item"><span class="v">96.8%</span> <span class="l">到位率</span></div>
+        <div class="tc-data-item"><span class="v">128 个</span> <span class="l">覆盖项目</span></div>
+        <div class="tc-data-item"><span class="v">32 省</span> <span class="l">覆盖地区</span></div>
+      </div>
+      <div class="tc-actions">
+        <div class="tc-btn tc-btn-ghost">🔍 查看详情</div>
+        <div class="tc-btn tc-btn-primary">📊 完整公示</div>
+      </div>
+    </div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">2025 年度物资流向公示</div>
+        <span class="tc-badge pub">📋 公示中</span>
+      </div>
+      <div class="tc-meta">2026-01-31 发布 · 全年完整数据</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">1,860 万件</span> <span class="l">物资总量</span></div>
+        <div class="tc-data-item"><span class="v">98.2%</span> <span class="l">年度到位率</span></div>
+        <div class="tc-data-item"><span class="v">680 个</span> <span class="l">覆盖项目</span></div>
+      </div>
+      <div class="tc-actions">
+        <div class="tc-btn tc-btn-ghost">🔍 查看详情</div>
+        <div class="tc-btn tc-btn-primary">📊 年度公示</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 运营月报 -->
+  <div class="h5-trans-section">
+    <div class="h5-trans-section-title">📈 运营月报</div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">2026 年 5 月运营月报</div>
+        <span class="tc-badge pub">✓ 已发布</span>
+      </div>
+      <div class="tc-meta">2026-06-05 发布 · 项目 · 物资 · 财务 · 信用</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">42 个</span> <span class="l">进行中项目</span></div>
+        <div class="tc-data-item"><span class="v">328 万件</span> <span class="l">月物资量</span></div>
+        <div class="tc-data-item"><span class="v">286 万人</span> <span class="l">月受惠</span></div>
+        <div class="tc-data-item"><span class="v">+38%</span> <span class="l">同比增速</span></div>
+      </div>
+      <div class="tc-actions">
+        <div class="tc-btn tc-btn-primary">📖 查看月报</div>
+      </div>
+    </div>
+
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">2026 年 4 月运营月报</div>
+        <span class="tc-badge pub">✓ 已发布</span>
+      </div>
+      <div class="tc-meta">2026-05-05 发布</div>
+      <div class="tc-data">
+        <div class="tc-data-item"><span class="v">38 个</span> <span class="l">进行中项目</span></div>
+        <div class="tc-data-item"><span class="v">296 万件</span> <span class="l">月物资量</span></div>
+        <div class="tc-data-item"><span class="v">268 万人</span> <span class="l">月受惠</span></div>
+      </div>
+      <div class="tc-actions">
+        <div class="tc-btn tc-btn-ghost">📖 查看月报</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 资质证书 -->
+  <div class="h5-trans-section">
+    <div class="h5-trans-section-title">🏛️ 资质认证</div>
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">慈善组织公开募捐资格证书</div>
+        <span class="tc-badge pass">✓ 有效</span>
+      </div>
+      <div class="tc-meta">民政部颁发 · 有效期至 2028-12-31 · 证书编号 CA-2023-0018</div>
+    </div>
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">中国社会组织 5A 评级</div>
+        <span class="tc-badge pass">✓ 有效</span>
+      </div>
+      <div class="tc-meta">2024 年评审 · 最高等级 · 全国前 5%</div>
+    </div>
+    <div class="h5-trans-card">
+      <div class="tc-head">
+        <div class="tc-title">《中国慈善行业自律公约》成员</div>
+        <span class="tc-badge pass">✓ 签署</span>
+      </div>
+      <div class="tc-meta">2023 年加入 · 高于行业标准执行</div>
+    </div>
+  </div>
+
+  <div style="height:24px;"></div>
+</div>
+
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='./'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='./mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='./report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic">🔔</div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='./profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="./public/js/h5.js"></script>
+<script>
+function updateClock() {
+  document.getElementById('statusTime').textContent = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+updateClock();
+setInterval(updateClock, 1000);
+if (window.gsap) {
+  gsap.fromTo('.h5-trans-card', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.06, ease: 'power2.out', delay: 0.2 });
+  gsap.fromTo('.h5-trans-summary', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
+}
+</script>
+</body>
+</html>

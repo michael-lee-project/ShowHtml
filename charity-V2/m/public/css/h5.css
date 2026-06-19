@@ -1028,6 +1028,186 @@ body[data-role="org"] { --h5-primary: var(--h5-org); --h5-primary-deep: #8B5A1A;
 body[data-role="volunteer"] { --h5-primary: var(--h5-volunteer); --h5-primary-deep: #0D8A7E; --h5-primary-soft: rgba(20,184,166,0.1); }
 body[data-role="recipient"] { --h5-primary: var(--h5-recipient); --h5-primary-deep: #5B21B6; --h5-primary-soft: rgba(124,58,237,0.08); }
 
+/* ===== 三种捐赠方式（H5 节奏：3 卡横排 + 4 步骤）===== */
+.h5-flow-grid {
+  display: grid; grid-template-columns: 1fr; gap: 12px;
+  margin: 0 16px 16px;
+}
+.h5-flow-card {
+  background: var(--h5-card);
+  border-radius: var(--h5-radius);
+  padding: 16px;
+  border: 1px solid var(--h5-border);
+  position: relative;
+  overflow: hidden;
+}
+.h5-flow-card .num-tag {
+  position: absolute; top: 0; right: 0;
+  background: var(--h5-primary-soft);
+  color: var(--h5-primary);
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px;
+  border-bottom-left-radius: var(--h5-radius-sm);
+}
+.h5-flow-card .ft {
+  font-size: 15px; font-weight: 700; color: var(--h5-text);
+  margin-bottom: 4px; padding-right: 50px;
+}
+.h5-flow-card .fsub {
+  font-size: 12px; color: var(--h5-text-3); margin-bottom: 12px;
+}
+.h5-flow-card .steps {
+  display: flex; align-items: center; gap: 4px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.h5-flow-card .steps::-webkit-scrollbar { display: none; }
+.h5-flow-card .step {
+  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  min-width: 48px;
+}
+.h5-flow-card .step .ico {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--h5-primary-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.h5-flow-card .step .lbl {
+  font-size: 9px; color: var(--h5-text-2); text-align: center; line-height: 1.2;
+}
+.h5-flow-card .step .arr {
+  color: var(--h5-text-3); font-size: 10px; flex-shrink: 0;
+}
+.h5-flow-card .scenario {
+  margin-top: 12px; padding: 8px 10px;
+  background: var(--h5-bg); border-radius: 6px;
+  font-size: 11px; color: var(--h5-text-2); line-height: 1.5;
+}
+
+/* ===== 物资地图（H5 节奏：插图 + 关键数据条）===== */
+.h5-map-card {
+  margin: 0 16px 16px;
+  background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+  border-radius: var(--h5-radius);
+  border: 1px solid var(--h5-border);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.h5-map-illust {
+  position: relative;
+  height: 140px;
+  margin: 12px 0 16px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(232,93,4,0.2) 0%, transparent 12%),
+    radial-gradient(circle at 70% 25%, rgba(20,184,166,0.25) 0%, transparent 10%),
+    radial-gradient(circle at 45% 60%, rgba(196,132,42,0.2) 0%, transparent 14%),
+    radial-gradient(circle at 80% 70%, rgba(124,58,237,0.18) 0%, transparent 10%),
+    radial-gradient(circle at 30% 80%, rgba(14,90,111,0.18) 0%, transparent 10%);
+  border-radius: 10px;
+  border: 1px dashed rgba(232,93,4,0.2);
+}
+.h5-map-illust .pin {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--h5-primary);
+  box-shadow: 0 0 0 4px rgba(232,93,4,0.15);
+  animation: h5-pulse 1.8s infinite;
+}
+.h5-map-illust .pin::after {
+  content: attr(data-n);
+  position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+  background: var(--h5-text); color: #fff;
+  font-size: 10px; padding: 2px 6px; border-radius: 8px;
+  white-space: nowrap;
+}
+@keyframes h5-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+.h5-map-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.h5-map-stat {
+  text-align: center;
+  padding: 10px 4px;
+  background: var(--h5-card);
+  border-radius: 8px;
+  border: 1px solid var(--h5-border);
+}
+.h5-map-stat .ico { font-size: 18px; margin-bottom: 4px; }
+.h5-map-stat .n {
+  font-size: 16px; font-weight: 700; color: var(--h5-text); line-height: 1.1;
+}
+.h5-map-stat .l {
+  font-size: 10px; color: var(--h5-text-3); margin-top: 2px;
+}
+.h5-map-cta {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 13px; color: var(--h5-primary);
+  font-weight: 600;
+}
+.h5-map-cta::after { content: ' ›'; }
+
+/* ===== 信任背书（H5 节奏：5 张信任卡 + CTA）===== */
+.h5-trust-head {
+  margin: 0 16px 12px;
+}
+.h5-trust-head .eyebrow {
+  display: inline-block;
+  font-size: 11px; font-weight: 600;
+  color: var(--h5-primary);
+  background: var(--h5-primary-soft);
+  padding: 3px 10px; border-radius: 999px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.h5-trust-head h3 {
+  font-size: 18px; font-weight: 700; color: var(--h5-text);
+  margin-bottom: 4px; line-height: 1.3;
+}
+.h5-trust-head p {
+  font-size: 12px; color: var(--h5-text-2); line-height: 1.6;
+}
+.h5-trust-cards {
+  margin: 0 16px 16px;
+  background: var(--h5-card);
+  border-radius: var(--h5-radius);
+  border: 1px solid var(--h5-border);
+  overflow: hidden;
+}
+.h5-trust-card {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--h5-divider);
+}
+.h5-trust-card:last-child { border-bottom: 0; }
+.h5-trust-card .ic {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--h5-primary-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.h5-trust-card .body { flex: 1; }
+.h5-trust-card .t {
+  font-size: 13px; font-weight: 600; color: var(--h5-text);
+  margin-bottom: 2px;
+}
+.h5-trust-card .d {
+  font-size: 11px; color: var(--h5-text-3); line-height: 1.5;
+}
+.h5-trust-cta {
+  margin: 0 16px 16px;
+  display: flex; gap: 8px;
+}
+.h5-trust-cta .h5-btn { flex: 1; }
 /* ===== 媒体查询 ===== */
 @media (max-width: 360px) {
   .h5-section { padding: 10px 12px; }

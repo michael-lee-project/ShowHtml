@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>慈善驿站 · 慈商联营</title>
+<link rel="stylesheet" href="public/css/h5.css">
+<link rel="stylesheet" href="public/css/h5-app.css">
+<style>
+  /* ===== 状态栏 ===== */
+  .h5-status-bar.light { background: transparent; color: rgba(255,255,255,0.9); }
+  .h5-status-bar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 390px; z-index: 999; }
+
+  /* ===== Hero Banner ===== */
+  .st-hero {
+    background: linear-gradient(135deg, #C4842A 0%, #A05520 50%, #7A3D0F 100%);
+    color: #fff;
+    padding: 60px 16px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .st-hero::before {
+    content: "";
+    position: absolute; top: -40px; right: -20px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .st-hero::after {
+    content: "🏠";
+    position: absolute; right: 16px; bottom: -20px;
+    font-size: 160px; opacity: 0.08;
+  }
+  .st-hero .eyebrow {
+    font-size: 11px; letter-spacing: 1px; opacity: 0.85; margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .st-hero .title {
+    font-size: 24px; font-weight: 800; line-height: 1.2; margin-bottom: 8px;
+  }
+  .st-hero .desc {
+    font-size: 13px; opacity: 0.92; line-height: 1.55; margin-bottom: 14px;
+  }
+  .st-hero .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .st-hero .tag-item {
+    background: rgba(255,255,255,0.18);
+    color: #fff; border: 1px solid rgba(255,255,255,0.2);
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 500;
+  }
+
+  /* ===== 统计条 ===== */
+  .st-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: #fff;
+    border-bottom: 1px solid var(--h5-border);
+  }
+  .st-stat {
+    text-align: center; padding: 14px 6px;
+    border-right: 1px solid var(--h5-divider);
+  }
+  .st-stat:last-child { border-right: 0; }
+  .st-stat .v { font-size: 20px; font-weight: 800; color: var(--h5-org); line-height: 1; }
+  .st-stat .l { font-size: 10px; color: var(--h5-text-3); margin-top: 3px; line-height: 1.2; }
+
+  /* ===== 搜索栏 ===== */
+  .st-search-bar {
+    background: var(--h5-card);
+    padding: 10px 16px;
+    position: sticky; top: 44px; z-index: 5;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .st-search {
+    background: var(--h5-bg);
+    border-radius: 999px;
+    padding: 8px 14px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--h5-text-3);
+  }
+  .st-search input {
+    flex: 1; border: 0; background: transparent;
+    font-size: 13px; color: var(--h5-text); outline: 0;
+  }
+  .st-search input::placeholder { color: var(--h5-text-3); }
+
+  /* ===== 筛选标签 ===== */
+  .st-filters {
+    background: var(--h5-card);
+    padding: 10px 16px;
+    display: flex; gap: 8px; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid var(--h5-divider);
+  }
+  .st-filters::-webkit-scrollbar { display: none; }
+  .st-chip {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid var(--h5-border);
+    background: var(--h5-bg);
+    color: var(--h5-text-2);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .st-chip.active {
+    background: var(--h5-org); color: #fff; border-color: var(--h5-org);
+  }
+
+  /* ===== 驿站列表 ===== */
+  .st-list { padding: 12px 16px 80px; }
+  .st-card {
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 1px solid var(--h5-border);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .st-card:active { transform: scale(0.98); background: var(--h5-bg); }
+  .st-card-head { display: flex; gap: 12px; margin-bottom: 10px; }
+  .st-card-logo {
+    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    background: linear-gradient(135deg, #FFF1E5, #FFE4CC);
+  }
+  .st-card-body { flex: 1; overflow: hidden; }
+  .st-card-name {
+    font-size: 15px; font-weight: 700; margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .st-card-addr {
+    font-size: 11px; color: var(--h5-text-3); margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .st-card-dist {
+    font-size: 11px; color: var(--h5-org); font-weight: 700;
+  }
+  .st-card-services {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px;
+  }
+  .st-card-services .svc {
+    padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; color: var(--h5-text-2);
+    background: var(--h5-bg);
+  }
+  .st-card-services .svc.hot {
+    background: rgba(196, 132, 42, 0.1);
+    color: var(--h5-org); font-weight: 600;
+  }
+  .st-card-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 8px; border-top: 1px dashed var(--h5-border);
+  }
+  .st-card-hours { font-size: 11px; color: var(--h5-trust); font-weight: 600; }
+  .st-card-rating { font-size: 11px; color: var(--h5-warning); font-weight: 600; }
+  .st-card-badge {
+    display: inline-block; margin-left: 6px;
+    font-size: 10px; padding: 1px 5px; border-radius: 4px;
+    vertical-align: middle;
+  }
+  .st-card-badge.flagship {
+    background: linear-gradient(135deg, #DC2626, #B91C1C); color: #fff;
+  }
+  .st-card-badge.new {
+    background: #D1FAE5; color: #065F46;
+  }
+
+  /* ===== CTA 区块 ===== */
+  .st-cta {
+    background: linear-gradient(135deg, #FFF7ED 0%, #FEF0E5 100%);
+    border-radius: var(--h5-radius);
+    padding: 20px 16px;
+    text-align: center;
+    margin: 0 16px 16px;
+  }
+  .st-cta .t { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .st-cta .d { font-size: 12px; color: var(--h5-text-2); margin-bottom: 12px; line-height: 1.5; }
+  .st-cta-btns { display: flex; gap: 10px; justify-content: center; }
+  .st-cta .btn-primary {
+    background: var(--h5-org); color: #fff; border: none;
+    padding: 10px 20px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .st-cta .btn-ghost {
+    background: transparent; color: var(--h5-org);
+    border: 1.5px solid var(--h5-org);
+    padding: 9px 20px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+
+  /* ===== Tabbar ===== */
+  .h5-tabbar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 390px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--h5-border);
+    padding: 0 0 env(safe-area-inset-bottom, 0);
+    z-index: 100;
+    display: flex;
+  }
+  .h5-tab {
+    flex: 1; text-align: center; padding: 8px 0;
+    cursor: pointer;
+  }
+  .h5-tab .tab-ic { font-size: 22px; margin-bottom: 1px; }
+  .h5-tab .tab-label { font-size: 10px; color: var(--h5-text-3); }
+  .h5-tab.active .tab-label { color: var(--h5-org); }
+  .h5-tab .tab-ic { position: relative; }
+  .h5-tab .tab-badge {
+    position: absolute; top: -2px; right: -4px;
+    background: var(--h5-danger); color: #fff;
+    font-size: 9px; border-radius: 999px;
+    min-width: 14px; height: 14px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 3px;
+  }
+
+  /* ===== body padding ===== */
+  body { padding-bottom: calc(var(--h5-tabbar-h) + env(safe-area-inset-bottom, 0px)); }
+
+  /* ===== App header override for this page ===== */
+  .h5-page { padding-top: 0; }
+  .h5-app-header { padding: 0 16px; }
+</style>
+</head>
+<body class="has-tabbar">
+
+<!-- 状态栏 -->
+<div class="h5-status-bar light">
+  <span class="time">9:41</span>
+  <span class="right">📶 🔋</span>
+</div>
+
+<div class="h5-page">
+
+  <!-- Hero -->
+  <div class="st-hero">
+    <div class="eyebrow">🏠 慈善驿站</div>
+    <div class="title">村社的公益客厅</div>
+    <div class="desc">线下空间 + 严选商品 + 物资自提 + 社区服务。共 186 家驿站，覆盖 32 个城市、1,260 个村社，每家驿站月均接待 800+ 人次。</div>
+    <div class="tags">
+      <span class="tag-item">☕ 严选咖啡</span>
+      <span class="tag-item">♻️ 旧物回收</span>
+      <span class="tag-item">📦 物资自提</span>
+      <span class="tag-item">🎓 公益活动</span>
+    </div>
+  </div>
+
+  <!-- 统计条 -->
+  <div class="st-stats">
+    <div class="st-stat">
+      <div class="v">186</div>
+      <div class="l">已开业驿站</div>
+    </div>
+    <div class="st-stat">
+      <div class="v">32</div>
+      <div class="l">覆盖城市</div>
+    </div>
+    <div class="st-stat">
+      <div class="v">¥1,860</div>
+      <div class="l">月均营业额/店</div>
+    </div>
+    <div class="st-stat">
+      <div class="v">1,260</div>
+      <div class="l">月均接待人次</div>
+    </div>
+  </div>
+
+  <!-- 搜索栏 -->
+  <div class="st-search-bar">
+    <div class="st-search">
+      <span>🔍</span>
+      <input type="text" placeholder="搜索驿站名 / 地址 / 城市">
+      <span style="font-size:16px;">🎤</span>
+    </div>
+  </div>
+
+  <!-- 筛选标签 -->
+  <div class="st-filters">
+    <button class="st-chip active" onclick="filterChip(this)">全部</button>
+    <button class="st-chip" onclick="filterChip(this)">📍 1km 内</button>
+    <button class="st-chip" onclick="filterChip(this)">☕ 含咖啡</button>
+    <button class="st-chip" onclick="filterChip(this)">♻️ 旧物回收</button>
+    <button class="st-chip" onclick="filterChip(this)">📦 物资自提</button>
+    <button class="st-chip" onclick="filterChip(this)">⭐ 4.5+</button>
+    <button class="st-chip" onclick="filterChip(this)">🆕 新开业</button>
+  </div>
+
+  <!-- 驿站列表 -->
+  <div class="st-list">
+
+    <div class="st-card" onclick="location.href='station-detail.html?id=sz-ns-001'">
+      <div class="st-card-head">
+        <div class="st-card-logo">🏠</div>
+        <div class="st-card-body">
+          <div class="st-card-name">
+            南山区科技园驿站
+            <span class="st-card-badge flagship">📌 旗舰</span>
+          </div>
+          <div class="st-card-addr">深圳市南山区科苑南路 88 号 1 楼</div>
+          <div class="st-card-dist">📍 0.8 km · 步行 11 分钟</div>
+        </div>
+      </div>
+      <div class="st-card-services">
+        <span class="svc hot">☕ 严选咖啡</span>
+        <span class="svc hot">📦 物资自提</span>
+        <span class="svc hot">♻️ 旧物回收</span>
+        <span class="svc">🎓 公益讲座</span>
+        <span class="svc">📚 图书借阅</span>
+      </div>
+      <div class="st-card-foot">
+        <span class="st-card-hours">🟢 营业中 · 09:00 - 21:00</span>
+        <span class="st-card-rating">⭐ 4.9 · 1,260 评价</span>
+      </div>
+    </div>
+
+    <div class="st-card" onclick="location.href='station-detail.html?id=sz-fh-002'">
+      <div class="st-card-head">
+        <div class="st-card-logo" style="background:linear-gradient(135deg, #E0FAF5, #CCFBF1);">🏠</div>
+        <div class="st-card-body">
+          <div class="st-card-name">福田区香蜜湖驿站</div>
+          <div class="st-card-addr">深圳市福田区香梅路 1003 号</div>
+          <div class="st-card-dist">📍 2.3 km · 公交 25 分钟</div>
+        </div>
+      </div>
+      <div class="st-card-services">
+        <span class="svc hot">☕ 严选咖啡</span>
+        <span class="svc">📦 物资自提</span>
+        <span class="svc">🎓 公益课堂</span>
+        <span class="svc">👴 老人关爱</span>
+      </div>
+      <div class="st-card-foot">
+        <span class="st-card-hours">🟢 营业中 · 09:00 - 19:00</span>
+        <span class="st-card-rating">⭐ 4.7 · 856 评价</span>
+      </div>
+    </div>
+
+    <div class="st-card" onclick="location.href='station-detail.html?id=sz-lh-003'">
+      <div class="st-card-head">
+        <div class="st-card-logo" style="background:linear-gradient(135deg, #F3E8FF, #E9D5FF);">🏠</div>
+        <div class="st-card-body">
+          <div class="st-card-name">
+            龙华区民乐村驿站
+            <span class="st-card-badge new">🆕 新开</span>
+          </div>
+          <div class="st-card-addr">深圳市龙华区民乐村文化广场旁</div>
+          <div class="st-card-dist">📍 5.2 km · 地铁 4 号线</div>
+        </div>
+      </div>
+      <div class="st-card-services">
+        <span class="svc hot">♻️ 旧物回收</span>
+        <span class="svc hot">📦 物资自提</span>
+        <span class="svc">🌾 助农产品</span>
+        <span class="svc">👨‍🌾 村民议事</span>
+      </div>
+      <div class="st-card-foot">
+        <span class="st-card-hours">🟢 营业中 · 10:00 - 20:00</span>
+        <span class="st-card-rating">⭐ 4.8 · 286 评价</span>
+      </div>
+    </div>
+
+    <div class="st-card" onclick="location.href='station-detail.html?id=gz-th-004'">
+      <div class="st-card-head">
+        <div class="st-card-logo" style="background:linear-gradient(135deg, #FAEFD9, #FFE4D2);">🏠</div>
+        <div class="st-card-body">
+          <div class="st-card-name">广州市天河区石牌驿站</div>
+          <div class="st-card-addr">广州市天河区石牌东路 168 号</div>
+          <div class="st-card-dist">📍 6.8 km · 地铁 3 号线</div>
+        </div>
+      </div>
+      <div class="st-card-services">
+        <span class="svc hot">☕ 严选咖啡</span>
+        <span class="svc hot">♻️ 旧物回收</span>
+        <span class="svc">📚 图书角</span>
+        <span class="svc">🎨 文创市集</span>
+      </div>
+      <div class="st-card-foot">
+        <span class="st-card-hours">🟢 营业中 · 09:30 - 21:30</span>
+        <span class="st-card-rating">⭐ 4.6 · 412 评价</span>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="st-cta">
+      <div class="t">🤝 您的村社也能开一家慈善驿站</div>
+      <div class="d">村委提供闲置场地 + 慈商联营提供严选商品<br>村社基金账户自动归集利润，<strong>0 管理费</strong></div>
+      <div class="st-cta-btns">
+        <button class="btn-primary">📋 申请开设驿站</button>
+        <button class="btn-ghost">📞 咨询招商经理</button>
+      </div>
+    </div>
+
+  </div><!-- /.st-list -->
+
+</div><!-- /.h5-page -->
+
+<!-- Tabbar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='index.html'">
+    <div class="tab-ic">🏠</div>
+    <div class="tab-label">首页</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='mall.html'">
+    <div class="tab-ic">🛒</div>
+    <div class="tab-label">商城</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='report.html'">
+    <div class="tab-ic">📊</div>
+    <div class="tab-label">报告</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='messages.html'">
+    <div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div>
+    <div class="tab-label">消息</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='profile.html'">
+    <div class="tab-ic">👤</div>
+    <div class="tab-label">我的</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="public/js/h5.js"></script>
+<script>
+// 时间更新
+(function() {
+  var t = document.querySelector('.h5-status-bar .time');
+  if (t) {
+    var now = new Date();
+    t.textContent = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  }
+})();
+
+// 筛选标签切换
+function filterChip(el) {
+  document.querySelectorAll('.st-chip').forEach(function(c) { c.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+// GSAP 入场动画
+window.addEventListener('load', function() {
+  if (!window.gsap) return;
+  var $ = function(s) { return Array.from(document.querySelectorAll(s)); };
+  gsap.fromTo('.st-hero', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
+  gsap.fromTo('.st-stats .st-stat', { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.08, delay: 0.2, ease: 'power2.out' });
+  gsap.fromTo('.st-search-bar', { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, delay: 0.35, ease: 'power2.out' });
+  gsap.fromTo('.st-filters', { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, delay: 0.4, ease: 'power2.out' });
+  gsap.fromTo('.st-card', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, delay: 0.5, ease: 'power2.out' });
+  gsap.fromTo('.st-cta', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.7, ease: 'power2.out' });
+});
+</script>
+
+</body>
+</html>

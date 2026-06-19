@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>物资追溯 · 慈商联营</title>
+<link rel="stylesheet" href="./public/css/h5.css?v=2">
+<link rel="stylesheet" href="./public/css/h5-app.css?v=2">
+<style>
+.h5-trace-search { padding: 16px; }
+.h5-trace-input-wrap {
+  display: flex; gap: 8px; align-items: center;
+}
+.h5-trace-input {
+  flex: 1; padding: 12px 14px;
+  border: 1.5px solid var(--h5-border); border-radius: var(--h5-radius);
+  font-size: 14px; background: var(--h5-card); color: var(--h5-text);
+  outline: none; transition: border-color 0.2s;
+}
+.h5-trace-input:focus { border-color: var(--h5-primary); }
+.h5-trace-input::placeholder { color: var(--h5-text-3); }
+.h5-trace-btn {
+  padding: 12px 20px; border-radius: var(--h5-radius); border: none;
+  background: var(--h5-primary); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+}
+
+/* Demo result */
+.h5-trace-result { padding: 0 16px 16px; display: none; }
+.h5-trace-result.show { display: block; }
+.h5-trace-result-card {
+  background: var(--h5-card); border: 1px solid var(--h5-border);
+  border-radius: var(--h5-radius); overflow: hidden; margin-bottom: 16px;
+}
+.h5-trace-result-head {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--h5-divider);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.h5-trace-result-head .title { font-size: 14px; font-weight: 700; color: var(--h5-text); }
+.h5-trace-result-head .status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
+.status-done { background: #DCFCE7; color: #16A34A; }
+.status-transit { background: #FEF3C7; color: #B45309; }
+
+/* 6 节点流程 */
+.h5-trace-flow { padding: 16px; }
+.h5-trace-steps { display: flex; flex-direction: column; gap: 0; }
+.h5-trace-step {
+  display: flex; gap: 12px; align-items: flex-start;
+  position: relative;
+}
+.h5-trace-step:not(:last-child) { padding-bottom: 16px; }
+.h5-trace-step:not(:last-child)::before {
+  content: ''; position: absolute; left: 15px; top: 32px; bottom: 0;
+  width: 2px; background: var(--h5-divider);
+}
+.h5-trace-step.done:not(:last-child)::before { background: #DCFCE7; }
+.h5-trace-step.active:not(:last-child)::before { background: linear-gradient(180deg, #14B8A6 50%, var(--h5-divider) 50%); }
+.h5-trace-step .step-dot {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; position: relative; z-index: 1;
+  background: var(--h5-border); color: var(--h5-text-3);
+}
+.h5-trace-step.done .step-dot { background: #DCFCE7; color: #16A34A; }
+.h5-trace-step.active .step-dot { background: #E0FAF5; color: #14B8A6; animation: trace-pulse 1.8s infinite; }
+@keyframes trace-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(20,184,166,0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(20,184,166,0); }
+}
+.h5-trace-step .step-body { flex: 1; padding-top: 4px; }
+.h5-trace-step .step-title { font-size: 13px; font-weight: 700; color: var(--h5-text); margin-bottom: 2px; }
+.h5-trace-step .step-meta { font-size: 11px; color: var(--h5-text-3); }
+.h5-trace-step .step-time { font-size: 11px; color: var(--h5-text-3); margin-top: 2px; }
+
+/* 历史 */
+.h5-trace-history { padding: 0 16px 16px; }
+.h5-history-list .h5-list-item { padding: 10px 0; }
+</style>
+</head>
+<body class="has-tabbar has-status-bar">
+
+<div class="h5-status-bar light">
+  <span class="time" id="statusTime">9:41</span>
+  <span class="right">📶 🔋</span>
+</div>
+
+<div class="h5-nav">
+  <div class="h5-nav-left" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">物资追溯</div>
+  <div class="h5-nav-right"></div>
+</div>
+
+<div class="h5-page">
+  <!-- 搜索框 -->
+  <div class="h5-trace-search">
+    <div style="font-size:14px;font-weight:700;color:var(--h5-text);margin-bottom:10px;">输入物资编号或扫码</div>
+    <div class="h5-trace-input-wrap">
+      <input type="text" class="h5-trace-input" id="traceInput" placeholder="如 CC-PRJ-2026-0682" value="CC-PRJ-2026-0682">
+      <button class="h5-trace-btn" onclick="doTrace()">追溯</button>
+    </div>
+    <div style="font-size:11px;color:var(--h5-text-3);margin-top:8px;">
+      💡 支持物资编号、捐赠批次号、快递单号查询
+    </div>
+  </div>
+
+  <!-- Demo 结果 -->
+  <div class="h5-trace-result show" id="traceResult">
+    <div class="h5-trace-result-card">
+      <div class="h5-trace-result-head">
+        <div>
+          <div class="title">CC-PRJ-2026-0682</div>
+          <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">云南鲁甸地震 · 应急物资批次</div>
+        </div>
+        <span class="status status-done">✅ 已完成</span>
+      </div>
+
+      <!-- 6 节点 -->
+      <div class="h5-trace-flow">
+        <div class="h5-section-hd" style="font-size:13px;font-weight:700;margin-bottom:14px;">📦 物资流转节点</div>
+        <div class="h5-trace-steps">
+          <div class="h5-trace-step done">
+            <div class="step-dot">📦</div>
+            <div class="step-body">
+              <div class="step-title">企业出库</div>
+              <div class="step-meta">美心食品（昆明仓）</div>
+              <div class="step-time">2026-06-12 06:00</div>
+            </div>
+          </div>
+          <div class="h5-trace-step done">
+            <div class="step-dot">🚚</div>
+            <div class="step-body">
+              <div class="step-title">物流揽收</div>
+              <div class="step-meta">顺丰公益物流承运</div>
+              <div class="step-time">2026-06-12 08:30</div>
+            </div>
+          </div>
+          <div class="h5-trace-step done">
+            <div class="step-dot">🏛️</div>
+            <div class="step-body">
+              <div class="step-title">慈善会签收</div>
+              <div class="step-meta">云南省慈善总会 · 昆明分拨中心</div>
+              <div class="step-time">2026-06-12 16:00</div>
+            </div>
+          </div>
+          <div class="h5-trace-step done">
+            <div class="step-dot">🚛</div>
+            <div class="step-body">
+              <div class="step-title">物资分发</div>
+              <div class="step-meta">32 个安置点 · 志愿者协同派发</div>
+              <div class="step-time">2026-06-13 12:00</div>
+            </div>
+          </div>
+          <div class="h5-trace-step done">
+            <div class="step-dot">👨‍👩‍👧</div>
+            <div class="step-body">
+              <div class="step-title">受捐者领取</div>
+              <div class="step-meta">1,200 件 · 扫码确认签收</div>
+              <div class="step-time">2026-06-13 18:00</div>
+            </div>
+          </div>
+          <div class="h5-trace-step done">
+            <div class="step-dot">✅</div>
+            <div class="step-body">
+              <div class="step-title">项目闭环</div>
+              <div class="step-meta">受捐者反馈已归档 · 存证编号 2026-CC-0682</div>
+              <div class="step-time">2026-06-14 10:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 受益确认 -->
+    <div class="h5-trace-result-card" style="padding:14px 16px;">
+      <div class="h5-section-hd" style="font-size:13px;font-weight:700;margin-bottom:12px;">👥 受益确认（已脱敏）</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:var(--h5-bg);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#14B8A6;">1,200 件</div>
+          <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">物资签收量</div>
+        </div>
+        <div style="background:var(--h5-bg);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#14B8A6;">100%</div>
+          <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">到位率</div>
+        </div>
+        <div style="background:var(--h5-bg);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#14B8A6;">320 户</div>
+          <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">受惠家庭</div>
+        </div>
+        <div style="background:var(--h5-bg);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:18px;font-weight:800;color:#14B8A6;">12h</div>
+          <div style="font-size:11px;color:var(--h5-text-3);margin-top:2px;">全程耗时</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:#E0FAF5;border-radius:8px;font-size:12px;color:#0E8F80;line-height:1.6;">
+        ✓ 本批次物资已全部到达受捐者手中，数据同步至区块链存证，不可篡改。
+      </div>
+    </div>
+  </div>
+
+  <!-- 历史查询 -->
+  <div class="h5-trace-history">
+    <div class="h5-section-hd" style="font-size:13px;font-weight:700;margin-bottom:8px;">🕐 最近查询</div>
+    <div class="h5-history-list">
+      <a class="h5-list-item" style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--h5-divider);text-decoration:none;">
+        <div style="width:36px;height:36px;background:#FEE2E2;color:#DC2626;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">🚨</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--h5-text);">CC-PRJ-2026-0681</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">云南鲁甸地震 · 已完成</div>
+        </div>
+        <div style="font-size:11px;color:var(--h5-text-3);">6/12</div>
+      </a>
+      <a class="h5-list-item" style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--h5-divider);text-decoration:none;">
+        <div style="width:36px;height:36px;background:#FEF3C7;color:#B45309;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">🌀</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--h5-text);">CC-PRJ-2026-0608</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">福建台风救援 · 运输中</div>
+        </div>
+        <div style="font-size:11px;color:var(--h5-text-3);">6/10</div>
+      </a>
+      <a class="h5-list-item" style="display:flex;gap:10px;align-items:center;padding:10px 0;text-decoration:none;">
+        <div style="width:36px;height:36px;background:#E0FAF5;color:#14B8A6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">📖</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--h5-text);">CC-EDU-2026-0156</div>
+          <div style="font-size:11px;color:var(--h5-text-3);">一书一希望 · 已完成</div>
+        </div>
+        <div style="font-size:11px;color:var(--h5-text-3);">6/8</div>
+      </a>
+    </div>
+  </div>
+
+  <div style="height:24px;"></div>
+</div>
+
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='./'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='./mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='./report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic">🔔</div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='./profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="./public/js/h5.js"></script>
+<script>
+function updateClock() {
+  document.getElementById('statusTime').textContent = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+function doTrace() {
+  var code = document.getElementById('traceInput').value.trim();
+  if (!code) return;
+  var result = document.getElementById('traceResult');
+  result.classList.add('show');
+  if (window.gsap) {
+    gsap.fromTo('.h5-trace-result-card', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.1, ease: 'power2.out' });
+  }
+}
+
+// GSAP entrance
+if (window.gsap) {
+  gsap.fromTo('.h5-trace-search', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
+  gsap.fromTo('.h5-trace-step', { x: -10, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, stagger: 0.1, ease: 'power2.out', delay: 0.3 });
+}
+</script>
+</body>
+</html>

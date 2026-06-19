@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  if (screen.width < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    window.location.replace('./m/index.html');
+  }
+</script>
 <title>慈商联营 — 让每一份善意都可追溯 | 海南亚洲公益研究院</title>
 <meta name="description" content="慈商联营是海南亚洲公益研究院发起的全流程透明化公益平台，连接企业、慈善会、社会组织、志愿者与受捐者，让慈善最后一公里完全可见。">
 <link rel="stylesheet" href="public/css/style.css?v=hamb1">

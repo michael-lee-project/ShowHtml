@@ -6,8 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>慈商联营 · 让每一份善意都可追溯</title>
-<link rel="stylesheet" href="./public/css/h5.css">
-<link rel="stylesheet" href="./public/css/h5-app.css">
+<link rel="stylesheet" href="./public/css/h5.css?v=2">
+<link rel="stylesheet" href="./public/css/h5-app.css?v=2">
 <style>
   /* 角色快速入口卡 - 不跳到 onboarding，点击直接进对应 dashboard */
   .h5-role-entry:active { background: var(--h5-bg); }
@@ -67,12 +67,12 @@
   <!-- Impact Hero (single big card, app feel) -->
   <div class="h5-impact-hero">
     <div class="label">累计公益影响</div>
-    <div class="value"><span class="counter" data-target="862000">0</span><span class="unit">件</span></div>
+      <div class="value"><span class="counter" data-target="3286000">0</span><span class="unit">件</span></div>
     <div class="sub">受惠 <span class="counter" data-target="2860000">0</span> 人次 · 注册志愿者 <span class="counter" data-target="86000">0</span> 名</div>
     <div class="stats-row">
       <div class="stat">
-        <div class="v"><span class="counter" data-target="1860">0</span>万</div>
-        <div class="l">捐赠价值</div>
+        <div class="v"><span class="counter" data-target="862">0</span>万</div>
+        <div class="l">物资捐赠</div>
       </div>
       <div class="stat">
         <div class="v"><span class="counter" data-target="1380">0</span></div>
@@ -123,7 +123,7 @@
       <div class="title">云南昭通 6.2 级地震</div>
       <div class="meta">12 家企业已响应 · 60%</div>
       <div class="progress"><div class="progress-fill" style="width:60%;"></div></div>
-      <div class="progress-text">¥482k / ¥800k</div>
+      <div class="progress-text">2.4 万件 / 4 万件</div>
     </a>
     <a class="h5-h-card" onclick="openProject()">
       <div class="pic" style="background:linear-gradient(135deg,#FED7AA 0%,#FDBA74 100%);">
@@ -133,7 +133,7 @@
       <div class="title">临期 0 浪费专项</div>
       <div class="meta">126 家企业 · 78%</div>
       <div class="progress"><div class="progress-fill" style="width:78%;background:#F59E0B;"></div></div>
-      <div class="progress-text">¥1,860 万</div>
+      <div class="progress-text">86 万件</div>
     </a>
     <a class="h5-h-card" onclick="openProject()">
       <div class="pic" style="background:linear-gradient(135deg,#BAE6FD 0%,#7DD3FC 100%);">
@@ -143,7 +143,7 @@
       <div class="title">一书一希望 山区图书角</div>
       <div class="meta">23 家企业 · 57%</div>
       <div class="progress"><div class="progress-fill" style="width:57%;background:#0EA5E9;"></div></div>
-      <div class="progress-text">¥286k / ¥500k</div>
+      <div class="progress-text">1.4 万件 / 2.5 万件</div>
     </a>
   </div>
 
@@ -152,7 +152,7 @@
   <!-- Section: 最新动态 (list with avatars) -->
   <div class="h5-section-title">
     <span>最新动态</span>
-    <span class="more" onclick="openTip('动态中心','Phase 2 接入：完整动态时间轴')">更多 ›</span>
+    <span class="more" onclick="location.href='./feed.html'">更多 ›</span>
   </div>
   <div class="h5-list">
     <a class="h5-list-item">
@@ -233,7 +233,7 @@
   <!-- Section: 透明公示 (list) -->
   <div class="h5-section-title">
     <span>透明公示</span>
-    <span class="more" onclick="openTip('公示中心','Phase 2 接入：完整公示时间轴')">更多 ›</span>
+    <span class="more" onclick="location.href='./transparency.html'">更多 ›</span>
   </div>
   <div class="h5-list">
     <a class="h5-list-item">
@@ -264,6 +264,155 @@
 
   <div class="h5-section-divider"></div>
 
+  <!-- Section: 3 种捐赠方式 -->
+  <div class="h5-section-title">
+    <span>怎么捐物资</span>
+    <span class="more" onclick="openTip('物资捐赠方式','不同企业不同场景，平台提供 3 种捐赠方式，匹配最合适流程')">了解 ›</span>
+  </div>
+  <div class="h5-flow-grid">
+    <!-- 方式 1: 企业主动发起 -->
+    <div class="h5-flow-card">
+      <div class="num-tag">方式 1</div>
+      <div class="ft">企业主动发起</div>
+      <div class="fsub">有临期/新品物资 · 选属地慈善会</div>
+      <div class="steps">
+        <div class="step"><div class="ico">📦</div><div class="lbl">企业<br>发起</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">🏛️</div><div class="lbl">匹配<br>慈善会</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">🙋</div><div class="lbl">志愿者<br>派发</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">✅</div><div class="lbl">受捐者<br>领取</div></div>
+      </div>
+      <div class="scenario">适合：企业有临期/新品物资需要快速处理，直接对接属地慈善会</div>
+    </div>
+    <!-- 方式 2: 响应项目·先派发后发货 -->
+    <div class="h5-flow-card">
+      <div class="num-tag">方式 2</div>
+      <div class="ft">响应受灾项目</div>
+      <div class="fsub">先派发验证 · 企业再发货</div>
+      <div class="steps">
+        <div class="step"><div class="ico">📢</div><div class="lbl">项目<br>发布</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">🤝</div><div class="lbl">捐赠<br>匹配</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">🚚</div><div class="lbl">物资<br>派发</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">📮</div><div class="lbl">企业<br>发货</div></div>
+      </div>
+      <div class="scenario">适合：定向捐赠，慈善会发布项目后企业按需匹配，先验证后发货</div>
+    </div>
+    <!-- 方式 3: 响应项目·寄送+登记 -->
+    <div class="h5-flow-card">
+      <div class="num-tag">方式 3</div>
+      <div class="ft">集中寄送 + 派发</div>
+      <div class="fsub">大批量物资 · 集中寄指定地址</div>
+      <div class="steps">
+        <div class="step"><div class="ico">📢</div><div class="lbl">项目<br>发布</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">🤝</div><div class="lbl">捐赠<br>匹配</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">🚛</div><div class="lbl">物资<br>寄送</div></div>
+        <div class="step"><div class="arr">→</div></div>
+        <div class="step"><div class="ico">📝</div><div class="lbl">派发<br>登记</div></div>
+      </div>
+      <div class="scenario">适合：大批量集中捐赠，物资集中寄送再由志愿者派发，扫码登记闭环</div>
+    </div>
+  </div>
+
+  <div class="h5-section-divider"></div>
+
+  <!-- Section: 物资流转地图 -->
+  <div class="h5-section-title">
+    <span>物资流转 · 全国实时</span>
+    <span class="more" onclick="location.href='./trace.html'">查看完整轨迹 ›</span>
+  </div>
+  <div class="h5-map-card">
+    <div class="h5-map-illust" id="mapIllust">
+      <div class="pin" style="top:30%;left:22%;" data-n="486"></div>
+      <div class="pin" style="top:25%;left:55%;" data-n="2,108"></div>
+      <div class="pin" style="top:45%;left:70%;" data-n="3,486"></div>
+      <div class="pin" style="top:55%;left:42%;" data-n="1,468"></div>
+      <div class="pin" style="top:70%;left:58%;" data-n="986"></div>
+      <div class="pin" style="top:78%;left:75%;" data-n="720"></div>
+    </div>
+    <div class="h5-map-stats">
+      <div class="h5-map-stat">
+        <div class="ico">👨‍👩‍👧</div>
+        <div class="n">42.6 万</div>
+        <div class="l">受惠家庭</div>
+      </div>
+      <div class="h5-map-stat">
+        <div class="ico">👴</div>
+        <div class="n">18.6 万</div>
+        <div class="l">受惠老人</div>
+      </div>
+      <div class="h5-map-stat">
+        <div class="ico">🧒</div>
+        <div class="n">32.8 万</div>
+        <div class="l">受惠儿童</div>
+      </div>
+      <div class="h5-map-stat">
+        <div class="ico">🤝</div>
+        <div class="n">1.28 万</div>
+        <div class="l">志愿者</div>
+      </div>
+    </div>
+    <a class="h5-map-cta" href="./trace.html" style="display:block;text-decoration:none;">查看完整轨迹</a>
+  </div>
+
+  <div class="h5-section-divider"></div>
+
+  <!-- Section: 信任背书 -->
+  <div class="h5-trust-head">
+    <span class="eyebrow">公益公信力</span>
+    <h3>让慈善成为<br>人人可信的公益</h3>
+    <p>由海南亚洲公益研究院发起 · 按《慈善法》执行 · 每件物资全程可查</p>
+  </div>
+  <div class="h5-trust-cards">
+    <div class="h5-trust-card">
+      <div class="ic">📜</div>
+      <div class="body">
+        <div class="t">慈善组织公开募捐资质</div>
+        <div class="d">平台持有民政部门颁发的资格证书</div>
+      </div>
+    </div>
+    <div class="h5-trust-card">
+      <div class="ic">🔍</div>
+      <div class="body">
+        <div class="t">物资全流程扫码追溯</div>
+        <div class="d">每件物资唯一二维码，从出库到签收全程可查</div>
+      </div>
+    </div>
+    <div class="h5-trust-card">
+      <div class="ic">📊</div>
+      <div class="body">
+        <div class="t">独立第三方季度审计</div>
+        <div class="d">普华永道 / 德勤 / 毕马威按季度审计</div>
+      </div>
+    </div>
+    <div class="h5-trust-card">
+      <div class="ic">🏛️</div>
+      <div class="body">
+        <div class="t">政府监管 + 媒体监督</div>
+        <div class="d">接受民政/审计/网信监管，人民网/新华网共建</div>
+      </div>
+    </div>
+    <div class="h5-trust-card">
+      <div class="ic">💎</div>
+      <div class="body">
+        <div class="t">慈善组织自律公约成员</div>
+        <div class="d">签署《中国慈善行业自律公约》</div>
+      </div>
+    </div>
+  </div>
+  <div class="h5-trust-cta">
+    <a class="h5-btn h5-btn-primary" href="./transparency.html">查看完整公示</a>
+    <a class="h5-btn h5-btn-ghost" href="./annual-report.html">年度报告</a>
+  </div>
+
+  <div class="h5-section-divider"></div>
+
   <!-- Section: 标杆爱心企业 (horizontal scroll logos) -->
   <div class="h5-section-title">
     <span>标杆爱心企业</span>
@@ -273,27 +422,27 @@
     <a class="h5-h-card" style="flex: 0 0 100px; max-width: 100px; padding: 14px 8px; text-align: center;">
       <div style="width:48px;height:48px;margin:0 auto 8px;background:#E85D04;color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;">美</div>
       <div style="font-size:12px;font-weight:600;color:var(--h5-text);">美心食品</div>
-      <div style="font-size:10px;color:var(--h5-text-3);">¥1,860 万</div>
+      <div style="font-size:10px;color:var(--h5-text-3);">86 万件</div>
     </a>
     <a class="h5-h-card" style="flex: 0 0 100px; max-width: 100px; padding: 14px 8px; text-align: center;">
       <div style="width:48px;height:48px;margin:0 auto 8px;background:#14B8A6;color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;">伊</div>
       <div style="font-size:12px;font-weight:600;color:var(--h5-text);">伊利集团</div>
-      <div style="font-size:10px;color:var(--h5-text-3);">¥1,420 万</div>
+      <div style="font-size:10px;color:var(--h5-text-3);">62 万件</div>
     </a>
     <a class="h5-h-card" style="flex: 0 0 100px; max-width: 100px; padding: 14px 8px; text-align: center;">
       <div style="width:48px;height:48px;margin:0 auto 8px;background:#C4842A;color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;">格</div>
       <div style="font-size:12px;font-weight:600;color:var(--h5-text);">格力电器</div>
-      <div style="font-size:10px;color:var(--h5-text-3);">¥960 万</div>
+      <div style="font-size:10px;color:var(--h5-text-3);">48 万件</div>
     </a>
     <a class="h5-h-card" style="flex: 0 0 100px; max-width: 100px; padding: 14px 8px; text-align: center;">
       <div style="width:48px;height:48px;margin:0 auto 8px;background:#0E5A6F;color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;">招</div>
       <div style="font-size:12px;font-weight:600;color:var(--h5-text);">招商银行</div>
-      <div style="font-size:10px;color:var(--h5-text-3);">¥820 万</div>
+      <div style="font-size:10px;color:var(--h5-text-3);">36 万件</div>
     </a>
     <a class="h5-h-card" style="flex: 0 0 100px; max-width: 100px; padding: 14px 8px; text-align: center;">
       <div style="width:48px;height:48px;margin:0 auto 8px;background:#7C3AED;color:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;">腾</div>
       <div style="font-size:12px;font-weight:600;color:var(--h5-text);">腾讯公益</div>
-      <div style="font-size:10px;color:var(--h5-text-3);">¥720 万</div>
+      <div style="font-size:10px;color:var(--h5-text-3);">32 万件</div>
     </a>
   </div>
 
@@ -356,7 +505,7 @@
     <div class="ic" style="background:rgba(15,23,42,0.06);color:#1A1A1A;">📊</div>
     <div class="body">
       <div class="t">2024 年度报告</div>
-      <div class="d">¥1,860 万 · 86 万件 · 12.6 万人次</div>
+      <div class="d">328 万件 · 286 万人次</div>
     </div>
     <div class="chev">›</div>
   </a>
@@ -391,7 +540,7 @@
 <div class="h5-tabbar" id="tabbar" style="display:none;">
   <div class="h5-tab active"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
   <div class="h5-tab" onclick="location.href='./mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
-  <div class="h5-tab" onclick="location.href='./charity/reports.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='./report.html'"><div class="tab-ic" style="position:relative;">📊<span class="tab-badge">3</span></div><div class="tab-label">报告</div></div>
   <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div><div class="tab-label">消息</div></div>
   <div class="h5-tab" onclick="location.href='./login.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
 </div>
@@ -507,29 +656,8 @@
   });
 
   function openRoleIntro() { H5.openModal('roleModal'); }
-  function openProject() {
-    document.getElementById('tipTitle').textContent = '项目详情';
-    document.getElementById('tipBody').innerHTML =
-      '<div style="font-size:48px;margin-bottom:16px;">📋</div>' +
-      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">项目详情页</div>' +
-      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;">' +
-      'H5 Phase 2 接入：项目完整描述、物资清单、<br>捐赠入口、进展时间轴、反馈' +
-      '</div>' +
-      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" style="margin-top:24px;" onclick="H5.closeModal(\'tipModal\')">知道了</button>';
-    H5.openModal('tipModal');
-  }
-  function openTrace() {
-    document.getElementById('tipTitle').textContent = '物资追溯';
-    document.getElementById('tipBody').innerHTML =
-      '<div style="font-size:48px;margin-bottom:16px;">🔍</div>' +
-      '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">扫码或输入编号</div>' +
-      '<div style="font-size:13px;color:var(--h5-text-3);line-height:1.7;margin-bottom:16px;">' +
-      '查看物资从企业捐赠到受赠者的<br>完整流转记录' +
-      '</div>' +
-      '<input type="text" class="h5-input" placeholder="如 CC-PRJ-2025-0682" style="text-align:center;margin-bottom:12px;">' +
-      '<button class="h5-btn h5-btn-primary h5-btn-block h5-btn-lg" onclick="H5.closeModal(\'tipModal\')">立即追溯</button>';
-    H5.openModal('tipModal');
-  }
+  function openProject() { location.href = './projects.html'; }
+  function openTrace() { location.href = './trace.html'; }
 </script>
 
 <script>

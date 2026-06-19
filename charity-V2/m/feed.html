@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>最新动态 · 慈商联营</title>
+<link rel="stylesheet" href="./public/css/h5.css?v=2">
+<link rel="stylesheet" href="./public/css/h5-app.css?v=2">
+<style>
+.h5-feed-list { padding: 12px 16px; }
+.h5-feed-item {
+  display: flex; gap: 10px; padding-bottom: 16px; position: relative;
+}
+.h5-feed-item:not(:last-child)::before {
+  content: ''; position: absolute; left: 19px; top: 36px; bottom: 0;
+  width: 1px; background: var(--h5-divider);
+}
+.h5-feed-icon {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; position: relative; z-index: 1;
+}
+.h5-feed-body { flex: 1; }
+.h5-feed-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 3px;
+}
+.h5-feed-title { font-size: 13px; font-weight: 700; color: var(--h5-text); line-height: 1.3; flex: 1; }
+.h5-feed-time { font-size: 10px; color: var(--h5-text-3); flex-shrink: 0; margin-left: 8px; }
+.h5-feed-meta { font-size: 11px; color: var(--h5-text-2); margin-bottom: 4px; }
+.h5-feed-card {
+  background: var(--h5-card); border: 1px solid var(--h5-border);
+  border-radius: var(--h5-radius); padding: 10px 12px;
+}
+.h5-feed-card .fc-title { font-size: 13px; font-weight: 700; color: var(--h5-text); margin-bottom: 3px; }
+.h5-feed-card .fc-sub { font-size: 11px; color: var(--h5-text-3); }
+.h5-feed-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.h5-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 5px;
+  font-size: 10px; font-weight: 600;
+}
+</style>
+</head>
+<body class="has-tabbar has-status-bar">
+
+<div class="h5-status-bar light">
+  <span class="time" id="statusTime">9:41</span>
+  <span class="right">📶 🔋</span>
+</div>
+
+<div class="h5-nav">
+  <div class="h5-nav-left" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">最新动态</div>
+  <div class="h5-nav-right"></div>
+</div>
+
+<div class="h5-page">
+  <div style="padding:12px 16px 0;">
+    <div class="h5-cat-chips">
+      <div class="h5-chip active">全部</div>
+      <div class="h5-chip">物资到达</div>
+      <div class="h5-chip">项目启动</div>
+      <div class="h5-chip">审计公示</div>
+      <div class="h5-chip">合作公告</div>
+    </div>
+  </div>
+
+  <div class="h5-feed-list" id="feedList"></div>
+  <div style="height:24px;"></div>
+</div>
+
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='./'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='./mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='./report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic">🔔</div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='./profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="./public/js/h5.js"></script>
+<script>
+(function () {
+  var FEED = [
+    { type: 'delivery', icon: '🚚', color: '#14B8A6', bg: '#E0FAF5',
+      title: '美心临期面包已到达云南鲁甸',
+      meta: '云南鲁甸 6.0 级地震 · 已签收',
+      time: '2h 前',
+      detail: '1,200 件物资已到达受捐家庭，受益人扫码确认签收。',
+      tags: [{ t: '物资到达', c: '#14B8A6', bg: '#E0FAF5' }, { t: '应急救援', c: '#DC2626', bg: '#FEE2E2' }]
+    },
+    { type: 'emergency', icon: '🚨', color: '#DC2626', bg: '#FEE2E2',
+      title: '云南鲁甸 6.0 级地震响应启动',
+      meta: '12 家企业 · 紧急响应阶段',
+      time: '4h 前',
+      detail: '慈商联营 2 小时内启动应急响应，联动 12 家爱心企业，72 小时内物资直达 32 个安置点。',
+      tags: [{ t: '应急启动', c: '#DC2626', bg: '#FEE2E2' }]
+    },
+    { type: 'audit', icon: '🏆', color: '#7C3AED', bg: '#EDE9FE',
+      title: '5 月财务审计 · 普华永道',
+      meta: '已通过 · 报告已发布',
+      time: '1d 前',
+      detail: '普华永道完成 5 月财务审计，审计意见：无保留意见。所有收支合规，物资流转记录完整。',
+      tags: [{ t: '审计通过', c: '#7C3AED', bg: '#EDE9FE' }, { t: '财务公示', c: '#0277BD', bg: '#E0F2FE' }]
+    },
+    { type: 'education', icon: '📖', color: '#D97706', bg: '#FEF3C7',
+      title: '一书一希望 · 第 8 批捐赠完成',
+      meta: '教育助学 · 5,600 名学生受惠',
+      time: '3d 前',
+      detail: '第 8 批"一书一希望"物资已配送至云南、贵州 28 所乡村小学，5,600 名学生收到爱心书包。',
+      tags: [{ t: '儿童助学', c: '#D97706', bg: '#FEF3C7' }]
+    },
+    { type: 'partner', icon: '🤝', color: '#0E5A6F', bg: '#E5F0F4',
+      title: '顺丰公益物流正式接入平台',
+      meta: '合作企业 · 应急响应物流',
+      time: '5d 前',
+      detail: '顺丰公益物流与慈商联营完成系统对接，24h 紧急承运能力正式纳入应急响应体系。',
+      tags: [{ t: '合作公告', c: '#0E5A6F', bg: '#E5F0F4' }]
+    },
+    { type: 'report', icon: '📊', color: '#14B8A6', bg: '#E0FAF5',
+      title: '5 月运营月报已发布',
+      meta: '月报 · 32 个项目 · 全面公示',
+      time: '1w 前',
+      detail: '5 月运营月报发布：32 个项目运行中，328 万件物资到位，受惠 286 万人次，合作企业 3,680 家。',
+      tags: [{ t: '月报发布', c: '#14B8A6', bg: '#E0FAF5' }]
+    },
+    { type: 'delivery', icon: '🍞', color: '#E85D04', bg: '#FFF1E5',
+      title: '美心临期 0 浪费专项 · 第 6 批',
+      meta: '临期食品 · 3,200 件 · 8 家社会组织',
+      time: '1w 前',
+      detail: '第 6 批临期食品（面包、糕点）已分配至 8 家社会组织，覆盖 3,试用场景：社区老人食堂、受灾安置点。',
+      tags: [{ t: '物资到达', c: '#14B8A6', bg: '#E0FAF5' }, { t: '长线陪伴', c: '#0277BD', bg: '#E0F2FE' }]
+    },
+    { type: 'audit', icon: '📜', color: '#0E5A6F', bg: '#E5F0F4',
+      title: 'Q1 物资流向公示完成',
+      meta: 'Q1 · 86 个项目 · 完整可查',
+      time: '2w 前',
+      detail: 'Q1 物资流向公示已在官网和民政部平台同步发布，每件物资二维码流转记录完整可查。',
+      tags: [{ t: '物资公示', c: '#0E5A6F', bg: '#E5F0F4' }]
+    },
+  ];
+
+  function renderFeed() {
+    var list = FEED;
+    document.getElementById('feedList').innerHTML = list.map(function (item) {
+      var tagsHtml = item.tags.map(function (tag) {
+        return '<span class="h5-tag" style="background:' + tag.bg + ';color:' + tag.c + ';">' + tag.t + '</span>';
+      }).join('');
+      return '<div class="h5-feed-item">' +
+        '<div class="h5-feed-icon" style="background:' + item.bg + ';color:' + item.color + ';">' + item.icon + '</div>' +
+        '<div class="h5-feed-body">' +
+          '<div class="h5-feed-head">' +
+            '<div class="h5-feed-title">' + item.title + '</div>' +
+            '<div class="h5-feed-time">' + item.time + '</div>' +
+          '</div>' +
+          '<div class="h5-feed-meta">' + item.meta + '</div>' +
+          '<div class="h5-feed-card">' +
+            '<div class="fc-title">' + item.detail.substring(0, 40) + '…</div>' +
+            '<div class="fc-sub">' + item.detail.substring(40) + '</div>' +
+            '<div class="h5-feed-tags">' + tagsHtml + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    if (window.gsap) {
+      gsap.fromTo('.h5-feed-item', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.07, ease: 'power2.out' });
+    }
+  }
+
+  function updateClock() {
+    document.getElementById('statusTime').textContent = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  renderFeed();
+})();
+</script>
+</body>
+</html>

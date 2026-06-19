@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>项目详情 · 慈商联营</title>
+<link rel="stylesheet" href="./public/css/h5.css?v=2">
+<link rel="stylesheet" href="./public/css/h5-app.css?v=2">
+<style>
+/* ===== 项目详情 H5 样式 ===== */
+
+.h5-detail-hero {
+  padding: 14px 16px 16px;
+  position: relative; overflow: hidden;
+}
+.h5-detail-hero .top-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.h5-detail-hero .cat-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+.h5-detail-hero .urgent-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 6px;
+  font-size: 11px; font-weight: 800; color: #7F1D1D;
+  background: #FEF3C7;
+}
+.h5-detail-hero .urgent-badge .dot {
+  width: 5px; height: 5px; background: #DC2626;
+  border-radius: 50%; animation: dpulse 1.6s infinite;
+}
+@keyframes dpulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); }
+  50% { box-shadow: 0 0 0 4px rgba(220,38,38,0); }
+}
+.h5-detail-hero h1 {
+  font-size: 18px; font-weight: 800; line-height: 1.3;
+  margin-bottom: 6px; color: var(--h5-text);
+}
+.h5-detail-hero .org-row {
+  font-size: 12px; color: var(--h5-text-2); margin-bottom: 2px;
+}
+.h5-detail-hero .region-row {
+  font-size: 12px; color: var(--h5-text-3);
+}
+.h5-detail-hero .hero-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-top: 12px;
+}
+.h5-detail-hero .hstat {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 10px; padding: 10px 8px; text-align: center;
+}
+.h5-detail-hero .hstat .v {
+  font-size: 15px; font-weight: 800; line-height: 1.1; margin-bottom: 3px;
+}
+.h5-detail-hero .hstat .l { font-size: 10px; color: var(--h5-text-3); }
+.h5-detail-hero .progress-card {
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 12px; padding: 12px; margin-top: 12px;
+}
+.h5-detail-hero .pc-head { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.h5-detail-hero .pct-big { font-size: 22px; font-weight: 900; line-height: 1; }
+.h5-detail-hero .raised-text { font-size: 11px; color: var(--h5-text-3); }
+.h5-detail-hero .pbar { height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; }
+.h5-detail-hero .pfill { height: 100%; border-radius: 4px; }
+
+/* 物资用途构成 */
+.h5-usage-section { padding: 16px; }
+.h5-section-hd {
+  font-size: 14px; font-weight: 700; color: var(--h5-text);
+  margin-bottom: 12px;
+}
+.h5-usage-bars { }
+.h5-usage-item {
+  margin-bottom: 10px;
+}
+.h5-usage-item .u-head {
+  display: flex; justify-content: space-between; margin-bottom: 4px;
+}
+.h5-usage-item .u-type { font-size: 12px; font-weight: 600; color: var(--h5-text); }
+.h5-usage-item .u-val { font-size: 12px; font-weight: 700; }
+.h5-usage-item .u-bar {
+  height: 6px; background: var(--h5-border); border-radius: 3px; overflow: hidden;
+}
+.h5-usage-item .u-fill { height: 100%; border-radius: 3px; }
+
+/* 受益人 */
+.h5-beneficiary { padding: 0 16px 16px; }
+.h5-bene-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.h5-bene-item {
+  background: var(--h5-card); border: 1px solid var(--h5-border);
+  border-radius: 10px; padding: 10px 6px; text-align: center;
+}
+.h5-bene-item .ic { font-size: 20px; margin-bottom: 4px; }
+.h5-bene-item .n { font-size: 14px; font-weight: 700; color: var(--h5-text); line-height: 1.1; }
+.h5-bene-item .l { font-size: 10px; color: var(--h5-text-3); margin-top: 2px; }
+
+/* 时间轴 */
+.h5-timeline { padding: 0 16px 16px; }
+.h5-tl { position: relative; padding-left: 20px; }
+.h5-tl::before {
+  content: ''; position: absolute; left: 7px; top: 0; bottom: 0;
+  width: 2px; background: var(--h5-divider);
+}
+.h5-tl-item { position: relative; margin-bottom: 16px; }
+.h5-tl-item::before {
+  content: ''; position: absolute; left: -17px; top: 5px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--h5-border); border: 2px solid var(--h5-card);
+}
+.h5-tl-item.latest::before { background: var(--cat-c, var(--h5-primary)); }
+.h5-tl-item .tl-date { font-size: 10px; color: var(--h5-text-3); margin-bottom: 2px; }
+.h5-tl-item .tl-text { font-size: 12px; color: var(--h5-text); line-height: 1.5; }
+
+/* 反馈 */
+.h5-feedback { padding: 0 16px 16px; }
+.h5-fb-card {
+  background: var(--h5-card); border: 1px solid var(--h5-border);
+  border-radius: var(--h5-radius); padding: 12px 14px; margin-bottom: 10px;
+}
+.h5-fb-card .fb-head { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+.h5-fb-card .fb-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.h5-fb-card .fb-meta { flex: 1; }
+.h5-fb-card .fb-name { font-size: 13px; font-weight: 700; color: var(--h5-text); }
+.h5-fb-card .fb-from { font-size: 11px; color: var(--h5-text-3); }
+.h5-fb-card .fb-body {
+  font-size: 12px; color: var(--h5-text-2); line-height: 1.7;
+  padding: 8px 10px; background: var(--h5-bg); border-radius: 8px;
+}
+.h5-fb-card .fb-priv { font-size: 10px; color: var(--h5-text-3); margin-top: 5px; text-align: right; }
+
+/* 底部 CTA */
+.h5-detail-cta {
+  position: fixed; bottom: 56px; left: 0; right: 0;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--h5-divider);
+  padding: 10px 16px;
+  display: flex; gap: 10px; z-index: 50;
+}
+.h5-detail-cta .cta-btn {
+  flex: 1; text-align: center; padding: 11px 0;
+  border-radius: var(--h5-radius-sm); font-size: 14px; font-weight: 700;
+  cursor: pointer; border: none; text-decoration: none; display: block;
+}
+.h5-detail-cta .cta-primary { background: var(--cat-c, var(--h5-primary)); color: #fff; }
+.h5-detail-cta .cta-ghost {
+  background: transparent; color: var(--cat-c, var(--h5-primary));
+  border: 1px solid var(--cat-c, var(--h5-primary));
+}
+
+/* 响应后隐藏 bottom padding */
+body { padding-bottom: 80px; }
+</style>
+</head>
+<body class="has-tabbar has-status-bar">
+
+<div class="h5-status-bar light">
+  <span class="time" id="statusTime">9:41</span>
+  <span class="right">📶 🔋</span>
+</div>
+
+<div class="h5-nav" id="mainNav">
+  <div class="h5-nav-left" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">项目详情</div>
+  <div class="h5-nav-right"></div>
+</div>
+
+<div class="h5-page" id="mainBody">
+  <!-- Hero -->
+  <div class="h5-detail-hero" id="hero"></div>
+
+  <!-- 物资构成 -->
+  <div class="h5-usage-section" id="usageSection">
+    <div class="h5-section-hd">📦 物资构成</div>
+    <div class="h5-usage-bars" id="usageBars"></div>
+  </div>
+
+  <!-- 受益人 -->
+  <div class="h5-beneficiary" id="beneSection">
+    <div class="h5-section-hd">👥 受益人群</div>
+    <div class="h5-bene-grid" id="beneGrid"></div>
+  </div>
+
+  <!-- 时间轴 -->
+  <div class="h5-timeline" id="tlSection">
+    <div class="h5-section-hd">📍 项目进展</div>
+    <div class="h5-tl" id="tl"></div>
+  </div>
+
+  <!-- 受益反馈 -->
+  <div class="h5-feedback" id="fbSection">
+    <div class="h5-section-hd">💬 受益者反馈</div>
+    <div id="fbList"></div>
+  </div>
+
+  <div style="height:80px;"></div>
+</div>
+
+<!-- 底部 CTA -->
+<div class="h5-detail-cta" id="ctaBar">
+  <div class="cta-btn cta-ghost" onclick="H5.openModal('shareModal')">🔗 转发扩散</div>
+  <div class="cta-btn cta-primary" onclick="H5.openModal('respondModal')">💖 响应项目</div>
+</div>
+
+<!-- 分享 Modal -->
+<div class="h5-modal-mask" id="shareModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title">转发扩散</div>
+      <div class="close" onclick="H5.closeModal('shareModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" style="padding:24px 20px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:16px;">🔗</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:8px;" id="shareTitle"></div>
+      <div style="font-size:12px;color:var(--h5-text-3);margin-bottom:20px;" id="shareRegion"></div>
+      <div style="background:var(--h5-bg);border-radius:8px;padding:12px;font-size:13px;color:var(--h5-text-2);margin-bottom:20px;line-height:1.6;" id="shareDesc"></div>
+      <div class="h5-btn h5-btn-primary h5-btn-block" onclick="H5.closeModal('shareModal')">知道了</div>
+    </div>
+  </div>
+</div>
+
+<!-- 响应 Modal -->
+<div class="h5-modal-mask" id="respondModal">
+  <div class="h5-modal">
+    <div class="h5-modal-grabber"></div>
+    <div class="h5-modal-head">
+      <div class="title">💖 响应项目</div>
+      <div class="close" onclick="H5.closeModal('respondModal')">✕</div>
+    </div>
+    <div class="h5-modal-body" style="padding:24px 20px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:16px;">🏢</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:8px;">响应此项目</div>
+      <div style="font-size:13px;color:var(--h5-text-2);line-height:1.7;margin-bottom:20px;">
+        您可以捐赠物资或响应需求。<br>登录后进入企业工作台操作。
+      </div>
+      <a class="h5-btn h5-btn-primary h5-btn-block" href="./login.html?next=company/dashboard.html" style="display:block;text-align:center;">立即登录响应</a>
+      <div class="h5-btn" style="margin-top:10px;text-align:center;color:var(--h5-text-3);font-size:12px;" onclick="H5.closeModal('respondModal')">稍后再说</div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='./'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='./mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='./report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic">🔔</div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='./profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="./public/js/h5.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var CATS = {
+    urgent:   { name: '应急救援', c1: '#DC2626', soft: '#FEE2E2' },
+    longterm: { name: '长线陪伴', c1: '#0277BD', soft: '#E0F2FE' },
+    children: { name: '儿童助学', c1: '#D97706', soft: '#FEF3C7' },
+    elderly:  { name: '老人关怀', c1: '#7C3AED', soft: '#EDE9FE' },
+    rural:    { name: '乡村建设', c1: '#16A34A', soft: '#DCFCE7' },
+    health:   { name: '医疗健康', c1: '#E11D48', soft: '#FFE4E6' },
+  };
+
+  var PROJECTS = {
+    'p-em-001': {
+      cat: 'urgent', icon: '🌋', name: '云南鲁甸 6.0 级地震抗震救灾',
+      org: '云南省慈善总会 · 联合发起', region: '云南 · 鲁甸县',
+      statDonate: '32,860 件', statPeople: '12,000 人', statSpeed: '< 4h 响应',
+      goal: 50000, raised: 32860, urgent: true,
+      story: '2026 年 6 月 12 日凌晨 2 时 14 分，云南鲁甸发生 6.0 级地震，震源深度 12 公里。地震造成 32 个乡镇受灾、12,000 名群众紧急转移。慈商联营在震后 2 小时内启动应急预案，联动 12 家爱心企业，72 小时内将物资送达 32 个安置点。',
+      goals: ['为 32 个安置点 12,000 名受灾群众提供 30 天基本生活保障', '紧急调拨帐篷 1,200 顶、棉被 8,000 床、食品 80 吨', '为 1,800 名儿童提供营养餐 + 学习用品', '为 2,300 名老人提供慢病药品 + 助行器'],
+      timeline: [
+        { t: '2026-06-12 02:14', d: '云南鲁甸 6.0 级地震发生，2 小时内启动应急响应' },
+        { t: '2026-06-12 06:00', d: '第一批救援物资从昆明仓紧急发车' },
+        { t: '2026-06-12 18:00', d: '80 吨面包、30 万瓶矿泉水抵达 32 个安置点' },
+        { t: '2026-06-13 12:00', d: '帐篷 1,200 顶、棉被 8,000 床全部到位' },
+        { t: '2026-06-15 20:00', d: '儿童营养餐启动配送，覆盖 18 所临时学校', },
+        { t: '2026-06-20', d: '老人慢病药品到位，1,800 名老人完成健康评估' },
+        { t: '2026-07-12', d: '响应阶段结束，转入 6 个月"灾后重建"长线项目' },
+      ],
+      funds: [
+        { type: '食品 / 饮用水', pct: 38, val: '12,500 件', color: '#E85D04' },
+        { type: '应急物资', pct: 28, val: '9,200 件', color: '#F59E0B' },
+        { type: '儿童关怀', pct: 14, val: '4,600 件', color: '#D97706' },
+        { type: '老人关怀', pct: 12, val: '3,940 件', color: '#7C3AED' },
+        { type: '物流仓储', pct: 8, val: '2,630 件', color: '#14B8A6' },
+      ],
+      beneficiaries: [
+        { icon: '👨‍👩‍👧', n: '2,680', l: '受惠家庭' },
+        { icon: '👴', n: '2,300', l: '受惠老人' },
+        { icon: '🧒', n: '1,800', l: '受惠儿童' },
+        { icon: '🤝', n: '86', l: '志愿者' },
+      ],
+      thanks: [
+        { avatar: '#E85D04', avatarTxt: '王', name: '王主任', from: '鲁甸县民政局', body: '慈商联营的响应速度让我们非常感动。地震后 4 小时内送达的 80 吨面包和牛奶，让 32 个安置点 1.2 万人吃上了热乎饭。', priv: '已通过平台脱敏审核' },
+        { avatar: '#0E5A6F', avatarTxt: '李', name: '李校长', from: '鲁甸县 · 龙头山中心小学', body: '感谢慈商联营 4 天内为我们 230 个孩子搭起临时学校，6 月 20 日就能正常上课了。', priv: '已获学校授权' },
+        { avatar: '#14B8A6', avatarTxt: '陈', name: '陈社工', from: '鲁甸县 · 益童乐园', body: '物资之外，平台派来的 3 名儿童心理辅导师帮孩子们走出地震阴影，这份"陪伴"是金钱买不到的。', priv: '已通过平台脱敏审核' },
+      ],
+    },
+    'p-em-002': {
+      cat: 'urgent', icon: '🌀', name: '福建福州超强台风"海鸥"救援',
+      org: '福建省红十字会 · 联合发起', region: '福建 · 福州 6 县',
+      statDonate: '28,500 件', statPeople: '8,000 人', statSpeed: '< 6h 响应',
+      goal: 40000, raised: 28500, urgent: true,
+      timeline: [
+        { t: '2026-06-10 03:00', d: '气象台发布红色预警，6 小时内启动应急响应' },
+        { t: '2026-06-10 09:00', d: '"海鸥"登陆连江县，沿海 6 县受灾' },
+        { t: '2026-06-10 14:00', d: '第一批应急物资从福州仓发出' },
+        { t: '2026-06-10 22:00', d: '8,000 名群众全部安全转移，6 个安置点启动' },
+        { t: '2026-06-12', d: '儿童心理疏导团队 12 人抵达 6 县' },
+        { t: '2026-06-15', d: '台风过后清淤 + 重建开始，项目进入长线阶段' },
+      ],
+      funds: [
+        { type: '应急物资', pct: 42, val: '11,970 件', color: '#DC2626' },
+        { type: '食品', pct: 28, val: '7,980 件', color: '#E85D04' },
+        { type: '儿童关怀', pct: 16, val: '4,560 件', color: '#D97706' },
+        { type: '物流', pct: 10, val: '2,850 件', color: '#14B8A6' },
+      ],
+      beneficiaries: [
+        { icon: '👨‍👩‍👧', n: '1,560', l: '受惠家庭' },
+        { icon: '👴', n: '860', l: '受惠老人' },
+        { icon: '🧒', n: '1,200', l: '受惠儿童' },
+        { icon: '🤝', n: '48', l: '志愿者' },
+      ],
+      thanks: [
+        { avatar: '#0277BD', avatarTxt: '林', name: '林主任', from: '连江县应急办', body: '慈商联营 6 小时响应速度打破历年记录，8,000 名群众在台风登陆前 5 小时全部安全转移。', priv: '已通过平台脱敏审核' },
+      ],
+    },
+    'p-em-003': {
+      cat: 'urgent', icon: '⛰️', name: '甘肃临夏特大泥石流救援',
+      org: '甘肃省民政厅 · 联合发起', region: '甘肃 · 临夏',
+      statDonate: '38,200 件', statPeople: '4,500 人', statSpeed: '< 3h 响应',
+      goal: 55000, raised: 38200, urgent: true,
+      timeline: [
+        { t: '2026-06-08 08:00', d: '临夏州遭遇 50 年一遇特大泥石流，3 个乡镇被困' },
+        { t: '2026-06-08 11:00', d: '慈商联营 3 小时内启动应急响应' },
+        { t: '2026-06-08 18:00', d: '顺丰紧急承运物资出发' },
+        { t: '2026-06-09 12:00', d: '娃哈哈纯净水 20 万瓶抵达分发点' },
+        { t: '2026-06-10', d: '物资全部到位，受困群众得到安置' },
+      ],
+      funds: [
+        { type: '应急物资', pct: 45, val: '17,190 件', color: '#DC2626' },
+        { type: '食品', pct: 30, val: '11,460 件', color: '#E85D04' },
+        { type: '药品', pct: 15, val: '5,730 件', color: '#7C3AED' },
+        { type: '物流', pct: 10, val: '3,820 件', color: '#14B8A6' },
+      ],
+      beneficiaries: [
+        { icon: '👨‍👩‍👧', n: '980', l: '受惠家庭' },
+        { icon: '👴', n: '620', l: '受惠老人' },
+        { icon: '🧒', n: '480', l: '受惠儿童' },
+        { icon: '🤝', n: '64', l: '志愿者' },
+      ],
+      thanks: [],
+    },
+  };
+
+  // Default project for non-detailed ones
+  function getProject(id) {
+    if (PROJECTS[id]) return PROJECTS[id];
+    // Minimal fallback
+    return {
+      cat: 'longterm', icon: '🌱', name: '公益项目',
+      org: '合作慈善机构', region: '全国',
+      statDonate: '—', statPeople: '—', statSpeed: '—',
+      goal: 1000, raised: 500, urgent: false,
+      timeline: [
+        { t: '2026-01-01', d: '项目启动' },
+        { t: '2026-06-01', d: '持续推进中' },
+      ],
+      funds: [
+        { type: '物资', pct: 100, val: '—', color: '#14B8A6' },
+      ],
+      beneficiaries: [
+        { icon: '👨‍👩‍👧', n: '—', l: '受惠家庭' },
+        { icon: '👴', n: '—', l: '受惠老人' },
+        { icon: '🧒', n: '—', l: '受惠儿童' },
+        { icon: '🤝', n: '—', l: '志愿者' },
+      ],
+      thanks: [],
+    };
+  }
+
+  var id = new URLSearchParams(location.search).get('id') || 'p-em-001';
+  var p = getProject(id);
+  var cat = CATS[p.cat] || CATS.longterm;
+  var pct = Math.min(100, Math.round((p.raised / p.goal) * 100));
+
+  // Apply cat color to body
+  document.documentElement.style.setProperty('--cat-c', cat.c1);
+  document.querySelector('.h5-detail-cta').style.setProperty('--cat-c', cat.c1);
+  document.querySelectorAll('.cta-btn').forEach(function (btn) {
+    btn.style.setProperty('--cat-c', cat.c1);
+  });
+
+  // Hero
+  document.getElementById('hero').innerHTML =
+    '<div class="top-row">' +
+      '<span class="cat-badge" style="background:' + cat.c1 + ';">' + cat.name + '</span>' +
+      (p.urgent ? '<span class="urgent-badge"><span class="dot"></span>紧急中</span>' : '') +
+    '</div>' +
+    '<h1>' + p.name + '</h1>' +
+    '<div class="org-row">🏛️ ' + p.org + '</div>' +
+    '<div class="region-row">📍 ' + p.region + '</div>' +
+    '<div class="hero-stats">' +
+      '<div class="hstat"><div class="v" style="color:' + cat.c1 + ';">' + p.statDonate + '</div><div class="l">物资捐赠</div></div>' +
+      '<div class="hstat"><div class="v" style="color:' + cat.c1 + ';">' + p.statPeople + '</div><div class="l">受惠人数</div></div>' +
+      '<div class="hstat"><div class="v" style="color:' + cat.c1 + ';">' + p.statSpeed + '</div><div class="l">响应时效</div></div>' +
+    '</div>' +
+    '<div class="progress-card">' +
+      '<div class="pc-head">' +
+        '<div class="pct-big" style="color:' + cat.c1 + ';">' + pct + '%</div>' +
+        '<div class="raised-text">' + p.raised.toLocaleString() + ' / ' + p.goal.toLocaleString() + ' 件</div>' +
+      '</div>' +
+      '<div class="pbar"><div class="pfill" style="width:' + pct + '%;background:' + cat.c1 + ';"></div></div>' +
+    '</div>';
+
+  // Share modal content
+  document.getElementById('shareTitle').textContent = p.name;
+  document.getElementById('shareRegion').textContent = '📍 ' + p.region;
+  document.getElementById('shareDesc').textContent = p.story || p.name + '，' + p.statDonate + '物资已送达 ' + p.statPeople + ' 受惠人群。';
+
+  // Usage bars
+  document.getElementById('usageBars').innerHTML = p.funds.map(function (f) {
+    return '<div class="h5-usage-item">' +
+      '<div class="u-head">' +
+        '<span class="u-type">' + f.type + '</span>' +
+        '<span class="u-val" style="color:' + (f.color || cat.c1) + ';">' + f.pct + '% · ' + f.val + '</span>' +
+      '</div>' +
+      '<div class="u-bar"><div class="u-fill" style="width:' + f.pct + '%;background:' + (f.color || cat.c1) + ';"></div></div>' +
+    '</div>';
+  }).join('');
+
+  // Beneficiaries
+  document.getElementById('beneGrid').innerHTML = p.beneficiaries.map(function (b) {
+    return '<div class="h5-bene-item">' +
+      '<div class="ic">' + b.icon + '</div>' +
+      '<div class="n">' + b.n + '</div>' +
+      '<div class="l">' + b.l + '</div>' +
+    '</div>';
+  }).join('');
+
+  // Timeline
+  var tlHtml = p.timeline.map(function (item, i) {
+    var isLast = i === p.timeline.length - 1;
+    return '<div class="h5-tl-item' + (isLast ? ' latest' : '') + '">' +
+      '<div class="tl-date">' + item.t + '</div>' +
+      '<div class="tl-text">' + item.d + '</div>' +
+    '</div>';
+  }).join('');
+  document.getElementById('tl').innerHTML = tlHtml;
+
+  // Feedback
+  if (p.thanks && p.thanks.length > 0) {
+    document.getElementById('fbList').innerHTML = p.thanks.map(function (f) {
+      return '<div class="h5-fb-card">' +
+        '<div class="fb-head">' +
+          '<div class="fb-avatar" style="background:' + f.avatar + ';">' + f.avatarTxt + '</div>' +
+          '<div class="fb-meta">' +
+            '<div class="fb-name">' + f.name + '</div>' +
+            '<div class="fb-from">' + f.from + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="fb-body">"' + f.body + '"</div>' +
+        '<div class="fb-priv">✓ ' + f.priv + '</div>' +
+      '</div>';
+    }).join('');
+  } else {
+    document.getElementById('fbSection').style.display = 'none';
+  }
+
+  // Update clock
+  function updateClock() {
+    var now = new Date();
+    document.getElementById('statusTime').textContent = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // GSAP entrance
+  if (window.gsap) {
+    gsap.fromTo('.h5-detail-hero', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
+    gsap.fromTo('.h5-usage-item', { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.05, ease: 'power2.out', delay: 0.3 });
+    gsap.fromTo('.h5-tl-item', { x: -10, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, stagger: 0.08, ease: 'power2.out', delay: 0.4 });
+    gsap.fromTo('.h5-fb-card', { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.1, ease: 'power2.out', delay: 0.5 });
+  }
+})();
+</script>
+</body>
+</html>

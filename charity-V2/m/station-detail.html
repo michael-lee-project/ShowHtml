@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>南山区科技园驿站 · 慈商联营</title>
+<link rel="stylesheet" href="public/css/h5.css">
+<link rel="stylesheet" href="public/css/h5-app.css">
+<style>
+  /* ===== 状态栏 ===== */
+  .h5-status-bar.light { background: transparent; color: rgba(255,255,255,0.9); }
+  .h5-status-bar { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 390px; z-index: 999; }
+
+  /* ===== Hero ===== */
+  .std-hero {
+    background: linear-gradient(135deg, #C4842A 0%, #A05520 50%, #7A3D0F 100%);
+    color: #fff;
+    padding: 60px 16px 28px;
+    position: relative; overflow: hidden;
+  }
+  .std-hero::before {
+    content: "";
+    position: absolute; top: -40px; right: -20px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .std-hero::after {
+    content: "🏠";
+    position: absolute; right: 16px; bottom: -20px;
+    font-size: 160px; opacity: 0.08;
+  }
+  .std-hero .breadcrumb {
+    font-size: 11px; opacity: 0.75; margin-bottom: 8px;
+  }
+  .std-hero .breadcrumb a { color: rgba(255,255,255,0.85); text-decoration: none; }
+  .std-hero .breadcrumb span { margin: 0 4px; }
+  .std-hero .title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .std-hero .title { font-size: 22px; font-weight: 800; line-height: 1.2; }
+  .std-hero .badge {
+    background: rgba(255,255,255,0.18); color: #fff;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+  }
+  .std-hero .desc {
+    font-size: 13px; opacity: 0.92; line-height: 1.55; margin-bottom: 12px;
+  }
+  .std-hero .meta-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .std-hero .meta-tag {
+    background: rgba(255,255,255,0.18); color: #fff;
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 11px;
+  }
+
+  /* ===== 操作按钮条 ===== */
+  .std-actions {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    background: #fff;
+    border-bottom: 1px solid var(--h5-border);
+    padding: 12px 16px; gap: 10px;
+  }
+  .std-action-btn {
+    background: var(--h5-bg);
+    border-radius: var(--h5-radius-sm);
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--h5-border);
+    transition: all .2s;
+  }
+  .std-action-btn:active { transform: scale(0.96); background: #f0f0f0; }
+  .std-action-btn .ic { font-size: 22px; display: block; margin-bottom: 4px; }
+  .std-action-btn .lbl { font-size: 11px; color: var(--h5-text-2); font-weight: 600; }
+
+  /* ===== 内容区 ===== */
+  .std-body { padding: 16px 16px 80px; }
+
+  /* ===== 信息面板 ===== */
+  .std-panel {
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--h5-border);
+  }
+  .std-panel h3 {
+    font-size: 14px; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .std-info-row {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid var(--h5-divider);
+    font-size: 13px;
+  }
+  .std-info-row:last-child { border-bottom: 0; }
+  .std-info-row .lbl { color: var(--h5-text-3); min-width: 65px; flex-shrink: 0; }
+  .std-info-row .val { color: var(--h5-text); font-weight: 600; flex: 1; }
+  .std-info-row .val.trust { color: var(--h5-trust); }
+
+  /* ===== 服务项目 ===== */
+  .std-svc-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .std-svc {
+    background: var(--h5-bg);
+    border-radius: var(--h5-radius-sm);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .std-svc .ic { font-size: 28px; display: block; margin-bottom: 6px; }
+  .std-svc .t { font-size: 13px; font-weight: 700; }
+  .std-svc .d { font-size: 10px; color: var(--h5-text-3); margin-top: 3px; }
+
+  /* ===== 商品 ===== */
+  .std-section-title {
+    font-size: 14px; font-weight: 700; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .std-section-title .more { font-size: 11px; color: var(--h5-text-3); }
+  .std-product-list { display: flex; flex-direction: column; gap: 10px; }
+  .std-product {
+    background: var(--h5-card);
+    border-radius: var(--h5-radius);
+    padding: 12px;
+    display: flex; gap: 12px; align-items: center;
+    border: 1px solid var(--h5-border);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .std-product:active { transform: scale(0.98); background: var(--h5-bg); }
+  .std-product .cover {
+    width: 64px; height: 64px; border-radius: 10px; flex-shrink: 0;
+    background: var(--h5-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .std-product .info { flex: 1; overflow: hidden; }
+  .std-product .name {
+    font-size: 13px; font-weight: 600;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; line-height: 1.3;
+  }
+  .std-product .meta { font-size: 10px; color: var(--h5-text-3); margin-top: 3px; }
+  .std-product .price-row { display: flex; align-items: baseline; gap: 4px; margin-top: 4px; }
+  .std-product .price { font-size: 16px; font-weight: 800; color: var(--h5-org); }
+  .std-product .price .y { font-size: 11px; }
+  .std-product .old { font-size: 11px; color: var(--h5-text-3); text-decoration: line-through; }
+  .std-product .pickup-tag {
+    background: #E0FAF5; color: #0D9488;
+    padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;
+  }
+
+  /* ===== 活动 ===== */
+  .std-activity {
+    background: var(--h5-bg);
+    border-radius: var(--h5-radius-sm);
+    padding: 12px;
+    display: flex; gap: 12px; margin-bottom: 8px;
+  }
+  .std-activity .date {
+    width: 50px; flex-shrink: 0;
+    background: linear-gradient(135deg, #E85D04, #C44569);
+    color: #fff; border-radius: 8px;
+    text-align: center; padding: 8px 4px;
+  }
+  .std-activity .date .d { font-size: 18px; font-weight: 800; line-height: 1; }
+  .std-activity .date .m { font-size: 10px; opacity: 0.9; }
+  .std-activity .body { flex: 1; }
+  .std-activity .t { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .std-activity .meta { font-size: 11px; color: var(--h5-text-3); }
+  .std-activity .act-btn {
+    align-self: center; flex-shrink: 0;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: none;
+  }
+  .std-activity .act-btn.primary { background: var(--h5-org); color: #fff; }
+  .std-activity .act-btn.ghost { background: transparent; color: var(--h5-org); border: 1.5px solid var(--h5-org); }
+  .std-activity .act-btn.full { background: var(--h5-bg); color: var(--h5-text-3); border: 1.5px solid var(--h5-border); }
+
+  /* ===== 月度贡献 ===== */
+  .std-contrib {
+    background: linear-gradient(135deg, #FFF7ED 0%, #FEF0E5 100%);
+    border-radius: var(--h5-radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(196,132,42,0.2);
+  }
+  .std-contrib h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .std-contrib-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .std-contrib-cell {
+    background: #fff; border-radius: var(--h5-radius-sm);
+    padding: 12px 10px; text-align: center;
+  }
+  .std-contrib-cell .v { font-size: 20px; font-weight: 800; line-height: 1; }
+  .std-contrib-cell .v.orange { color: var(--h5-org); }
+  .std-contrib-cell .v.teal { color: var(--h5-trust); }
+  .std-contrib-cell .v.purple { color: #7C3AED; }
+  .std-contrib-cell .v.amber { color: #D97706; }
+  .std-contrib-cell .l { font-size: 10px; color: var(--h5-text-3); margin-top: 3px; }
+  .std-contrib-tip {
+    margin-top: 10px; background: #fff; border-radius: 8px;
+    padding: 8px 12px; font-size: 11px; color: var(--h5-text-2);
+    text-align: center;
+  }
+  .std-fund-tip {
+    margin-top: 10px; background: linear-gradient(135deg, #E0FAF5 0%, #fff 100%);
+    padding: 10px 12px; border-radius: 8px;
+    font-size: 11px; color: var(--h5-text-2); line-height: 1.5;
+  }
+
+  /* ===== 地图占位 ===== */
+  .std-map {
+    background: linear-gradient(135deg, #E0FAF5, #CCFBF1);
+    height: 160px; border-radius: var(--h5-radius);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--h5-trust); font-size: 15px; font-weight: 600;
+    position: relative; overflow: hidden;
+  }
+  .std-map::before {
+    content: "🗺️"; position: absolute; left: 16px; top: 12px;
+    font-size: 40px; opacity: 0.3;
+  }
+
+  /* ===== Tabbar ===== */
+  .h5-tabbar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 390px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--h5-border);
+    padding: 0 0 env(safe-area-inset-bottom, 0);
+    z-index: 100; display: flex;
+  }
+  .h5-tab { flex: 1; text-align: center; padding: 8px 0; cursor: pointer; }
+  .h5-tab .tab-ic { font-size: 22px; margin-bottom: 1px; }
+  .h5-tab .tab-label { font-size: 10px; color: var(--h5-text-3); }
+  .h5-tab.active .tab-label { color: var(--h5-org); }
+  .h5-tab .tab-badge {
+    position: absolute; top: -2px; right: -4px;
+    background: var(--h5-danger); color: #fff;
+    font-size: 9px; border-radius: 999px;
+    min-width: 14px; height: 14px;
+    display: flex; align-items: center; justify-content: center; padding: 0 3px;
+  }
+
+  body { padding-bottom: calc(var(--h5-tabbar-h) + env(safe-area-inset-bottom, 0px)); }
+  .h5-page { padding-top: 0; }
+
+  /* ===== 底部悬浮预约按钮 ===== */
+  .std-bottom-bar {
+    position: fixed; bottom: calc(var(--h5-tabbar-h) + env(safe-area-inset-bottom, 0px));
+    left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 390px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--h5-border);
+    padding: 10px 16px;
+    display: flex; gap: 10px; align-items: center; z-index: 99;
+  }
+  .std-bottom-bar .price-info { flex: 1; }
+  .std-bottom-bar .price-info .label { font-size: 11px; color: var(--h5-text-3); }
+  .std-bottom-bar .price-info .value { font-size: 16px; font-weight: 800; color: var(--h5-org); }
+  .std-bottom-bar .btn-book {
+    background: var(--h5-org); color: #fff; border: none;
+    padding: 12px 28px; border-radius: 999px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+</style>
+</head>
+<body class="has-tabbar">
+
+<!-- 状态栏 -->
+<div class="h5-status-bar light">
+  <span class="time">9:41</span>
+  <span class="right">📶 🔋</span>
+</div>
+
+<div class="h5-page">
+
+  <!-- Hero -->
+  <div class="std-hero">
+    <div class="breadcrumb">
+      <a href="stations.html">🏠 慈善驿站</a>
+      <span>›</span>
+      南山区科技园驿站
+    </div>
+    <div class="title-row">
+      <div class="title">🏠 南山区科技园驿站</div>
+      <span class="badge">📌 旗舰</span>
+    </div>
+    <div class="desc">村社闲置空间改造的公益客厅，集严选咖啡 / 物资自提 / 旧物回收 / 公益活动于一体。村社基金账户自动归集利润，<strong>0 管理费</strong>，全部用于社区治理。</div>
+    <div class="meta-row">
+      <span class="meta-tag">🟢 营业中</span>
+      <span class="meta-tag">⭐ 4.9 · 1,260 评价</span>
+      <span class="meta-tag">🏆 2024 五星级驿站</span>
+      <span class="meta-tag">📍 0.8 km</span>
+    </div>
+  </div>
+
+  <!-- 操作条 -->
+  <div class="std-actions">
+    <div class="std-action-btn" onclick="location.href='stations.html'">
+      <span class="ic">📍</span>
+      <span class="lbl">导航到店</span>
+    </div>
+    <div class="std-action-btn">
+      <span class="ic">📞</span>
+      <span class="lbl">拨打电话</span>
+    </div>
+    <div class="std-action-btn">
+      <span class="ic">⭐</span>
+      <span class="lbl">收藏驿站</span>
+    </div>
+  </div>
+
+  <!-- 内容区 -->
+  <div class="std-body">
+
+    <!-- 基本信息 -->
+    <div class="std-panel">
+      <h3>📋 基本信息</h3>
+      <div class="std-info-row">
+        <span class="lbl">地　　址</span>
+        <span class="val">深圳市南山区科苑南路 88 号 1 楼</span>
+      </div>
+      <div class="std-info-row">
+        <span class="lbl">营业时间</span>
+        <span class="val trust">🟢 09:00 - 21:00（营业中）</span>
+      </div>
+      <div class="std-info-row">
+        <span class="lbl">联系电话</span>
+        <span class="val">0755-8652-XXXX</span>
+      </div>
+      <div class="std-info-row">
+        <span class="lbl">地　　铁</span>
+        <span class="val">1号线高新园站 B 出口步行 6 分钟</span>
+      </div>
+      <div class="std-info-row">
+        <span class="lbl">停　　车</span>
+        <span class="val">驿站门口 5 个公益车位</span>
+      </div>
+      <div class="std-info-row">
+        <span class="lbl">驿站面积</span>
+        <span class="val">280 m²（2 层）</span>
+      </div>
+      <div class="std-info-row">
+        <span class="lbl">综合评分</span>
+        <span class="val" style="color:#F59E0B;">⭐ 4.9 分 · 1,260 条评价</span>
+      </div>
+    </div>
+
+    <!-- 月度贡献 -->
+    <div class="std-contrib">
+      <h3>📊 本月贡献</h3>
+      <div class="std-contrib-grid">
+        <div class="std-contrib-cell">
+          <div class="v orange">¥18,260</div>
+          <div class="l">商品销售额</div>
+        </div>
+        <div class="std-contrib-cell">
+          <div class="v teal">¥913</div>
+          <div class="l">归集社区基金</div>
+        </div>
+        <div class="std-contrib-cell">
+          <div class="v purple">1,260</div>
+          <div class="l">接待人次</div>
+        </div>
+        <div class="std-contrib-cell">
+          <div class="v amber">186</div>
+          <div class="l">物资自提单</div>
+        </div>
+      </div>
+      <div class="std-contrib-tip">💎 利润 100% 归集到南山区科技园社区基金 · 0 管理费</div>
+    </div>
+
+    <!-- 服务项目 -->
+    <div class="std-panel">
+      <h3>🎯 提供服务</h3>
+      <div class="std-svc-grid">
+        <div class="std-svc">
+          <span class="ic">☕</span>
+          <span class="t">严选咖啡</span>
+          <span class="d">精选云南/海南咖啡豆</span>
+        </div>
+        <div class="std-svc">
+          <span class="ic">📦</span>
+          <span class="t">物资自提</span>
+          <span class="d">商城订单到店自取</span>
+        </div>
+        <div class="std-svc">
+          <span class="ic">♻️</span>
+          <span class="t">旧物回收</span>
+          <span class="d">闲置衣物/图书回收</span>
+        </div>
+        <div class="std-svc">
+          <span class="ic">🎓</span>
+          <span class="t">公益讲座</span>
+          <span class="d">定期举办公益活动</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 驿站热卖 -->
+    <div class="std-section-title">
+      🔥 驿站热卖
+      <span class="more">查看全部 ›</span>
+    </div>
+    <div class="std-product-list">
+      <div class="std-product" onclick="location.href='mall.html'">
+        <div class="cover">☕</div>
+        <div class="info">
+          <div class="name">云南精品挂耳咖啡（10包装）</div>
+          <div class="meta">慈商联营严选 · 已有 286 人到店自提</div>
+          <div class="price-row">
+            <span class="price"><span class="y">¥</span>68</span>
+            <span class="old">¥89</span>
+            <span class="pickup-tag">📦 到店自提</span>
+          </div>
+        </div>
+      </div>
+      <div class="std-product" onclick="location.href='mall.html'">
+        <div class="cover">👕</div>
+        <div class="info">
+          <div class="name">公益联名纯棉T恤（男女同款）</div>
+          <div class="meta">慈商联营严选 · 已有 128 人到店自提</div>
+          <div class="price-row">
+            <span class="price"><span class="y">¥</span>49</span>
+            <span class="old">¥79</span>
+            <span class="pickup-tag">📦 到店自提</span>
+          </div>
+        </div>
+      </div>
+      <div class="std-product" onclick="location.href='mall.html'">
+        <div class="cover">📚</div>
+        <div class="info">
+          <div class="name">儿童绘本套装（全10册）</div>
+          <div class="meta">慈商联营严选 · 已有 95 人到店自提</div>
+          <div class="price-row">
+            <span class="price"><span class="y">¥</span>39</span>
+            <span class="old">¥68</span>
+            <span class="pickup-tag">📦 到店自提</span>
+          </div>
+        </div>
+      </div>
+      <!-- 社区基金归集提示 -->
+      <div class="std-fund-tip">
+        💎 严选商品每单 <strong>5%</strong> 自动归集到 <strong>南山区科技园社区基金</strong>，用于社区治理支出
+      </div>
+    </div>
+
+    <!-- 近期活动 -->
+    <div class="std-section-title" style="margin-top:16px;">
+      📅 近期活动
+      <span class="more">查看全部 ›</span>
+    </div>
+    <div class="std-panel" style="padding:12px;">
+      <div class="std-activity">
+        <div class="date">
+          <div class="d">15</div>
+          <div class="m">6月</div>
+        </div>
+        <div class="body">
+          <div class="t">端午公益市集·物资捐赠活动</div>
+          <div class="meta">14:00-18:00 · 预计 200+ 人 · 已报名 168 人</div>
+        </div>
+        <button class="act-btn primary">立即报名</button>
+      </div>
+      <div class="std-activity">
+        <div class="date" style="background:linear-gradient(135deg, #0E5A6F, #065F6B);">
+          <div class="d">22</div>
+          <div class="m">6月</div>
+        </div>
+        <div class="body">
+          <div class="t">社区旧物新生·闲置衣物回收</div>
+          <div class="meta">10:00-17:00 · 联合壹基金 · 已报名 86 人</div>
+        </div>
+        <button class="act-btn ghost">查看详情</button>
+      </div>
+      <div class="std-activity">
+        <div class="date" style="background:linear-gradient(135deg, #7C3AED, #C44569);">
+          <div class="d">28</div>
+          <div class="m">6月</div>
+        </div>
+        <div class="body">
+          <div class="t">咖啡拉花体验课</div>
+          <div class="meta">19:00-21:00 · ¥68/人 · 限 12 人</div>
+        </div>
+        <button class="act-btn ghost">报名</button>
+      </div>
+      <div class="std-activity">
+        <div class="date" style="background:linear-gradient(135deg, #999, #666);">
+          <div class="d">30</div>
+          <div class="m">6月</div>
+        </div>
+        <div class="body">
+          <div class="t">老人智能手机使用课堂</div>
+          <div class="meta">10:00-12:00 · 60岁以上免费 · 已报满</div>
+        </div>
+        <button class="act-btn full">已报满</button>
+      </div>
+    </div>
+
+    <!-- 地图 -->
+    <div class="std-section-title" style="margin-top:16px;">🗺️ 驿站位置</div>
+    <div class="std-map">点击查看完整地图</div>
+
+  </div><!-- /.std-body -->
+
+</div><!-- /.h5-page -->
+
+<!-- 底部预约悬浮条 -->
+<div class="std-bottom-bar">
+  <div class="price-info">
+    <div class="label">到店消费 · 订单自动 5% 捐赠</div>
+    <div class="value">¥ 1,860+ 月均</div>
+  </div>
+  <button class="btn-book">📋 预约到访</button>
+</div>
+
+<!-- Tabbar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='index.html'">
+    <div class="tab-ic">🏠</div>
+    <div class="tab-label">首页</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='mall.html'">
+    <div class="tab-ic">🛒</div>
+    <div class="tab-label">商城</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='report.html'">
+    <div class="tab-ic">📊</div>
+    <div class="tab-label">报告</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='messages.html'">
+    <div class="tab-ic" style="position:relative;">🔔<span class="tab-badge">3</span></div>
+    <div class="tab-label">消息</div>
+  </div>
+  <div class="h5-tab" onclick="location.href='profile.html'">
+    <div class="tab-ic">👤</div>
+    <div class="tab-label">我的</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="public/js/h5.js"></script>
+<script>
+// 时间更新
+(function() {
+  var t = document.querySelector('.h5-status-bar .time');
+  if (t) {
+    var now = new Date();
+    t.textContent = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  }
+})();
+
+// GSAP 入场动画
+window.addEventListener('load', function() {
+  if (!window.gsap) return;
+  gsap.fromTo('.std-hero', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
+  gsap.fromTo('.std-actions .std-action-btn', { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.06, delay: 0.25, ease: 'power2.out' });
+  gsap.fromTo('.std-panel', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.08, delay: 0.4, ease: 'power2.out' });
+  gsap.fromTo('.std-product', { x: 16, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, stagger: 0.06, delay: 0.6, ease: 'power2.out' });
+  gsap.fromTo('.std-activity', { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.08, delay: 0.75, ease: 'power2.out' });
+  gsap.fromTo('.std-bottom-bar', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.5, ease: 'power2.out' });
+});
+</script>
+
+</body>
+</html>

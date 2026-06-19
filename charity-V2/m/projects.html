@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>慈善项目 · 慈商联营</title>
+<link rel="stylesheet" href="./public/css/h5.css?v=2">
+<link rel="stylesheet" href="./public/css/h5-app.css?v=2">
+<style>
+/* ===== 项目列表页 H5 样式 ===== */
+
+/* Sticky 顶部工具栏 */
+.h5-proj-sticky {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--h5-bg);
+  padding: 12px 16px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* 类目 Filter Chips */
+.h5-cat-chips {
+  display: flex; gap: 6px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding-bottom: 12px;
+  scrollbar-width: none;
+}
+.h5-cat-chips::-webkit-scrollbar { display: none; }
+.h5-chip {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 600;
+  background: var(--h5-card); color: var(--h5-text-2);
+  border: 1px solid var(--h5-border);
+  cursor: pointer; transition: all 0.2s;
+  white-space: nowrap;
+}
+.h5-chip.active {
+  background: var(--chip-c, var(--h5-primary));
+  color: #fff; border-color: transparent;
+}
+.h5-chip .cnt { font-weight: 400; opacity: 0.75; font-size: 11px; }
+
+/* 排序行 */
+.h5-sort-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px 10px;
+  background: var(--h5-bg);
+  border-bottom: 1px solid var(--h5-divider);
+}
+.h5-sort-label { font-size: 11px; color: var(--h5-text-3); flex-shrink: 0; }
+.h5-sort-chips {
+  display: flex; gap: 6px; overflow-x: auto;
+  scrollbar-width: none; flex: 1;
+}
+.h5-sort-chips::-webkit-scrollbar { display: none; }
+.h5-sort-chip {
+  flex-shrink: 0; padding: 3px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 600;
+  background: transparent; color: var(--h5-text-2);
+  border: 1px solid var(--h5-border);
+  cursor: pointer; transition: all 0.15s;
+}
+.h5-sort-chip.active {
+  background: var(--h5-primary-soft); color: var(--h5-primary);
+  border-color: var(--h5-primary);
+}
+.h5-result-cnt { font-size: 11px; color: var(--h5-text-3); margin-left: auto; flex-shrink: 0; }
+
+/* 类目色彩变量 */
+[data-cat="urgent"]   { --chip-c: #DC2626; }
+[data-cat="longterm"] { --chip-c: #0277BD; }
+[data-cat="children"] { --chip-c: #D97706; }
+[data-cat="elderly"] { --chip-c: #7C3AED; }
+[data-cat="rural"]   { --chip-c: #16A34A; }
+[data-cat="health"]  { --chip-c: #E11D48; }
+
+/* 项目卡片 */
+.h5-proj-list { padding: 12px 16px; }
+.h5-proj-card {
+  background: var(--h5-card);
+  border-radius: var(--h5-radius);
+  border: 1px solid var(--h5-border);
+  margin-bottom: 12px;
+  overflow: hidden;
+  text-decoration: none; display: block;
+  transition: box-shadow 0.2s;
+}
+.h5-proj-card:active { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.h5-proj-card .pc-head {
+  padding: 12px 14px 0;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.h5-proj-card .pc-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.h5-proj-card .pc-meta { flex: 1; }
+.h5-proj-card .pc-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 4px; }
+.h5-proj-card .cat-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 5px;
+  font-size: 10px; font-weight: 700; color: #fff;
+}
+.h5-proj-card .urgent-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 5px;
+  font-size: 10px; font-weight: 800; color: #7F1D1D;
+  background: #FEF3C7;
+}
+.h5-proj-card .urgent-badge .dot {
+  width: 5px; height: 5px; background: #DC2626;
+  border-radius: 50%; animation: h5-pulse-dot 1.6s infinite;
+}
+@keyframes h5-pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); }
+  50% { box-shadow: 0 0 0 4px rgba(220,38,38,0); }
+}
+.h5-proj-card .pc-title {
+  font-size: 14px; font-weight: 700; color: var(--h5-text);
+  line-height: 1.3; margin-bottom: 3px;
+}
+.h5-proj-card .pc-org {
+  font-size: 11px; color: var(--h5-text-3);
+}
+.h5-proj-card .pc-desc {
+  padding: 8px 14px;
+  font-size: 12px; color: var(--h5-text-2); line-height: 1.6;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.h5-proj-card .pc-stats {
+  display: flex; padding: 0 14px 10px; gap: 12px;
+}
+.h5-proj-card .pc-stat {
+  flex: 1; background: var(--h5-bg); border-radius: 8px;
+  padding: 8px 6px; text-align: center;
+}
+.h5-proj-card .pc-stat .v {
+  font-size: 14px; font-weight: 700; color: var(--h5-text); line-height: 1.1;
+}
+.h5-proj-card .pc-stat .l {
+  font-size: 10px; color: var(--h5-text-3); margin-top: 2px;
+}
+.h5-proj-card .pc-progress {
+  padding: 0 14px 12px;
+}
+.h5-proj-card .pc-pbar {
+  height: 6px; background: var(--h5-border); border-radius: 3px; overflow: hidden;
+}
+.h5-proj-card .pc-pfill {
+  height: 100%; border-radius: 3px; transition: width 0.6s;
+}
+.h5-proj-card .pc-pfoot {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 5px;
+}
+.h5-proj-card .pc-region { font-size: 11px; color: var(--h5-text-3); }
+.h5-proj-card .pc-pct { font-size: 11px; font-weight: 700; }
+.h5-proj-card .pc-actions {
+  display: flex; gap: 8px; padding: 0 14px 12px;
+}
+.h5-proj-card .pc-btn {
+  flex: 1; text-align: center; padding: 8px 0;
+  border-radius: var(--h5-radius-sm); font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none; display: block; text-decoration: none;
+}
+.h5-proj-card .pc-btn-primary {
+  background: var(--cat-c, var(--h5-primary)); color: #fff;
+}
+.h5-proj-card .pc-btn-ghost {
+  background: transparent; color: var(--cat-c, var(--h5-primary));
+  border: 1px solid var(--cat-c, var(--h5-primary));
+}
+</style>
+</head>
+<body class="has-tabbar has-status-bar">
+
+<div class="h5-status-bar light">
+  <span class="time" id="statusTime">9:41</span>
+  <span class="right">📶 🔋</span>
+</div>
+
+<!-- Nav -->
+<div class="h5-nav" id="mainNav">
+  <div class="h5-nav-left" onclick="history.back()">‹</div>
+  <div class="h5-nav-title">慈善项目</div>
+  <div class="h5-nav-right"></div>
+</div>
+
+<div class="h5-page" id="mainBody">
+  <!-- Hero Banner -->
+  <div class="h5-proj-hero" style="background: linear-gradient(135deg, #FFF1E5 0%, #FFE4D2 100%); padding: 14px 16px 12px; border-bottom: 1px solid #FFE4D2;">
+    <div style="font-size:12px;color:#E85D04;font-weight:600;margin-bottom:4px;">💖 6 大类目 · 142 个进行中</div>
+    <div style="font-size:18px;font-weight:800;color:#1A1A1A;margin-bottom:4px;">让每一份善意都有归处</div>
+    <div style="font-size:12px;color:#525252;line-height:1.5;">物资 6 节点全追溯 · 100% 公开透明</div>
+  </div>
+
+  <!-- Sticky filter -->
+  <div class="h5-proj-sticky" id="stickyBar">
+    <div class="h5-cat-chips" id="catChips"></div>
+    <div class="h5-sort-row">
+      <span class="h5-sort-label">排序</span>
+      <div class="h5-sort-chips">
+        <button class="h5-sort-chip active" data-sort="urgent">🚨 紧急优先</button>
+        <button class="h5-sort-chip" data-sort="latest">⏱️ 最新</button>
+        <button class="h5-sort-chip" data-sort="progress">📈 进度</button>
+        <button class="h5-sort-chip" data-sort="amount">📦 物资</button>
+      </div>
+      <span class="h5-result-cnt" id="resultCnt"></span>
+    </div>
+  </div>
+
+  <!-- Project List -->
+  <div class="h5-proj-list" id="projList"></div>
+
+  <div style="height:24px;"></div>
+</div>
+
+<!-- Bottom tab bar -->
+<div class="h5-tabbar">
+  <div class="h5-tab" onclick="location.href='./'"><div class="tab-ic">🏠</div><div class="tab-label">首页</div></div>
+  <div class="h5-tab" onclick="location.href='./mall.html'"><div class="tab-ic">🛒</div><div class="tab-label">商城</div></div>
+  <div class="h5-tab" onclick="location.href='./report.html'"><div class="tab-ic">📊</div><div class="tab-label">报告</div></div>
+  <div class="h5-tab" onclick="location.href='./messages.html'"><div class="tab-ic">🔔</div><div class="tab-label">消息</div></div>
+  <div class="h5-tab" onclick="location.href='./profile.html'"><div class="tab-ic">👤</div><div class="tab-label">我的</div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="./public/js/h5.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var CATS = {
+    urgent:   { name: '应急救援', c1: '#DC2626', soft: '#FEE2E2' },
+    longterm: { name: '长线陪伴', c1: '#0277BD', soft: '#E0F2FE' },
+    children: { name: '儿童助学', c1: '#D97706', soft: '#FEF3C7' },
+    elderly:  { name: '老人关怀', c1: '#7C3AED', soft: '#EDE9FE' },
+    rural:    { name: '乡村建设', c1: '#16A34A', soft: '#DCFCE7' },
+    health:   { name: '医疗健康', c1: '#E11D48', soft: '#FFE4E6' },
+  };
+
+  var PROJECTS = [
+    { id: 'p-em-001', cat: 'urgent', name: '云南鲁甸 6.0 级地震抗震救灾', icon: '🌋', org: '云南省慈善总会', region: '云南 · 鲁甸', statDonate: '32,860 件', statPeople: '12,000 人', statOrg: '12 家', goal: 50000, raised: 32860, urgent: true, latest: '2026-06-12', amount: 32860 },
+    { id: 'p-em-002', cat: 'urgent', name: '福建福州超强台风"海鸥"救援', icon: '🌀', org: '福建省红十字会', region: '福建 · 福州', statDonate: '28,500 件', statPeople: '8,000 人', statOrg: '8 家', goal: 40000, raised: 28500, urgent: true, latest: '2026-06-10', amount: 28500 },
+    { id: 'p-em-003', cat: 'urgent', name: '甘肃临夏特大泥石流救援', icon: '⛰️', org: '甘肃省民政厅', region: '甘肃 · 临夏', statDonate: '38,200 件', statPeople: '4,500 人', statOrg: '15 家', goal: 55000, raised: 38200, urgent: true, latest: '2026-06-08', amount: 38200 },
+    { id: 'p-em-004', cat: 'urgent', name: '西藏日喀则 6.8 级地震 · 已完成', icon: '🏔️', org: '中国红十字会', region: '西藏 · 日喀则', statDonate: '86,000 件', statPeople: '15,000 人', statOrg: '20 家', goal: 86000, raised: 86000, urgent: false, latest: '2025-10-15', amount: 86000 },
+    { id: 'p-lt-001', cat: 'longterm', name: '"暖心早餐"长线项目', icon: '🍞', org: '美心 × 青基会', region: '12 省 · 230 校', statDonate: '48,200 份/月', statPeople: '6,200 人', statOrg: '1 家', goal: 80000, raised: 48200, urgent: false, latest: '2026-01-10', amount: 48200 },
+    { id: 'p-lt-002', cat: 'longterm', name: '"伊利营养 2030" 学生奶计划', icon: '🥛', org: '伊利集团 × 中国奶业协会', region: '22 省 · 480 校', statDonate: '286 万盒/年', statPeople: '98,200 人', statOrg: '1 家', goal: 4000000, raised: 2860000, urgent: false, latest: '2024-07-01', amount: 2860000 },
+    { id: 'p-lt-003', cat: 'longterm', name: '"春苗营养计划" 4.0', icon: '🌿', org: '安利 × 青基会', region: '18 省 · 420 校', statDonate: '56,200 套', statPeople: '76,500 人', statOrg: '1 家', goal: 80000, raised: 56200, urgent: false, latest: '2025-04-15', amount: 56200 },
+    { id: 'p-lt-004', cat: 'longterm', name: '贵州山火救援队常驻项目', icon: '🌲', org: '贵州省慈善总会', region: '贵州 · 3 个物资站', statDonate: '1,280 套', statPeople: '—', statOrg: '3 家', goal: 1800, raised: 1280, urgent: false, latest: '2025-08-10', amount: 1280 },
+    { id: 'p-ch-001', cat: 'children', name: '"一封家书"乡村儿童陪伴', icon: '✉️', org: '中国社会工作联合会', region: '8 省 · 3,000 名儿童', statDonate: '3,600 封', statPeople: '3,000 人', statOrg: '5 家', goal: 5000, raised: 3600, urgent: false, latest: '2025-09-01', amount: 3600 },
+    { id: 'p-ch-002', cat: 'children', name: '"新书包"开学季援助', icon: '🎒', org: '中国教育发展基金会', region: '10 省 · 5,000 名学生', statDonate: '6,200 套', statPeople: '5,000 人', statOrg: '6 家', goal: 8000, raised: 6200, urgent: false, latest: '2025-08-25', amount: 6200 },
+    { id: 'p-ch-003', cat: 'children', name: '"守护花蕾"女童安全教育', icon: '🌸', org: '中国少年儿童基金会', region: '12 省 · 800 校', statDonate: '1,280 套', statPeople: '120,000 人', statOrg: '4 家', goal: 1800, raised: 1280, urgent: false, latest: '2025-05-15', amount: 1280 },
+    { id: 'p-el-001', cat: 'elderly', name: '"暖心食堂" 农村老人助餐', icon: '🍱', org: '中国老龄事业发展基金会', region: '15 省 · 200 个社区', statDonate: '86 万份', statPeople: '12,000 人', statOrg: '10 家', goal: 1200000, raised: 860000, urgent: false, latest: '2025-06-20', amount: 860000 },
+    { id: 'p-el-002', cat: 'elderly', name: '"银发陪伴"独居老人关爱', icon: '🤝', org: '中国社会工作联合会', region: '6 省 · 20 城', statDonate: '3,200 套', statPeople: '2,000 人', statOrg: '8 家', goal: 4000, raised: 3200, urgent: false, latest: '2025-04-10', amount: 3200 },
+    { id: 'p-ru-001', cat: 'rural', name: '"光伏学校"山区清洁能源', icon: '☀️', org: '比亚迪 × 中国教育发展基金会', region: '云南 · 怒江', statDonate: '28 套', statPeople: '1,200 人', statOrg: '1 家', goal: 40, raised: 28, urgent: false, latest: '2026-02-10', amount: 28 },
+    { id: 'p-ru-002', cat: 'rural', name: '"顺丰村" 公益物流进村', icon: '🚚', org: '顺丰公益物流 × 国家邮政局', region: '全国 · 1,000 村', statDonate: '1,860 批', statPeople: '28,600 人', statOrg: '1 家', goal: 2400, raised: 1860, urgent: false, latest: '2024-04-01', amount: 1860 },
+    { id: 'p-ru-003', cat: 'rural', name: '"饮水思源" 山区直饮水设备', icon: '💧', org: '娃哈哈 × 中国农村水利协会', region: '6 省 · 30 校', statDonate: '38 套', statPeople: '3,500 人', statOrg: '1 家', goal: 50, raised: 38, urgent: false, latest: '2026-01-15', amount: 38 },
+    { id: 'p-he-001', cat: 'health', name: '"两癌筛查" 母亲健康', icon: '🎗️', org: '中国癌症基金会', region: '云南 · 4 县', statDonate: '6,800 人次', statPeople: '5,000 人', statOrg: '3 家', goal: 8000, raised: 6800, urgent: false, latest: '2025-03-20', amount: 6800 },
+    { id: 'p-he-002', cat: 'health', name: '"校园洗手" 健康教育', icon: '🧴', org: '立白集团 × 中国疾控中心', region: '6 省 · 240 校', statDonate: '280 套', statPeople: '24,200 人', statOrg: '1 家', goal: 360, raised: 280, urgent: false, latest: '2026-03-01', amount: 280 },
+  ];
+
+  var currentCat = 'all';
+  var currentSort = 'urgent';
+
+  function formatNum(n) {
+    if (n >= 100000000) return (n / 100000000).toFixed(1) + ' 亿';
+    if (n >= 10000000) return Math.round(n / 10000) + ' 万';
+    if (n >= 10000) return Math.round(n / 10000) + ' 万';
+    return n.toLocaleString();
+  }
+
+  function renderCats() {
+    var html = '<div class="h5-chip active" data-cat="all" style="--chip-c: var(--h5-primary)">全部 <span class="cnt">' + PROJECTS.length + '</span></div>';
+    Object.keys(CATS).forEach(function (c) {
+      var cnt = PROJECTS.filter(function (p) { return p.cat === c; }).length;
+      html += '<div class="h5-chip" data-cat="' + c + '">'
+        + CATS[c].name + ' <span class="cnt">' + cnt + '</span></div>';
+    });
+    document.getElementById('catChips').innerHTML = html;
+  }
+
+  function filterAndSort() {
+    var list = currentCat === 'all' ? PROJECTS.slice() : PROJECTS.filter(function (p) { return p.cat === currentCat; });
+    switch (currentSort) {
+      case 'urgent':   list.sort(function (a, b) { return (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0) || b.latest.localeCompare(a.latest); }); break;
+      case 'latest':   list.sort(function (a, b) { return b.latest.localeCompare(a.latest); }); break;
+      case 'progress': list.sort(function (a, b) { return (b.raised / b.goal) - (a.raised / a.goal); }); break;
+      case 'amount':   list.sort(function (a, b) { return b.amount - a.amount; }); break;
+    }
+    return list;
+  }
+
+  function renderList() {
+    var list = filterAndSort();
+    var el = document.getElementById('projList');
+    var cntEl = document.getElementById('resultCnt');
+    cntEl.textContent = list.length + ' 个';
+
+    if (list.length === 0) {
+      el.innerHTML = '<div style="text-align:center;padding:60px 16px;color:var(--h5-text-3);"><div style="font-size:48px;margin-bottom:12px;">📭</div><div style="font-size:14px;">该类目下暂无项目</div></div>';
+      return;
+    }
+
+    el.innerHTML = list.map(function (p) {
+      var pct = Math.min(100, Math.round((p.raised / p.goal) * 100));
+      var cat = CATS[p.cat] || CATS.longterm;
+      return '<a class="h5-proj-card" href="./project-detail.html?id=' + p.id + '" style="--cat-c:' + cat.c1 + '">' +
+        '<div class="pc-head">' +
+          '<div class="pc-icon" style="background:' + cat.soft + ';">' + p.icon + '</div>' +
+          '<div class="pc-meta">' +
+            '<div class="pc-badges">' +
+              '<span class="cat-badge" style="background:' + cat.c1 + ';">' + cat.name + '</span>' +
+              (p.urgent ? '<span class="urgent-badge"><span class="dot"></span>紧急中</span>' : '') +
+            '</div>' +
+            '<div class="pc-title">' + p.name + '</div>' +
+            '<div class="pc-org">🏛️ ' + p.org + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="pc-desc">' + (PROJECTS.find(function (x) { return x.id === p.id; }) || p).desc + '</div>' +
+        '<div class="pc-stats">' +
+          '<div class="pc-stat"><div class="v">' + p.statDonate + '</div><div class="l">物资捐赠</div></div>' +
+          '<div class="pc-stat"><div class="v">' + p.statPeople + '</div><div class="l">受惠人数</div></div>' +
+          '<div class="pc-stat"><div class="v">' + p.statOrg + '</div><div class="l">合作方</div></div>' +
+        '</div>' +
+        '<div class="pc-progress">' +
+          '<div class="pc-pbar"><div class="pc-pfill" style="width:' + pct + '%;background:' + cat.c1 + ';"></div></div>' +
+          '<div class="pc-pfoot">' +
+            '<span class="pc-region">📍 ' + p.region + '</span>' +
+            '<span class="pc-pct" style="color:' + cat.c1 + ';">' + pct + '% · ' + formatNum(p.raised) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="pc-actions">' +
+          '<div class="pc-btn pc-btn-primary">💖 响应项目</div>' +
+          '<div class="pc-btn pc-btn-ghost">查看详情</div>' +
+        '</div>' +
+      '</a>';
+    }).join('');
+
+    // GSAP entrance
+    if (window.gsap) {
+      gsap.fromTo('.h5-proj-card', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.05, ease: 'power2.out' });
+    }
+  }
+
+  function bindEvents() {
+    document.getElementById('catChips').addEventListener('click', function (e) {
+      var chip = e.target.closest('.h5-chip');
+      if (!chip) return;
+      document.querySelectorAll('.h5-cat-chips .h5-chip').forEach(function (c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      currentCat = chip.dataset.cat;
+      renderList();
+    });
+
+    document.querySelector('.h5-sort-row').addEventListener('click', function (e) {
+      var btn = e.target.closest('.h5-sort-chip');
+      if (!btn) return;
+      document.querySelectorAll('.h5-sort-chip').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentSort = btn.dataset.sort;
+      renderList();
+    });
+  }
+
+  // Update clock
+  function updateClock() {
+    var now = new Date();
+    document.getElementById('statusTime').textContent = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  renderCats();
+  renderList();
+  bindEvents();
+})();
+</script>
+</body>
+</html>
