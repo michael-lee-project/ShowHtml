@@ -1,5 +1,6 @@
 /* ========================================
    agents.js — 6 个 AI Agent 数据定义
+   M3: 拆分为 4 个免费助手 + 2 个付费专家入口
    ======================================== */
 
 const AGENTS = [
@@ -13,6 +14,9 @@ const AGENTS = [
     role: '售前转化',
     kicker: 'P0 · 销售',
     status: 'running',
+    type: 'expert',          // M3: 改为专家入口
+    requireLevel: 'VIP',    // PRD §7.2 销售/junior 需 VIP+
+    priceUMDT: 9.9,
     desc: '读取新人资料、商品库、佣金规则和客户标签，主动识别意向、推荐商品、报价促单并推动成交。',
     caps: ['读新人', '配商品', '算佣金', '定打法', '打标签', '排跟进'],
     quickPrompts: [
@@ -31,6 +35,9 @@ const AGENTS = [
     role: '售后接待',
     kicker: 'P0 · 客服',
     status: 'busy',
+    type: 'expert',          // M3: 改为专家入口
+    requireLevel: 'MN',     // PRD §7.2 客服/mid 需 MN+
+    priceUMDT: 49,
     desc: '负责 FAQ 题库、智能回答、售后接待、情绪安抚、复购引导，把客服数据沉淀给销售。',
     caps: ['FAQ', '情绪安抚', '物流查询', '退款处理', '复购引导', '转人工'],
     quickPrompts: [
@@ -49,6 +56,7 @@ const AGENTS = [
     role: '会议纪要',
     kicker: 'P1 · 会议',
     status: 'idle',
+    type: 'helper',          // M3: 免费助手
     desc: '录音转写、说话人分离、关键决策提取、行动项跟踪、意图分析，把会议变成可复用的知识。',
     caps: ['实时转写', '说话人分离', '纪要生成', '行动项', '意图分析', '多语言'],
     quickPrompts: [
@@ -67,6 +75,7 @@ const AGENTS = [
     role: '视觉设计',
     kicker: 'P1 · 设计',
     status: 'running',
+    type: 'helper',          // M3: 免费助手
     desc: '海报、UI、Logo、品牌视觉一站式生成。读懂品牌调性，输出可商用设计稿，秒级响应。',
     caps: ['海报设计', 'UI 界面', 'Logo 生成', '品牌延展', '配色方案', '素材合成'],
     quickPrompts: [
@@ -85,6 +94,7 @@ const AGENTS = [
     role: '视频创作',
     kicker: 'P1 · 视频',
     status: 'idle',
+    type: 'helper',          // M3: 免费助手
     desc: '脚本撰写、分镜设计、字幕生成、智能剪辑、口播数字人，把创意变成可发布的成片。',
     caps: ['脚本撰写', '分镜设计', '智能剪辑', '字幕生成', '数字人口播', '特效合成'],
     quickPrompts: [
@@ -103,6 +113,7 @@ const AGENTS = [
     role: '内容创作',
     kicker: 'P1 · 写作',
     status: 'idle',
+    type: 'helper',          // M3: 免费助手
     desc: '公众号、小红书、知乎、抖音脚本、广告文案、企业文档，深度理解品牌口吻与平台调性。',
     caps: ['公众号', '小红书', '知乎', '广告文案', '企业文档', 'SEO 文章'],
     quickPrompts: [
@@ -115,13 +126,17 @@ const AGENTS = [
 
 // 工位位置映射（按 ws-0 ~ ws-5 顺序，对应 12点 / 2点 / 4点 / 6点 / 8点 / 10点）
 const WORKSTATION_LAYOUT = [
-  'sales',    // 12 点 - 销售（最显眼位置）
-  'design',   // 2 点 - 设计
-  'video',    // 4 点 - 视频
-  'customer', // 6 点 - 客服
-  'meeting',  // 8 点 - 会议
-  'writing'   // 10 点 - 写作
+  'sales',    // 12 点 - 销售（专家入口：MVP 不可用）
+  'design',   // 2 点 - 设计（免费助手）
+  'video',    // 4 点 - 视频（免费助手）
+  'customer', // 6 点 - 客服（专家入口：MVP 不可用）
+  'meeting',  // 8 点 - 会议（免费助手）
+  'writing'   // 10 点 - 写作（免费助手）
 ];
+
+// M3 辅助：获取 helper / expert 列表
+const HELPERS = AGENTS.filter(a => a.type === 'helper');
+const EXPERT_AGENTS = AGENTS.filter(a => a.type === 'expert');
 
 function getAgent(id) {
   return AGENTS.find(a => a.id === id);
@@ -133,4 +148,14 @@ function getAgentIndex(id) {
 
 function getWorkstationIndex(id) {
   return WORKSTATION_LAYOUT.indexOf(id);
+}
+
+// M3: 判断当前用户是否能用这个 agent（helper 全部可用，expert 看会员等级）
+function canUseAgent(agentId) {
+  const a = getAgent(agentId);
+  if (!a) return false;
+  if (a.type === 'helper') return true;
+  // expert 看用户等级
+  const tierMap = { NU: [], VIP: ['sales'], MN: ['sales', 'customer'], MB: ['sales', 'customer'] };
+  return (tierMap[userStore.level] || []).includes(agentId);
 }

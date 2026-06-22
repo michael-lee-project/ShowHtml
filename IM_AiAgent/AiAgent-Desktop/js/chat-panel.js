@@ -558,39 +558,11 @@ function mockFollowUpReply(agentId, userText, agent, history) {
 document.addEventListener('click', (e) => {
   const card = e.target.closest('.agent-config-card');
   if (!card) return;
-  showToast(`✅ ${card.dataset.configModule} 配置已打开（演示）`, 'success');
+  showToast('✅ ' + card.dataset.configModule + ' 配置已打开（演示）', { type: 'success' });
 });
 
 /* === 附件按钮（占位 toast） === */
 function handleAttach() {
   if (isTyping) return;
-  showToast('附件上传 · 阶段4 接入', 'info');
-}
-
-/* === 顶部 toast 提示 === */
-function showToast(msg, type = 'info') {
-  const layer = document.getElementById('pulseLayer') || document.body;
-  const t = document.createElement('div');
-  t.className = `toast toast-${type}`;
-  t.textContent = msg;
-  t.style.cssText = `
-    position: fixed;
-    top: 80px; left: 50%;
-    transform: translateX(-50%);
-    background: var(--ink);
-    color: #fff;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.05em;
-    padding: 8px 16px;
-    border-radius: var(--r-2);
-    z-index: 9999;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    animation: toastIn 0.3s var(--ease-out) forwards;
-  `;
-  document.body.appendChild(t);
-  setTimeout(() => {
-    t.style.animation = 'toastOut 0.3s var(--ease-out) forwards';
-    setTimeout(() => t.remove(), 300);
-  }, 4000);
+  showToast('附件上传 · 阶段4 接入', { type: 'info' });
 }

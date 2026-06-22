@@ -170,14 +170,11 @@
     </div>
   </main>
 
-  <!-- 14. 全局 AI 问答悬浮球 -->
-  <div class="global-ai-ball" data-action="open-global-ai" title="问 AI 任何问题">💬</div>
-
   <!-- JS (defer + cache buster: 避免脚本阻塞解析 / 浏览器强缓存) -->
   <script defer src="js/mock-data-v2.js?v=18"></script>
   <script defer src="js/mock-ai.js?v=18"></script>
-  <script defer src="js/views-v33.js"></script>
-  <script defer src="js/spa-v22.js"></script>
+  <script defer src="js/views-v34.js?v=semiauto"></script>
+  <script defer src="js/spa-v22.js?v=fix-route"></script>
   </script>
   <style>
 /* === Hallmark 重新设计：AI Agent Center 紧凑卡片风格 === */
@@ -356,6 +353,68 @@ input:checked + .ac-slider:before {
 .list-item.marketing-case-item,
 .list-item.marketing-case-item.hot {
   border-radius: 12px !important;
+}
+/* 全局AI悬浮球定位修正（手机框内） */
+.phone-frame {
+  position: relative !important;
+}
+#phoneContent {
+  position: relative !important;
+}
+.global-ai-ball {
+  position: absolute !important;
+  bottom: 80px !important;
+  right: 16px !important;
+  display: block !important;
+  z-index: 999 !important;
+}
+/* === 半自动化场景：AI输出3个可选思路 === */
+.semi-options-bubble {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 10px 12px !important;
+  max-width: 85% !important;
+}
+.semi-options-bubble b {
+  display: block !important;
+  font-size: 13px !important;
+  color: #374151 !important;
+  margin-bottom: 8px !important;
+  font-weight: 500 !important;
+}
+.semi-options-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+.semi-option-item {
+  text-align: left !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  background: #f9fafb !important;
+  cursor: pointer !important;
+  transition: all .2s !important;
+}
+.semi-option-item:hover {
+  border-color: #c8102e !important;
+  background: #fff1f2 !important;
+}
+.semi-option-item.selected {
+  border-color: #c8102e !important;
+  background: #c8102e !important;
+}
+.semi-option-item.selected .opt-text {
+  color: #ffffff !important;
+}
+.semi-option-item .opt-text {
+  font-size: 14px !important;
+  color: #111827 !important;
+  line-height: 1.4 !important;
+}
+.semi-option-item i {
+  display: none !important;
 }
   </style>
 </body>

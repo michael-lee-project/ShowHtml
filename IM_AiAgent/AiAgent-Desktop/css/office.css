@@ -1034,7 +1034,7 @@
   border-radius: 50% 45% 55% 45%;
   background:
     radial-gradient(circle at 68% 38%, #fff 0 3px, transparent 4px),
-    radial-gradient(circle at 28% 36%, #ff3b30 0 3px, transparent 4px),
+    radial-gradient(circle at 28% 36%, #e8453c 0 3px, transparent 4px),
     radial-gradient(circle at 47% 68%, #10b981 0 3px, transparent 4px),
     #f7efe4;
   border: 1px solid rgba(0,0,0,0.08);
@@ -1597,3 +1597,69 @@
 }
 .iso-stage.is-focus-mode .ws-1.is-focus-target,
 .iso-stage.is-focus-mode .ws-4.is-focus-target { transform: scale(0.96); }
+
+/* ===========================================
+   M3: 工位类型 Chip（helper/expert）+ 锁定视觉
+   =========================================== */
+.ws-agent-chip {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  z-index: 12;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 8px;
+  border-radius: var(--r-full);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.ws-agent-chip.is-free {
+  color: #fff;
+  background: linear-gradient(135deg, var(--green) 0%, #0d8a5e 100%);
+  border: 1px solid #0d8a5e;
+}
+.ws-agent-chip.is-locked {
+  color: var(--member-mb-gold);
+  background: linear-gradient(135deg, var(--bg-ink) 0%, #2a2a2a 100%);
+  border: 1px solid var(--member-mb-gold);
+  box-shadow: 0 4px 12px rgba(212, 160, 23, 0.32), 0 0 0 2px rgba(212, 160, 23, 0.18);
+}
+.ws-agent-chip.is-locked.is-unlocked {
+  color: #fff;
+  background: linear-gradient(135deg, var(--expert-gold) 0%, #b97506 100%);
+  border: 1px solid var(--expert-gold);
+}
+
+/* 锁定工位视觉：去饱和 + 微微灰 */
+.workstation.is-locked {
+  filter: saturate(0.55) brightness(0.95);
+}
+.workstation.is-locked .ws-agent-avatar {
+  filter: grayscale(0.35);
+  opacity: 0.78;
+}
+.workstation.is-locked .room-glass-wall-top,
+.workstation.is-locked .room-glass-wall-left {
+  background: rgba(140, 130, 110, 0.06);
+}
+
+/* 解锁工位视觉：金光边 */
+.workstation.is-unlocked {
+  filter: saturate(1.05);
+}
+.workstation.is-unlocked::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid var(--expert-gold);
+  border-radius: 14px;
+  pointer-events: none;
+  opacity: 0.55;
+  z-index: 0;
+}

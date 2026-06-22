@@ -1,0 +1,923 @@
+/* ==================================================
+   M4: 雇佣中心 · Dashboard 风格（去掉装饰，回归克制）
+   redesign-existing-projects: 去掉过度设计
+   ================================================== */
+
+/* === 页面基础 === */
+.hire-hub-shell {
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  overflow-y: auto;
+  background: var(--paper, #fafaf7);
+}
+
+/* === 简化 section header（替代 hero） === */
+.hc-page-head {
+  padding: 20px 32px 16px;
+  border-bottom: 1px solid var(--line, #d8d4cc);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.hc-page-head-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.hc-page-head h2 {
+  font-family: Georgia, "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: -0.01em;
+  color: var(--ink, #1a1a1a);
+}
+.hc-page-head h2 em {
+  font-style: normal;
+  color: var(--accent-red, #e8453c);
+}
+.hc-page-head-meta {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3, #8a8a8a);
+  letter-spacing: 0.05em;
+}
+.hc-page-head-meta strong {
+  color: var(--ink, #1a1a1a);
+  font-weight: 700;
+}
+
+/* === 主体三栏 === */
+.hc-grid {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) 260px;
+  gap: 16px;
+  padding: 16px 24px 32px;
+  align-items: start;
+}
+
+/* === 左：筛选（普通分组，不要 island） === */
+.hc-filter {
+  background: transparent;
+  padding: 0;
+  position: sticky;
+  top: 16px;
+}
+.hc-section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hc-section-head .kicker-tag {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3, #8a8a8a);
+  padding: 2px 6px;
+  border: 1px solid var(--line-2, #ece8e0);
+  border-radius: 3px;
+}
+.hc-section-head strong {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink, #1a1a1a);
+  font-weight: 700;
+}
+.hc-filter-group {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-2, #ece8e0);
+}
+.hc-filter-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.hc-filter-label {
+  display: block;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--ink-3, #8a8a8a);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.hc-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.hc-filter-pill {
+  padding: 4px 9px;
+  background: transparent;
+  border: 1px solid var(--line-2, #ece8e0);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-2, #4a4a4a);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hc-filter-pill:hover {
+  border-color: var(--ink-3, #8a8a8a);
+  color: var(--ink, #1a1a1a);
+}
+.hc-filter-pill.is-active {
+  background: var(--ink, #1a1a1a);
+  color: #fff;
+  border-color: var(--ink, #1a1a1a);
+}
+.hc-filter-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.hc-filter-status-text {
+  font-size: 11px;
+  color: var(--ink-3, #8a8a8a);
+}
+.hc-filter-upgrade {
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px 10px;
+  background: var(--ink, #1a1a1a);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.hc-filter-upgrade:hover {
+  background: var(--accent-red, #e8453c);
+}
+
+/* === 中：工位 Bento（去 island 装饰，回归 office 原生） === */
+.hc-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* Tier 段标题 */
+.hc-tier-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hc-tier-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 6px;
+}
+.hc-tier-head-left {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.hc-tier-head h3 {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink, #1a1a1a);
+  font-weight: 700;
+  margin: 0;
+}
+.hc-tier-head h3 em {
+  font-style: normal;
+  color: var(--accent-red, #e8453c);
+}
+.hc-tier-head-num {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-3, #8a8a8a);
+  letter-spacing: 0.05em;
+}
+.hc-tier-head-price {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-2, #4a4a4a);
+  letter-spacing: 0.04em;
+}
+
+/* Bento grid */
+.hc-station-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 14px 12px;
+  align-items: flex-end;
+}
+.hc-station-grid--top .hc-station {
+  width: 150px;
+}
+.hc-station-grid--top .hc-station-stage { height: 156px; }
+.hc-station-grid--top .hc-station-agent { width: 92px; height: 106px; bottom: 18px; }
+.hc-station-grid--mid .hc-station {
+  width: 124px;
+}
+.hc-station-grid--mid .hc-station-stage { height: 138px; }
+.hc-station-grid--mid .hc-station-agent { width: 78px; height: 90px; bottom: 16px; }
+.hc-station-grid--junior .hc-station {
+  width: 110px;
+}
+.hc-station-grid--junior .hc-station-stage { height: 130px; }
+.hc-station-grid--junior .hc-station-agent { width: 70px; height: 80px; bottom: 16px; }
+
+/* === 单个工位（人物 stage + 操作 info-row 分层） === */
+.hc-station {
+  position: relative;
+  width: 110px;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  border-radius: 4px;
+  overflow: visible;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.hc-station:hover {
+  transform: translateY(-3px);
+}
+.hc-station.is-locked { opacity: 1; }
+
+/* 工位主体：纯人物 stage（不带任何文字信息） */
+.hc-station-stage {
+  position: relative;
+  width: 100%;
+  height: 130px;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, #f8f6f0 0%, #fdfcf8 100%);
+  border: 1px solid var(--line-2, #ece8e0);
+  border-bottom: none;
+}
+
+/* 椭圆阴影 */
+.hc-station-shadow {
+  position: absolute;
+  left: 50%; bottom: 4px;
+  transform: translateX(-50%);
+  width: 88%; height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(30,24,18,0.14) 0%, transparent 70%);
+  filter: blur(2px);
+  z-index: 0;
+}
+
+/* 圆环地台 */
+.hc-station-floor {
+  position: absolute;
+  left: 50%; bottom: 6px;
+  transform: translateX(-50%);
+  width: 80%; height: 14px;
+  background: radial-gradient(ellipse at center, var(--c, var(--accent-red)) 0%, transparent 60%);
+  opacity: 0.14;
+  border-radius: 50%;
+  z-index: 1;
+}
+.hc-station-floor::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed var(--c, var(--accent-red));
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+/* 桌子 */
+.hc-station-desk {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 8px;
+  background: linear-gradient(180deg, #6a5a48 0%, #3b3025 100%);
+  border-radius: 2px;
+  box-shadow:
+    0 4px 8px -2px rgba(0,0,0,0.36),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+  z-index: 2;
+}
+.hc-station-desk::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(180deg, #8a7560 0%, #6a5a48 100%);
+  border-radius: 1px 1px 0 0;
+}
+
+/* 显示器 */
+.hc-station-monitor {
+  position: absolute;
+  left: 60%; bottom: 22px;
+  width: 13px; height: 9px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 1px;
+  z-index: 3;
+}
+.hc-station-monitor::before {
+  content: '';
+  position: absolute;
+  top: 1px; left: 1px; right: 1px;
+  height: 5px;
+  background: linear-gradient(180deg, var(--c, var(--accent-red)) 0%, transparent 100%);
+  opacity: 0.55;
+}
+
+/* 椅子 */
+.hc-station-chair {
+  position: absolute;
+  left: 50%; bottom: 6px;
+  transform: translateX(-50%);
+  width: 26px; height: 8px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 5px 5px 2px 2px;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* 人物（PNG） */
+.hc-station-agent {
+  position: absolute;
+  left: 50%; bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 4;
+  width: 70px; height: 80px;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease;
+}
+.hc-station:hover .hc-station-agent { transform: translateX(-50%) translateY(-3px); }
+.hc-station-avatar {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: filter 0.3s ease;
+}
+
+/* tier + 价格 badge（工位右上角） */
+.hc-station-badge {
+  position: absolute;
+  top: 4px; left: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  z-index: 5;
+}
+.hc-station-tier {
+  font-family: "DM Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.95);
+  color: var(--ink, #1a1a1a);
+}
+.hc-station.is-available .hc-station-tier { background: var(--c, var(--accent-red)); color: #fff; }
+.hc-station.is-locked .hc-station-tier { background: rgba(26,26,26,0.9); color: #d4a017; }
+.hc-station-price {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--ink, #1a1a1a);
+  background: rgba(250,250,247,0.92);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+/* 锁定遮罩（只覆盖 stage，不盖住下方操作条） */
+.hc-station-lock-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 4px 4px 0 0;
+  background: rgba(180,180,180,0.18);
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* === 操作条（独立区域，紧贴工位 stage 下方） === */
+.hc-station-info {
+  padding: 6px 6px 7px;
+  background: var(--bg-paper, #fff);
+  border: 1px solid var(--line-2, #ece8e0);
+  border-top: 1px dashed var(--line-2, #ece8e0);
+  border-radius: 0 0 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hc-station-name {
+  display: block;
+  font-family: "DM Mono", "Noto Serif SC", serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink, #1a1a1a);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.hc-station-meta {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-3, #8a8a8a);
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+.hc-station-meta .sep { margin: 0 3px; color: var(--ink-3, #8a8a8a); }
+
+.hc-station-actions {
+  display: flex;
+  gap: 3px;
+  margin-top: 1px;
+}
+.hc-station-buy,
+.hc-station-detail,
+.hc-station-locked {
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+  line-height: 1.1;
+}
+.hc-station-buy {
+  background: var(--c, var(--accent-red));
+  color: #fff;
+  border-color: var(--c, var(--accent-red));
+}
+.hc-station-buy:hover { filter: brightness(0.92); }
+
+.hc-station-detail {
+  background: var(--bg-paper, #fff);
+  color: var(--ink-2, #4a4a4a);
+  border-color: var(--line-2, #ece8e0);
+}
+.hc-station-detail:hover {
+  background: var(--ink, #1a1a1a);
+  color: #fff;
+  border-color: var(--ink, #1a1a1a);
+}
+
+.hc-station-locked {
+  background: rgba(26,26,26,0.9);
+  color: #d4a017;
+  border-color: #d4a017;
+  flex: 1;
+}
+
+/* 锁定态人物去饱和 */
+.hc-station.is-locked .hc-station-avatar {
+  filter: saturate(0.25) brightness(0.92);
+}
+
+/* 空态 */
+.hc-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ink-3, #8a8a8a);
+  font-size: 12px;
+}
+
+/* === 右：我的雇佣（回到白底普通卡片） === */
+.hc-mine {
+  background: transparent;
+  border: none;
+  padding: 0;
+  position: sticky;
+  top: 16px;
+}
+.hc-mine-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.hc-mine-head .kicker-tag {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3, #8a8a8a);
+  padding: 2px 6px;
+  border: 1px solid var(--line-2, #ece8e0);
+  border-radius: 3px;
+}
+.hc-mine-head strong {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink, #1a1a1a);
+  font-weight: 700;
+}
+.hc-mine-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--line-2, #ece8e0);
+}
+.hc-mine-tab {
+  flex: 1;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--ink-3, #8a8a8a);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  margin-bottom: -1px;
+}
+.hc-mine-tab:hover {
+  color: var(--ink-2, #4a4a4a);
+}
+.hc-mine-tab.is-active {
+  color: var(--ink, #1a1a1a);
+  border-bottom-color: var(--accent-red, #e8453c);
+}
+.hc-mine-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hc-mine-empty {
+  text-align: center;
+  padding: 24px 8px;
+  color: var(--ink-3, #8a8a8a);
+  font-size: 11px;
+}
+.hc-mine-item {
+  padding: 10px;
+  background: var(--bg-paper, #fff);
+  border: 1px solid var(--line-2, #ece8e0);
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+.hc-mine-item:hover {
+  border-color: var(--ink-3, #8a8a8a);
+}
+.hc-mine-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hc-mine-item-icon {
+  width: 28px; height: 28px;
+  border-radius: 4px;
+  color: #fff;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hc-mine-item-info {
+  flex: 1; min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hc-mine-item-info strong {
+  font-size: 12px;
+  color: var(--ink, #1a1a1a);
+  font-weight: 700;
+}
+.hc-mine-item-info em {
+  font-style: normal;
+  font-size: 10px;
+  color: var(--ink-3, #8a8a8a);
+  font-family: "DM Mono", monospace;
+}
+.hc-mine-countdown {
+  font-size: 11px;
+  color: var(--accent-red, #e8453c);
+  font-weight: 700;
+  font-family: "DM Mono", monospace;
+}
+.hc-mine-item-foot {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+.hc-mine-mini-btn {
+  flex: 1;
+  padding: 4px 6px;
+  background: transparent;
+  border: 1px solid var(--line-2, #ece8e0);
+  border-radius: 3px;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-2, #4a4a4a);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.hc-mine-mini-btn:hover {
+  background: var(--ink, #1a1a1a);
+  color: #fff;
+  border-color: var(--ink, #1a1a1a);
+}
+
+/* === 响应式 === */
+@media (max-width: 1180px) {
+  .hc-grid { grid-template-columns: 180px minmax(0,1fr) 240px; padding: 12px 16px 24px; gap: 12px; }
+  .hc-page-head { padding: 16px 16px 12px; }
+}
+@media (max-width: 768px) {
+  .hc-grid { grid-template-columns: 1fr; padding: 12px; }
+  .hc-page-head { padding: 12px; }
+  .hc-filter, .hc-mine { position: static; }
+  .hc-station-grid--top .hc-station { width: 110px; height: 150px; }
+  .hc-station-grid--mid .hc-station { width: 96px; height: 130px; }
+  .hc-station-grid--junior .hc-station { width: 84px; height: 116px; }
+}
+
+/* ============================================
+   详情弹窗 — Editorial Luxury + Soft Structuralism
+   杂志感：Georgia/Noto Serif SC + DM Mono + 暖白纸感
+   ============================================ */
+.hc-detail {
+  font-family: var(--font-body, -apple-system, "PingFang SC", sans-serif);
+  color: var(--ink, #1a1a1a);
+  /* 留给 dialog-card 自身的 padding，这里不重复 */
+}
+
+/* --- Hero：头像 + 元信息（杂志大标题）--- */
+.hc-detail-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-3, #ebe6d8);
+}
+
+.hc-detail-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif, "Noto Serif SC", serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  /* inline style 注入 background */
+}
+
+.hc-detail-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.hc-detail-kicker {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-red, #e8453c);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.hc-detail-name {
+  font-family: var(--font-serif, "Noto Serif SC", serif);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink, #1a1a1a);
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+
+.hc-detail-rating {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 11px;
+  color: var(--ink-3, #8a8a8a);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.hc-detail-rating::before {
+  content: "★";
+  color: var(--expert-gold, #d4a017);
+  font-size: 12px;
+}
+
+.hc-detail-dot {
+  color: var(--ink-4, #b5b0a4);
+  margin: 0 2px;
+}
+
+.hc-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.hc-detail-tag {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 10px;
+  padding: 2px 8px;
+  background: var(--bg-warm-2, #f5f0e8);
+  color: var(--ink-2, #4a4a4a);
+  border-radius: var(--r-full, 999px);
+  letter-spacing: 0.04em;
+}
+
+/* --- Block：每个段（描述 / 能力 / 价格）--- */
+.hc-detail-block {
+  margin-bottom: 14px;
+}
+
+.hc-detail-block:last-child {
+  margin-bottom: 0;
+}
+
+.hc-detail-block-kicker {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3, #8a8a8a);
+  margin-bottom: 8px;
+  font-weight: 500;
+  /* 上方装饰小线 */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hc-detail-block-kicker::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 1px;
+  background: var(--accent-red, #e8453c);
+}
+
+.hc-detail-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-2, #4a4a4a);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+/* --- 能力清单：打勾项 --- */
+.hc-detail-caps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+}
+
+.hc-detail-cap {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-2, #4a4a4a);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.hc-detail-cap-tick {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  margin-top: 4px;
+  position: relative;
+  border-radius: 50%;
+  background: var(--accent-red-3, #fff5f4);
+}
+
+.hc-detail-cap-tick::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  width: 3px;
+  height: 6px;
+  border-right: 1.5px solid var(--accent-red, #e8453c);
+  border-bottom: 1.5px solid var(--accent-red, #e8453c);
+  transform: rotate(45deg);
+}
+
+/* --- 价格 3 列：编辑部分栏感 --- */
+.hc-detail-pricing {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  margin-top: 18px;
+  padding: 14px 0 4px;
+  border-top: 1px solid var(--border-3, #ebe6d8);
+  border-bottom: 1px solid var(--border-3, #ebe6d8);
+}
+
+.hc-detail-price {
+  padding: 0 12px;
+  position: relative;
+}
+
+/* 中间分隔线 */
+.hc-detail-price + .hc-detail-price::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--border-3, #ebe6d8);
+}
+
+.hc-detail-price-kicker {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3, #8a8a8a);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.hc-detail-price-val {
+  font-family: var(--font-serif, "Noto Serif SC", serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink, #1a1a1a);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.hc-detail-price-val > i {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink-3, #8a8a8a);
+  letter-spacing: 0.04em;
+  font-style: normal;
+  margin-left: 2px;
+}
+
+.hc-detail-price-val-mono {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 16px;
+}
+
+/* 价格区数字（UMDT 价）特出红色 */
+.hc-detail-price:first-child .hc-detail-price-val {
+  color: var(--accent-red, #e8453c);
+}
+
+/* --- 响应式：能力清单在小屏单列 --- */
+@media (max-width: 540px) {
+  .hc-detail-caps { grid-template-columns: 1fr; }
+  .hc-detail-pricing { grid-template-columns: 1fr; gap: 12px; }
+  .hc-detail-price + .hc-detail-price::before { display: none; }
+  .hc-detail-price { padding: 8px 0; border-top: 1px dashed var(--border-3, #ebe6d8); }
+  .hc-detail-price:first-child { border-top: none; padding-top: 0; }
+}

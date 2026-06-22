@@ -531,7 +531,7 @@ const AC_DETAIL_PRESETS = {
   }
 };
 
-let activeAgentCenterId = 'sales';
+let activeAgentCenterId = 'meeting';  // M3: 默认改为免费助手（销售/客服已升级为专家）
 let activeAgentCenterModuleId = null;
 let activeAgentCenterFieldIndex = null;
 
@@ -565,9 +565,9 @@ function acEscape(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-function renderAgentCenter(agentId = 'sales') {
+function renderAgentCenter(agentId = 'meeting') {
   const root = document.getElementById('agentCenterRoot');
-  const agent = getAgent(agentId) || AGENTS[0];
+  const agent = getAgent(agentId) || HELPERS[0];
   const cfg = AGENT_FUNCTION_CONFIGS[agent.id] || AGENT_FUNCTION_CONFIGS.sales;
   if (!root || !agent || !cfg) return;
   const activeModule = activeAgentCenterModuleId
@@ -584,7 +584,7 @@ function renderAgentCenter(agentId = 'sales') {
         <p>选择 Agent，配置能力、资料、规则和确认边界。</p>
       </div>
       <div class="agent-center-agent-list">
-        ${AGENTS.map(a => {
+        ${HELPERS.map(a => {
           const itemCfg = AGENT_FUNCTION_CONFIGS[a.id] || AGENT_FUNCTION_CONFIGS.sales;
           return `
             <button class="agent-center-agent ${a.id === agent.id ? 'is-active' : ''}" data-agent-center-id="${a.id}" style="--c:${a.color};--soft:${a.colorSoft}">
@@ -597,6 +597,29 @@ function renderAgentCenter(agentId = 'sales') {
             </button>
           `;
         }).join('')}
+      </div>
+
+      <!-- M3: 助手 vs 专家差异说明 -->
+      <div class="agent-center-helper-expert-split">
+        <div class="agent-center-split-head">
+          <span class="kicker-tag">EXPERT</span>
+          <strong>需要更高质量？</strong>
+        </div>
+        <p class="agent-center-split-desc">助手是公司里的实习生，专家是从外部请来的顾问。销售 / 客服已升级为付费专家。</p>
+        <div class="agent-center-expert-cards">
+          ${EXPERT_AGENTS.map(e => `
+            <button class="agent-center-expert-card" data-nav="hire-center" data-expert="${e.id}" style="--c:${e.color};--soft:${e.colorSoft}">
+              <span class="agent-center-expert-icon">${e.icon}</span>
+              <span class="agent-center-expert-body">
+                <strong>${acEscape(e.name)}</strong>
+                <em class="mono">¥${e.priceUMDT} UMDT · ${e.requireLevel}+</em>
+                <span>${acEscape(e.role)}</span>
+              </span>
+              <em class="agent-center-expert-arrow">›</em>
+            </button>
+          `).join('')}
+        </div>
+        <button class="agent-center-mini-btn" data-nav="hire-center" style="margin-top:10px;width:100%">前往雇佣中心</button>
       </div>
     </aside>
 

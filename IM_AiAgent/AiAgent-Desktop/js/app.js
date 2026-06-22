@@ -688,3 +688,291 @@ function startTopClock() {
 
 /* === 启动 === */
 document.addEventListener('DOMContentLoaded', initApp);
+
+/* ========================================
+   M1-D: 顶部 5 Tab 路由 + 资产订阅刷新
+   ======================================== */
+
+const TAB_VIEWS = ['office', 'messages', 'agent-center', 'compute-hub', 'hire-center', 'membership'];
+
+function switchTab(tabName) {
+  if (!TAB_VIEWS.includes(tabName)) return;
+  // 顶部 tab 高亮
+  document.querySelectorAll('.app-tab').forEach((t) => {
+    t.classList.toggle('is-active', t.dataset.tab === tabName);
+  });
+  // 主区域 stage-view 切换
+  document.querySelectorAll('.stage-view').forEach((v) => {
+    v.classList.toggle('is-active', v.dataset.stage === tabName);
+  });
+  // 同步侧栏 side-tabs（仅 office/messages 时高亮，其它 tab 关闭侧栏 panel）
+  const sideTabs = document.querySelectorAll('.side-tab');
+  if (tabName === 'office' || tabName === 'messages') {
+    sideTabs.forEach((t) => t.classList.toggle('is-active', t.dataset.sideTab === tabName));
+    document.querySelectorAll('.side-panel').forEach((p) => {
+      p.classList.toggle('is-hidden', p.dataset.sidePanel !== tabName);
+    });
+  } else {
+    sideTabs.forEach((t) => t.classList.remove('is-active'));
+    document.querySelectorAll('.side-panel').forEach((p) => p.classList.add('is-hidden'));
+  }
+  // 调用模块渲染函数
+  if (tabName === 'office' && typeof renderOffice === 'function') renderOffice();
+  if (tabName === 'messages' && typeof renderMessageBoard === 'function') renderMessageBoard();
+  if (tabName === 'agent-center' && typeof openAgentCenter === 'function') openAgentCenter();
+  if (tabName === 'compute-hub' && typeof openComputeHub === 'function') openComputeHub();
+   if (tabName === 'hire-center' && typeof openHireCenter === 'function') openHireCenter();
+   if (tabName === 'membership' && typeof openMembership === 'function') openMembership();
+}
+
+window.appNavigate = switchTab;   // 让 toast.js 资源不足引导按钮能调用
+
+function fmtNum(n) { return Number(n).toLocaleString('en-US'); }
+
+function refreshTopbarAndSidebar() {
+  const w = window.walletStore;
+  const u = window.umdtStore;
+  const user = window.userStore;
+
+  // 顶部栏：Token / UMDT / 徽章
+  const tokenNum = document.getElementById('topbarTokenNum');
+  if (tokenNum) {
+    const available = walletActions.available();
+    tokenNum.textContent = fmtNum(available);
+    tokenNum.classList.remove('is-bump-token');
+    void tokenNum.offsetWidth;
+    tokenNum.classList.add('is-bump-token');
+  }
+  const umdtNum = document.getElementById('topbarUMDTNum');
+  if (umdtNum) {
+    umdtNum.textContent = fmtNum(u.balance);
+    umdtNum.classList.remove('is-bump-umdt');
+    void umdtNum.offsetWidth;
+    umdtNum.classList.add('is-bump-umdt');
+  }
+  const badge = document.getElementById('topbarBadge');
+  const badgeTxt = document.getElementById('topbarBadgeText');
+  if (badge && badgeTxt) {
+    badge.className = 'member-badge ' + String(user.level).toLowerCase();
+    badgeTxt.textContent = user.level;
+  }
+
+  // 左侧栏：资产 + 徽章 + 交易记录数
+  const sbToken = document.getElementById('sbTokenNum');
+  const sbUMDT = document.getElementById('sbUMDTNum');
+  const sbLocked = document.getElementById('sbLockedNum');
+  if (sbToken)  sbToken.textContent  = fmtNum(walletActions.available());
+  if (sbUMDT)   sbUMDT.textContent   = fmtNum(u.balance);
+  if (sbLocked) sbLocked.textContent = fmtNum(w.lockedBalance);
+  const sbBadge = document.getElementById('sbBadge');
+  if (sbBadge) sbBadge.className = 'member-badge ' + String(user.level).toLowerCase();
+  // 侧栏 asset-actions 内的等级按钮文字
+  const sbActionLvl = document.getElementById('sbActionLvl');
+  if (sbActionLvl) sbActionLvl.textContent = user.level;
+  const recordsCount = document.getElementById('sbRecordsCount');
+  if (recordsCount) recordsCount.textContent = String((w.history || []).length);
+
+  // M7: 渲染左侧 LIVE ACTIVITY + TEAM SCOREBOARD
+  renderSidebarLiveActivity();
+  renderSidebarTeam();
+
+  // 广播 store:changed 事件，让 membership.js 等监听者能 re-render
+  document.dispatchEvent(new CustomEvent('store:changed', { detail: { source: 'refreshTopbarAndSidebar' } }));
+}
+
+/* === M4: 左侧栏「我的 AI 专家」渲染 === */
+function renderSidebarHires() {
+  const root = document.getElementById('sidebarHires');
+  if (!root || !window.hireStore) return;
+  const active = window.hireStore.active || [];
+  if (active.length === 0) {
+    root.innerHTML = '暂无进行中的专家<br><a class="sidebar-empty-link" data-nav="hire-center">前往雇佣中心</a>';
+  } else {
+    const items = active.slice(0, 3).map((h) => {
+      const remainMs = new Date(h.expireAt).getTime() - Date.now();
+      const remainH = Math.max(0, Math.floor(remainMs / 3600000));
+      const remainM = Math.max(0, Math.floor((remainMs % 3600000) / 60000));
+      return `<li class="sidebar-hire-item">
+        <span class="hire-dot"></span>
+        <span class="hire-name">${h.expertId}</span>
+        <span class="hire-time mono">${remainH}h${String(remainM).padStart(2,'0')}m</span>
+      </li>`;
+    }).join('');
+    root.innerHTML = `<ul class="sidebar-hire-list">${items}</ul>
+      <a class="sidebar-empty-link" data-nav="hire-center">${active.length > 3 ? '查看全部 ' + active.length + ' 个' : '管理专家 →'}</a>`;
+  }
+  // 重新绑定 data-nav click（innerHTML 后旧 listener 失效）
+  root.querySelectorAll('[data-nav]').forEach((el) => {
+    if (!el.dataset.navBound) {
+      el.dataset.navBound = '1';
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        switchTab(el.dataset.nav);
+      });
+    }
+  });
+}
+
+/* === M7: 左侧 LIVE ACTIVITY 事件流渲染 === */
+function renderSidebarLiveActivity() {
+  const root = document.getElementById('sbLiveEvents');
+  if (!root) return;
+
+  // Mock 事件数据（演示用，可随时替换为真实 store 数据）
+  const now = new Date();
+  const hhmm = (h, m) => {
+    const totalM = m < 0 ? (h === 0 ? 23 * 60 + 59 + m : (h - 1) * 60 + (60 + m)) : h * 60 + m;
+    const rh = Math.floor(totalM / 60) % 24;
+    const rm = totalM % 60;
+    return String(rh).padStart(2,'0') + ':' + String(rm).padStart(2,'0');
+  };
+  const events = [
+    { icon: '销', color: 'var(--agent-sales, #dc2626)', title: 'AI 销售助手完成新客报价', meta: hhmm(now.getHours(), now.getMinutes()-2) + ' · 销售', badge: 'DONE' },
+    { icon: '设', color: 'var(--agent-design, #7c3aed)', title: '618 海报 v3 已生成', meta: hhmm(now.getHours(), now.getMinutes()-7) + ' · 设计', badge: 'OUTPUT' },
+    { icon: '议', color: 'var(--agent-meeting, #2563eb)', title: 'Q3 复盘会议纪要已整理', meta: hhmm(now.getHours(), now.getMinutes()-15) + ' · 会议', badge: 'DONE' },
+    { icon: '频', color: 'var(--agent-video, #0891b2)', title: '产品介绍分镜渲染中 42%', meta: hhmm(now.getHours(), now.getMinutes()-18) + ' · 视频', badge: 'RUNNING' },
+    { icon: '写', color: 'var(--agent-writing, #b45309)', title: '品牌文案初稿已提交', meta: hhmm(now.getHours(), now.getMinutes()-31) + ' · 写作', badge: 'DONE' },
+  ];
+
+  root.innerHTML = events.map((ev) => `
+    <div class="sb-event">
+      <div class="sb-event-icon" style="color:${ev.color}">${ev.icon}</div>
+      <div class="sb-event-body">
+        <div class="sb-event-title">${ev.title}</div>
+        <div class="sb-event-meta">
+          <span>${ev.meta}</span>
+          <span class="sb-event-badge">${ev.badge}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* === M7: 左侧 TEAM SCOREBOARD 渲染 === */
+function renderSidebarTeam() {
+  const root = document.getElementById('sbTeamGrid');
+  if (!root) return;
+
+  // 从 AGENTS 全局数组读取数据（与 agent-center.js 一致）
+  const agents = typeof AGENTS !== 'undefined' ? AGENTS : [];
+  if (agents.length === 0) {
+    root.innerHTML = '<div style="font-size:11px;color:var(--ink-3);padding:8px 0;">暂无团队数据</div>';
+    return;
+  }
+
+  // 按 status 优先级排序：running > busy > idle
+  const STATUS_PRI = { running: 0, busy: 1, idle: 2 };
+  const sorted = [...agents].sort((a, b) => (STATUS_PRI[a.status] ?? 3) - (STATUS_PRI[b.status] ?? 3));
+
+  // 模拟任务进度（演示用）
+  const PROGRESS = { running: 72, busy: 45, idle: 0 };
+  const STATUS_LABEL = { running: 'RUNNING', busy: 'BUSY', idle: 'IDLE' };
+
+  root.innerHTML = sorted.map((agent, i) => {
+    const initials = agent.name.slice(0, 1);
+    const color = agent.color || 'var(--accent-red, #dc2626)';
+    const progress = PROGRESS[agent.status] ?? 0;
+    const badgeClass = 'is-' + (agent.status === 'running' ? 'running' : agent.status === 'busy' ? 'busy' : 'idle');
+    const taskDesc = agent.currentTask
+      ? (agent.currentTask.length > 10 ? agent.currentTask.slice(0, 10) + '…' : agent.currentTask)
+      : agent.role || '空闲';
+
+    return `
+      <div class="sb-team-row" data-agent="${agent.id}" title="${agent.name} · ${agent.role}">
+        <div class="sb-team-rank">${i + 1}</div>
+        <div class="sb-team-info">
+          <div class="sb-team-name">${agent.name.replace('AI ','')}</div>
+          <div class="sb-team-task">${taskDesc}</div>
+        </div>
+        <div class="sb-team-status">
+          <span class="sb-team-badge ${badgeClass}">${STATUS_LABEL[agent.status] || 'IDLE'}</span>
+          ${agent.status !== 'idle' ? `<div class="sb-progress"><div class="sb-progress-fill" style="width:${progress}%;background:${color}"></div></div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function initM1D() {
+  // 顶部 5 tab 点击
+  document.querySelectorAll('.app-tab').forEach((tab) => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+  });
+
+  // data-nav 元素点击（侧栏快捷入口 + 顶部资产/徽章/头像）
+  document.querySelectorAll('[data-nav]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      switchTab(el.dataset.nav);
+    });
+  });
+
+  // 充值 UMDT 按钮（侧栏）
+  document.getElementById('btnRechargeUMDT')?.addEventListener('click', () => {
+    showDialog({
+      title: '充值 UMDT（Mock）',
+      content: '选择充值金额，立即到账：',
+      actions: [
+        { label: '+ 100 UMDT',  onClick: () => { walletActions.rechargeUMDT(100);  showToast('已到账 100 UMDT',  { type: 'success' }); refreshTopbarAndSidebar(); } },
+        { label: '+ 500 UMDT',  onClick: () => { walletActions.rechargeUMDT(500);  showToast('已到账 500 UMDT',  { type: 'success' }); refreshTopbarAndSidebar(); } },
+        { label: '+ 1000 UMDT', primary: true, onClick: () => { walletActions.rechargeUMDT(1000); showToast('已到账 1000 UMDT', { type: 'success' }); refreshTopbarAndSidebar(); } },
+        { label: '取消', onClick: () => {} }
+      ]
+    });
+  });
+
+  // 订阅 store 变化
+  if (typeof window.subscribeStore === 'function') {
+    window.subscribeStore(() => refreshTopbarAndSidebar());
+  }
+
+  // 侧栏 asset-actions 内的充值按钮
+  document.getElementById('sbBtnRecharge')?.addEventListener('click', () => {
+    showDialog({
+      title: '充值 UMDT（Mock）',
+      content: '选择充值金额，立即到账：',
+      actions: [
+        { label: '+ 100 UMDT',  onClick: () => { walletActions.rechargeUMDT(100);  showToast('已到账 100 UMDT',  { type: 'success' }); } },
+        { label: '+ 500 UMDT',  onClick: () => { walletActions.rechargeUMDT(500);  showToast('已到账 500 UMDT',  { type: 'success' }); } },
+        { label: '+ 1000 UMDT', primary: true, onClick: () => { walletActions.rechargeUMDT(1000); showToast('已到账 1000 UMDT', { type: 'success' }); } },
+        { label: '取消', onClick: () => {} }
+      ]
+    });
+  });
+
+  // 首次渲染
+  refreshTopbarAndSidebar();
+
+  // ====== 会员等级切换（演示用：点击 topbar 徽章循环 NU→VIP→MN→MB）======
+  const MEMBERSHIP_TIERS = ['NU', 'VIP', 'MN', 'MB'];
+  const LEVEL_NAMES = { NU: '基础会员', VIP: '进阶会员', MN: '专业会员', MB: '至尊会员' };
+
+  window.cycleMembershipTier = function () {
+    const cur = window.userStore.level;
+    const curIdx = MEMBERSHIP_TIERS.indexOf(cur);
+    const nextIdx = (curIdx + 1) % MEMBERSHIP_TIERS.length;
+    const next = MEMBERSHIP_TIERS[nextIdx];
+    const price = next === 'NU' ? 0 : ({ VIP: 199, MN: 999, MB: 4999 })[next] || 0;
+    // 直接写 level（绕过 upgrade 的 UMDT 扣款，适合纯演示）
+    window.userStore.level = next;
+    showToast('已切换至 ' + LEVEL_NAMES[next] + '（' + next + '）', { type: 'success' });
+  };
+
+  document.getElementById('topbarBadge')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.cycleMembershipTier();
+  });
+
+  // 键盘快捷键 M：切换会员等级
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'm' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const tag = document.activeElement?.tagName;
+      if (tag !== 'INPUT' && tag !== 'TEXTAREA') window.cycleMembershipTier();
+    }
+  });
+}
+
+// M1-D 启动
+document.addEventListener('DOMContentLoaded', initM1D);

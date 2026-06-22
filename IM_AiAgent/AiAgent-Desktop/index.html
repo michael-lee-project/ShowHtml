@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=1280">
   <title>AI Agent 办公室 · 桌面端原型</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="css/main.css?v=7">
-  <link rel="stylesheet" href="css/sidebar.css?v=5">
-  <link rel="stylesheet" href="css/office.css?v=37">
+  <link rel="stylesheet" href="css/main.css?v=8">
+  <link rel="stylesheet" href="css/sidebar.css?v=22">
+  <link rel="stylesheet" href="css/office.css?v=38">
   <link rel="stylesheet" href="css/chat-panel.css?v=9">
   <link rel="stylesheet" href="css/pulse.css?v=6">
   <link rel="stylesheet" href="css/messages.css?v=12">
-  <link rel="stylesheet" href="css/agent-center.css?v=7">
+  <link rel="stylesheet" href="css/agent-center.css?v=8">
+  <link rel="stylesheet" href="css/compute-hub.css?v=3">
+  <link rel="stylesheet" href="css/hire-center.css?v=4">
+  <link rel="stylesheet" href="css/membership.css?v=4">
 </head>
 <body>
 
@@ -21,82 +24,94 @@
       <span class="app-logo">◇</span>
       <div class="app-brand-text">
         <span class="app-brand-name">AI AGENT OFFICE</span>
-        <span class="app-brand-sub mono">智能体协同工作台 · v1.0</span>
+        <span class="app-brand-sub mono">智能体协同工作台 · v1.1</span>
       </div>
     </div>
-    <div class="app-topbar-meta mono">
-      <span class="meta-pill"><i class="dot dot-green"></i>6 AGENTS ONLINE</span>
-      <span class="meta-pill" id="liveClock">--:--</span>
-      <span class="meta-user">
+
+    <!-- M1-D: 顶部 5 Tab 主导航（PRD §6.1） -->
+    <nav class="app-tabs" id="appTabs">
+      <button class="app-tab is-active" data-tab="office">办公室</button>
+      <button class="app-tab" data-tab="messages">消息</button>
+      <button class="app-tab" data-tab="agent-center">Agent Center</button>
+      <button class="app-tab" data-tab="compute-hub">算力</button>
+      <button class="app-tab" data-tab="hire-center">雇佣</button>
+    </nav>
+
+    <!-- M1-D: 右侧资产 + 徽章 + 头像（订阅 store 刷新） -->
+    <div class="app-topbar-meta">
+      <button class="asset-pill asset-token" id="topbarToken" data-nav="compute-hub" title="点击进入算力中心">
+        <i>⚡</i>
+        <span class="asset-number token-color" id="topbarTokenNum">1,000,000</span>
+      </button>
+      <button class="asset-pill asset-umdt" id="topbarUMDT" data-nav="compute-hub" title="UMDT 余额">
+        <i>$</i>
+        <span class="asset-number umdt-color" id="topbarUMDTNum">1,000</span>
+      </button>
+      <button class="member-badge" id="topbarBadge" data-nav="membership" title="会员中心">
+        <i class="badge-dot"></i>
+        <span class="lvl-text" id="topbarBadgeText">VIP</span>
+      </button>
+      <button class="meta-user" id="topbarAvatar" data-nav="membership" title="个人中心">
         <span class="meta-avatar">M</span>
-        <span>Michael</span>
-      </span>
+        <span class="meta-user-name mono">Michael</span>
+      </button>
     </div>
   </header>
 
   <!-- ====== App Shell ====== -->
   <div class="app-shell">
 
-    <!-- ====== Left Sidebar ====== -->
+    <!-- ====== Left Sidebar (M8 统一重设计：3 段单列流) ====== -->
     <aside class="app-sidebar" id="appSidebar">
-      <!-- Tab Switcher (B方案：左栏顶部tab) -->
-      <nav class="side-tabs">
-        <button class="side-tab is-active" data-side-tab="office">
-          <span class="side-tab-icon">⌂</span>
-          <span>办公室</span>
-        </button>
-        <button class="side-tab" data-side-tab="messages">
-          <span class="side-tab-icon">✉</span>
-          <span>消息</span>
-          <em class="side-tab-badge">12</em>
-        </button>
-      </nav>
 
-      <!-- ===== OFFICE PANEL ===== -->
-      <div class="side-panel" data-side-panel="office">
-        <div class="side-section">
-          <div class="side-section-head">
-            <span class="kicker-tag">AGENTS · 6</span>
-            <span class="side-section-hint mono">配置 / 对话</span>
+      <!-- ====== SECTION 1: ASSETS ====== -->
+      <section class="sb-section sb-assets">
+        <div class="sb-kicker">资产总览</div>
+        <div class="sb-assets-grid">
+          <div class="sb-asset-cell">
+            <i class="sb-asset-i">⚡ Token</i>
+            <strong class="sb-asset-n sb-red" id="sbTokenNum">1,000,000</strong>
           </div>
-          <ul class="agent-list" id="agentList"><!-- JS 渲染 --></ul>
-        </div>
-
-        <div class="side-section">
-          <div class="side-section-head">
-            <span class="kicker-tag">TASKS</span>
-            <span class="side-section-hint mono">历史任务</span>
+          <div class="sb-asset-cell">
+            <i class="sb-asset-i">$ UMDT</i>
+            <strong class="sb-asset-n" id="sbUMDTNum">1,000</strong>
           </div>
-          <ul class="task-history">
-            <li><span class="task-dot" style="--c:var(--agent-sales)"></span><span class="task-text">销售 · 新客李 XX 报价</span><span class="task-time mono">12:04</span></li>
-            <li><span class="task-dot" style="--c:var(--agent-design)"></span><span class="task-text">设计 · 618 海报 v2</span><span class="task-time mono">11:38</span></li>
-            <li><span class="task-dot" style="--c:var(--agent-meeting)"></span><span class="task-text">会议 · Q3 复盘纪要</span><span class="task-time mono">10:15</span></li>
-            <li><span class="task-dot" style="--c:var(--agent-video)"></span><span class="task-text">视频 · 产品介绍分镜</span><span class="task-time mono">09:42</span></li>
-          </ul>
-        </div>
-
-        <div class="side-footer">
-          <button class="side-foot-btn" data-side-foot="me"><span>👤</span>我的</button>
-          <button class="side-foot-btn" data-side-foot="agent-center"><span>✦</span>Agent中心</button>
-        </div>
-      </div>
-
-      <!-- ===== MESSAGES PANEL ===== -->
-      <div class="side-panel is-hidden" data-side-panel="messages">
-        <div class="side-section">
-          <div class="side-section-head">
-            <span class="kicker-tag">CUSTOMERS</span>
-            <span class="side-section-hint mono">客户对话</span>
+          <div class="sb-asset-cell">
+            <i class="sb-asset-i">🔒 锁定</i>
+            <strong class="sb-asset-n" id="sbLockedNum">0</strong>
           </div>
-          <ul class="msg-list" id="msgList"><!-- JS 渲染 --></ul>
+          <div class="sb-asset-cell">
+            <i class="sb-asset-i">📋 任务</i>
+            <strong class="sb-asset-n" id="sbTaskCount">24</strong>
+          </div>
         </div>
-        <div class="side-footer">
-          <button class="side-foot-btn" data-side-foot="me"><span>👤</span>我的</button>
-          <button class="side-foot-btn" data-side-foot="agent-center"><span>✦</span>Agent中心</button>
+        <div class="sb-assets-actions">
+          <button class="sb-action-btn" id="sbBtnRecharge">充值</button>
+          <button class="sb-action-btn" data-nav="compute-hub">记录</button>
+          <button class="sb-action-btn" data-nav="membership"><span id="sbActionLvl">VIP</span> ›</button>
         </div>
-      </div>
+      </section>
+
+      <!-- ====== SECTION 2: LIVE ACTIVITY (flex: 1, 拉伸填满) ====== -->
+      <section class="sb-section is-flex sb-live">
+        <div class="sb-live-header">
+          <div class="sb-kicker">LIVE · AI 活动</div>
+          <div class="sb-live-pulse"><span class="sb-live-dot"></span>实时</div>
+        </div>
+        <div class="sb-live-events" id="sbLiveEvents">
+          <!-- JS 动态渲染 -->
+        </div>
+      </section>
+
+      <!-- ====== SECTION 3: TEAM SCOREBOARD ====== -->
+      <section class="sb-section sb-team">
+        <div class="sb-kicker">TEAM · 活动排行</div>
+        <div class="sb-team-grid" id="sbTeamGrid">
+          <!-- JS 动态渲染 -->
+        </div>
+      </section>
+
     </aside>
-
     <!-- ====== Main Stage ====== -->
     <main class="app-stage" id="appStage">
 
@@ -156,6 +171,42 @@
         <div class="agent-center-shell" id="agentCenterRoot"><!-- JS 渲染 --></div>
       </section>
 
+      <!-- Compute Hub View (M2) -->
+      <section class="stage-view stage-compute-hub" data-stage="compute-hub">
+        <div class="stage-toolbar mono">
+          <span class="kicker">COMPUTE HUB · TOKEN ECONOMY</span>
+          <span class="stage-toolbar-right">
+            <span class="msg-stat" id="chLevelPill">VIP 9折</span>
+            <span class="msg-stat" id="chRatePill">抽佣 4%</span>
+          </span>
+        </div>
+        <div class="compute-hub-shell" id="computeHubRoot"><!-- JS 渲染 --></div>
+      </section>
+
+      <!-- Hire Center View (M4) -->
+      <section class="stage-view stage-hire-hub" data-stage="hire-center">
+        <div class="stage-toolbar mono">
+          <span class="kicker">HIRE CENTER · EXPERT MARKETPLACE</span>
+          <span class="stage-toolbar-right">
+            <span class="msg-stat"><strong>16</strong> 专家</span>
+            <span class="msg-stat"><strong>BR-HIR</strong> 雇佣规则</span>
+          </span>
+        </div>
+        <div class="hire-hub-shell" id="hireHubRoot"><!-- JS 渲染（fetch ./data/experts.mock.json） --></div>
+      </section>
+
+      <!-- Membership Center View (M5) -->
+      <section class="stage-view stage-membership" data-stage="membership">
+        <div class="stage-toolbar mono">
+          <span class="kicker">MEMBERSHIP CENTER · TIER UPGRADE</span>
+          <span class="stage-toolbar-right">
+            <span class="msg-stat"><strong>4</strong> 套餐档</span>
+            <span class="msg-stat"><strong>BR-MEM</strong> 会员规则</span>
+          </span>
+        </div>
+        <div class="mem-shell" id="membershipRoot"><!-- JS 渲染（INLINE 数据） --></div>
+      </section>
+
     </main>
 
     <!-- ====== Chat Panel (右侧滑出) ====== -->
@@ -184,12 +235,23 @@
   <!-- ====== 脉冲层（欢呼动效） ====== -->
   <div class="pulse-layer" id="pulseLayer"></div>
 
+  <!-- ====== Toast 层 ====== -->
+  <div class="toast-layer" id="toastLayer"></div>
+
+  <!-- ====== Dialog 层 ====== -->
+  <div class="dialog-layer" id="dialogLayer"></div>
+
   <!-- ====== Scripts ====== -->
+  <script src="js/store.js?v=1"></script>
+  <script src="js/toast.js?v=2"></script>
   <script src="js/agents.js?v=5"></script>
   <script src="js/office.js?v=16"></script>
   <script src="js/chat-panel.js?v=8"></script>
   <script src="js/pulse.js?v=7"></script>
   <script src="js/agent-center.js?v=7"></script>
-  <script src="js/app.js?v=13"></script>
+  <script src="js/compute-hub.js?v=4"></script>
+  <script src="js/hire-center.js?v=7"></script>
+  <script src="js/membership.js?v=5"></script>
+  <script src="js/app.js?v=22"></script>
 </body>
 </html>

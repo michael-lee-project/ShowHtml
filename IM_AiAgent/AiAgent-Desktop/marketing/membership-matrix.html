@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI 助手 / 专家 × 会员套餐</title>
+<style>
+  /* ===== 杂志编辑风 + 暖白 + 黑字 + 红强调 + DM Mono ===== */
+  :root {
+    --paper:       #fafaf7;
+    --ink:         #1a1a1a;
+    --ink-2:       #4a4a4a;
+    --ink-3:       #8a8a8a;
+    --red:         #e8453c;
+    --red-deep:    #c8362e;
+    --gold:        #d4a017;
+    --line:        #d8d4cc;
+    --line-2:      #ece8e0;
+    --nu:          #8a8a8a;
+    --vip:         #10b981;
+    --mn:          #8b5cf6;
+    --mb:          #1a1a1a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .mono { font-family: "DM Mono", "SF Mono", "JetBrains Mono", Menlo, monospace; }
+  .serif { font-family: Georgia, "Times New Roman", "STZhongsong", serif; }
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 48px 60px;
+  }
+
+  /* ===== 顶部 kicker ===== */
+  .kicker {
+    font-family: "DM Mono", "SF Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.1;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--ink-2);
+    margin-bottom: 32px;
+  }
+  .subtitle strong { color: var(--ink); font-weight: 700; }
+
+  /* ===== 4 套餐对比图 ===== */
+  .matrix-wrap {
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 4px 0;
+    margin-bottom: 36px;
+  }
+  .matrix-head {
+    display: grid;
+    grid-template-columns: 200px repeat(4, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .matrix-head > div {
+    padding: 12px 14px;
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    border-left: 1px solid var(--line);
+  }
+  .matrix-head > div:first-child { border-left: none; }
+  .matrix-head > div.is-pack {
+    text-align: center;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .matrix-row {
+    display: grid;
+    grid-template-columns: 200px repeat(4, 1fr);
+    border-bottom: 1px solid var(--line-2);
+    cursor: default;
+    transition: background 0.15s ease;
+  }
+  .matrix-row:last-child { border-bottom: none; }
+  .matrix-row > .row-label {
+    padding: 14px;
+    border-left: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .matrix-row > .row-label:first-child { border-left: none; }
+  .matrix-row > .pack-cell {
+    padding: 14px;
+    border-left: 1px solid var(--line-2);
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .pack-cell .cell-title {
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .pack-cell .cell-main {
+    color: var(--ink);
+    font-weight: 700;
+    font-family: "DM Mono", monospace;
+    font-size: 13px;
+  }
+  .pack-cell .cell-note {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 2px;
+  }
+  .pack-cell.is-empty {
+    background: #f6f3ec;
+    color: var(--ink-3);
+  }
+  .pack-cell.is-empty .cell-main {
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  /* ===== Level badge ===== */
+  .lv-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    width: fit-content;
+  }
+  .lv-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .lv-nu  { background: #ececec; color: var(--nu); }
+  .lv-vip { background: #d4f1e1; color: #0d8a5e; }
+  .lv-mn  { background: #efe6ff; color: #6b3fb8; }
+  .lv-mb  { background: #1a1a1a; color: var(--gold); }
+
+  .price {
+    font-family: "DM Mono", monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .price small { font-size: 10px; color: var(--ink-3); font-weight: 400; }
+  .pack-tag {
+    font-size: 10px;
+    color: var(--ink-3);
+    font-family: "DM Mono", monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== Hover 高亮 ===== */
+  .matrix-row:hover > .row-label,
+  .matrix-row:hover > .pack-cell {
+    background: #fff8e8;
+  }
+  .col-hover {
+    background: #fff8e8 !important;
+  }
+  .col-dim {
+    opacity: 0.32;
+    transition: opacity 0.2s ease;
+  }
+
+  /* ===== 资源详情卡区 ===== */
+  .section-h {
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .section-h .kicker { margin: 0; }
+  .section-h h2 {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--ink);
+  }
+  .section-h .count {
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-left: auto;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+  }
+  .rcard {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--line-2);
+    border-radius: 6px;
+    cursor: default;
+    transition: all 0.18s ease;
+  }
+  .rcard:hover {
+    border-color: var(--ink);
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  }
+  .rcard .rname {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .rcard .rmeta {
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .rcard .rmeta .token-cost {
+    color: var(--red);
+    font-weight: 700;
+  }
+  .rcard .rcap {
+    font-size: 11px;
+    color: var(--ink-2);
+    margin-top: 2px;
+  }
+
+  /* ===== 套餐说明 ===== */
+  .pack-notes {
+    background: #fff;
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+  .pack-notes strong { color: var(--ink); font-weight: 700; }
+  .pack-notes ul { margin: 4px 0 0 16px; padding: 0; }
+
+  /* ===== 交互提示 ===== */
+  .hint {
+    text-align: center;
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    padding: 8px 0;
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===== 顶部标题 ===== -->
+  <div class="kicker">UMDT × TOKEN ECONOMY · MEMBERSHIP PLANS</div>
+  <h1>AI 助手 / 专家 × 会员套餐</h1>
+  <div class="subtitle">
+    <strong>4 个独立套餐：</strong>NU / VIP / MN / MB · 各档资源<strong>不可跨档解锁</strong>
+    · 全部按 <strong>实际 Token 消耗</strong>计费
+    · <span class="mono" style="color:var(--red)">▶ 悬停列高亮</span>
+  </div>
+
+  <div class="hint">把鼠标移到任意套餐列或资源行上 → 整列 / 整行高亮</div>
+
+  <!-- ===== 4 套餐对比图 ===== -->
+  <div class="matrix-wrap" id="matrix">
+    <div class="matrix-head">
+      <div>资源 / 套餐</div>
+      <div class="is-pack" data-col="nu">NU · 免费试用</div>
+      <div class="is-pack" data-col="vip">VIP · 个人推荐</div>
+      <div class="is-pack" data-col="mn">MN · 团队首选</div>
+      <div class="is-pack" data-col="mb">MB · 企业旗舰</div>
+    </div>
+
+    <!-- 价格行（已删除：产品不收月费） -->
+
+    <!-- 月赠 Token 行 -->
+    <div class="matrix-row" data-row="gift">
+      <div class="row-label">
+        <span class="pack-tag">MONTHLY GIFT</span>
+        <strong>每月赠送 Token</strong>
+      </div>
+      <div class="pack-cell col-nu">
+        <div class="cell-main">20 万</div>
+        <div class="cell-note">Token / 月</div>
+      </div>
+      <div class="pack-cell col-vip">
+        <div class="cell-main">50 万</div>
+        <div class="cell-note">Token / 月</div>
+      </div>
+      <div class="pack-cell col-mn">
+        <div class="cell-main">150 万</div>
+        <div class="cell-note">Token / 月</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">200 万</div>
+        <div class="cell-note">Token / 月</div>
+      </div>
+    </div>
+
+    <!-- 永久免费 Token 行 -->
+    <div class="matrix-row" data-row="free">
+      <div class="row-label">
+        <span class="pack-tag">FREE TOKEN</span>
+        <strong>永久免费 Token</strong>
+      </div>
+      <div class="pack-cell col-nu"><div class="cell-main">100 万</div></div>
+      <div class="pack-cell col-vip"><div class="cell-main">100 万</div></div>
+      <div class="pack-cell col-mn"><div class="cell-main">100 万</div></div>
+      <div class="pack-cell col-mb"><div class="cell-main">100 万</div></div>
+    </div>
+
+    <!-- 助手行（所有档都有） -->
+    <div class="matrix-row" data-row="helpers">
+      <div class="row-label">
+        <span class="pack-tag">RESOURCES · 4 项</span>
+        <strong>AI 助手</strong>
+      </div>
+      <div class="pack-cell col-nu">
+        <div class="cell-main">✓ 全部 4 个</div>
+        <div class="cell-note">会议 · 设计 · 视频 · 写作</div>
+      </div>
+      <div class="pack-cell col-vip">
+        <div class="cell-main">✓ 全部 4 个</div>
+        <div class="cell-note">会议 · 设计 · 视频 · 写作</div>
+      </div>
+      <div class="pack-cell col-mn">
+        <div class="cell-main">✓ 全部 4 个</div>
+        <div class="cell-note">会议 · 设计 · 视频 · 写作</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">✓ 全部 4 个</div>
+        <div class="cell-note">会议 · 设计 · 视频 · 写作</div>
+      </div>
+    </div>
+
+    <!-- 入门专家行 -->
+    <div class="matrix-row" data-row="junior">
+      <div class="row-label">
+        <span class="pack-tag">RESOURCES · 7 项</span>
+        <strong>入门专家</strong>
+      </div>
+      <div class="pack-cell col-nu is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">NU 套餐不含</div>
+      </div>
+      <div class="pack-cell col-vip">
+        <div class="cell-main">✓ 全部 7 个</div>
+        <div class="cell-note">¥9.9 / 次 · 按 Token 实扣</div>
+      </div>
+      <div class="pack-cell col-mn">
+        <div class="cell-main">✓ 全部 7 个</div>
+        <div class="cell-note">¥9.9 / 次 · 按 Token 实扣</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">✓ 全部 7 个</div>
+        <div class="cell-note">¥9.9 / 次 · 按 Token 实扣</div>
+      </div>
+    </div>
+
+    <!-- 中级专家行 -->
+    <div class="matrix-row" data-row="mid">
+      <div class="row-label">
+        <span class="pack-tag">RESOURCES · 4 项</span>
+        <strong>中级专家</strong>
+      </div>
+      <div class="pack-cell col-nu is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">NU 套餐不含</div>
+      </div>
+      <div class="pack-cell col-vip is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">VIP 套餐不含</div>
+      </div>
+      <div class="pack-cell col-mn">
+        <div class="cell-main">✓ 全部 4 个</div>
+        <div class="cell-note">¥49 / 次 · 按 Token 实扣</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">✓ 全部 4 个</div>
+        <div class="cell-note">¥49 / 次 · 按 Token 实扣</div>
+      </div>
+    </div>
+
+    <!-- 顶级专家行 -->
+    <div class="matrix-row" data-row="top">
+      <div class="row-label">
+        <span class="pack-tag">RESOURCES · 5 项</span>
+        <strong>顶级专家</strong>
+      </div>
+      <div class="pack-cell col-nu is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">NU 套餐不含</div>
+      </div>
+      <div class="pack-cell col-vip is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">VIP 套餐不含</div>
+      </div>
+      <div class="pack-cell col-mn is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">MN 套餐不含</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">✓ 全部 5 个</div>
+        <div class="cell-note">¥299 / 次 · 按 Token 实扣</div>
+      </div>
+    </div>
+
+    <!-- 平台折扣行 -->
+    <div class="matrix-row" data-row="platform">
+      <div class="row-label">
+        <span class="pack-tag">DISCOUNT</span>
+        <strong>平台市场折扣</strong>
+      </div>
+      <div class="pack-cell col-nu">
+        <div class="cell-main">10 折</div>
+        <div class="cell-note">原价购买</div>
+      </div>
+      <div class="pack-cell col-vip">
+        <div class="cell-main">9 折</div>
+        <div class="cell-note">Token 单价</div>
+      </div>
+      <div class="pack-cell col-mn">
+        <div class="cell-main">8 折</div>
+        <div class="cell-note">Token 单价</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">7 折</div>
+        <div class="cell-note">Token 单价</div>
+      </div>
+    </div>
+
+    <!-- 抽佣行 -->
+    <div class="matrix-row" data-row="commission">
+      <div class="row-label">
+        <span class="pack-tag">COMMISSION</span>
+        <strong>用户市场抽佣</strong>
+      </div>
+      <div class="pack-cell col-nu">
+        <div class="cell-main">5%</div>
+        <div class="cell-note">买入他人 Token</div>
+      </div>
+      <div class="pack-cell col-vip">
+        <div class="cell-main">4%</div>
+        <div class="cell-note">买入他人 Token</div>
+      </div>
+      <div class="pack-cell col-mn">
+        <div class="cell-main">3%</div>
+        <div class="cell-note">买入他人 Token</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">2%</div>
+        <div class="cell-note">买入他人 Token</div>
+      </div>
+    </div>
+
+    <!-- 挂单卖出行 -->
+    <div class="matrix-row" data-row="sell">
+      <div class="row-label">
+        <span class="pack-tag">USER MARKET</span>
+        <strong>用户市场挂单卖出</strong>
+      </div>
+      <div class="pack-cell col-nu is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">NU 套餐不含</div>
+      </div>
+      <div class="pack-cell col-vip is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">VIP 套餐不含</div>
+      </div>
+      <div class="pack-cell col-mn is-empty">
+        <div class="cell-main">— 不包含</div>
+        <div class="cell-note">MN 套餐不含</div>
+      </div>
+      <div class="pack-cell col-mb">
+        <div class="cell-main">✓ 可挂单</div>
+        <div class="cell-note">卖出自有 Token</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 套餐说明 ===== -->
+  <div class="pack-notes">
+    <strong>核心规则：</strong>
+    <ul>
+      <li>4 档会员是 <strong>4 个独立套餐</strong>，资源不可跨档解锁（VIP 不能"升级"到 MN 拿中级专家）</li>
+      <li>所有资源（助手 / 入门 / 中级 / 顶级）<strong>全部按 Token 实扣</strong>，无免费档</li>
+      <li>月赠 Token + 折扣 + 抽佣随档位递增，VIP/MN/MB 可用资源范围不同</li>
+      <li>需要更多资源 / 更低抽佣 → 选择更高级档（不是"升级"，是"换套餐"）</li>
+    </ul>
+  </div>
+
+  <!-- ===== 4 个助手 ===== -->
+  <div class="section-h">
+    <span class="kicker">HELPERS · 助手</span>
+    <h2>4 个助手</h2>
+    <span class="count">所有套餐均可使用 · 按 Token 计费</span>
+  </div>
+  <div class="card-grid">
+    <div class="rcard"><div class="rname">AI 会议助手</div><div class="rmeta"><span>会议</span><span class="token-cost">~300 Token/次</span></div><div class="rcap">实时转录 · 重点提炼 · 待办事项</div></div>
+    <div class="rcard"><div class="rname">AI 设计助手</div><div class="rmeta"><span>设计</span><span class="token-cost">~500 Token/次</span></div><div class="rcap">视觉设计 · Logo / 海报 / VI</div></div>
+    <div class="rcard"><div class="rname">AI 视频助手</div><div class="rmeta"><span>视频</span><span class="token-cost">~600 Token/次</span></div><div class="rcap">视频创作 · 脚本 · 分镜 · 口播</div></div>
+    <div class="rcard"><div class="rname">AI 写作助手</div><div class="rmeta"><span>写作</span><span class="token-cost">~400 Token/次</span></div><div class="rcap">内容创作 · 公众号 · 周报 · 文案</div></div>
+  </div>
+
+  <!-- ===== 入门级 7 个 ===== -->
+  <div class="section-h">
+    <span class="kicker">JUNIOR · ¥9.9</span>
+    <h2>入门级专家</h2>
+    <span class="count">7 个 · VIP+ 套餐含 · 按 Token 实扣</span>
+  </div>
+  <div class="card-grid">
+    <div class="rcard"><div class="rname">销售转化专家</div><div class="rmeta"><span>销售</span><span>24h</span><span class="token-cost">~2,000 Token</span><span>★4.7</span></div><div class="rcap">识别意向 · 话术 · 跟进节奏</div></div>
+    <div class="rcard"><div class="rname">公众号爆款专家</div><div class="rmeta"><span>写作</span><span>48h</span><span class="token-cost">~2,500 Token</span><span>★4.6</span></div><div class="rcap">爆款公式 · 选题 · 标题</div></div>
+    <div class="rcard"><div class="rname">Logo 设计专家</div><div class="rmeta"><span>设计</span><span>12h</span><span class="token-cost">~1,500 Token</span><span>★4.8</span></div><div class="rcap">3 套方向 · 配色 · 字体</div></div>
+    <div class="rcard"><div class="rname">数据复盘专家</div><div class="rmeta"><span>数据</span><span>24h</span><span class="token-cost">~1,800 Token</span><span>★4.5</span></div><div class="rcap">数据整理 · 图表 · PPT 初稿</div></div>
+    <div class="rcard"><div class="rname">AI 客服托管</div><div class="rmeta"><span>客服</span><span>72h</span><span class="token-cost">~3,000 Token</span><span>★4.9</span></div><div class="rcap">7×24h 自动接待 · FAQ · 情绪检测</div></div>
+    <div class="rcard"><div class="rname">短视频脚本专家</div><div class="rmeta"><span>视频</span><span>24h</span><span class="token-cost">~2,200 Token</span><span>★4.7</span></div><div class="rcap">钩子公式 · 字幕 · BGM 建议</div></div>
+    <div class="rcard"><div class="rname">会议纪要专家</div><div class="rmeta"><span>会议</span><span>4h</span><span class="token-cost">~800 Token</span><span>★4.8</span></div><div class="rcap">实时转录 · 重点 · 待办</div></div>
+  </div>
+
+  <!-- ===== 中级 4 个 ===== -->
+  <div class="section-h">
+    <span class="kicker">MID · ¥49</span>
+    <h2>中级专家</h2>
+    <span class="count">4 个 · MN+ 套餐含 · 按 Token 实扣</span>
+  </div>
+  <div class="card-grid">
+    <div class="rcard"><div class="rname">品牌文案专家</div><div class="rmeta"><span>写作</span><span>48h</span><span class="token-cost">~8,000 Token</span><span>★4.8</span></div><div class="rcap">品牌定位 · Slogan · 故事</div></div>
+    <div class="rcard"><div class="rname">品牌设计专家</div><div class="rmeta"><span>设计</span><span>72h</span><span class="token-cost">~12,000 Token</span><span>★4.9</span></div><div class="rcap">VI 终稿 · 色彩 · 应用规范</div></div>
+    <div class="rcard"><div class="rname">大客户销售专家</div><div class="rmeta"><span>销售</span><span>168h</span><span class="token-cost">~25,000 Token</span><span>★4.9</span></div><div class="rcap">客户画像 · 报价方案 · 谈判</div></div>
+    <div class="rcard"><div class="rname">客户成功专家</div><div class="rmeta"><span>客服</span><span>168h</span><span class="token-cost">~20,000 Token</span><span>★4.8</span></div><div class="rcap">客户分层 · 续费 · 增值</div></div>
+  </div>
+
+  <!-- ===== 顶级 5 个 ===== -->
+  <div class="section-h">
+    <span class="kicker">TOP · ¥299</span>
+    <h2>顶级专家</h2>
+    <span class="count">5 个 · MB 套餐专属 · 按 Token 实扣</span>
+  </div>
+  <div class="card-grid">
+    <div class="rcard"><div class="rname">TVC 广告专家</div><div class="rmeta"><span>视频</span><span>720h</span><span class="token-cost">~80,000 Token</span><span>★5.0</span></div><div class="rcap">创意脚本 · 分镜 · 拍摄 · 后期</div></div>
+    <div class="rcard"><div class="rname">数据战略专家</div><div class="rmeta"><span>数据</span><span>720h</span><span class="token-cost">~100,000 Token</span><span>★5.0</span></div><div class="rcap">数据架构 · 指标体系 · BI</div></div>
+    <div class="rcard"><div class="rname">内容战略专家</div><div class="rmeta"><span>写作</span><span>720h</span><span class="token-cost">~80,000 Token</span><span>★5.0</span></div><div class="rcap">内容矩阵 · IP 定位 · 分发</div></div>
+    <div class="rcard"><div class="rname">风水顾问专家</div><div class="rmeta"><span>合规</span><span>24h</span><span class="token-cost">~5,000 Token</span><span>★4.9</span></div><div class="rcap">办公室风水 · 座位 · 招财</div></div>
+    <div class="rcard"><div class="rname">战略会议专家</div><div class="rmeta"><span>会议</span><span>48h</span><span class="token-cost">~40,000 Token</span><span>★5.0</span></div><div class="rcap">高管教练 · OKR · 战略对齐</div></div>
+  </div>
+
+</div>
+
+<!-- ===== 交互 JS：列 / 行高亮 ===== -->
+<script>
+(function () {
+  var wrap = document.getElementById('matrix');
+  if (!wrap) return;
+
+  var colSelectors = ['.col-nu', '.col-vip', '.col-mn', '.col-mb'];
+
+  wrap.querySelectorAll('.matrix-head > [data-col]').forEach(function (headCell) {
+    var col = headCell.dataset.col;
+    headCell.addEventListener('mouseenter', function () {
+      highlightColumn(col);
+    });
+    headCell.addEventListener('mouseleave', function () {
+      clearHighlight();
+    });
+  });
+
+  wrap.querySelectorAll('.pack-cell').forEach(function (cell) {
+    cell.addEventListener('mouseenter', function () {
+      colSelectors.forEach(function (s) {
+        if (cell.matches(s)) {
+          var col = s.replace('.col-', '');
+          highlightColumn(col);
+        }
+      });
+    });
+    cell.addEventListener('mouseleave', function () {
+      clearHighlight();
+    });
+  });
+
+  function highlightColumn(col) {
+    clearHighlight();
+    wrap.classList.add('has-col-hover');
+    colSelectors.forEach(function (s) {
+      var target = s.replace('.col-', '');
+      wrap.querySelectorAll('.col-' + target).forEach(function (el) {
+        if (target === col) el.classList.add('col-hover');
+        else el.classList.add('col-dim');
+      });
+    });
+    wrap.querySelectorAll('.matrix-head > [data-col]').forEach(function (h) {
+      if (h.dataset.col === col) h.classList.add('col-hover');
+      else h.classList.add('col-dim');
+    });
+  }
+
+  function clearHighlight() {
+    wrap.classList.remove('has-col-hover');
+    wrap.querySelectorAll('.col-hover, .col-dim').forEach(function (el) {
+      el.classList.remove('col-hover', 'col-dim');
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

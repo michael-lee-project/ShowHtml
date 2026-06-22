@@ -159,13 +159,21 @@ function renderOffice() {
   const stationsHTML = WORKSTATION_LAYOUT.map((agentId, idx) => {
     const agent = getAgent(agentId);
     const room = OFFICE_ROOMS[agentId] || { no: `ROOM 0${idx + 1}`, title: agent.role, sub: agent.en };
+    // M3: helper 显示「免费使用」chip，expert 显示「🔒 升级到 X 解锁」chip
+    const isExpert = agent.type === 'expert';
+    const usable = typeof canUseAgent === 'function' ? canUseAgent(agentId) : !isExpert;
+    const chipHTML = isExpert
+      ? `<div class="ws-agent-chip is-locked ${usable ? 'is-unlocked' : ''}">${usable ? '¥' + (agent.priceUMDT || 9.9) : '🔒 ' + agent.requireLevel + '+'}</div>`
+      : `<div class="ws-agent-chip is-free">免费使用</div>`;
     return `
-      <div class="workstation office-room ws-${idx} room-${agentId} ${agent.status === 'busy' ? 'is-busy' : ''} ${agent.status === 'running' ? 'is-busy' : ''}"
+      <div class="workstation office-room ws-${idx} room-${agentId} ${agent.status === 'busy' ? 'is-busy' : ''} ${agent.status === 'running' ? 'is-busy' : ''} ${isExpert && !usable ? 'is-locked' : ''} ${isExpert && usable ? 'is-unlocked' : ''}"
            data-agent-id="${agentId}"
+           data-agent-type="${agent.type || 'helper'}"
            style="--agent-color:${agent.color}">
         <div class="room-bg-grid" aria-hidden="true"></div>
         <div class="room-glass-wall room-glass-wall-top" aria-hidden="true"></div>
         <div class="room-glass-wall room-glass-wall-left" aria-hidden="true"></div>
+        ${chipHTML}
         <div class="room-plate">
           <span class="room-no mono">${room.no}</span>
           <strong>${room.title}</strong>
@@ -206,6 +214,14 @@ function renderOffice() {
     el.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = el.dataset.agentTarget;
+      // M3: expert 未达等级时弹 toast 引导升级，不打开 chat
+      const a = getAgent(id);
+      if (a && a.type === 'expert' && typeof canUseAgent === 'function' && !canUseAgent(id)) {
+        showLevelShortage(a.requireLevel || 'VIP');
+        highlightWorkstation(id);
+        focusScreenOnAgent(id);
+        return;
+      }
       openAgentPanel(id);
       highlightWorkstation(id);
       // 阶段 4.3：联动大屏聚焦到该 Agent

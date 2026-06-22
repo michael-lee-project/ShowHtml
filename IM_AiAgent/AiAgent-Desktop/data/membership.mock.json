@@ -1,0 +1,49 @@
+{
+  "levels": ["NU", "VIP", "MN", "MB"],
+  "levelNames": {
+    "NU": "基础会员",
+    "VIP": "进阶会员",
+    "MN": "专业会员",
+    "MB": "至尊会员"
+  },
+  "platformDiscount": {
+    "NU": 1.00,
+    "VIP": 0.90,
+    "MN": 0.80,
+    "MB": 0.70
+  },
+  "monthlyGift": {
+    "NU": 200000,
+    "VIP": 500000,
+    "MN": 1000000,
+    "MB": 2000000
+  },
+  "hireableTiers": {
+    "NU": [],
+    "VIP": ["junior"],
+    "MN": ["junior", "mid"],
+    "MB": ["junior", "mid", "top"]
+  },
+  "commission": {
+    "NU": 0.05,
+    "VIP": 0.04,
+    "MN": 0.03,
+    "MB": 0.02
+  },
+  "upgradePrice": {
+    "VIP": 199,
+    "MN": 999,
+    "MB": 4999
+  },
+  "benefits": [
+    { "key": "freeToken",       "label": "免费 Token 启动包",  "NU": "100 万",    "VIP": "100 万",    "MN": "100 万",    "MB": "100 万" },
+    { "key": "platformDiscount","label": "平台 Token 折扣",    "NU": "无折扣",    "VIP": "9 折",     "MN": "8 折",     "MB": "7 折" },
+    { "key": "monthlyGift",     "label": "月度赠送 Token",      "NU": "20 万",     "VIP": "50 万",     "MN": "100 万",    "MB": "200 万" },
+    { "key": "availableHelpers","label": "可用免费助手",       "NU": "全部 4 个",  "VIP": "全部 4 个",  "MN": "全部 4 个",  "MB": "全部 4 个" },
+    { "key": "hireableExperts", "label": "可雇佣专家档位",     "NU": "不可",      "VIP": "初级 3 个",  "MN": "中级 8 个",  "MB": "全部 16 个" },
+    { "key": "userMarketSell",  "label": "用户市场挂单出售",   "NU": "不支持",    "VIP": "不支持",    "MN": "不支持",    "MB": "支持" },
+    { "key": "commission",      "label": "用户市场交易抽佣",   "NU": "5%",        "VIP": "4%",        "MN": "3%",        "MB": "2%" },
+    { "key": "priorityQueue",   "label": "专家优先排队",       "NU": "不支持",    "VIP": "不支持",    "MN": "支持",      "MB": "支持" },
+    { "key": "vipService",      "label": "专属客服",           "NU": "不支持",    "VIP": "不支持",    "MN": "不支持",    "MB": "支持" }
+  ]
+}

@@ -98,13 +98,13 @@ const WORKFLOW_ITEMS = [
 
 
 const AI_AUTO_SCENES = [
-  { id:'silent', no:'01', title:'沉默唤醒', agent:'AI 销售助手', desc:'高意向客户 3 天未回复，AI 低压力重新触达。', tag:'主动跟进' },
-  { id:'price', no:'02', title:'价格异议', agent:'AI 销售助手', desc:'客户觉得贵，AI 拆解顾虑并切换低门槛方案。', tag:'异议处理' },
-  { id:'close', no:'03', title:'成交推进', agent:'AI 销售助手', desc:'客户问付款方式，AI 抓住强成交窗口。', tag:'临门一脚' },
-  { id:'complaint', no:'04', title:'投诉安抚', agent:'AI 客服助手', desc:'客户不满发货慢，AI 先安抚再判断是否转人工。', tag:'风险客服' },
-  { id:'repurchase', no:'05', title:'复购提醒', agent:'AI 客服助手', desc:'根据购买周期主动提醒补货并发送老客户券。', tag:'复购增长' },
-  { id:'meeting-follow', no:'06', title:'会后跟进', agent:'AI 销售助手', desc:'会议助手提炼重点，销售助手自动发会后方案。', tag:'三 Agent 协同' },
-  { id:'semiauto', no:'07', title:'半自动化', agent:'AI 销售助手', desc:'AI 给方案，你选思路，AI 再回复。', tag:'人机协同' }
+  { id:'semiauto', no:'01', title:'半自动化', agent:'AI 销售助手', desc:'AI 给方案，你选思路，AI 再回复。', tag:'人机协同' },
+  { id:'silent', no:'02', title:'沉默唤醒', agent:'AI 销售助手', desc:'高意向客户 3 天未回复，AI 低压力重新触达。', tag:'主动跟进' },
+  { id:'price', no:'03', title:'价格异议', agent:'AI 销售助手', desc:'客户觉得贵，AI 拆解顾虑并切换低门槛方案。', tag:'异议处理' },
+  { id:'close', no:'04', title:'成交推进', agent:'AI 销售助手', desc:'客户问付款方式，AI 抓住强成交窗口。', tag:'临门一脚' },
+  { id:'complaint', no:'05', title:'投诉安抚', agent:'AI 客服助手', desc:'客户不满发货慢，AI 先安抚再判断是否转人工。', tag:'风险客服' },
+  { id:'repurchase', no:'06', title:'复购提醒', agent:'AI 客服助手', desc:'根据购买周期主动提醒补货并发送老客户券。', tag:'复购增长' },
+  { id:'meeting-follow', no:'07', title:'会后跟进', agent:'AI 销售助手', desc:'会议助手提炼重点，销售助手自动发会后方案。', tag:'三 Agent 协同' }
 ];
 
 
@@ -2689,9 +2689,45 @@ function renderAiSceneChip(scene) {
 }
 
 function getAiScenarioDemo(id) {
+  console.log('getAiScenarioDemo id =', JSON.stringify(id));
   const demos = {
+    semiauto: {
+      agent:'AI 销售助手', id:'semiauto', title:'半自动化', name:'小雅', avatar:'雅', scene:'客户问：这个产品效果到底怎么样？', score:85,
+      tags:['效果疑问','需求确认','人机协同'], strategy:'AI出3个思路，你选一个AI再回复',
+      insight:'AI能分析出客户常见问法，但有些场景需要你选切入角度，AI再写具体回复。',
+      goal:'AI分析问题给出3个可选思路，你选择后，AI生成最终回复发给客户。',
+      done:'已给出3个可选方案，等待你的选择后生成最终回复。',
+      result:{main:'AI 已分析问题，输出3个可选思路，等待人工选择', items:['客户问题：效果信心顾虑','AI输出：3种应对策略','下一步：人工选择 → AI生成回复']},
+      steps:[
+        {type:'customer', text:'你这个产品，实际效果到底怎么样啊？我有点担心达不到预期。'},
+        {type:'thinking', lines:['✓ 识别核心顾虑：效果信心','✓ 匹配3种常见应对策略','● 输出3个可选思路，请人工选择']},
+        {type:'semi-options', options:[
+          {id:1, text:'直接证明 → 放老客户反馈+数据对比'},
+          {id:2, text:'降低预期 → 先讲清楚边界，不夸大承诺'},
+          {id:3, text:'试用体验 → 建议先小单体验，效果验证再升级'}
+        ]}
+      ]
+    },
+    'semi-auto': {
+      // 兜底：兼容旧缓存按钮点击
+      agent:'AI 销售助手', id:'semiauto', title:'半自动化', name:'小雅', avatar:'雅', scene:'客户问：这个产品效果到底怎么样？', score:85,
+      tags:['效果疑问','需求确认','人机协同'], strategy:'AI出3个思路，你选一个AI再回复',
+      insight:'AI能分析出客户常见问法，但有些场景需要你选切入角度，AI再写具体回复。',
+      goal:'AI分析问题给出3个可选思路，你选择后，AI生成最终回复发给客户。',
+      done:'已给出3个可选方案，等待你的选择后生成最终回复。',
+      result:{main:'AI 已分析问题，输出3个可选思路，等待人工选择', items:['客户问题：效果信心顾虑','AI输出：3种应对策略','下一步：人工选择 → AI生成回复']},
+      steps:[
+        {type:'customer', text:'你这个产品，实际效果到底怎么样啊？我有点担心达不到预期。'},
+        {type:'thinking', lines:['✓ 识别核心顾虑：效果信心','✓ 匹配3种常见应对策略','● 输出3个可选思路，请人工选择']},
+        {type:'semi-options', options:[
+          {id:1, text:'直接证明 → 放老客户反馈+数据对比'},
+          {id:2, text:'降低预期 → 先讲清楚边界，不夸大承诺'},
+          {id:3, text:'试用体验 → 建议先小单体验，效果验证再升级'}
+        ]}
+      ]
+    },
     silent: {
-      id:'silent', title:'沉默唤醒', name:'小雅', avatar:'雅', agent:'AI 销售助手', scene:'高意向客户 3 天未回复', score:84,
+      id:'silent', title:'沉默唤醒', name:'小雅', avatar:'雅', agent:'AI 销售助手', scene:'高意向客户 3天未回复', score:84,
       tags:['沉默客户','曾问价格','轻压力触达'], strategy:'轻提醒 + 选择题唤醒',
       goal:'客户不回不是拒绝，AI 自动换低压力话术重新触达。',
       result:{main:'Agent 输出：客户重新进入可跟进队列', items:['客户阶段：沉默 → 已回应','意向分：76 → 84','下一步：等待 A/B 选择','写入画像：价格谨慎 / 可低门槛转化','人工建议：无需接管']},
@@ -2905,11 +2941,30 @@ function getAiDemoThread(c, thread, relatedChat) {
       ]
     },
     semiauto: {
-      agent:'AI 销售助手', scene:'客户问：这个产品效果到底怎么样？', score:85,
+      agent:'AI 销售助手', id:'semiauto', title:'半自动化', name:'小雅', avatar:'雅', scene:'客户问：这个产品效果到底怎么样？', score:85,
       tags:['效果疑问','需求确认','人机协同'], strategy:'AI出3个思路，你选一个AI再回复',
       insight:'AI能分析出客户常见问法，但有些场景需要你选切入角度，AI再写具体回复。',
       goal:'AI分析问题给出3个可选思路，你选择后，AI生成最终回复发给客户。',
       done:'已给出3个可选方案，等待你的选择后生成最终回复。',
+      result:{main:'AI 已分析问题，输出3个可选思路，等待人工选择', items:['客户问题：效果信心顾虑','AI输出：3种应对策略','下一步：人工选择 → AI生成回复']},
+      steps:[
+        {type:'customer', text:'你这个产品，实际效果到底怎么样啊？我有点担心达不到预期。'},
+        {type:'thinking', lines:['✓ 识别核心顾虑：效果信心','✓ 匹配3种常见应对策略','● 输出3个可选思路，请人工选择']},
+        {type:'semi-options', options:[
+          {id:1, text:'直接证明 → 放老客户反馈+数据对比'},
+          {id:2, text:'降低预期 → 先讲清楚边界，不夸大承诺'},
+          {id:3, text:'试用体验 → 建议先小单体验，效果验证再升级'}
+        ]}
+      ]
+    },
+    'semi-auto': {
+      // 兜底：兼容旧缓存按钮点击
+      agent:'AI 销售助手', id:'semiauto', title:'半自动化', name:'小雅', avatar:'雅', scene:'客户问：这个产品效果到底怎么样？', score:85,
+      tags:['效果疑问','需求确认','人机协同'], strategy:'AI出3个思路，你选一个AI再回复',
+      insight:'AI能分析出客户常见问法，但有些场景需要你选切入角度，AI再写具体回复。',
+      goal:'AI分析问题给出3个可选思路，你选择后，AI生成最终回复发给客户。',
+      done:'已给出3个可选方案，等待你的选择后生成最终回复。',
+      result:{main:'AI 已分析问题，输出3个可选思路，等待人工选择', items:['客户问题：效果信心顾虑','AI输出：3种应对策略','下一步：人工选择 → AI生成回复']},
       steps:[
         {type:'customer', text:'你这个产品，实际效果到底怎么样啊？我有点担心达不到预期。'},
         {type:'thinking', lines:['✓ 识别核心顾虑：效果信心','✓ 匹配3种常见应对策略','● 输出3个可选思路，请人工选择']},
@@ -2971,7 +3026,7 @@ function renderAiDemoStep(step, idx, c, demo) {
           <b>${demo.agent} 已分析，你选一个思路我来写回复：</b>
           <div class="semi-options-list">
             ${step.options.map(opt => `
-              <button class="semi-option-item" data-action="select-semi-option" data-demo-id="${demo.id}" data-option-id="${opt.id}">
+              <button class="semi-option-item" data-action="select-semi-option" data-demo-sid="${demo.id}" data-option-id="${opt.id}">
                 <span class="opt-text">${opt.text}</span>
                 <i></i>
               </button>

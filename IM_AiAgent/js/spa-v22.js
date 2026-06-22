@@ -24,6 +24,15 @@ function initSPA() {
   bindGlobalClicks();
   updateTime();
   setInterval(updateTime, 60000);
+  // 老板：打开消息页后自动进入半自动化场景演示
+  setTimeout(() => {
+    // 如果当前还是 chat-list，自动打开半自动化
+    const current = viewStack[viewStack.length - 1];
+    if (current === 'message') {
+      viewStack.push('chat-demo:semiauto');
+      renderCurrentView();
+    }
+  }, 300);
 }
 
 /* ============================================
@@ -32,9 +41,19 @@ function initSPA() {
 function renderCurrentView() {
   const content = document.getElementById('phoneContent');
   const current = viewStack[viewStack.length - 1];
+  console.log('renderCurrentView current =', JSON.stringify(current));
 
   // 解析 view + 参数
-  const [viewName, arg] = current.split(':');
+  const colonIndex = current.indexOf(':');
+  let viewName, arg;
+  if (colonIndex >= 0) {
+    viewName = current.slice(0, colonIndex);
+    arg = current.slice(colonIndex + 1);
+    console.log('parsed viewName =', JSON.stringify(viewName), 'arg =', JSON.stringify(arg));
+  } else {
+    viewName = current;
+    arg = '';
+  }
 
   // 注入当前 view，并强制激活（避免非首页视图忘记带 active 导致 display:none）
   const html = VIEWS[viewName] ? VIEWS[viewName](arg) : '';
@@ -172,6 +191,7 @@ function bindGlobalClicks() {
     switch (action) {
       case 'open':
         if (target2) {
+          console.log('open target2 =', JSON.stringify(target2));
           viewStack.push(target2);
           renderCurrentView();
         }
@@ -242,6 +262,57 @@ function bindGlobalClicks() {
           showToast('✅ 已收到问题，AI 正在处理中（原型演示）', 'success');
         }
         break;
+      case 'select-semi-option': {
+        // 半自动化场景：选择一个思路，AI 继续生成回复
+        const demoSid = target.getAttribute('data-demo-sid');
+        const optionId = parseInt(target.getAttribute('data-option-id'), 10);
+        console.log('select-semi-option demoSid:', demoSid, 'optionId:', optionId);
+        // 标记选中：页面只有一组选项，直接全部清除
+        const allOptions = document.querySelectorAll('.semi-option-item');
+        allOptions.forEach(opt => opt.classList.remove('selected'));
+        target.classList.add('selected');
+        // 预定义不同选项的回复
+        const finalReplies = {
+          1: '客户你好，给你看一下我们几百位老客户的真实反馈，平均下来 87% 的坚持使用的客户都达到了预期效果。我放几个对比截图你看看，都是真实客户的使用记录。',
+          2: '实话说，这个产品不是适合所有人。它需要你每天能抽 10 分钟跟进客户，如果能坚持，效果一般不会差；如果做不到，我建议你可以先从小的开始。我不夸大效果，只承诺能做到的：帮你整理好话术和跟进节奏，你跟着做就行。',
+          3: '我建议你先拿体验装试一试，自己走一遍完整流程，确认效果适合你的客户群体，再考虑升级全套。体验装价格不高，而且没用完可退，你没什么风险。'
+        };
+        console.log('finalReplies[optionId]:', finalReplies[optionId]);
+        // 找到聊天框
+        let chatBody = document.getElementById(`chatBody-${demoSid}`);
+        if (!chatBody) {
+          // 降级找通用聊天容器
+          chatBody = document.querySelector('.ai-demo-chat .marketing-chat-stack');
+          console.log('fallback to generic chat container:', !!chatBody);
+        }
+        if (!chatBody) {
+          console.error('cannot find chat body');
+          showToast('❌ 找不到对话容器', 'error');
+          return;
+        }
+        // 添加AI思考loading
+        const thinking = document.createElement('div');
+        thinking.className = 'ai-thinking-card ai-demo-loading';
+        thinking.innerHTML = '<span>AI 销售助手正在写回复</span><div class="ai-thinking-dots"><i></i><i></i><i></i></div>';
+        chatBody.appendChild(thinking);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // 延时1.5秒生成最终回复
+        setTimeout(() => {
+          thinking.remove();
+          const reply = finalReplies[optionId];
+          if (reply) {
+            console.log('appending reply:', reply.substring(0, 30));
+            appendAiMessage(chatBody, reply, '小雅', '雅');
+            chatBody.scrollTop = chatBody.scrollHeight;
+            showToast('✅ 已生成最终回复', 'success');
+          } else {
+            console.error('no reply for optionId', optionId);
+            showToast('❌ 找不到对应回复', 'error');
+          }
+        }, 1500);
+        break;
+      }
       case 'open-notification-center':
         // 通知中心：原型演示列出最近通知
         const notifications = [
