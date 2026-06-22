@@ -207,9 +207,10 @@ main{
 }
 .card .meta{
   font:500 10px 'DM Mono',monospace;color:#918a7d;letter-spacing:.2px;
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .card .go{
-  display:inline-flex;align-items:center;gap:4px;
+  display:inline-flex;align-items:center;gap:4px;flex-shrink:0;white-space:nowrap;
   font:600 11px/1 'DM Mono',monospace;letter-spacing:.4px;
   background:#1a1a1a;color:#fff;
   padding:7px 11px;border-radius:10px;
@@ -230,21 +231,21 @@ main{
 <div class="topbar">
   <span class="logo">MICHAEL<i>·</i>PROTOTYPES</span>
   <nav id="nav">
-    <button class="chip active" data-cat="all">全部<i>08</i></button>
+    <button class="chip active" data-cat="all">全部<i>09</i></button>
     <button class="chip" data-cat="charity">公益<i>02</i></button>
     <button class="chip" data-cat="admin">后台<i>02</i></button>
     <button class="chip" data-cat="game">游戏<i>01</i></button>
     <button class="chip" data-cat="ecom">电商<i>01</i></button>
     <button class="chip" data-cat="defi">DeFi<i>01</i></button>
-    <button class="chip" data-cat="ai">AI<i>01</i></button>
+    <button class="chip" data-cat="ai">AI<i>02</i></button>
   </nav>
 </div>
 <main>
   <div class="intro">
     <div class="left">
       <div class="kicker">PROTOTYPES · 2026.05</div>
-      <h1><span class="num">08</span>原型实验室</h1>
-      <p class="sub">共 <i>08</i> 件作品,涵盖 <i>游戏娱乐 / 电商平台 / 管理后台 / DeFi / 公益 / AI</i> 等方向</p>
+      <h1><span class="num">09</span>原型实验室</h1>
+      <p class="sub">共 <i>09</i> 件作品,涵盖 <i>游戏娱乐 / 电商平台 / 管理后台 / DeFi / 公益 / AI</i> 等方向</p>
     </div>
     <div class="meta">
       <div class="live">实验室在线</div>
@@ -252,7 +253,7 @@ main{
     </div>
   </div>
   <div class="grid" id="grid">
-    <article class="card ai" data-cat="ai" data-href="IM_AiAgent/index.html">
+    <article class="card ai" data-cat="ai" data-href="IM_AiAgent/AiAgent-Desktop/index.html">
       <div class="visual">
         <div class="phone-mini">
           <div class="phone-mini-screen" style="background:#eef2ff;display:flex;flex-direction:column;">
@@ -289,17 +290,64 @@ main{
       <div class="body">
         <div class="top">
           <div class="tags"><span class="tag tag-ai">AI Agent</span><span class="tag" style="background:#dcfce7;color:#166534">NEW</span></div>
+          <h3>IM AiAgent-桌面端V3.0 <span class="ver">v3.0</span></h3>
+          <p class="desc">桌面端 IM AI Agent 原型,面向多会话协作、智能体工作台、工具调用与任务自动化。</p>
+        </div>
+        <div class="footer">
+          <span class="meta">2026.06 · 桌面端 · V3.0</span>
+          <button class="go">进入 <span>↗</span></button>
+        </div>
+      </div>
+    </article>
+
+        <article class="card ai" data-cat="ai" data-href="IM_AiAgent/index.html">
+      <div class="visual">
+        <div class="phone-mini">
+          <div class="phone-mini-screen" style="background:#eef2ff;display:flex;flex-direction:column;">
+            <div style="height:10px;background:linear-gradient(90deg,#1e1b4b,#3730a3);display:flex;align-items:center;padding:0 4px;gap:3px;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:3px">
+                <div style="width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:grid;place-items:center;font-size:4px">✨</div>
+                <span style="font-size:4px;color:#fff;font-weight:700">AI Agent</span>
+              </div>
+              <div style="display:flex;gap:1px">
+                <span style="width:2px;height:2px;border-radius:50%;background:#22c55e"></span>
+              </div>
+            </div>
+            <div style="flex:1;padding:3px;display:flex;flex-direction:column;gap:2px;background:linear-gradient(180deg,#eef2ff,#fff)">
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:grid;place-items:center;font-size:4px;color:#fff">✨</div>
+                <div style="background:#fff;border-radius:4px 4px 4px 1px;padding:3px 4px;font-size:5px;color:#374151;line-height:1.3;border:1px solid #e0e7ff">Hi!我能帮你</div>
+              </div>
+              <div style="display:flex;gap:2px;justify-content:flex-end">
+                <div style="background:linear-gradient(135deg,#3730a3,#1e1b4b);border-radius:4px 4px 1px 4px;padding:3px 5px;font-size:5px;color:#fff;line-height:1.3">查订单#123</div>
+              </div>
+              <div style="display:flex;gap:2px;align-items:flex-end">
+                <div style="width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:grid;place-items:center;font-size:4px;color:#fff">✨</div>
+                <div style="background:#fff;border-radius:4px 4px 4px 1px;padding:3px 4px;font-size:5px;color:#374151;line-height:1.3;border:1px solid #e0e7ff">订单已发货 ✨</div>
+              </div>
+            </div>
+            <div style="height:9px;background:#fff;border-top:1px solid #e0e7ff;display:flex;align-items:center;padding:0 3px;gap:2px">
+              <div style="flex:1;height:6px;background:#f5f3ff;border-radius:3px;display:flex;align-items:center;padding:0 3px"><span style="font-size:4px;color:#a5b4fc">💬 发送消息...</span></div>
+              <div style="width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3730a3);display:grid;place-items:center;font-size:4px;color:#fff">↑</div>
+            </div>
+          </div>
+        </div>
+        <div class="visual-label">AI AGENT</div>
+      </div>
+      <div class="body">
+        <div class="top">
+          <div class="tags"><span class="tag tag-ai">AI Agent</span></div>
           <h3>IM AI Agent <span class="ver">v1.0</span></h3>
           <p class="desc">即时通讯 + AI 智能体,支持多轮对话、工具调用、业务自动化操作。</p>
         </div>
         <div class="footer">
           <span class="meta">2026.05 · 5 模块</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
 
-    <article class="card charity" data-cat="charity" data-href="charity/index.html">
+<article class="card charity" data-cat="charity" data-href="charity/index.html">
       <div class="visual">
         <div class="phone-mini">
           <div class="phone-mini-screen" style="background:#fdf6f0;display:flex;flex-direction:column;">
@@ -325,7 +373,7 @@ main{
         </div>
         <div class="footer">
           <span class="meta">2026.05 · 8 模块</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
@@ -364,7 +412,7 @@ main{
         </div>
         <div class="footer">
           <span class="meta">2026.05 · 10 模块</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
@@ -407,7 +455,7 @@ main{
         </div>
         <div class="footer">
           <span class="meta">2026.05 · 9 模块</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
@@ -448,7 +496,7 @@ main{
         </div>
         <div class="footer">
           <span class="meta">2026.05 · 6 模块</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
@@ -485,7 +533,7 @@ main{
         </div>
         <div class="footer">
           <span class="meta">2026.05 · 3 流程</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
@@ -525,7 +573,7 @@ main{
         </div>
         <div class="footer">
           <span class="meta">Figma · 4 场景</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
@@ -561,7 +609,7 @@ main{
         </div>
         <div class="footer">
           <span class="meta">2026.05 · 7 模块</span>
-          <button class="go">查看 <span>↗</span></button>
+          <button class="go">进入 <span>↗</span></button>
         </div>
       </div>
     </article>
