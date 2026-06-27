@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UMakex_Desktop · V1 原型</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 40px; }
+    .index-wrap {
+      max-width: 760px;
+      width: 100%;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+      padding: 40px 48px;
+    }
+    .index-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .index-sub { color: var(--text-secondary); margin-bottom: 28px; }
+    .index-section { margin-bottom: 24px; }
+    .index-section h3 { font-size: 14px; font-weight: 600; color: var(--text-tertiary); margin-bottom: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .index-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .index-link {
+      display: block;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .index-link:hover { border-color: var(--text-accent); transform: translateY(-1px); box-shadow: var(--shadow-pop); }
+    .index-link.is-soon { opacity: 0.5; cursor: not-allowed; }
+    .index-link-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .index-link-desc { font-size: 12px; color: var(--text-secondary); }
+    .index-link-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .tag-v1 { background: #E8F5EE; color: #07C160; }
+    .tag-v2 { background: #FFF4E5; color: #C46A1F; }
+    .tag-v3 { background: #EDE7FF; color: #6E4BD8; }
+  </style>
+</head>
+<body>
+  <div class="index-wrap">
+    <div class="index-title">UMakex_Desktop · V4.0 原型</div>
+    <div class="index-sub">macOS 风格桌面端 AI Agent 协同工作平台 · 分文件 HTML 原型（1180×820）</div>
+
+    <div class="index-section">
+      <h3>V1 · IM 基础 + 公众号（当前迭代）</h3>
+      <div class="index-grid">
+        <a href="messages.html" class="index-link">
+          <div class="index-link-name">消息列表 <span class="index-link-tag tag-v1">V1</span></div>
+          <div class="index-link-desc">会话列表 + 单聊 / 群聊窗口</div>
+        </a>
+        <a href="contacts.html" class="index-link">
+          <div class="index-link-name">通讯录 <span class="index-link-tag tag-v1">V1</span></div>
+          <div class="index-link-desc">好友 / 群聊 + 新朋友 + 黑名单</div>
+        </a>
+        <a href="profile.html" class="index-link">
+          <div class="index-link-name">我的 <span class="index-link-tag tag-v1">V1</span></div>
+          <div class="index-link-desc">个人卡 + 统计 + 快捷功能 + 退出</div>
+        </a>
+        <a href="official-account.html" class="index-link">
+          <div class="index-link-name">公众号 <span class="index-link-tag tag-v1">V1</span></div>
+          <div class="index-link-desc">UMC 集团 + 旗下项目矩阵（纯展示）</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="index-section">
+      <h3>V2 · AI Agent 协同工作台</h3>
+      <div class="index-grid">
+        <a href="agent-workstation.html" class="index-link">
+          <div class="index-link-name">办公室协同 <span class="index-link-tag tag-v2">V2</span></div>
+          <div class="index-link-desc">等距视角办公室 + 8 专家 + CEO 大屏 + 抽屉</div>
+        </a>
+        <a href="agent-workstation.html" class="index-link">
+          <div class="index-link-name">销冠专家 <span class="index-link-tag tag-v2">V2</span></div>
+          <div class="index-link-desc">半自动 / 全自动聊天接管交互演示</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="index-section">
+      <h3>V3 · 算力中心 / Token 经济系统</h3>
+      <div class="index-grid">
+        <div class="index-link is-soon">
+          <div class="index-link-name">算力中心 <span class="index-link-tag tag-v3">V3</span></div>
+          <div class="index-link-desc">认购池 + 销售池 + 会员价格</div>
+        </div>
+        <div class="index-link is-soon">
+          <div class="index-link-name">Token 盲盒 <span class="index-link-tag tag-v3">V3</span></div>
+          <div class="index-link-desc">9.9 USDT 转盘抽奖 + 用户略赚概率</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

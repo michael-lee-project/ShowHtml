@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>通讯录 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/contacts.css" />
+</head>
+<body>
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <a href="messages.html" class="sidebar__item" title="消息" data-nav="messages">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/>
+            </svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item is-active" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <circle cx="9" cy="10" r="2"/>
+              <path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/>
+              <path d="M15 9h4M15 13h3"/>
+            </svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+              <path d="M8 11h8M8 15h5"/>
+            </svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3"/>
+              <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+              <circle cx="12" cy="7" r="1" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 4 7v10l8 5 8-5V7z"/>
+              <path d="M12 2v20M4 7l16 10M20 7 4 17"/>
+            </svg>
+          </a>
+          
+          <a href="profile.html" class="sidebar__item" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 12l3 3 5-6"/>
+          </svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区 ========== -->
+      <div class="main">
+
+        <!-- 通讯录列表 -->
+        <aside class="contacts">
+          <div class="contacts__header">
+            <div class="contacts__title">通讯录</div>
+            <div class="contacts__actions">
+              <button class="contacts__icon-btn" title="添加好友">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="10" cy="8" r="4"/>
+                  <path d="M3 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/>
+                  <path d="M19 8v6M16 11h6"/>
+                </svg>
+              </button>
+              <button class="contacts__icon-btn" title="创建群聊">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="8" r="3"/>
+                  <circle cx="17" cy="9" r="2.5"/>
+                  <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/>
+                  <path d="M16 16c2.8 0 5 1.7 5 4"/>
+                </svg>
+              </button>
+              <button class="contacts__icon-btn" title="添加群聊">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="3"/>
+                  <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+                  <path d="M19 4v6M16 7h6"/>
+                </svg>
+              </button>
+              <button class="contacts__icon-btn" title="刷新">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="contacts__search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m20 20-3.5-3.5"/>
+            </svg>
+            <input type="text" placeholder="搜索联系人" />
+          </div>
+
+          <div class="contacts__tabs">
+            <div class="contacts__tab is-active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="3"/>
+                <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+              </svg>
+              好友
+            </div>
+            <div class="contacts__tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="8" r="3"/>
+                <circle cx="17" cy="9" r="2.5"/>
+                <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/>
+              </svg>
+              群聊
+            </div>
+          </div>
+
+          <div class="contacts__scroll">
+
+            <!-- 特殊项 -->
+            <div class="contact-special">
+              <div class="contact-special__icon contact-special__icon--new">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="10" cy="8" r="4"/>
+                  <path d="M3 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+                  <path d="M19 4v6M16 7h6"/>
+                </svg>
+              </div>
+              <div class="contact-special__name">新朋友</div>
+            </div>
+
+            <div class="contact-special">
+              <div class="contact-special__icon contact-special__icon--block">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="m5 5 14 14"/>
+                </svg>
+              </div>
+              <div class="contact-special__name">黑名单</div>
+            </div>
+
+            <!-- E -->
+            <div class="contact-group__letter">E</div>
+
+            <div class="contact-item">
+              <div class="avatar" style="background: linear-gradient(135deg,#708090,#A9A9A9);">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.5"/></svg>
+              </div>
+              <div class="contact-item__main">
+                <div class="contact-item__name">Edi卷毛超强</div>
+                <div class="contact-item__id">30817253</div>
+              </div>
+              <span class="contact-item__tag">私聊</span>
+            </div>
+
+            <div class="contact-item">
+              <div class="avatar" style="background: var(--avatar-pink,#F8375C);">E</div>
+              <div class="contact-item__main">
+                <div class="contact-item__name">evelyb-菲菲-设计</div>
+                <div class="contact-item__id">05523307</div>
+              </div>
+              <span class="contact-item__tag">私聊</span>
+            </div>
+
+            <!-- J -->
+            <div class="contact-group__letter">J</div>
+
+            <div class="contact-item">
+              <div class="avatar" style="background: linear-gradient(135deg,#F5DEB3,#A0522D);">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 3a4 4 0 0 0-4 4 4 4 0 0 0 1 2.6V12a3 3 0 0 0 6 0V9.6A4 4 0 0 0 16 7a4 4 0 0 0-4-4zM7 20a5 5 0 0 1 10 0z"/></svg>
+              </div>
+              <div class="contact-item__main">
+                <div class="contact-item__name">Jack</div>
+                <div class="contact-item__id">15662420</div>
+              </div>
+              <span class="contact-item__tag">私聊</span>
+            </div>
+
+            <!-- P -->
+            <div class="contact-group__letter">P</div>
+
+            <div class="contact-item">
+              <div class="avatar" style="background: linear-gradient(135deg,#FFD700,#FF8C00);">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M5 19a3 3 0 1 1 6 0 3 3 0 0 1-6 0zM13 5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zM8 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+              </div>
+              <div class="contact-item__main">
+                <div class="contact-item__name">play boy</div>
+                <div class="contact-item__id">51974555</div>
+              </div>
+              <span class="contact-item__tag">私聊</span>
+            </div>
+
+            <!-- S -->
+            <div class="contact-group__letter">S</div>
+
+            <div class="contact-item">
+              <div class="avatar" style="background: linear-gradient(135deg,#87CEEB,#4682B4);">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7z"/></svg>
+              </div>
+              <div class="contact-item__main">
+                <div class="contact-item__name">Sam</div>
+                <div class="contact-item__id">20607252</div>
+              </div>
+              <span class="contact-item__tag">私聊</span>
+            </div>
+
+            <div class="contact-item">
+              <div class="avatar" style="background: linear-gradient(135deg,#FF6B6B,#C0392B);">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7z"/></svg>
+              </div>
+              <div class="contact-item__main">
+                <div class="contact-item__name">Sam</div>
+                <div class="contact-item__id">20607253</div>
+              </div>
+              <span class="contact-item__tag">私聊</span>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- 右侧空状态 -->
+        <main class="contacts__empty">
+          <div class="contacts__empty-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <circle cx="12" cy="11" r="3"/>
+              <path d="M5 17c1-2 3.5-3 7-3s6 1 7 3"/>
+            </svg>
+            <p>请选择好友查看详情</p>
+          </div>
+        </main>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="assets/js/shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>消息 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/messages.css" />
+</head>
+<body>
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <a href="messages.html" class="sidebar__item is-active" title="消息" data-nav="messages">
+            <!-- chat icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/>
+            </svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <circle cx="9" cy="10" r="2"/>
+              <path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/>
+              <path d="M15 9h4M15 13h3"/>
+            </svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+              <path d="M8 11h8M8 15h5"/>
+            </svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3"/>
+              <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+              <circle cx="12" cy="7" r="1" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 4 7v10l8 5 8-5V7z"/>
+              <path d="M12 2v20M4 7l16 10M20 7 4 17"/>
+            </svg>
+          </a>
+          
+          <a href="profile.html" class="sidebar__item" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 12l3 3 5-6"/>
+          </svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区 ========== -->
+      <div class="main">
+
+        <!-- 会话列表 -->
+        <aside class="session-list">
+          <div class="session-list__header">
+            <div class="session-list__title">消息</div>
+            <div class="session-list__actions">
+              <button class="session-list__icon-btn" title="筛选">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h10M3 12h7M3 18h4M15 6l4 6-4 6M21 6l-4 6 4 6"/>
+                </svg>
+              </button>
+              <button class="session-list__icon-btn" title="刷新">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="session-list__search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m20 20-3.5-3.5"/>
+            </svg>
+            <input type="text" placeholder="搜索会话" />
+          </div>
+
+          <div class="session-list__scroll">
+
+            <!-- 置顶会话 -->
+            <div class="session-group__label">置顶会话 <span>1</span></div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">📌</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <svg viewBox="0 0 24 24" fill="#07C160" width="10" height="10"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
+                    <span class="session-item__name-text">UMC会员服务…</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">09:24</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">王玉梅通过了入群申请</span>
+                  <span class="session-item__extras">
+                    <span class="badge">3</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 全部会话 -->
+            <div class="session-group__label">全部会话 <span>11</span></div>
+
+            <div class="session-item is-active">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">📒</div>
+                <span class="session-item__online"></span>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">UMC专员</span>
+                    <span class="tag tag--chat">单聊</span>
+                  </div>
+                  <span class="session-item__time">昨天</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">怎么啦?</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-red,#E54B4B);">企</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">企业星链</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">昨天</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">1</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-orange,#FF6B35);">项</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">项目组沟通群</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-25</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">下午3点的会议链接。</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-purple,#8E5BFF);">O</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">Opul+UMC PP…</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-24</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">这个内容要补充才行</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-pink,#F8375C);">O</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">OPU 大学</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-17</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">我分享了一个话题给你:</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-yellow,#F5A623);">💡</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">UMC 内部大集合</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-17</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">85730620通过了入群申请</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-purple,#8E5BFF);">O</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">OpulnX AI 量化…</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-10</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">盈科合约交易上线:</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#87CEEB,#FFB6C1);">夏</div>
+                <span class="session-item__online" style="background: var(--text-accent);"></span>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">夏目</span>
+                    <span class="tag tag--chat">单聊</span>
+                  </div>
+                  <span class="session-item__time">06-09</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">OK。</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#FFB6C1,#FF8FA3);">玲</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">小玲</span>
+                    <span class="tag tag--chat">单聊</span>
+                  </div>
+                  <span class="session-item__time">06-08</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">在吗？</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- 聊天窗口 -->
+        <section class="chat">
+          <div class="chat__header">
+            <div class="chat__title">UMC专员</div>
+
+            <!-- AI 接管 toggle -->
+            <div class="ai-control">
+              <span class="ai-control__label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="7" r="3"/>
+                  <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+                  <circle cx="12" cy="7" r="1" fill="currentColor"/>
+                </svg>
+                AI 接管
+              </span>
+              <div class="ai-control__toggle" id="aiToggle">
+                <button class="ai-control__opt is-active" data-mode="off">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+                  关闭
+                </button>
+                <button class="ai-control__opt" data-mode="semi">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a3 3 0 1 1 6 0 3 3 0 0 1-6 0z"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+                  半自动
+                </button>
+                <button class="ai-control__opt" data-mode="full">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+                  全自动
+                </button>
+              </div>
+            </div>
+
+            <button class="chat__more" title="更多">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg>
+            </button>
+          </div>
+
+          <!-- AI 接管状态 banner（默认隐藏） -->
+          <div class="chat__ai-banner" id="aiBanner" data-mode="off">
+            <div class="ai-banner__inner">
+              <span class="ai-banner__icon" id="aiBannerIcon">🤖</span>
+              <div class="ai-banner__main">
+                <div class="ai-banner__title" id="aiBannerTitle">AI 接管已关闭</div>
+                <div class="ai-banner__sub" id="aiBannerSub">当前由你手动回复好友消息</div>
+              </div>
+              <div class="ai-banner__pulse">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat__body">
+            <!-- 17:33 对方发 -->
+            <div class="msg msg--other">
+              <div class="msg__avatar">
+                <div class="avatar avatar--sm" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">📒</div>
+              </div>
+              <div class="msg__col">
+                <div class="msg__bubble">拉你进去了的</div>
+                <div class="msg__time" style="text-align:left;">17:33</div>
+              </div>
+            </div>
+
+            <!-- 昨天时间分隔 -->
+            <div class="chat__time-sep">
+              <span class="chat__time-sep--pill">昨天 → 18:22</span>
+            </div>
+
+            <!-- 18:22 自己 -->
+            <div class="msg msg--self">
+              <div class="msg__avatar">
+                <div class="avatar avatar--sm" style="background: linear-gradient(135deg,#87CEEB,#4682B4);">M</div>
+              </div>
+              <div class="msg__col">
+                <div class="msg__bubble">怎么啦?</div>
+                <div class="msg__time msg__time--check">18:22 ✓✓</div>
+              </div>
+            </div>
+
+            <!-- AI 接管演示卡片（默认隐藏，根据模式显示） -->
+            <div class="ai-demo" id="aiDemo" data-mode="off">
+              <div class="ai-demo__divider">
+                <span>AI 接管演示</span>
+              </div>
+
+              <!-- 半自动演示 -->
+              <div class="ai-demo__panel" data-mode="semi">
+                <div class="ai-demo__head">
+                  <div class="ai-demo__icon" style="background: linear-gradient(135deg, #1FB6FF, #2D7CFF);">🤖</div>
+                  <div>
+                    <div class="ai-demo__title">销冠专家 · 半自动接管</div>
+                    <div class="ai-demo__sub">AI 分析好友对话 → 给出建议回复 → 你审过再发送</div>
+                  </div>
+                  <div class="ai-demo__badge">半自动</div>
+                </div>
+
+                <!-- 步骤 1：好友消息触发分析 -->
+                <div class="ai-demo__step">
+                  <span class="ai-demo__step-num">1</span>
+                  <span class="ai-demo__step-label">好友发起咨询</span>
+                </div>
+                <div class="msg msg--other" style="margin-bottom: 12px;">
+                  <div class="msg__avatar"><div class="avatar avatar--sm" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">📒</div></div>
+                  <div class="msg__col">
+                    <div class="msg__bubble">那个 8000 套餐还送礼品吗？我看下要不要买</div>
+                  </div>
+                </div>
+
+                <!-- 步骤 2：AI 分析建议 -->
+                <div class="ai-demo__step">
+                  <span class="ai-demo__step-num">2</span>
+                  <span class="ai-demo__step-label">AI 分析</span>
+                </div>
+                <div class="ai-suggest">
+                  <div class="ai-suggest__head">
+                    <span class="ai-suggest__dot"></span>
+                    <span>AI 已分析此对话</span>
+                  </div>
+                  <div class="ai-suggest__grid">
+                    <div class="ai-suggest__item">
+                      <span class="ai-suggest__label">客户意图</span>
+                      <span class="ai-suggest__value ai-suggest__value--hot">🔥 强购买意向</span>
+                    </div>
+                    <div class="ai-suggest__item">
+                      <span class="ai-suggest__label">成交概率</span>
+                      <span class="ai-suggest__value ai-suggest__value--num">78%</span>
+                    </div>
+                    <div class="ai-suggest__item">
+                      <span class="ai-suggest__label">情绪温度</span>
+                      <span class="ai-suggest__value">🔆 积极</span>
+                    </div>
+                    <div class="ai-suggest__item">
+                      <span class="ai-suggest__label">关键顾虑</span>
+                      <span class="ai-suggest__value">礼品价值</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 步骤 3：AI 建议回复 -->
+                <div class="ai-demo__step">
+                  <span class="ai-demo__step-num">3</span>
+                  <span class="ai-demo__step-label">AI 建议回复（待你审阅）</span>
+                </div>
+                <div class="ai-reply">
+                  <div class="ai-reply__bubble">
+                    <span class="ai-reply__tag">🤖 AI 建议</span>
+                    小明兄太巧了！正好赶上我们 618 活动，8000 套餐打 <strong>9 折 7200</strong>，再送您一份价值 800 的精品礼盒，今天下单还能锁定名额 👀
+                  </div>
+                  <div class="ai-reply__quote">
+                    <span class="ai-reply__quote-label">策略说明</span>
+                    用 9 折 + 礼品升级回应他的顾虑，"锁定名额"制造紧迫感，预计提升成交 25%
+                  </div>
+                  <div class="ai-reply__actions">
+                    <button class="ai-reply__btn ai-reply__btn--primary">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                      通过并发送
+                    </button>
+                    <button class="ai-reply__btn">修改后发送</button>
+                    <button class="ai-reply__btn ai-reply__btn--ghost">跳过</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 全自动演示 -->
+              <div class="ai-demo__panel" data-mode="full">
+                <div class="ai-demo__head">
+                  <div class="ai-demo__icon" style="background: linear-gradient(135deg, #8E5BFF, #5B3FD8);">🤖</div>
+                  <div>
+                    <div class="ai-demo__title">销冠专家 · 全自动接管</div>
+                    <div class="ai-demo__sub">AI 主动给好友发消息 · 结合上下文 · 推销产品 · 触发成交</div>
+                  </div>
+                  <div class="ai-demo__badge ai-demo__badge--full">全自动</div>
+                </div>
+
+                <!-- 实时活动日志 -->
+                <div class="ai-flow">
+                  <div class="ai-flow__step is-done">
+                    <span class="ai-flow__time">14:02</span>
+                    <span class="ai-flow__icon">📊</span>
+                    <div class="ai-flow__main">
+                      <div class="ai-flow__title">扫描好友列表 · 找到 12 位潜在客户</div>
+                      <div class="ai-flow__sub">基于最近聊天活跃度 + 标签「老客户 / 高意向」筛选</div>
+                    </div>
+                  </div>
+
+                  <div class="ai-flow__step is-done">
+                    <span class="ai-flow__time">14:03</span>
+                    <span class="ai-flow__icon">🎯</span>
+                    <div class="ai-flow__main">
+                      <div class="ai-flow__title">已选定 3 位优先触达</div>
+                      <div class="ai-flow__sub">小明（上周咨询套餐）· 小王（3 天前点赞）· 小李（618 关键词）</div>
+                    </div>
+                  </div>
+
+                  <div class="ai-flow__step is-done">
+                    <span class="ai-flow__time">14:04</span>
+                    <span class="ai-flow__icon">✍️</span>
+                    <div class="ai-flow__main">
+                      <div class="ai-flow__title">已为小明生成个性化话术</div>
+                      <div class="ai-flow__sub">结合他 3 次聊天上下文 + 性格画像「务实、关心性价比」</div>
+                    </div>
+                  </div>
+
+                  <div class="ai-flow__step is-active">
+                    <span class="ai-flow__time">14:05</span>
+                    <span class="ai-flow__icon">📤</span>
+                    <div class="ai-flow__main">
+                      <div class="ai-flow__title">正在给「小明」发送消息…</div>
+                      <div class="ai-flow__sub">
+                        <span class="ai-flow__preview">小明兄！上次您看的 8000 套餐正好在做活动，现在下单打 9 折 7200，再送您价值 800 的精品礼盒...</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="ai-flow__step is-pending">
+                    <span class="ai-flow__time">—</span>
+                    <span class="ai-flow__icon">⏳</span>
+                    <div class="ai-flow__main">
+                      <div class="ai-flow__title">等待小明回复</div>
+                      <div class="ai-flow__sub">若 30 分钟内无回复，将自动跟进一条</div>
+                    </div>
+                  </div>
+
+                  <div class="ai-flow__step is-pending">
+                    <span class="ai-flow__time">—</span>
+                    <span class="ai-flow__icon">🚀</span>
+                    <div class="ai-flow__main">
+                      <div class="ai-flow__title">若触发成交 · 自动下单 + 通知</div>
+                      <div class="ai-flow__sub">确认订单后将发送付款链接 + 推送通知到你手机</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 全自动开关 -->
+                <div class="ai-flow__toggle">
+                  <div>
+                    <div class="ai-flow__toggle-title">AI 已自主接管</div>
+                    <div class="ai-flow__toggle-sub">每日最多主动联系 <strong>50</strong> 位好友 · 消耗约 <strong>15,000</strong> token</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" checked />
+                    <span class="switch__slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 关闭状态 -->
+              <div class="ai-demo__panel" data-mode="off">
+                <div class="ai-demo__hint">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="7" r="3"/>
+                    <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+                  </svg>
+                  <div>
+                    <div class="ai-demo__hint-title">选择 AI 接管模式</div>
+                    <div class="ai-demo__hint-sub">
+                      <strong>关闭</strong>：手动回复 ·
+                      <strong>半自动</strong>：AI 给建议，你审过再发 ·
+                      <strong>全自动</strong>：AI 自主接管聊天
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 输入区 -->
+          <div class="chat__input">
+            <div class="chat__input-box">输入消息，Enter发送，Shift+Enter换行</div>
+            <div class="chat__input-tools">
+              <div class="chat__input-icons">
+                <button class="chat__input-icon" title="表情">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <circle cx="9" cy="10" r="0.6" fill="currentColor"/>
+                    <circle cx="15" cy="10" r="0.6" fill="currentColor"/>
+                  </svg>
+                </button>
+                <button class="chat__input-icon" title="图片">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2"/>
+                    <circle cx="9" cy="11" r="1.5"/>
+                    <path d="m3 17 5-5 5 5 3-3 5 5"/>
+                  </svg>
+                </button>
+                <button class="chat__input-icon" title="文件">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                    <path d="M14 3v6h6"/>
+                  </svg>
+                </button>
+                <button class="chat__input-icon" title="视频会议">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="6" width="13" height="12" rx="2"/>
+                    <path d="m16 10 5-3v10l-5-3z"/>
+                  </svg>
+                </button>
+              </div>
+              <button class="btn btn--primary" style="height:32px;padding:0 20px;">发送</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="assets/js/shared.js"></script>
+  <script>
+    // ===== 销冠 AI 接管交互 =====
+    (function () {
+      'use strict';
+
+      const MODE_COPY = {
+        off: {
+          icon: '🤖',
+          title: 'AI 接管已关闭',
+          sub: '当前由你手动回复好友消息',
+        },
+        semi: {
+          icon: '🤖',
+          title: 'AI 半自动接管中',
+          sub: 'AI 正在分析好友对话 · 给建议回复 · 等你审阅',
+        },
+        full: {
+          icon: '🤖',
+          title: 'AI 全自动接管中',
+          sub: 'AI 正在自主给好友发消息 · 已联系 1/3 位优先客户',
+        },
+      };
+
+      const toggle = document.getElementById('aiToggle');
+      const banner = document.getElementById('aiBanner');
+      const bannerTitle = document.getElementById('aiBannerTitle');
+      const bannerSub = document.getElementById('aiBannerSub');
+      const demo = document.getElementById('aiDemo');
+
+      if (!toggle || !banner || !demo) return;
+
+      // 切换模式
+      toggle.addEventListener('click', (e) => {
+        const btn = e.target.closest('.ai-control__opt');
+        if (!btn) return;
+        const mode = btn.dataset.mode;
+
+        // 更新按钮 active
+        toggle.querySelectorAll('.ai-control__opt').forEach((b) => {
+          b.classList.toggle('is-active', b === btn);
+        });
+
+        // 更新 banner
+        banner.dataset.mode = mode;
+        const copy = MODE_COPY[mode];
+        if (mode === 'off') {
+          banner.classList.remove('is-visible');
+        } else {
+          banner.classList.add('is-visible');
+          bannerTitle.textContent = copy.title;
+          bannerSub.textContent = copy.sub;
+        }
+
+        // 更新 demo
+        demo.dataset.mode = mode;
+      });
+
+      // 半自动：通过并发送按钮模拟
+      const approveBtn = demo.querySelector('.ai-reply__btn--primary');
+      if (approveBtn) {
+        approveBtn.addEventListener('click', function () {
+          const original = this.innerHTML;
+          this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.2-8.5"/></svg> 发送中…';
+          this.disabled = true;
+          this.style.opacity = '0.7';
+
+          setTimeout(() => {
+            this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 已发送 ✓';
+            this.style.background = 'var(--text-accent)';
+            this.style.color = 'white';
+            this.style.opacity = '1';
+
+            // 在演示卡片上方插入一条已发送的消息气泡
+            const chatBody = document.querySelector('.chat__body');
+            const sent = document.createElement('div');
+            sent.className = 'msg msg--self';
+            sent.style.animation = 'fadeUp 380ms cubic-bezier(0.32, 0.72, 0, 1) both';
+            sent.innerHTML = `
+              <div class="msg__avatar"><div class="avatar avatar--sm" style="background: linear-gradient(135deg,#87CEEB,#4682B4);">M</div></div>
+              <div class="msg__col">
+                <div class="msg__bubble" style="max-width: 100%;">小明兄太巧了！正好赶上我们 618 活动，8000 套餐打 9 折 7200，再送您一份价值 800 的精品礼盒，今天下单还能锁定名额 👀</div>
+                <div class="msg__time msg__time--check">${new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })} ✓✓</div>
+              </div>
+            `;
+            // 插到 demo 卡片之前
+            chatBody.insertBefore(sent, demo);
+            // 平滑滚动
+            sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 900);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
