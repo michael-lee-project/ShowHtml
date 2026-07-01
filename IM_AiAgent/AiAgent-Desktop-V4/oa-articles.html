@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>公众号文章 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/official-account.css" />
+</head>
+<body data-page="articles">
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop · 公众号文章</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <a href="messages.html" class="sidebar__item" title="消息" data-nav="messages">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/></svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/><path d="M15 9h4M15 13h3"/></svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item is-active" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 11h8M8 15h5"/></svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3"/><path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/><circle cx="12" cy="7" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v10l8 5 8-5V7z"/><path d="M12 2v20M4 7l16 10M20 7 4 17"/></svg>
+          </a>
+          <a href="profile.html" class="sidebar__item" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区：文章列表 ========== -->
+      <main class="oa">
+        <div class="oa__inner">
+
+          <!-- 顶部 nav 切换 -->
+          <nav class="oa__nav">
+            <a href="official-account.html" class="oa__nav-item" data-nav="home">
+              <span class="oa__nav-icon">🏠</span>
+              <span>主页</span>
+            </a>
+            <a href="oa-articles.html" class="oa__nav-item is-active" data-nav="articles">
+              <span class="oa__nav-icon">📰</span>
+              <span>文章</span>
+              <span class="oa__nav-count">328</span>
+            </a>
+            <a href="oa-analytics.html" class="oa__nav-item" data-nav="analytics">
+              <span class="oa__nav-icon">📊</span>
+              <span>数据</span>
+            </a>
+            <a href="oa-menu.html" class="oa__nav-item" data-nav="menu">
+              <span class="oa__nav-icon">⚙️</span>
+              <span>菜单</span>
+            </a>
+          </nav>
+
+          <!-- 筛选 + 搜索 -->
+          <div class="oa__toolbar">
+            <div class="oa__chips">
+              <button class="oa__chip is-active" type="button" data-filter="all">全部 · 328</button>
+              <button class="oa__chip" type="button" data-filter="featured">推荐 · 86</button>
+              <button class="oa__chip" type="button" data-filter="industry">行业 · 92</button>
+              <button class="oa__chip" type="button" data-filter="tutorial">教程 · 118</button>
+              <button class="oa__chip" type="button" data-filter="announce">公告 · 32</button>
+            </div>
+            <div class="oa__search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" placeholder="搜索文章标题 / 摘要 / 标签…" />
+            </div>
+          </div>
+
+          <!-- 精选置顶 -->
+          <div class="oa__featured">
+            <div class="oa__featured-label">📌 编辑精选</div>
+            <a href="oa-article.html" class="oa__featured-card">
+              <div class="oa__featured-thumb" style="background: linear-gradient(135deg, #7C5CFF, #5D3FE5);">
+                <span class="oa__featured-thumb-icon">🤖</span>
+              </div>
+              <div class="oa__featured-body">
+                <div class="oa__featured-tags">
+                  <span class="oa__tag oa__tag--featured">置顶</span>
+                  <span class="oa__tag oa__tag--ai">AI</span>
+                </div>
+                <h2 class="oa__featured-title">AI Agent 协同办公的 5 个真相：为什么你的 AI 还没真正帮你干活？</h2>
+                <p class="oa__featured-desc">90% 的"AI 工具"还是 chatbox，不是真正的 Agent。本文拆解 CEO + 8 专家协同工作流背后的设计逻辑，从需求拆解、任务调度到算力结算的完整闭环。</p>
+                <div class="oa__featured-meta">
+                  <span>👁 12.6w 阅读</span>
+                  <span>★ 1.2k 点赞</span>
+                  <span>💬 286 评论</span>
+                  <span>2 小时前</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- 文章列表 -->
+          <div class="oa__article-list">
+            <a href="oa-article.html" class="oa__article-card" data-cat="tutorial">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #07C160, #4DD890);">
+                <span>💎</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--tutorial">教程</span>
+                  <span class="oa__tag">Token 优化</span>
+                </div>
+                <h3 class="oa__article-title">如何用 Token 优化你的 AI 工作流：5 个真实案例</h3>
+                <p class="oa__article-desc">同一份需求，不同的 Token 策略，AI 效果天差地别。本文用 5 个真实场景拆解 Token 分配 + 模型选择 + 上下文压缩的最佳实践。</p>
+                <div class="oa__article-meta">
+                  <span>👁 8.6k 阅读</span>
+                  <span>★ 624 点赞</span>
+                  <span>5 小时前</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="industry">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #1FB6FF, #2D7CFF);">
+                <span>📈</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--industry">行业</span>
+                  <span class="oa__tag">2026 趋势</span>
+                </div>
+                <h3 class="oa__article-title">2026 AI 行业趋势预测：从工具到协同，Agent 才是终局</h3>
+                <p class="oa__article-desc">当所有人都在卷大模型参数时，下一波赢家已经在卷协同工作流。本文从 8 个公开数据看 2026 AI Agent 行业的 5 个拐点。</p>
+                <div class="oa__article-meta">
+                  <span>👁 6.2k 阅读</span>
+                  <span>★ 489 点赞</span>
+                  <span>昨天</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="featured">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #FFD700, #FF8C42);">
+                <span>★</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--featured">推荐</span>
+                  <span class="oa__tag">销冠实战</span>
+                </div>
+                <h3 class="oa__article-title">从 0 到 1：销冠专家的 30 天，一段 AI 接管客户对话的真实记录</h3>
+                <p class="oa__article-desc">从手动回复到全自动接管 86 位客户，转化率从 12% 涨到 23%。这是 UMakex 销冠专家的 30 天成长日志，含全部对话模板。</p>
+                <div class="oa__article-meta">
+                  <span>👁 4.8k 阅读</span>
+                  <span>★ 312 点赞</span>
+                  <span>2 天前</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="announce">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #E54B4B, #FF7B7B);">
+                <span>📢</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--announce">公告</span>
+                  <span class="oa__tag">V3 升级</span>
+                </div>
+                <h3 class="oa__article-title">UMakex 算力中心 V3 正式上线：盲盒转盘 + 个人数据看板</h3>
+                <p class="oa__article-desc">V3 升级公告：8 大新增功能详解，含认购池 / 销售池 / 盲盒 / 实时动态模块。预约升级享 3 倍算力赠送。</p>
+                <div class="oa__article-meta">
+                  <span>👁 3.4k 阅读</span>
+                  <span>★ 198 点赞</span>
+                  <span>3 天前</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="tutorial">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #7BC498, #4DD890);">
+                <span>✎</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--tutorial">教程</span>
+                  <span class="oa__tag">文案</span>
+                </div>
+                <h3 class="oa__article-title">3 步做出爆款公众号文章：AI 写作专家的真实工作流拆解</h3>
+                <p class="oa__article-desc">从选题、标题、开头到正文金句，AI 写作专家 3 步生成 10w+ 爆款文章。本文含完整 prompt 模板，新人可复用。</p>
+                <div class="oa__article-meta">
+                  <span>👁 5.2k 阅读</span>
+                  <span>★ 412 点赞</span>
+                  <span>4 天前</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="industry">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #8E5BFF, #5B3FD8);">
+                <span>⛓</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--industry">行业</span>
+                  <span class="oa__tag">Web3</span>
+                </div>
+                <h3 class="oa__article-title">Web3 + AI 融合的下一个爆点：为什么 Token 化是必由之路？</h3>
+                <p class="oa__article-desc">从 USDT 流通到算力 Token 化，UMakex 如何用区块链重构 AI 算力交易。含技术架构 + 经济模型 + 行业数据。</p>
+                <div class="oa__article-meta">
+                  <span>👁 2.9k 阅读</span>
+                  <span>★ 168 点赞</span>
+                  <span>5 天前</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="announce">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #FF6B35, #E54B4B);">
+                <span>❤</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--announce">公告</span>
+                  <span class="oa__tag">公益</span>
+                </div>
+                <h3 class="oa__article-title">慈商联营公益平台正式上线：物资全流程透明化追溯</h3>
+                <p class="oa__article-desc">海南亚洲公益研究院战略合作项目，每一份爱心都可被追溯。5 角色协同：企业 / 慈善会 / 社会组织 / 志愿者 / 受捐者。</p>
+                <div class="oa__article-meta">
+                  <span>👁 1.8k 阅读</span>
+                  <span>★ 96 点赞</span>
+                  <span>1 周前</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="tutorial">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #5BD897, #07C160);">
+                <span>☯</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--tutorial">教程</span>
+                  <span class="oa__tag">玄学</span>
+                </div>
+                <h3 class="oa__article-title">五行风水 + AI = ？当传统玄学遇上 1.2 亿参数大模型</h3>
+                <p class="oa__article-desc">AI 能不能算命？UMakex 五行风水专家的实践：把八字排盘、流年大运做成结构化数据 + 知识图谱 + LLM 解读，准确率 89%。</p>
+                <div class="oa__article-meta">
+                  <span>👁 12.3k 阅读</span>
+                  <span>★ 856 点赞</span>
+                  <span>1 周前</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="oa-article.html" class="oa__article-card" data-cat="featured">
+              <div class="oa__article-thumb" style="background: linear-gradient(135deg, #B695FF, #7C5CFF);">
+                <span>◐</span>
+              </div>
+              <div class="oa__article-body">
+                <div class="oa__article-tags">
+                  <span class="oa__tag oa__tag--featured">推荐</span>
+                  <span class="oa__tag">数据分析</span>
+                </div>
+                <h3 class="oa__article-title">一个数据分析师的 AI 进化：从 Excel 到自然语言查询</h3>
+                <p class="oa__article-desc">"给我看下上周华东区转化率"——一句自然语言拿到 4 张报表 + 趋势预测。UMakex 数据分析专家的实战案例。</p>
+                <div class="oa__article-meta">
+                  <span>👁 3.1k 阅读</span>
+                  <span>★ 234 点赞</span>
+                  <span>2 周前</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- 分页 -->
+          <div class="oa__pagination">
+            <button class="oa__page is-disabled" type="button">← 上一页</button>
+            <button class="oa__page is-active" type="button">1</button>
+            <button class="oa__page" type="button">2</button>
+            <button class="oa__page" type="button">3</button>
+            <button class="oa__page" type="button">4</button>
+            <span class="oa__page-dots">···</span>
+            <button class="oa__page" type="button">37</button>
+            <button class="oa__page" type="button">下一页 →</button>
+          </div>
+
+        </div>
+      </main>
+
+    </div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="assets/js/shared.js"></script>
+  <script src="assets/js/oa.js"></script>
+</body>
+</html>

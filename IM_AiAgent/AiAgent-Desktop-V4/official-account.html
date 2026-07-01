@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="assets/css/shell.css" />
   <link rel="stylesheet" href="assets/css/official-account.css" />
 </head>
-<body>
+<body data-page="home">
   <div class="window">
 
     <!-- ========== 标题栏 ========== -->
@@ -82,6 +82,27 @@
       <main class="oa">
         <div class="oa__inner">
 
+          <!-- 顶部 nav 切换 -->
+          <nav class="oa__nav">
+            <a href="official-account.html" class="oa__nav-item is-active" data-nav="home">
+              <span class="oa__nav-icon">🏠</span>
+              <span>主页</span>
+            </a>
+            <a href="oa-articles.html" class="oa__nav-item" data-nav="articles">
+              <span class="oa__nav-icon">📰</span>
+              <span>文章</span>
+              <span class="oa__nav-count">328</span>
+            </a>
+            <a href="oa-analytics.html" class="oa__nav-item" data-nav="analytics">
+              <span class="oa__nav-icon">📊</span>
+              <span>数据</span>
+            </a>
+            <a href="oa-menu.html" class="oa__nav-item" data-nav="menu">
+              <span class="oa__nav-icon">⚙️</span>
+              <span>菜单</span>
+            </a>
+          </nav>
+
           <!-- 头部信息卡 -->
           <div class="oa__hero">
             <div class="oa__hero-logo">UMC</div>
@@ -129,8 +150,14 @@
           <div class="oa__section">
             <div class="oa__section-title">旗下项目</div>
             <div class="oa__projects">
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="desktop">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#07C160,#0E7C3A);">桌</div>
                   <div>
@@ -140,8 +167,14 @@
                 </div>
                 <div class="oa__project-desc">macOS 风格桌面端 AI Agent 协同工作平台，集成销冠、品牌、文案、视频、风水等多位专家。</div>
               </div>
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="chain">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#1FB6FF,#2D7CFF);">链</div>
                   <div>
@@ -151,8 +184,14 @@
                 </div>
                 <div class="oa__project-desc">面向企业的链上资产托管与量化策略平台，盈科合约交易系统 24h 自动运行。</div>
               </div>
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="opul-umc">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#8E5BFF,#5B3FD8);">O+</div>
                   <div>
@@ -162,8 +201,14 @@
                 </div>
                 <div class="oa__project-desc">跨境数字支付与稳定币结算网络，支持 USDT、UMDT 多场景流通。</div>
               </div>
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="opu-univ">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">学</div>
                   <div>
@@ -173,8 +218,14 @@
                 </div>
                 <div class="oa__project-desc">面向企业团队的内训与知识管理平台，AI 助教 + 课程矩阵 + 学员成长体系。</div>
               </div>
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="opulnx">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#F8375C,#C0294D);">量</div>
                   <div>
@@ -184,8 +235,14 @@
                 </div>
                 <div class="oa__project-desc">AI 驱动的量化交易策略平台，盈科合约 + 多因子模型 + 实时风控系统。</div>
               </div>
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="cishang">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#07C160,#1FB6FF);">慈</div>
                   <div>
@@ -195,8 +252,14 @@
                 </div>
                 <div class="oa__project-desc">海南亚洲公益研究院战略合作项目，物资全流程透明化追溯 + 5 角色协同。</div>
               </div>
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="member">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#FF6B35,#E54B4B);">UM</div>
                   <div>
@@ -206,8 +269,14 @@
                 </div>
                 <div class="oa__project-desc">NU / VIP / MN / MB 四级会员体系，含月赠 Token、折扣、优先客服等权益。</div>
               </div>
-
-              <div class="oa__project-card">
+              <div class="oa__project-card" data-project="ai-news">
+                <button class="oa__project-card__follow" type="button">+ 关注</button>
+                <div class="oa__project-card__bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <span class="oa__project-card__bell-badge">0</span>
+                </div>
                 <div class="oa__project-head">
                   <div class="oa__project-icon" style="background: linear-gradient(135deg,#5B3FD8,#1FB6FF);">AI</div>
                   <div>
@@ -217,9 +286,7 @@
                 </div>
                 <div class="oa__project-desc">每日 AI 行业新闻聚合与深度报道，覆盖模型发布、产品动态、投融资事件。</div>
               </div>
-
             </div>
-          </div>
 
         </div>
       </main>
@@ -227,6 +294,8 @@
     </div>
 
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="assets/js/shared.js"></script>
+  <script src="assets/js/oa.js"></script>
 </body>
 </html>
