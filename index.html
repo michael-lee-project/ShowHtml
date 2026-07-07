@@ -318,12 +318,12 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
     <div class="rail-section">
       <div class="rail-eyebrow">Filter</div>
       <nav class="chips">
-        <button class="chip active" data-cat="all">全部<span class="chip-count">10</span></button>
+        <button class="chip active" data-cat="all">全部<span class="chip-count">11</span></button>
         <button class="chip" data-cat="ai"><span class="chip-dot"></span>AI<span class="chip-count">03</span></button>
         <button class="chip" data-cat="admin"><span class="chip-dot"></span>后台<span class="chip-count">02</span></button>
         <button class="chip" data-cat="merchant"><span class="chip-dot"></span>商家<span class="chip-count">01</span></button>
         <button class="chip" data-cat="charity"><span class="chip-dot"></span>公益<span class="chip-count">02</span></button>
-        <button class="chip" data-cat="game"><span class="chip-dot"></span>游戏<span class="chip-count">01</span></button>
+        <button class="chip" data-cat="game"><span class="chip-dot"></span>游戏<span class="chip-count">02</span></button>
         <button class="chip" data-cat="ecom"><span class="chip-dot"></span>电商<span class="chip-count">01</span></button>
         <button class="chip" data-cat="defi"><span class="chip-dot"></span>DeFi<span class="chip-count">01</span></button>
       </nav>
@@ -340,7 +340,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
 
     <div class="rail-footer">
       <div class="rail-stat">
-        <div class="rail-stat-num">10<span>.</span></div>
+        <div class="rail-stat-num">11<span>.</span></div>
         <div class="rail-stat-label">PROTOTYPES · 2026</div>
       </div>
       <div class="rail-foot-text">
@@ -729,6 +729,59 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
             <p class="card-desc">数字彩票游戏平台 · Web 端体验。</p>
             <div class="card-foot">
               <span class="card-ver">2026.04 · V1.0</span>
+              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 11: Game Merchant Platform - Shop dashboard with priced game items -->
+        <article class="card" data-cat="game" data-href="opulatrix_game/website/index.html">
+          <div class="card-visual">
+            <div class="card-visual-bg"></div>
+            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+              <!-- Sidebar nav -->
+              <rect x="18" y="18" width="40" height="64" rx="3" fill="rgba(255,255,255,.5)"/>
+              <rect x="24" y="26" width="28" height="6" rx="2" fill="currentColor"/>
+              <rect x="24" y="38" width="28" height="3" rx="1" opacity=".4"/>
+              <rect x="24" y="46" width="20" height="3" rx="1" opacity=".4"/>
+              <rect x="24" y="54" width="28" height="3" rx="1" opacity=".4"/>
+              <rect x="24" y="62" width="22" height="3" rx="1" opacity=".4"/>
+              <rect x="24" y="70" width="26" height="3" rx="1" opacity=".4"/>
+              <!-- Main inventory panel -->
+              <rect x="76" y="18" width="146" height="64" rx="3" fill="rgba(255,255,255,.5)"/>
+              <line x1="76" y1="30" x2="222" y2="30" opacity=".3"/>
+              <rect x="84" y="22" width="30" height="4" rx="1" opacity=".5"/>
+              <rect x="190" y="22" width="24" height="4" rx="1" fill="currentColor"/>
+              <!-- Game items grid -->
+              <g>
+                <rect x="84" y="38" width="28" height="18" rx="2" fill="currentColor"/>
+                <text x="98" y="50" text-anchor="middle" fill="#fff" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥29</text>
+                <rect x="116" y="38" width="28" height="18" rx="2" fill="rgba(255,255,255,.5)"/>
+                <text x="130" y="50" text-anchor="middle" fill="currentColor" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥59</text>
+                <rect x="148" y="38" width="28" height="18" rx="2" fill="rgba(255,255,255,.5)"/>
+                <text x="162" y="50" text-anchor="middle" fill="currentColor" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥99</text>
+                <rect x="180" y="38" width="34" height="18" rx="2" fill="currentColor"/>
+                <text x="197" y="50" text-anchor="middle" fill="#fff" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥199</text>
+                <rect x="84" y="60" width="28" height="18" rx="2" fill="rgba(255,255,255,.5)"/>
+                <text x="98" y="72" text-anchor="middle" fill="currentColor" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥39</text>
+                <rect x="116" y="60" width="28" height="18" rx="2" fill="currentColor"/>
+                <text x="130" y="72" text-anchor="middle" fill="#fff" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥69</text>
+                <rect x="148" y="60" width="28" height="18" rx="2" fill="rgba(255,255,255,.5)"/>
+                <text x="162" y="72" text-anchor="middle" fill="currentColor" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥89</text>
+                <rect x="180" y="60" width="34" height="18" rx="2" fill="rgba(255,255,255,.5)"/>
+                <text x="197" y="72" text-anchor="middle" fill="currentColor" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥149</text>
+              </g>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-head">
+              <span class="card-num">№ 11 / 2026.07</span>
+              <span class="card-cat">GAME · MERCHANT</span>
+            </div>
+            <h3 class="card-title">游戏商户平台原型 V1.0</h3>
+            <p class="card-desc">面向游戏发行的商户后台 · 商品上架、库存管理、订单与对账,支持多 SKU 与价格策略。</p>
+            <div class="card-foot">
+              <span class="card-ver">2026.07 · V1.0</span>
               <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
             </div>
           </div>
