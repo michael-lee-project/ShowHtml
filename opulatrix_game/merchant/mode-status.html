@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>模式状态 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <link rel="stylesheet" href="../shared/css/water-gauge.css">
+  <style>
+    /* ===== 模式徽章 hero ===== */
+    .mode-hero {
+      padding: var(--space-8) var(--space-8);
+      border-radius: var(--radius-2xl);
+      margin-bottom: var(--space-6);
+      position: relative;
+      overflow: hidden;
+    }
+    .mode-hero.ignite {
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(220, 38, 38, 0.15), transparent),
+        radial-gradient(ellipse 60% 80% at 100% 50%, rgba(220, 38, 38, 0.05), transparent),
+        linear-gradient(135deg, var(--red-50), white 60%);
+      border: 1px solid var(--red-border);
+    }
+    .mode-hero.blaze {
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(22, 163, 74, 0.15), transparent),
+        radial-gradient(ellipse 60% 80% at 100% 50%, rgba(22, 163, 74, 0.05), transparent),
+        linear-gradient(135deg, var(--green-50), white 60%);
+      border: 1px solid var(--green-border);
+    }
+    .mode-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    @media (max-width: 767px) {
+      .mode-hero-grid { grid-template-columns: 1fr; }
+    }
+    .mode-hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-3);
+    }
+    .mode-hero.ignite .mode-hero-eyebrow { color: var(--red-700); }
+    .mode-hero.blaze .mode-hero-eyebrow { color: var(--green-700); }
+    .mode-hero-title {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-2);
+    }
+    @media (min-width: 768px) {
+      .mode-hero-title { font-size: var(--text-5xl); }
+    }
+    .mode-hero.ignite .mode-hero-title { color: var(--red-700); }
+    .mode-hero.blaze .mode-hero-title { color: var(--green-700); }
+    .mode-hero-sub {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+      max-width: 56ch;
+    }
+    .mode-hero-stat {
+      text-align: right;
+    }
+    @media (max-width: 767px) {
+      .mode-hero-stat { text-align: left; }
+    }
+    .mode-hero-stat-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-2);
+    }
+    .mode-hero-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-5xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .mode-hero.ignite .mode-hero-stat-value { color: var(--red-700); }
+    .mode-hero.blaze .mode-hero-stat-value { color: var(--green-700); }
+    .mode-hero-stat-meta {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      margin-top: var(--space-2);
+    }
+
+    /* ===== 水位全屏仪表盘 ===== */
+    .water-level {
+      padding: var(--space-8);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-2xl);
+      margin-bottom: var(--space-6);
+    }
+    .water-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: var(--space-6);
+    }
+    .water-title {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-1);
+    }
+    .water-sub {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+    }
+    .water-legend {
+      display: flex;
+      gap: var(--space-4);
+      font-size: var(--text-xs);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--text-secondary);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .legend-dot.min { background: var(--green-600); }
+    .legend-dot.max { background: var(--red-600); }
+    .legend-dot.current { background: var(--text-primary); }
+
+    /* ===== 水位 vs 段位 关系说明 banner ===== */
+    .water-relation-banner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-muted);
+      border-left: 3px solid var(--text-primary);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+    .water-relation-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+    .water-relation-text strong {
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+    }
+
+    /* ===== 模式切换时间线 ===== */
+    .timeline-card {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-6);
+    }
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--border-muted);
+      position: relative;
+    }
+    .timeline-item:last-child { border-bottom: 0; }
+    .timeline-time {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+    }
+    .timeline-body {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+    .timeline-dot.ignite { background: var(--red-600); }
+    .timeline-dot.blaze { background: var(--green-600); }
+    .timeline-dot.fallback { background: var(--red-400); }
+    .timeline-content { flex: 1; }
+    .timeline-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      margin-bottom: 2px;
+    }
+    .timeline-desc {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      line-height: var(--leading-relaxed);
+    }
+    .timeline-mode {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 2px 8px;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      border-radius: var(--radius-pill);
+      margin-left: var(--space-2);
+    }
+    .timeline-mode.ignite { background: var(--red-100); color: var(--red-700); }
+    .timeline-mode.blaze { background: var(--green-100); color: var(--green-700); }
+    .timeline-mode.fallback { background: var(--bg-muted); color: var(--text-secondary); }
+
+    /* ===== 模式规则说明 ===== */
+    .rules-card {
+      padding: var(--space-6);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    .rule-item {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      line-height: var(--leading-relaxed);
+    }
+    .rule-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+    .rule-text strong {
+      font-weight: var(--weight-semibold);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">模式状态</h1>
+          <span class="app-topbar-mode ignite">
+            <span class="mode-dot"></span>
+            星火养成期 · 进行中
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-primary btn-sm" onclick="RoleContactModal.open(CS_CONFIG)">联系专属客服</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- 当前模式 hero -->
+        <div class="mode-hero ignite fade-on-scroll">
+          <div class="mode-hero-grid">
+            <div>
+              <div class="mode-hero-eyebrow">CURRENT PHASE · 01 IGNITE</div>
+              <h2 class="mode-hero-title">星火养成期</h2>
+              <p class="mode-hero-sub">商家帮平台养成星火值，达成月度目标后自动切到分润期。已运行 18 天，进度 62%。</p>
+            </div>
+            <div class="mode-hero-stat">
+              <div class="mode-hero-stat-label">本月养成进度</div>
+              <div class="mode-hero-stat-value" data-count="62">0%</div>
+              <div class="mode-hero-stat-meta">124 万 / 200 万 · 预计 6/23 达标</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 全局水位（taste-skill v1.1 水平水位条 + 模式色填充） -->
+        <div class="water-pool fade-on-scroll" data-current="562" data-min="200" data-max="800" data-mode="ignite">
+          <div class="water-pool-head">
+            <div>
+              <h3 class="water-pool-title">
+                平台积分池水位
+                <span class="info-icon" data-tooltip="平台积分池水位是平台视角的总星火值余额（积分池里还剩多少积分没消纳），不是商户的养成进度。水位高低会自动触发段一/段二切换：水位高 → 段一（积分消纳）；水位低 → 段二（流水分润）。">ⓘ</span>
+              </h3>
+              <div class="water-pool-sub">平台总星火值 · 阈值触发段一/段二自动切换</div>
+            </div>
+            <div class="water-pool-status ignite">
+              <span class="status-dot"></span>
+              段一激活中
+            </div>
+          </div>
+
+          <!-- 关系说明 banner：水位 vs 段位 -->
+          <div class="water-relation-banner">
+            <span class="water-relation-icon">⇌</span>
+            <span class="water-relation-text">
+              <strong>水位</strong> = 平台总星火值（积分池余额） · <strong>段位</strong> = 商户当前业务模式
+              · 水位高低自动切换段位
+            </span>
+          </div>
+
+          <div class="water-headline">
+            <div class="water-value" data-count="562">0</div>
+            <div class="water-value-unit">万 积分池水位</div>
+            <div class="water-value-delta">↑ 较月初 +12.4%</div>
+          </div>
+
+          <div class="water-bar-container">
+            <div class="water-bar">
+              <div class="water-bar-segments">
+                <div class="water-segment dry"></div>
+                <div class="water-segment safe"></div>
+              </div>
+              <div class="water-bar-fill ignite" data-target-width="70.25"></div>
+              <div class="water-wave">
+                <svg viewBox="0 0 1200 72" preserveAspectRatio="none">
+                  <path class="wave-path-1" d="M0 36 Q150 16 300 36 T600 36 T900 36 T1200 36 V72 H0 Z" />
+                </svg>
+              </div>
+              <div class="water-threshold min" style="left: 25%;">
+                <span class="water-threshold-label">200 万</span>
+              </div>
+              <div class="water-threshold max" style="left: 100%;">
+                <span class="water-threshold-label">800 万</span>
+              </div>
+              <div class="water-indicator" style="left: 70.25%;">
+                <div class="water-indicator-label">562 万</div>
+                <div class="water-indicator-dot"></div>
+              </div>
+            </div>
+            <div class="water-axis">
+              <span>0</span>
+              <span>200 万</span>
+              <span>400 万</span>
+              <span>600 万</span>
+              <span>800 万</span>
+            </div>
+          </div>
+
+          <div class="water-metrics">
+            <div class="water-metric-row">
+              <span class="water-metric-label">
+                <span class="water-metric-marker curr"></span>
+                当前积分池水位
+              </span>
+              <span class="water-metric-value">562 万</span>
+            </div>
+            <div class="water-metric-row">
+              <span class="water-metric-label">
+                <span class="water-metric-marker warn"></span>
+                最高阈值 · 超此值自动切段一
+              </span>
+              <span class="water-metric-value" style="color: var(--red-600);">800 万</span>
+            </div>
+            <div class="water-metric-row">
+              <span class="water-metric-label">
+                <span class="water-metric-marker safe"></span>
+                最低阈值 · 低于此值自动切段二
+              </span>
+              <span class="water-metric-value" style="color: var(--green-600);">200 万</span>
+            </div>
+            <div class="water-metric-row">
+              <span class="water-metric-label">
+                <span class="water-metric-marker up"></span>
+                距离上限余量
+              </span>
+              <span class="water-metric-value">238 万<span class="delta">+12.4%</span></span>
+            </div>
+            <div class="water-metric-row">
+              <span class="water-metric-label">
+                <span class="water-metric-marker down"></span>
+                距离下限
+              </span>
+              <span class="water-metric-value">362 万</span>
+            </div>
+            <div class="water-metric-row">
+              <span class="water-metric-label">
+                <span class="water-metric-marker curr"></span>
+                水位覆盖率
+              </span>
+              <span class="water-metric-value">60.3%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 切换时间线 -->
+        <div class="timeline-card fade-on-scroll">
+          <div class="panel-head">
+            <div>
+              <h3 class="water-title">模式切换历史</h3>
+              <div class="water-sub">本月共发生 3 次模式切换 · 最近一次 2 小时前</div>
+            </div>
+          </div>
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <span class="timeline-time">06-23 14:00</span>
+              <div class="timeline-body">
+                <span class="timeline-dot ignite"></span>
+                <div class="timeline-content">
+                  <div class="timeline-title">
+                    切换到星火养成期
+                    <span class="timeline-mode ignite">回退 · 自动</span>
+                  </div>
+                  <div class="timeline-desc">检测到平台积分池水位反弹至 562 万，达到最高阈值 800 万的 70%。系统自动从燎原期回退到养成期。</div>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">06-12 11:00</span>
+              <div class="timeline-body">
+                <span class="timeline-dot blaze"></span>
+                <div class="timeline-content">
+                  <div class="timeline-title">
+                    切换到星火燎原期
+                    <span class="timeline-mode blaze">达标 · 自动</span>
+                  </div>
+                  <div class="timeline-desc">累计养成量达到 200 万星火值（100%），触发段二启用条件。开始计算段二流水分润。</div>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">06-01 00:00</span>
+              <div class="timeline-body">
+                <span class="timeline-dot ignite"></span>
+                <div class="timeline-content">
+                  <div class="timeline-title">
+                    月度重置 · 进入养成期
+                    <span class="timeline-mode ignite">月初 · 自动</span>
+                  </div>
+                  <div class="timeline-desc">平台为该商家分配新的月度养成目标 200 万星火值。本月养成期正式开始。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 模式规则说明 -->
+        <div class="rules-card fade-on-scroll">
+          <div class="panel-head">
+            <div>
+              <h3 class="water-title">模式启停规则</h3>
+              <div class="water-sub">平台根据平台积分池水位自动判定 · 支持高权限人工锁定</div>
+            </div>
+          </div>
+          <div class="rules-list">
+            <div class="rule-item">
+              <span class="rule-num">1</span>
+              <div class="rule-text">
+                <strong>水位 &gt; 最高阈值（800 万）</strong>：平台星火值超发，进入<strong style="color: var(--red-700);">星火养成期</strong>。商家帮平台消耗星火值。
+              </div>
+            </div>
+            <div class="rule-item">
+              <span class="rule-num">2</span>
+              <div class="rule-text">
+                <strong>水位 ≤ 最低阈值（200 万）</strong>：星火值接近耗尽，进入<strong style="color: var(--green-700);">星火燎原期</strong>。商家按流水分润收获。
+              </div>
+            </div>
+            <div class="rule-item">
+              <span class="rule-num">3</span>
+              <div class="rule-text">
+                <strong>回退机制</strong>：燎原期期间，若水位反弹 &gt; 最高阈值，<strong>自动回退到养成期</strong>，形成闭环动态调控。
+              </div>
+            </div>
+            <div class="rule-item">
+              <span class="rule-num">4</span>
+              <div class="rule-text">
+                <strong>人工锁定</strong>：平台可对单个商家进行模式锁定，锁定期间系统不会自动切换。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== 联系专属客服弹窗 ===== -->
+  <!-- 联系专属客服弹窗由 shared RoleContactModal 提供 -->
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="../shared/js/shared.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // ============== 模式 hero 数字立即显示 ==============
+      const stat = document.querySelector('.mode-hero-stat-value[data-count]');
+      if (stat) {
+        const target = parseInt(stat.dataset.count);
+        const isPct = stat.textContent.includes('%');
+        stat.textContent = isPct ? target + '%' : target;
+      }
+
+      // ============== GSAP Water Pool Timeline (taste-skill v1.1) ==============
+      const pool = document.querySelector('.water-pool');
+      if (pool) {
+        const current = parseInt(pool.dataset.current);
+        const maxV = parseInt(pool.dataset.max);
+        const targetWidth = (current / maxV) * 100;
+
+        // 立即 set 数字
+        const valueEl = pool.querySelector('.water-value[data-count]');
+        if (valueEl) valueEl.textContent = current;
+
+        const tl = gsap.timeline();
+
+        // Step 1: 水位条展开
+        const fill = pool.querySelector('.water-bar-fill');
+        fill.style.opacity = 1;
+        tl.to(fill, {
+          width: targetWidth + '%',
+          duration: 1.4,
+          ease: 'power3.out',
+        }, 0);
+
+        // Step 2: 阈值竖线 stagger
+        tl.to('.water-threshold', {
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: 'power2.out',
+        }, 0.5);
+
+        tl.to('.water-threshold-label', {
+          opacity: 1,
+          duration: 0.4,
+          stagger: 0.1,
+          ease: 'power2.out',
+        }, 0.6);
+
+        // Step 3: 水波纹 fade-in
+        const wave = pool.querySelector('.water-wave svg');
+        tl.to(wave, {
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+        }, 0.7);
+
+        const wavePath = pool.querySelector('.wave-path-1');
+        gsap.to(wavePath, {
+          attr: { d: 'M0 36 Q150 56 300 36 T600 36 T900 36 T1200 36 V72 H0 Z' },
+          duration: 2.4,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
+
+        // Step 4: 当前值指示器 spring
+        const indicator = pool.querySelector('.water-indicator');
+        tl.to(indicator, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          ease: 'back.out(2)',
+        }, 1.2);
+
+        // Step 5: 状态徽章
+        const status = pool.querySelector('.water-pool-status');
+        tl.to(status, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(1.7)',
+        }, 1.4);
+      }
+    });
+
+    // ESC 关闭联系弹窗（shared RoleContactModal）
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') RoleContactModal.close();
+    });
+  </script>
+</body>
+</html>

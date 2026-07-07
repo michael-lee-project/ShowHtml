@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>音浪对决 · 游戏商户平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .page { padding-top: 64px; }
+
+    /* Top nav */
+    .topnav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-default); z-index: 50; display: flex; align-items: center; }
+    .topnav-inner { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6); width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-6); }
+    .logo { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; color: var(--text-primary); }
+    .logo-mark { width: 28px; height: 28px; background: var(--text-primary); color: white; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-weight: var(--weight-bold); font-family: var(--font-mono); font-size: 14px; }
+    .logo-text { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+    .nav-links {
+      display: flex; align-items: center; gap: var(--space-2);
+      justify-content: center;
+    }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--text-secondary); text-decoration: none; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active {
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+      background: var(--bg-muted);
+    }
+    .nav-cta { padding: 8px 16px; background: var(--text-primary); color: white; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--weight-semibold); text-decoration: none; justify-self: end; transition: background 0.15s, transform 0.1s; }
+    .nav-cta:hover { background: var(--text-secondary); }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      max-width: 1200px; margin: var(--space-6) auto 0;
+      padding: 0 var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      display: flex; align-items: center; gap: var(--space-2);
+    }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text-primary); }
+    .breadcrumb-sep { color: var(--text-tertiary); }
+
+    /* Hero */
+    .detail-hero {
+      max-width: 1200px;
+      margin: var(--space-6) auto 0;
+      padding: 0 var(--space-6);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    @media (max-width: 1023px) { .detail-hero { grid-template-columns: 1fr; } }
+
+    .detail-cover {
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #DC2626, #7F1D1D);
+    }
+    .detail-cover::after {
+      content: '⚔';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 140px;
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    }
+    .detail-cover-pattern {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.3) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(0,0,0,0.15) 0%, transparent 50%);
+    }
+
+    .detail-title { font-size: var(--text-4xl); font-weight: var(--weight-bold); letter-spacing: -0.03em; margin-bottom: var(--space-3); }
+    .detail-meta { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-4); }
+    .detail-meta-tag {
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+    }
+    .detail-desc {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-6);
+    }
+    .detail-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+    .detail-stat {
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+    }
+    .detail-stat-val { font-family: var(--font-mono); font-size: var(--text-xl); font-weight: var(--weight-bold); }
+    .detail-stat-val.red { color: var(--red-700); }
+    .detail-stat-val.green { color: var(--green-700); }
+    .detail-stat-val.amber { color: #B45309; }
+    .detail-stat-label { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .detail-cta {
+      display: flex; gap: var(--space-3);
+    }
+    .btn-apply {
+      padding: 14px 28px;
+      background: var(--text-primary);
+      color: white;
+      border-radius: var(--radius-pill);
+      font-weight: var(--weight-semibold);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: var(--space-2);
+    }
+    .btn-consult {
+      padding: 14px 28px;
+      background: white;
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-pill);
+      font-weight: var(--weight-semibold);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: var(--space-2);
+    }
+
+    /* Tabs */
+    .tabs-bar {
+      max-width: 1200px;
+      margin: var(--space-12) auto 0;
+      padding: 0 var(--space-6);
+      border-bottom: 1px solid var(--border-default);
+      display: flex;
+      gap: var(--space-2);
+    }
+    .tab {
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      font-family: var(--font-sans);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .tab.active { color: var(--text-primary); font-weight: var(--weight-semibold); border-bottom-color: var(--text-primary); }
+
+    /* Content sections */
+    .content-section {
+      max-width: 1200px;
+      margin: var(--space-12) auto 0;
+      padding: 0 var(--space-6);
+    }
+    .section-h2 { font-size: var(--text-2xl); font-weight: var(--weight-bold); letter-spacing: -0.02em; margin-bottom: var(--space-6); }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+    @media (max-width: 768px) { .features-grid { grid-template-columns: 1fr; } }
+    .feature {
+      padding: var(--space-5);
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .feature-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--red-50);
+      color: var(--red-700);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      margin-bottom: var(--space-3);
+    }
+    .feature-title { font-size: var(--text-base); font-weight: var(--weight-semibold); margin-bottom: var(--space-1); }
+    .feature-desc { font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+
+    /* 接入流程 */
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+    @media (max-width: 768px) { .process-grid { grid-template-columns: 1fr 1fr; } }
+    .process-step {
+      padding: var(--space-5);
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      position: relative;
+    }
+    .process-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: var(--space-3);
+    }
+    .process-title { font-size: var(--text-base); font-weight: var(--weight-semibold); margin-bottom: var(--space-1); }
+    .process-desc { font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+    .process-time { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2); font-family: var(--font-mono); }
+
+    /* 截图 */
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-3);
+    }
+    @media (max-width: 768px) { .screenshots-grid { grid-template-columns: repeat(2, 1fr); } }
+    .screenshot {
+      aspect-ratio: 16/9;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+    }
+    .screenshot-grad { position: absolute; inset: 0; }
+    .screenshot-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 48px; color: rgba(255,255,255,0.7); }
+
+    /* Footer (reused inline) */
+    .footer { max-width: 1200px; margin: var(--space-16) auto 0; padding: var(--space-12) var(--space-6) var(--space-6); border-top: 1px solid var(--border-default); }
+    .footer-bottom { padding-top: var(--space-6); border-top: 1px solid var(--border-muted); font-size: var(--text-xs); color: var(--text-tertiary); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2); }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">G</span>
+        <span class="logo-text">游戏商户平台</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="games.html" class="nav-link active">游戏大厅</a>
+        <a href="rules.html" class="nav-link">合作规则</a>
+        <a href="about.html" class="nav-link">关于我们</a>
+        <a href="help.html" class="nav-link">帮助中心</a>
+        <a href="news.html" class="nav-link">公告</a>
+        <a href="apply.html" class="nav-cta">申请入驻</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="index.html">首页</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="games.html">游戏大厅</a>
+      <span class="breadcrumb-sep">/</span>
+      <span>音浪对决</span>
+    </div>
+
+    <div class="detail-hero">
+      <div class="detail-cover">
+        <div class="detail-cover-pattern"></div>
+      </div>
+      <div>
+        <div class="detail-meta">
+          <span class="detail-meta-tag">RPG</span>
+          <span class="detail-meta-tag">音乐竞技</span>
+          <span class="detail-meta-tag">2026</span>
+        </div>
+        <h1 class="detail-title">音浪对决</h1>
+        <p class="detail-desc">一款结合了音乐节奏和实时对战的创新竞技游戏。玩家跟随节拍操作,与对手同步 PK,体验 1V1 / 3V3 / 5V5 多模式的音乐对战乐趣。</p>
+        <div class="detail-stats">
+          <div class="detail-stat">
+            <div class="detail-stat-val red">28.4 万</div>
+            <div class="detail-stat-label">DAU</div>
+          </div>
+          <div class="detail-stat">
+            <div class="detail-stat-val green">¥86.4 万</div>
+            <div class="detail-stat-label">利润</div>
+          </div>
+          <div class="detail-stat">
+            <div class="detail-stat-val green">↑ +12.4%</div>
+            <div class="detail-stat-label">成长趋势</div>
+          </div>
+        </div>
+        <div class="detail-cta">
+          <a href="apply.html" class="btn-apply">申请接入 →</a>
+          <a href="#" class="btn-consult">咨询运营</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs-bar">
+      <button class="tab active">玩法</button>
+      <button class="tab">截图</button>
+      <button class="tab">评价 · 8.2k</button>
+      <button class="tab">接入流程</button>
+    </div>
+
+    <div class="content-section">
+      <h2 class="section-h2">核心玩法</h2>
+      <p style="font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-6); max-width: 800px;">
+        音浪对决独创「节拍 + 技能」双核玩法,玩家跟随背景音乐节拍操作角色,同时释放技能与对手进行博弈。融合 MOBA 与音游的双重快感,3 分钟即可完成一局。
+      </p>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">1</div>
+          <div class="feature-title">3 种模式</div>
+          <div class="feature-desc">1V1 排位赛 / 3V3 团战赛 / 5V5 锦标赛,适配不同玩家偏好</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">2</div>
+          <div class="feature-title">50+ 角色</div>
+          <div class="feature-desc">持续更新角色池,每赛季新增 8-10 位可玩角色,丰富策略组合</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">3</div>
+          <div class="feature-title">实时匹配</div>
+          <div class="feature-desc">基于 ELO 算法的智能匹配系统,平均匹配时间 12 秒</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">4</div>
+          <div class="feature-title">赛季体系</div>
+          <div class="feature-desc">3 个月一赛季,每赛季重置段位,激励玩家持续参与</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">5</div>
+          <div class="feature-title">社交系统</div>
+          <div class="feature-desc">好友系统、战队系统、师徒系统,形成完整社交关系链</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">6</div>
+          <div class="feature-title">赛事生态</div>
+          <div class="feature-desc">月赛 / 季赛 / 杯赛三级赛事,头部玩家可签约职业战队</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2 class="section-h2">游戏截图</h2>
+      <div class="screenshots-grid">
+        <div class="screenshot">
+          <div class="screenshot-grad" style="background: linear-gradient(135deg, #DC2626, #7F1D1D);"></div>
+          <div class="screenshot-icon">⚔</div>
+        </div>
+        <div class="screenshot">
+          <div class="screenshot-grad" style="background: linear-gradient(135deg, #1E1E1E, #0A0A0A);"></div>
+          <div class="screenshot-icon">♪</div>
+        </div>
+        <div class="screenshot">
+          <div class="screenshot-grad" style="background: linear-gradient(135deg, #F59E0B, #B45309);"></div>
+          <div class="screenshot-icon">🏆</div>
+        </div>
+        <div class="screenshot">
+          <div class="screenshot-grad" style="background: linear-gradient(135deg, #7C3AED, #4C1D95);"></div>
+          <div class="screenshot-icon">👥</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2 class="section-h2">接入流程</h2>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="process-num">01</div>
+          <div class="process-title">申请入驻</div>
+          <div class="process-desc">提交公司资质、游戏软著、版号,审核员 1-2 个工作日内回复</div>
+          <div class="process-time">预计 1-2 天</div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">02</div>
+          <div class="process-title">合同签署</div>
+          <div class="process-desc">线上签署合作规则,确认分润比例与档位</div>
+          <div class="process-time">预计 1 天</div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">03</div>
+          <div class="process-title">联调测试</div>
+          <div class="process-desc">技术对接 UMAX 工具,完成 API 联调与数据脱敏配置</div>
+          <div class="process-time">预计 3-5 天</div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">04</div>
+          <div class="process-title">正式上线</div>
+          <div class="process-desc">灰度发布 → 全量上线,进入流量分发池</div>
+          <div class="process-time">预计 1 天</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-bottom">
+        <span>© 2026 Opulatrix · 游戏商户平台</span>
+        <span>京ICP备 20260001 号</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>帮助中心 · 游戏商户平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .page { padding-top: 64px; }
+    .topnav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-default); z-index: 50; display: flex; align-items: center; }
+    .topnav-inner { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6); width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-6); }
+    .logo { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; color: var(--text-primary); }
+    .logo-mark { width: 28px; height: 28px; background: var(--text-primary); color: white; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-weight: var(--weight-bold); font-family: var(--font-mono); font-size: 14px; }
+    .logo-text { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+    .nav-links {
+      display: flex; align-items: center; gap: var(--space-2);
+      justify-content: center;
+    }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--text-secondary); text-decoration: none; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active {
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+      background: var(--bg-muted);
+    }
+    .nav-cta { padding: 8px 16px; background: var(--text-primary); color: white; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--weight-semibold); text-decoration: none; justify-self: end; transition: background 0.15s, transform 0.1s; }
+    .nav-cta:hover { background: var(--text-secondary); }
+
+    .help-hero {
+      max-width: 1200px;
+      margin: var(--space-12) auto var(--space-8);
+      padding: 0 var(--space-6);
+      text-align: center;
+    }
+    .help-hero h1 { font-size: var(--text-4xl); font-weight: var(--weight-bold); letter-spacing: -0.03em; margin-bottom: var(--space-3); }
+    .help-hero p { font-size: var(--text-lg); color: var(--text-secondary); margin-bottom: var(--space-6); }
+
+    .search-bar {
+      max-width: 600px; margin: 0 auto;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 16px 20px 16px 48px;
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-base);
+      font-family: var(--font-sans);
+      box-shadow: var(--shadow-sm);
+    }
+    .search-input:focus { outline: none; border-color: var(--text-primary); box-shadow: 0 0 0 4px rgba(24,24,27,0.08); }
+    .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--text-tertiary); }
+
+    /* Tabs */
+    .tabs-bar {
+      max-width: 1200px;
+      margin: var(--space-8) auto var(--space-6);
+      padding: 0 var(--space-6);
+      display: flex;
+      gap: var(--space-1);
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      width: fit-content;
+    }
+    .tab {
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      font-family: var(--font-sans);
+    }
+    .tab.active { background: white; color: var(--text-primary); font-weight: var(--weight-semibold); box-shadow: var(--shadow-sm); }
+
+    /* Main grid */
+    .help-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-8);
+    }
+    @media (max-width: 1023px) { .help-grid { grid-template-columns: 1fr; } }
+
+    /* Sidebar categories */
+    .help-side {
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      height: fit-content;
+    }
+    .help-side-title {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-semibold);
+      padding: var(--space-2) var(--space-3) var(--space-1);
+    }
+    .help-side-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .help-side-item:hover { background: var(--bg-muted); }
+    .help-side-item.active { background: var(--text-primary); color: white; font-weight: var(--weight-semibold); }
+    .help-side-count { font-size: var(--text-xs); opacity: 0.7; font-family: var(--font-mono); }
+
+    /* FAQ list */
+    .faq-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    .faq-item {
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .faq-q {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      cursor: pointer;
+      gap: var(--space-3);
+    }
+    .faq-q-icon {
+      flex-shrink: 0;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--bg-muted);
+      color: var(--text-tertiary);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .faq-item.open .faq-q-icon { transform: rotate(45deg); background: var(--red-50); color: var(--red-700); }
+    .faq-a {
+      display: none;
+      padding: 0 var(--space-5) var(--space-5);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* Contact section */
+    .contact-strip {
+      max-width: 1200px;
+      margin: var(--space-16) auto 0;
+      padding: var(--space-8) var(--space-6);
+      background: var(--bg-muted);
+      border-radius: var(--radius-2xl);
+    }
+    .contact-strip h3 { font-size: var(--text-xl); font-weight: var(--weight-bold); margin-bottom: var(--space-4); text-align: center; }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+    }
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-card {
+      padding: var(--space-5);
+      background: white;
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    .contact-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--red-50);
+      color: var(--red-700);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      margin: 0 auto var(--space-2);
+    }
+    .contact-label { font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 2px; }
+    .contact-val { font-family: var(--font-mono); font-size: var(--text-base); font-weight: var(--weight-semibold); }
+
+    .footer { max-width: 1200px; margin: var(--space-12) auto 0; padding: var(--space-6); border-top: 1px solid var(--border-default); }
+    .footer-bottom { font-size: var(--text-xs); color: var(--text-tertiary); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2); }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">G</span>
+        <span class="logo-text">游戏商户平台</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="games.html" class="nav-link">游戏大厅</a>
+        <a href="rules.html" class="nav-link">合作规则</a>
+        <a href="about.html" class="nav-link">关于我们</a>
+        <a href="help.html" class="nav-link active">帮助中心</a>
+        <a href="news.html" class="nav-link">公告</a>
+        <a href="apply.html" class="nav-cta">申请入驻</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="help-hero">
+      <h1>帮助中心</h1>
+      <p>找不到答案?联系客服或提交工单,工作日 1 小时内响应。</p>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" type="text" placeholder="搜索问题 (如: 入驻申请、结算提现、模式切换)" />
+      </div>
+    </div>
+
+    <div class="tabs-bar">
+      <button class="tab active">商户 FAQ</button>
+      <button class="tab">技术文档</button>
+    </div>
+
+    <div class="help-grid">
+      <aside class="help-side">
+        <div class="help-side-title">问题分类</div>
+        <a class="help-side-item active"><span>入驻相关</span><span class="help-side-count">8</span></a>
+        <a class="help-side-item"><span>合作模式</span><span class="help-side-count">12</span></a>
+        <a class="help-side-item"><span>结算与提现</span><span class="help-side-count">10</span></a>
+        <a class="help-side-item"><span>数据与对账</span><span class="help-side-count">7</span></a>
+        <a class="help-side-item"><span>风控与合规</span><span class="help-side-count">6</span></a>
+        <a class="help-side-item"><span>技术对接</span><span class="help-side-count">9</span></a>
+        <a class="help-side-item"><span>账户与安全</span><span class="help-side-count">5</span></a>
+      </aside>
+
+      <div>
+        <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; font-weight: var(--weight-semibold); margin-bottom: var(--space-4);">入驻相关 · 8 条</div>
+        <div class="faq-list">
+          <div class="faq-item open">
+            <div class="faq-q">
+              <span>申请入驻需要哪些材料?审核要多久?</span>
+              <span class="faq-q-icon">+</span>
+            </div>
+            <div class="faq-a">
+              需要提供:营业执照副本、法人身份证、对公账户信息、ICP 备案号、游戏软著证书、网络文化经营许可证。<br/><br/>
+              审核流程:提交申请 → 资料审核 (1-2 个工作日) → 资质核验 (1-2 个工作日) → 合同签署 (1 个工作日) → 接入联调 (3-5 个工作日)。整体周期 7-10 个工作日。
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <span>没有版号或软著可以入驻吗?</span>
+              <span class="faq-q-icon">+</span>
+            </div>
+            <div class="faq-a">
+              不可以。平台要求所有游戏必须有完整的版号、软著、ICP 备案,缺一不可。如果你的游戏还在开发期,可以先提交其他资质进入预审队列,版号下来后再正式签约。
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <span>个人开发者可以入驻吗?</span>
+              <span class="faq-q-icon">+</span>
+            </div>
+            <div class="faq-a">
+              不可以。入驻主体必须是合法注册的公司(企业法人、个体工商户、事业单位等),不接受个人开发者。如有需要,建议先注册公司再申请。
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <span>被驳回后多久可以重新申请?</span>
+              <span class="faq-q-icon">+</span>
+            </div>
+            <div class="faq-a">
+              资料不齐全:补齐后随时可重新申请。<br/>
+              资质不符:需解决根本问题后(如申请版号、变更经营范围)再申请,建议先联系运营沟通。<br/>
+              严重违规:6 个月内不接受再次申请。
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <span>合同期多久?到期后会自动续约吗?</span>
+              <span class="faq-q-icon">+</span>
+            </div>
+            <div class="faq-a">
+              合同期 1 年。合同到期前 30 天,平台会通知续约。如双方无异议,自动续约 1 年;如需调整条款,会重新协商。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-strip">
+      <h3>没找到答案?</h3>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="contact-icon">☎</div>
+          <div class="contact-label">客服电话</div>
+          <div class="contact-val">400-888-0001</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">@</div>
+          <div class="contact-label">商户邮箱</div>
+          <div class="contact-val">bd@game-merchant.cn</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">○</div>
+          <div class="contact-label">工单系统</div>
+          <div class="contact-val">提交工单 →</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-bottom">
+        <span>© 2026 Opulatrix · 游戏商户平台</span>
+        <span>京ICP备 20260001 号</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

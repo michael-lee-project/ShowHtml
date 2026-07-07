@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商家入驻 · 游戏商户平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .apply-page {
+      --mode-color: #2563EB;
+      --mode-color-light: #3B82F6;
+      --mode-color-bg: #EFF6FF;
+      --mode-color-border: #BFDBFE;
+    }
+
+    /* 顶部 hero */
+    .apply-hero {
+      padding: var(--space-12) 0 var(--space-8);
+      background:
+        radial-gradient(ellipse 60% 60% at 50% 0%, rgba(37, 99, 235, 0.06), transparent),
+        var(--bg-subtle);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .apply-hero h1 {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-3);
+    }
+    @media (min-width: 768px) {
+      .apply-hero h1 { font-size: var(--text-5xl); }
+    }
+    .apply-hero p {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      max-width: 60ch;
+    }
+
+    /* 步骤条 */
+    .stepper-wrap {
+      max-width: var(--container-lg);
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    /* 内容区 */
+    .apply-main {
+      max-width: var(--container-lg);
+      margin: 0 auto;
+      padding: var(--space-12) var(--space-6) var(--space-16);
+    }
+
+    /* apply-step 默认隐藏，JS 控制显示 */
+    .apply-step { display: none; }
+    .apply-step.active { display: block; }
+
+    /* 资料分级 tag */
+    .field-priority {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.05em;
+      margin-left: auto;
+    }
+    .field-priority.p0 { background: #FEE2E2; color: #B91C1C; }
+    .field-priority.p1 { background: #FEF3C7; color: #B45309; }
+    .field-priority.p2 { background: #DBEAFE; color: #1D4ED8; }
+
+    /* Step 1 / 4 提示 banner */
+    .info-banner {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      background: var(--mode-color-bg);
+      border: 1px solid var(--mode-color-border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+    .info-banner-icon {
+      flex-shrink: 0;
+      color: var(--mode-color);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    /* Step 4 预览 */
+    .review-section {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+    }
+    .review-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .review-section-title { font-size: var(--text-base); font-weight: var(--weight-semibold); }
+    .review-edit-btn {
+      font-size: var(--text-sm);
+      color: var(--mode-color);
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      font-family: var(--font-sans);
+      font-weight: var(--weight-medium);
+    }
+    .review-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      font-size: var(--text-sm);
+    }
+    .review-row dt { color: var(--text-tertiary); }
+    .review-row dd { color: var(--text-primary); font-weight: var(--weight-medium); margin: 0; word-break: break-word; }
+    @media (max-width: 767px) {
+      .review-row { grid-template-columns: 1fr; gap: 4px; }
+    }
+
+    .review-game-card {
+      padding: var(--space-4);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-muted);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-3);
+    }
+    .review-game-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-2);
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户平台</span>
+      </a>
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="games.html" class="nav-link">游戏大厅</a>
+        <a href="rules.html" class="nav-link">合作规则</a>
+        <a href="about.html" class="nav-link">关于我们</a>
+        <a href="help.html" class="nav-link">帮助中心</a>
+        <a href="news.html" class="nav-link">公告</a>
+        <a href="apply.html" class="nav-link nav-link-active">申请入驻</a>
+      </div>
+      <div class="nav-actions">
+        <a href="login.html" class="nav-link" style="padding: 6px 12px;">商家登录</a>
+        <a href="../merchant/login.html" class="nav-cta">商户后台</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="apply-page">
+    <!-- Hero -->
+    <section class="apply-hero">
+      <div class="container">
+        <h1>商家入驻申请</h1>
+        <p>完成下方 5 步表单后，平台将进行主体资质审核、游戏合规审核、技术对接试运营、正式终审，预计 7-10 个工作日完成全流程。</p>
+      </div>
+    </section>
+
+    <!-- 步骤条 -->
+    <div class="stepper-wrap">
+      <ol class="stepper">
+        <li class="stepper-item active" data-step="1">
+          <span class="stepper-circle">1</span>
+          <span class="stepper-label">基本信息</span>
+        </li>
+        <span class="stepper-line"></span>
+        <li class="stepper-item" data-step="2">
+          <span class="stepper-circle">2</span>
+          <span class="stepper-label">主体资料</span>
+        </li>
+        <span class="stepper-line"></span>
+        <li class="stepper-item" data-step="3">
+          <span class="stepper-circle">3</span>
+          <span class="stepper-label">游戏资料</span>
+        </li>
+        <span class="stepper-line"></span>
+        <li class="stepper-item" data-step="4">
+          <span class="stepper-circle">4</span>
+          <span class="stepper-label">预览确认</span>
+        </li>
+        <span class="stepper-line"></span>
+        <li class="stepper-item" data-step="5">
+          <span class="stepper-circle">5</span>
+          <span class="stepper-label">完成</span>
+        </li>
+      </ol>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="apply-main">
+
+      <!-- ============ Step 1: 基本信息 ============ -->
+      <section id="apply-step-1" class="apply-step active">
+        <div class="info-banner">
+          <span class="info-banner-icon">ⓘ</span>
+          <div>
+            本步骤用于快速建立商户档案。完整主体资料将在下一步填写，预计耗时 <strong>1 分钟</strong>。
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">商户基本信息</div>
+          <div class="form-section-sub">4 项必填。所有信息需真实有效，将用于平台身份核验。</div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">
+                公司名称 <span class="required">*</span>
+                <span class="field-priority p0">P0</span>
+              </label>
+              <input type="text" class="form-input" placeholder="请填写营业执照上的公司全称" />
+              <span class="form-hint">需与营业执照主体名称完全一致，含括号、英文</span>
+            </div>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label class="form-label">
+                联系人姓名 <span class="required">*</span>
+                <span class="field-priority p0">P0</span>
+              </label>
+              <input type="text" class="form-input" placeholder="如：张经理" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">
+                联系人手机 <span class="required">*</span>
+                <span class="field-priority p0">P0</span>
+              </label>
+              <input type="tel" class="form-input" placeholder="11 位手机号" />
+            </div>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label class="form-label">
+                联系人邮箱 <span class="required">*</span>
+                <span class="field-priority p0">P0</span>
+              </label>
+              <input type="email" class="form-input" placeholder="用于接收审核通知" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">
+                主营业务 <span class="required">*</span>
+                <span class="field-priority p0">P0</span>
+              </label>
+              <select class="form-select">
+                <option>游戏开发与发行</option>
+                <option>游戏运营</option>
+                <option>游戏发行代理</option>
+                <option>游戏工作室</option>
+                <option>其他</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <span class="step-nav-meta" id="save-status">填写内容自动保存，无需担心丢失</span>
+          <div class="step-nav-actions">
+            <button class="btn btn-ghost btn-lg" disabled>上一步</button>
+            <button class="btn btn-primary btn-lg" onclick="ApplyForm.next()">下一步：主体资料 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Step 2: 主体资料 ============ -->
+      <section id="apply-step-2" class="apply-step">
+        <div class="info-banner">
+          <span class="info-banner-icon">ⓘ</span>
+          <div>
+            <strong>P0 资料</strong>缺失则无法进入下一步审核。<strong>P1 资料</strong>可在审核过程中补交。带
+            <span class="field-priority p0" style="margin: 0 4px;">P0</span>
+            <span class="field-priority p1" style="margin: 0 4px;">P1</span>
+            标签代表分级。
+          </div>
+        </div>
+
+        <!-- 1. 营业执照 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            1. 营业执照 / 主体证明
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">彩色扫描件，需在有效期内</div>
+          <div class="upload-zone">
+            <div class="upload-zone-icon">↑</div>
+            <div class="upload-zone-title">点击或拖拽上传营业执照</div>
+            <div class="upload-zone-hint">
+              <span class="constraint">PDF</span>
+              <span class="constraint">JPG/PNG</span>
+              最大 10 MB，需含统一社会信用代码
+            </div>
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+        </div>
+
+        <!-- 2. 法定代表人 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            2. 法定代表人 / 负责人信息
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">法人或负责人二选一，身份证正反面均需上传</div>
+          <div class="form-row cols-3">
+            <div class="form-field">
+              <label class="form-label">姓名 <span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="法人姓名" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">证件类型 <span class="required">*</span></label>
+              <select class="form-select">
+                <option>身份证</option>
+                <option>护照</option>
+                <option>港澳台居民居住证</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">证件号码 <span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="18 位身份证号" />
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-field">
+              <label class="form-label">身份证正面 <span class="required">*</span></label>
+              <div class="upload-zone" style="padding: var(--space-4);">
+                <div class="upload-zone-title">上传身份证正面</div>
+                <div class="upload-zone-hint"><span class="constraint">JPG/PNG</span> ≤ 5 MB</div>
+                <input type="file" accept=".jpg,.jpeg,.png" />
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-label">身份证反面 <span class="required">*</span></label>
+              <div class="upload-zone" style="padding: var(--space-4);">
+                <div class="upload-zone-title">上传身份证反面</div>
+                <div class="upload-zone-hint"><span class="constraint">JPG/PNG</span> ≤ 5 MB</div>
+                <input type="file" accept=".jpg,.jpeg,.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 实际运营团队 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            3. 实际运营团队信息
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">核心运营人员简历 + 团队组织架构图</div>
+          <div class="upload-zone">
+            <div class="upload-zone-icon">↑</div>
+            <div class="upload-zone-title">上传团队资料</div>
+            <div class="upload-zone-hint">
+              <span class="constraint">PDF</span>
+              <span class="constraint">JPG/PNG</span>
+              最大 20 MB，可上传多份
+            </div>
+            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+        </div>
+
+        <!-- 4. 联系人信息 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            4. 联系人信息
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">业务对接人，非紧急情况下的第一联络人</div>
+          <div class="form-row cols-3">
+            <div class="form-field">
+              <label class="form-label">姓名 <span class="required">*</span></label>
+              <input type="text" class="form-input" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">手机 <span class="required">*</span></label>
+              <input type="tel" class="form-input" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">邮箱 <span class="required">*</span></label>
+              <input type="email" class="form-input" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. 技术负责人 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            5. 技术负责人信息
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">游戏服务端 / 客户端核心技术对接人</div>
+          <div class="form-row cols-3">
+            <div class="form-field">
+              <label class="form-label">姓名 <span class="required">*</span></label>
+              <input type="text" class="form-input" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">手机 <span class="required">*</span></label>
+              <input type="tel" class="form-input" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">从业年限 <span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="如：8 年" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. 财务负责人 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            6. 财务负责人信息
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">结算与对账联络人</div>
+          <div class="form-row cols-3">
+            <div class="form-field">
+              <label class="form-label">姓名 <span class="required">*</span></label>
+              <input type="text" class="form-input" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">手机 <span class="required">*</span></label>
+              <input type="tel" class="form-input" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">邮箱</label>
+              <input type="email" class="form-input" placeholder="选填" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. 收款账户 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            7. 收款账户信息
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">用于结算分润，必须为公司对公账户</div>
+          <div class="form-row cols-3">
+            <div class="form-field">
+              <label class="form-label">开户银行 <span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="如：招商银行" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">账户名称 <span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="公司全称" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">账号 <span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="银行账号" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">开户许可证 / 银行回单 <span class="required">*</span></label>
+            <div class="upload-zone" style="padding: var(--space-4);">
+              <div class="upload-zone-title">上传银行账户证明</div>
+              <div class="upload-zone-hint"><span class="constraint">PDF</span> <span class="constraint">JPG/PNG</span> ≤ 5 MB</div>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. 过往运营案例 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            8. 过往运营案例
+            <span class="field-priority p1" style="margin-left: 8px; background: #E5E7EB; color: #6B7280;">选填</span>
+          </div>
+          <div class="form-section-sub">已上线游戏的对账单、用户量截图、合作平台证明（至少 1 份）· <strong>不提交也可继续入驻</strong></div>
+          <div class="upload-zone">
+            <div class="upload-zone-icon">↑</div>
+            <div class="upload-zone-title">上传案例材料</div>
+            <div class="upload-zone-hint">
+              <span class="constraint">PDF</span>
+              <span class="constraint">JPG/PNG</span>
+              最多 10 份，单份 ≤ 20 MB
+            </div>
+            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+        </div>
+
+        <!-- 9. 风险承诺文件 -->
+        <div class="form-section">
+          <div class="form-section-title">
+            9. 风险承诺文件
+            <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+          </div>
+          <div class="form-section-sub">加盖公章的承诺书（包含反洗钱、用户资金安全、合规运营条款）</div>
+          <div class="upload-zone">
+            <div class="upload-zone-icon">↑</div>
+            <div class="upload-zone-title">上传签字盖章的承诺书</div>
+            <div class="upload-zone-hint">
+              <span class="constraint">PDF</span>
+              必须含公章 + 法人签字，≤ 10 MB
+            </div>
+            <input type="file" accept=".pdf" />
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <span class="step-nav-meta" id="save-status-2">草稿自动保存中...</span>
+          <div class="step-nav-actions">
+            <button class="btn btn-ghost btn-lg" onclick="ApplyForm.prev()">← 上一步</button>
+            <button class="btn btn-primary btn-lg" onclick="ApplyForm.next()">下一步：游戏资料 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Step 3: 游戏资料 ============ -->
+      <section id="apply-step-3" class="apply-step">
+        <div class="info-banner">
+          <span class="info-banner-icon">ⓘ</span>
+          <div>
+            一个公司可入驻多款游戏。每个游戏独立审核、独立上线。如有多款游戏，请逐个填写。
+          </div>
+        </div>
+
+        <!-- 多游戏 tabs -->
+        <div class="game-tabs" id="game-tabs">
+          <button class="game-tab active" data-game-idx="0">
+            <span class="game-tab-num">1</span>
+            <span>游戏 1</span>
+          </button>
+          <button class="game-tab game-tab-add" onclick="ApplyForm.addGame(); location.reload();">
+            + 添加另一款游戏
+          </button>
+        </div>
+
+        <!-- 当前游戏表单（演示版：游戏 1） -->
+        <div class="game-form" data-game-idx="0">
+
+          <!-- 1. 游戏名称 + 类型 -->
+          <div class="form-section">
+            <div class="form-section-title">
+              1-2. 游戏名称 & 类型
+              <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+            </div>
+            <div class="form-row cols-2">
+              <div class="form-field">
+                <label class="form-label">游戏名称 <span class="required">*</span></label>
+                <input type="text" class="form-input" placeholder="如：音浪对决" />
+              </div>
+              <div class="form-field">
+                <label class="form-label">游戏类型 <span class="required">*</span></label>
+                <select class="form-select">
+                  <option>MOBA</option>
+                  <option>SLG（策略）</option>
+                  <option>卡牌</option>
+                  <option>棋牌</option>
+                  <option>休闲</option>
+                  <option>模拟</option>
+                  <option>模拟经营</option>
+                  <option>消除</option>
+                  <option>竞速</option>
+                  <option>RPG</option>
+                  <option>MMORPG</option>
+                  <option>养成</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 玩法说明 + 视频（合并） -->
+          <div class="form-section">
+            <div class="form-section-title">
+              3. 游戏玩法说明 + 演示视频
+              <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+            </div>
+            <div class="form-section-sub">文字说明 + 配套演示视频，缺一不可</div>
+
+            <div class="form-field">
+              <label class="form-label">玩法说明 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="5" placeholder="详细描述游戏核心玩法、操作方式、对局机制、胜负条件等"></textarea>
+              <span class="form-hint">建议包含：核心循环、单局时长、胜负判定方式、特殊机制说明</span>
+            </div>
+
+            <div class="form-field" style="margin-top: var(--space-4);">
+              <label class="form-label">演示视频 <span class="required">*</span></label>
+              <div class="upload-zone">
+                <div class="upload-zone-icon">▶</div>
+                <div class="upload-zone-title">上传游戏演示视频</div>
+                <div class="upload-zone-hint">
+                  <span class="constraint">MP4</span>
+                  <span class="constraint">MOV</span>
+                  ≤ 100 MB，建议 2-5 分钟完整一局
+                </div>
+                <input type="file" accept=".mp4,.mov" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. 游戏规则文档 -->
+          <div class="form-section">
+            <div class="form-section-title">
+              4. 游戏规则文档
+              <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+            </div>
+            <div class="form-section-sub">完整规则文档，与玩法说明互补</div>
+            <div class="upload-zone">
+              <div class="upload-zone-icon">↑</div>
+              <div class="upload-zone-title">上传游戏规则文档</div>
+              <div class="upload-zone-hint">
+                <span class="constraint">PDF</span>
+                <span class="constraint">DOCX</span>
+                ≤ 20 MB，需含版本号与日期
+              </div>
+              <input type="file" accept=".pdf,.docx" />
+            </div>
+          </div>
+
+          <!-- 5-9. 关键规则（5 字段文字） -->
+          <div class="form-section">
+            <div class="form-section-title">
+              5-9. 关键规则说明
+              <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+            </div>
+            <div class="form-section-sub">5 项必填规则说明，是合规审核的核心</div>
+
+            <div class="form-field">
+              <label class="form-label">5. 输赢判定规则 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="3" placeholder="说明输赢的判定方式、判定时机、判定异常时的处理"></textarea>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">6. 赔率 / 奖励机制 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="3" placeholder="说明赔率结构、最高倍数、奖励发放方式（如：现金/积分/虚拟道具）"></textarea>
+              <span class="form-hint">⚠ 概率需对玩家公开，禁止暗箱调整</span>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">7. 游戏结算逻辑 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="3" placeholder="说明结算时间、结算对象、结算资金流向（用户↔平台↔商户三方）"></textarea>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">8. 异常局处理规则 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="3" placeholder="说明网络断线、服务器故障、玩家掉线、bug 出现时的处理方式"></textarea>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">9. 用户限制规则 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="3" placeholder="说明未成年人限制、地区限制、消费上限、实名制要求等"></textarea>
+            </div>
+          </div>
+
+          <!-- 10. 操作流程图 -->
+          <div class="form-section">
+            <div class="form-section-title">
+              10. 游戏操作流程图
+              <span class="field-priority p1" style="margin-left: 8px; background: #E5E7EB; color: #6B7280;">选填</span>
+            </div>
+            <div class="form-section-sub">从登录到结算的完整流程 · <strong>不提交也可继续入驻</strong></div>
+            <div class="upload-zone">
+              <div class="upload-zone-icon">↑</div>
+              <div class="upload-zone-title">上传流程图</div>
+              <div class="upload-zone-hint">
+                <span class="constraint">PNG/JPG</span>
+                <span class="constraint">PDF</span>
+                ≤ 10 MB，可上传多张
+              </div>
+              <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" />
+            </div>
+          </div>
+
+          <!-- 11. 客服 FAQ -->
+          <div class="form-section">
+            <div class="form-section-title">
+              11. 客服 FAQ
+              <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+            </div>
+            <div class="form-section-sub">至少 20 条，覆盖支付、胜负、奖励、投诉等常见问题</div>
+            <div class="upload-zone">
+              <div class="upload-zone-icon">↑</div>
+              <div class="upload-zone-title">上传客服 FAQ 文档</div>
+              <div class="upload-zone-hint">
+                <span class="constraint">PDF</span>
+                <span class="constraint">DOCX</span>
+                ≤ 10 MB
+              </div>
+              <input type="file" accept=".pdf,.docx" />
+            </div>
+          </div>
+
+          <!-- 12. 投诉处理规则 -->
+          <div class="form-section">
+            <div class="form-section-title">
+              12. 投诉处理规则
+              <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+            </div>
+            <div class="form-section-sub">受理渠道、响应时效、升级机制</div>
+            <div class="form-field">
+              <label class="form-label">处理规则 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="4" placeholder="如：投诉响应时效、申诉渠道、纠纷处理流程、赔付规则"></textarea>
+            </div>
+          </div>
+
+          <!-- 13. 是否有机器人 -->
+          <div class="form-section">
+            <div class="form-section-title">
+              13. 游戏中是否有机器人
+              <span class="field-priority p0" style="margin-left: 8px;">P0</span>
+            </div>
+            <div class="form-section-sub">机器人比例、算法、是否对玩家可见——必须如实披露</div>
+
+            <div class="form-row cols-2" style="margin-bottom: var(--space-3);">
+              <div class="form-field">
+                <label class="form-label">是否有机器人 <span class="required">*</span></label>
+                <select class="form-select" id="has-bot-select">
+                  <option value="no">无机器人</option>
+                  <option value="yes">有机器人（请在下方说明）</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">机器人占比（如有）</label>
+                <input type="text" class="form-input" placeholder="如：低峰期 30%" />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">详细说明 <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="4" placeholder="机器人的触发条件、行为模式、是否标注 AI 身份、是否与真人混排"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <span class="step-nav-meta">游戏资料 13 项（已合并演示视频到玩法说明）</span>
+          <div class="step-nav-actions">
+            <button class="btn btn-ghost btn-lg" onclick="ApplyForm.prev()">← 上一步</button>
+            <button class="btn btn-primary btn-lg" onclick="ApplyForm.next()">下一步：预览确认 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Step 4: 预览确认 ============ -->
+      <section id="apply-step-4" class="apply-step">
+        <div class="info-banner">
+          <span class="info-banner-icon">⚠</span>
+          <div>
+            提交后将进入审核流程，主体资料不可修改。请仔细核对以下信息，确认无误后提交。
+          </div>
+        </div>
+
+        <div class="review-section">
+          <div class="review-section-head">
+            <div class="review-section-title">商户基本信息</div>
+            <button class="review-edit-btn" onclick="ApplyForm.goToStep(1)">编辑</button>
+          </div>
+          <dl class="review-row"><dt>公司名称</dt><dd>北京某某科技有限公司</dd></dl>
+          <dl class="review-row"><dt>联系人</dt><dd>张经理 · 138****5678</dd></dl>
+          <dl class="review-row"><dt>邮箱</dt><dd>contact@example.com</dd></dl>
+          <dl class="review-row"><dt>主营业务</dt><dd>游戏开发与发行</dd></dl>
+        </div>
+
+        <div class="review-section">
+          <div class="review-section-head">
+            <div class="review-section-title">主体资料（9 项）</div>
+            <button class="review-edit-btn" onclick="ApplyForm.goToStep(2)">编辑</button>
+          </div>
+          <dl class="review-row"><dt>营业执照</dt><dd>已上传 · 营业执照.pdf (2.4 MB)</dd></dl>
+          <dl class="review-row"><dt>法人信息</dt><dd>张三 · 身份证 ****1234</dd></dl>
+          <dl class="review-row"><dt>实际运营团队</dt><dd>已上传 · 团队架构图.pdf (1.8 MB)</dd></dl>
+          <dl class="review-row"><dt>联系人</dt><dd>李四 · 139****0001</dd></dl>
+          <dl class="review-row"><dt>技术负责人</dt><dd>王五 · 8 年经验 · 137****0002</dd></dl>
+          <dl class="review-row"><dt>财务负责人</dt><dd>赵六 · 136****0003</dd></dl>
+          <dl class="review-row"><dt>收款账户</dt><dd>招商银行 · 1109 **** 0001</dd></dl>
+          <dl class="review-row"><dt>过往案例</dt><dd>已上传 3 份材料</dd></dl>
+          <dl class="review-row"><dt>风险承诺</dt><dd>已上传 · 承诺书.pdf (3.2 MB)</dd></dl>
+        </div>
+
+        <div class="review-section">
+          <div class="review-section-head">
+            <div class="review-section-title">游戏资料（1 款游戏）</div>
+            <button class="review-edit-btn" onclick="ApplyForm.goToStep(3)">编辑</button>
+          </div>
+          <div class="review-game-card">
+            <div class="review-game-title">游戏 1：音浪对决 · 音乐竞技</div>
+            <dl class="review-row"><dt>玩法说明 + 视频</dt><dd>已上传 · 演示视频.mp4 (45 MB)</dd></dl>
+            <dl class="review-row"><dt>规则文档</dt><dd>已上传 · 规则文档.pdf (3.1 MB)</dd></dl>
+            <dl class="review-row"><dt>输赢判定</dt><dd>按最终积分判定；同分时按时间戳先后</dd></dl>
+            <dl class="review-row"><dt>赔率机制</dt><dd>基础倍数 1-10x，特殊牌型最高 50x</dd></dl>
+            <dl class="review-row"><dt>结算逻辑</dt><dd>对局结束自动结算，T+0 到账平台账户</dd></dl>
+            <dl class="review-row"><dt>异常处理</dt><dd>断线 30s 内可重连，超时按托管处理</dd></dl>
+            <dl class="review-row"><dt>用户限制</dt><dd>实名认证 · 18+ · 单日消费上限 5000 元</dd></dl>
+            <dl class="review-row"><dt>操作流程图</dt><dd>已上传 · 流程图.png</dd></dl>
+            <dl class="review-row"><dt>客服 FAQ</dt><dd>已上传 · FAQ.pdf (28 条)</dd></dl>
+            <dl class="review-row"><dt>投诉处理</dt><dd>7×24 客服 · 2 小时首响应 · 3 工作日内闭环</dd></dl>
+            <dl class="review-row"><dt>机器人</dt><dd>无机器人</dd></dl>
+          </div>
+        </div>
+
+        <div class="form-section" style="background: var(--bg-subtle);">
+          <label style="display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer;">
+            <input type="checkbox" id="agreement-check" onchange="ApplyForm.data.agreementAccepted = this.checked" style="margin-top: 4px;" />
+            <span style="font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">
+              我已阅读并同意 <a href="rules.html" style="color: var(--mode-color);">《游戏商户入驻协议》</a>
+              与 <a href="rules.html" style="color: var(--mode-color);">《平台合规承诺》</a>，承诺所提交资料真实有效，并承担相应法律责任。
+            </span>
+          </label>
+        </div>
+
+        <div class="step-nav">
+          <span class="step-nav-meta">所有信息确认无误？</span>
+          <div class="step-nav-actions">
+            <button class="btn btn-ghost btn-lg" onclick="ApplyForm.prev()">← 上一步</button>
+            <button class="btn btn-primary btn-lg" onclick="ApplyForm.submit()">提交申请 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Step 5: 完成 ============ -->
+      <section id="apply-step-5" class="apply-step">
+        <div class="success-card">
+          <div class="success-icon">✓</div>
+          <div class="success-title">申请已提交</div>
+          <div class="success-sub">主体资质审核中，预计 1-3 个工作日内反馈结果</div>
+          <div class="success-meta">
+            <div class="success-meta-item">申请单号 <strong>APP-2026-0707-2841</strong></div>
+            <div class="success-meta-item">提交时间 <strong>2026-07-07 11:30</strong></div>
+          </div>
+          <div style="display: flex; gap: var(--space-3); justify-content: center;">
+            <a href="../merchant/onboarding.html" class="btn btn-primary btn-lg">查看审核进度 →</a>
+            <a href="index.html" class="btn btn-ghost btn-lg">返回首页</a>
+          </div>
+          <p style="margin-top: var(--space-6); font-size: var(--text-xs); color: var(--text-tertiary);">
+            审核结果将通过注册邮箱和短信通知您
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: 0; padding: 0;">
+        <span>© 2026 游戏商户平台. All rights reserved.</span>
+        <span>Opulatrix</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../shared/js/shared.js"></script>
+  <script>
+    // 初始化：尝试加载草稿
+    document.addEventListener('DOMContentLoaded', () => {
+      const hasDraft = ApplyForm.loadDraft();
+      if (hasDraft) {
+        ApplyForm.updateSaveStatus();
+      }
+      // 从 URL hash 跳转到指定 step（#step=2 → Step 2）
+      const hashMatch = location.hash.match(/step=(\d+)/);
+      const initialStep = hashMatch ? parseInt(hashMatch[1]) : 1;
+      ApplyForm.goToStep(Math.min(Math.max(initialStep, 1), ApplyForm.totalSteps));
+
+      // 步骤条点击跳转（仅允许回跳到已访问步骤）
+      document.querySelectorAll('.stepper-item').forEach((el) => {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', () => {
+          const targetStep = parseInt(el.dataset.step);
+          if (targetStep <= ApplyForm.currentStep) {
+            ApplyForm.goToStep(targetStep);
+          }
+        });
+      });
+
+      // Game tab 点击切换
+      document.querySelectorAll('.game-tab[data-game-idx]').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.game-tab[data-game-idx]').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const idx = tab.dataset.gameIdx;
+          document.querySelectorAll('.game-form').forEach(f => {
+            f.style.display = f.dataset.gameIdx === idx ? 'block' : 'none';
+          });
+        });
+      });
+
+      // 监听所有输入变化触发自动保存
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        el.addEventListener('input', () => ApplyForm.autoSave());
+        el.addEventListener('change', () => ApplyForm.autoSave());
+      });
+    });
+  </script>
+</body>
+</html>

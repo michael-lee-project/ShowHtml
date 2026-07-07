@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>入驻审核进度 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .onboarding-page {
+      --mode-color: #2563EB;
+      --mode-color-light: #3B82F6;
+      --mode-color-bg: #EFF6FF;
+      --mode-color-border: #BFDBFE;
+    }
+
+    .onboarding-hero {
+      padding: var(--space-8);
+      border-radius: var(--radius-2xl);
+      margin-bottom: var(--space-6);
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(37, 99, 235, 0.10), transparent),
+        linear-gradient(135deg, #EFF6FF, white 60%);
+      border: 1px solid var(--mode-color-border);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-6);
+      align-items: center;
+    }
+    @media (max-width: 767px) { .onboarding-hero { grid-template-columns: 1fr; } }
+    .onboarding-hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: var(--weight-semibold);
+      color: var(--mode-color);
+      margin-bottom: var(--space-3);
+    }
+    .onboarding-hero-title {
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+    @media (min-width: 768px) { .onboarding-hero-title { font-size: var(--text-4xl); } }
+    .onboarding-hero-sub {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+    .onboarding-hero-meta {
+      text-align: right;
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+    @media (max-width: 767px) { .onboarding-hero-meta { text-align: left; } }
+    .onboarding-hero-meta strong {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--text-base);
+      color: var(--text-primary);
+      font-weight: var(--weight-bold);
+      margin-top: 4px;
+    }
+
+    /* 步骤进度条 */
+    .flow-bar {
+      display: flex;
+      gap: 0;
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-6);
+      overflow-x: auto;
+    }
+    .flow-step {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      position: relative;
+      min-width: 180px;
+    }
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 36px;
+      right: -12px;
+      height: 2px;
+      background: var(--border-default);
+    }
+    .flow-step.completed:not(:last-child)::after { background: var(--green-700); }
+    .flow-step-circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-muted);
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .flow-step.active .flow-step-circle {
+      background: var(--mode-color);
+      color: white;
+      box-shadow: 0 0 0 6px var(--mode-color-bg);
+    }
+    .flow-step.completed .flow-step-circle {
+      background: var(--green-700);
+      color: white;
+    }
+    .flow-step-info { padding-top: 2px; }
+    .flow-step-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-primary); }
+    .flow-step-time { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .flow-step.active .flow-step-name { color: var(--mode-color); }
+
+    /* 资料清单 */
+    .checklist-section {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+    }
+    .checklist-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .checklist-section-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .checklist-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      background: var(--bg-muted);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+    }
+    .checklist-group-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+      margin: var(--space-4) 0 var(--space-2);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .checklist-group-title:first-child { margin-top: 0; }
+
+    .check-item {
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      align-items: center;
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .check-item:last-child { border-bottom: 0; }
+    .check-status {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: var(--weight-bold);
+      color: white;
+      flex-shrink: 0;
+    }
+    .check-status.passed { background: var(--green-700); }
+    .check-status.pending { background: var(--text-tertiary); }
+    .check-status.missing { background: var(--red-700); }
+    .check-status.reviewing { background: var(--mode-color); }
+    .check-status.optional { background: var(--bg-muted); color: var(--text-tertiary); border: 2px solid var(--border-default); }
+
+    .check-info { min-width: 0; }
+    .check-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .check-desc {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .check-action {
+      font-size: var(--text-xs);
+      color: var(--mode-color);
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      font-family: var(--font-sans);
+      font-weight: var(--weight-medium);
+    }
+
+    /* 右侧补充资料 CTA */
+    .action-card {
+      padding: var(--space-6);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+    }
+    .action-card-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-2);
+    }
+    .action-card-desc {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+      line-height: var(--leading-relaxed);
+    }
+    .alert {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-4);
+    }
+    .alert.alert-warning {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FCD34D;
+    }
+    .alert.alert-info {
+      background: var(--mode-color-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--mode-color-border);
+    }
+    .alert.alert-success {
+      background: #D1FAE5;
+      color: #065F46;
+      border: 1px solid #6EE7B7;
+    }
+    .alert-icon { flex-shrink: 0; font-size: 18px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div>
+          <h1 class="app-topbar-title">入驻审核进度</h1>
+          <p class="app-topbar-sub">查看资料审核状态、补充缺失材料、跟踪上线时间</p>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-primary btn-sm" onclick="RoleContactModal.open(ADVISOR_CONFIG)">联系审核顾问</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- Hero -->
+        <section class="onboarding-hero">
+          <div>
+            <div class="onboarding-hero-eyebrow">ONBOARDING · STEP 1/5</div>
+            <h2 class="onboarding-hero-title">主体资质初审</h2>
+            <p class="onboarding-hero-sub">资料审核中，预计 1-3 个工作日内反馈结果。审核期间您可继续补充 P1 资料。</p>
+          </div>
+          <div class="onboarding-hero-meta">
+            申请单号
+            <strong>APP-2026-0707-2841</strong>
+            <div style="margin-top: var(--space-3); font-size: var(--text-xs);">提交时间 2026-07-07 11:30</div>
+          </div>
+        </section>
+
+        <!-- 流程时间线 -->
+        <div class="flow-bar">
+          <div class="flow-step completed">
+            <span class="flow-step-circle">✓</span>
+            <div class="flow-step-info">
+              <div class="flow-step-name">提交申请</div>
+              <div class="flow-step-time">07-07 11:30 完成</div>
+            </div>
+          </div>
+          <div class="flow-step active">
+            <span class="flow-step-circle">2</span>
+            <div class="flow-step-info">
+              <div class="flow-step-name">主体资质初审</div>
+              <div class="flow-step-time">1-3 工作日 · 进行中</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="flow-step-circle">3</span>
+            <div class="flow-step-info">
+              <div class="flow-step-name">游戏合规审核</div>
+              <div class="flow-step-time">3-5 工作日</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="flow-step-circle">4</span>
+            <div class="flow-step-info">
+              <div class="flow-step-name">技术对接试运营</div>
+              <div class="flow-step-time">1-2 周</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="flow-step-circle">5</span>
+            <div class="flow-step-info">
+              <div class="flow-step-name">正式终审 / 上线</div>
+              <div class="flow-step-time">3-5 工作日 + 即时开通</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 资料审核状态 -->
+        <div class="alert alert-warning">
+          <span class="alert-icon">ℹ</span>
+          <div>
+            <strong>主体资料审核进行中</strong>，预计 1-3 个工作日内反馈结果。
+            审核期间您可继续完善 <strong>2 项选填资料</strong>（过往运营案例、游戏操作流程图），提交后我们会优先加速审核。
+          </div>
+        </div>
+
+        <!-- 主体资料 9 项 -->
+        <section class="checklist-section">
+          <div class="checklist-section-head">
+            <div class="checklist-section-title">
+              主体资料（9 项）
+              <span class="checklist-count">
+                <span style="color: var(--green-700);">● 9 已通过</span>
+                <span style="color: var(--text-tertiary);">● 0 待审</span>
+                <span style="color: var(--red-700);">● 0 缺失</span>
+              </span>
+            </div>
+            <span class="text-xs" style="color: var(--text-tertiary);">已通过 9 项 · 缺失 0 项</span>
+          </div>
+
+          <div class="checklist-group-title">基础资质</div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">
+                1. 营业执照 / 主体证明
+                <span class="priority-badge p0">P0</span>
+              </div>
+              <div class="check-desc">营业执照.pdf · 2.4 MB · 审核通过</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+
+          <div class="checklist-group-title">负责人信息</div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">
+                2. 法定代表人信息
+                <span class="priority-badge p0">P0</span>
+              </div>
+              <div class="check-desc">张三 · 身份证 ****1234 · 审核通过</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">
+                3. 实际运营团队信息
+                <span class="priority-badge p0">P0</span>
+              </div>
+              <div class="check-desc">团队架构图.pdf · 1.8 MB · 审核通过</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+
+          <div class="checklist-group-title">联系方式</div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">4. 联系人信息 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">李四 · 139****0001</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">5. 技术负责人 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">王五 · 8 年经验 · 137****0002</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">6. 财务负责人 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">赵六 · 136****0003</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+
+          <div class="checklist-group-title">资金与承诺</div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">7. 收款账户 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">招商银行 · 1109 **** 0001 · 已验证</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status optional">○</span>
+            <div class="check-info">
+              <div class="check-name">
+                8. 过往运营案例
+                <span class="priority-badge p1">选填</span>
+              </div>
+              <div class="check-desc">已上传 1 份 · 选填资料，不影响审核</div>
+            </div>
+            <button class="check-action">继续补充</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">9. 风险承诺文件 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">承诺书.pdf · 3.2 MB · 审核通过</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+        </section>
+
+        <!-- 游戏资料 13 项（合并演示视频） -->
+        <section class="checklist-section">
+          <div class="checklist-section-head">
+            <div class="checklist-section-title">
+              游戏资料 · 音浪对决（13 项）
+              <span class="checklist-count">
+                <span style="color: var(--text-tertiary);">● 待审</span>
+              </span>
+            </div>
+            <span class="text-xs" style="color: var(--text-tertiary);">游戏合规审核启动后开始审核</span>
+          </div>
+
+          <div class="checklist-group-title">游戏基础</div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">1-2. 名称 & 类型 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">音浪对决 · 音乐竞技</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">3. 玩法说明 + 演示视频 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">演示视频.mp4 · 45 MB · 等待游戏合规审核</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+
+          <div class="checklist-group-title">规则文档</div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">4. 游戏规则文档 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">规则文档.pdf · 3.1 MB</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+
+          <div class="checklist-group-title">关键规则说明（5 项）</div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">5. 输赢判定规则 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">按最终积分判定；同分时按时间戳先后</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">6. 赔率 / 奖励机制 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">基础倍数 1-10x，特殊牌型最高 50x</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">7. 游戏结算逻辑 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">对局结束自动结算，T+0 到账平台账户</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">8. 异常局处理规则 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">断线 30s 内可重连，超时按托管处理</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">9. 用户限制规则 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">实名认证 · 18+ · 单日消费上限 5000 元</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+
+          <div class="checklist-group-title">补充材料</div>
+          <div class="check-item">
+            <span class="check-status optional">○</span>
+            <div class="check-info">
+              <div class="check-name">10. 游戏操作流程图 <span class="priority-badge p1">选填</span></div>
+              <div class="check-desc">未提交 · 选填资料，不影响审核</div>
+            </div>
+            <button class="check-action">可选补充</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">11. 客服 FAQ <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">FAQ.pdf · 28 条</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">12. 投诉处理规则 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">7×24 客服 · 2 小时首响应</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+          <div class="check-item">
+            <span class="check-status passed">✓</span>
+            <div class="check-info">
+              <div class="check-name">13. 机器人披露 <span class="priority-badge p0">P0</span></div>
+              <div class="check-desc">无机器人</div>
+            </div>
+            <button class="check-action">查看</button>
+          </div>
+        </section>
+
+        <!-- 右侧补充资料 CTA 嵌入底部 -->
+        <div class="action-card">
+          <div class="action-card-title">继续完善选填资料？</div>
+          <div class="action-card-desc">
+            您还有 <strong style="color: var(--text-secondary);">1 项</strong> 选填资料（游戏操作流程图）未提交。不提交也可正常入驻审核，补充后会优先加速。
+          </div>
+          <div style="display: flex; gap: var(--space-3);">
+            <a href="../website/apply.html" class="btn btn-primary">补充选填资料 →</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../shared/js/shared.js"></script>
+  <script>
+    // 联系审核顾问弹窗（用 shared RoleContactModal）
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') RoleContactModal.close();
+    });
+  </script>
+</body>
+</html>

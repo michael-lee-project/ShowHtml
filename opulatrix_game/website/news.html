@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>公告资讯 · 游戏商户平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .page { padding-top: 64px; }
+    .topnav { position: fixed; top: 0; left: 0; right: 0; height: 64px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-default); z-index: 50; display: flex; align-items: center; }
+    .topnav-inner { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6); width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-6); }
+    .logo { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; color: var(--text-primary); }
+    .logo-mark { width: 28px; height: 28px; background: var(--text-primary); color: white; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-weight: var(--weight-bold); font-family: var(--font-mono); font-size: 14px; }
+    .logo-text { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+    .nav-links {
+      display: flex; align-items: center; gap: var(--space-2);
+      justify-content: center;
+    }
+    .nav-link { padding: 8px 14px; border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--text-secondary); text-decoration: none; }
+    .nav-link:hover { background: var(--bg-muted); color: var(--text-primary); }
+    .nav-link.active {
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+      background: var(--bg-muted);
+    }
+    .nav-cta { padding: 8px 16px; background: var(--text-primary); color: white; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--weight-semibold); text-decoration: none; justify-self: end; transition: background 0.15s, transform 0.1s; }
+    .nav-cta:hover { background: var(--text-secondary); }
+
+    .news-hero {
+      max-width: 1200px;
+      margin: var(--space-12) auto var(--space-8);
+      padding: 0 var(--space-6);
+    }
+    .news-hero h1 {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-2);
+    }
+    .news-hero p { font-size: var(--text-base); color: var(--text-secondary); }
+
+    /* Filter */
+    .filter-bar {
+      max-width: 1200px;
+      margin: 0 auto var(--space-4);
+      padding: 0 var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .chips { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+    .chip { padding: 8px 16px; border-radius: var(--radius-pill); background: var(--bg-muted); color: var(--text-secondary); font-size: var(--text-sm); cursor: pointer; border: 0; font-family: var(--font-sans); }
+    .chip.active { background: var(--text-primary); color: white; font-weight: var(--weight-semibold); }
+    .chip:hover:not(.active) { background: var(--border-default); }
+
+    /* Featured + list */
+    .news-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-6);
+    }
+    @media (max-width: 1023px) { .news-main { grid-template-columns: 1fr; } }
+
+    /* Featured (left) */
+    .featured {
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .featured-cover {
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #DC2626, #7F1D1D);
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-cover::after {
+      content: '★';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 100px;
+      color: rgba(255,255,255,0.3);
+    }
+    .featured-cover-tag {
+      position: absolute; top: 16px; left: 16px;
+      background: var(--red-600);
+      color: white;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .featured-body { padding: var(--space-6); flex: 1; display: flex; flex-direction: column; }
+    .featured-meta {
+      display: flex; gap: var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-3);
+    }
+    .featured-title {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-3);
+    }
+    .featured-excerpt {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-4);
+      flex: 1;
+    }
+    .featured-link {
+      font-size: var(--text-sm);
+      color: var(--red-700);
+      font-weight: var(--weight-semibold);
+      text-decoration: none;
+    }
+
+    /* List (right) */
+    .news-list {
+      display: flex; flex-direction: column; gap: var(--space-3);
+    }
+    .news-item {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .news-item:hover { border-color: var(--text-primary); transform: translateX(2px); }
+    .news-date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-3);
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    .news-date-day {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .news-date-mon {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+    .news-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .news-meta {
+      display: flex; gap: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .news-tag {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+    }
+    .news-tag.announce { background: var(--red-50); color: var(--red-700); }
+    .news-tag.industry { background: #DBEAFE; color: #1E40AF; }
+    .news-tag.policy { background: #FEF3C7; color: #B45309; }
+    .news-tag.product { background: var(--green-50); color: var(--green-700); }
+    .news-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .news-excerpt {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    /* Pagination */
+    .pagination {
+      max-width: 1200px;
+      margin: var(--space-12) auto 0;
+      padding: 0 var(--space-6);
+      display: flex;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+    .page-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+      background: white;
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      cursor: pointer;
+    }
+    .page-btn.active { background: var(--text-primary); color: white; border-color: var(--text-primary); font-weight: var(--weight-semibold); }
+
+    .footer { max-width: 1200px; margin: var(--space-12) auto 0; padding: var(--space-6); border-top: 1px solid var(--border-default); }
+    .footer-bottom { font-size: var(--text-xs); color: var(--text-tertiary); display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2); }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">G</span>
+        <span class="logo-text">游戏商户平台</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="games.html" class="nav-link">游戏大厅</a>
+        <a href="rules.html" class="nav-link">合作规则</a>
+        <a href="about.html" class="nav-link">关于我们</a>
+        <a href="help.html" class="nav-link">帮助中心</a>
+        <a href="news.html" class="nav-link active">公告</a>
+        <a href="apply.html" class="nav-cta">申请入驻</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="news-hero">
+      <h1>公告 · 资讯</h1>
+      <p>平台动态、行业资讯、政策更新、产品迭代</p>
+    </div>
+
+    <div class="filter-bar">
+      <div class="chips">
+        <button class="chip active">全部</button>
+        <button class="chip">平台公告</button>
+        <button class="chip">行业资讯</button>
+        <button class="chip">政策更新</button>
+        <button class="chip">产品动态</button>
+      </div>
+      <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">共 32 条</div>
+    </div>
+
+    <div class="news-main">
+      <a href="#" class="featured">
+        <div class="featured-cover">
+          <div class="featured-cover-tag">置顶 · 平台公告</div>
+        </div>
+        <div class="featured-body">
+          <div class="featured-meta">
+            <span>2026-06-22</span>
+            <span>·</span>
+            <span>平台公告</span>
+            <span>·</span>
+            <span>3 分钟阅读</span>
+          </div>
+          <h2 class="featured-title">关于 2026 年 7 月份数据脱敏规则升级的通知</h2>
+          <p class="featured-excerpt">为响应《数据安全法》及《个人信息保护法》最新要求,平台将于 2026 年 7 月 15 日对数据脱敏规则进行升级。商户可查看的数据粒度将由 L2 (中级) 默认升级到 L3 (高级),同时新增 12 项可查询维度...</p>
+          <span class="featured-link">阅读全文 →</span>
+        </div>
+      </a>
+
+      <div class="news-list">
+        <a href="#" class="news-item">
+          <div class="news-date">
+            <div class="news-date-day">20</div>
+            <div class="news-date-mon">2026/06</div>
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-tag announce">平台公告</span>
+              <span>2026-06-20</span>
+            </div>
+            <div class="news-title">星火养成 / 燎原双模式分润比例调整公告</div>
+            <div class="news-excerpt">为回馈广大商户的支持,自 2026 年 7 月 1 日起,星火燎原期流水分润比例由原 8.0% 上调至 8.5% (A 档),B 档由 8.5% 上调至 9.0%,C 档由 9.0% 上调至 9.5%...</div>
+          </div>
+        </a>
+
+        <a href="#" class="news-item">
+          <div class="news-date">
+            <div class="news-date-day">18</div>
+            <div class="news-date-mon">2026/06</div>
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-tag product">产品动态</span>
+              <span>2026-06-18</span>
+            </div>
+            <div class="news-title">数据分析模块上线,支持用户画像 + 转化漏斗</div>
+            <div class="news-excerpt">商户后台新增「数据分析」模块,提供活跃 / 付费 / ARPU / 留存 4 大核心指标,30 天趋势图、5 步转化漏斗、用户性别 / 年龄 / 地域画像分布,助力精细化运营...</div>
+          </div>
+        </a>
+
+        <a href="#" class="news-item">
+          <div class="news-date">
+            <div class="news-date-day">15</div>
+            <div class="news-date-mon">2026/06</div>
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-tag policy">政策更新</span>
+              <span>2026-06-15</span>
+            </div>
+            <div class="news-title">《网络游戏管理办法》新规解读,合规要点速览</div>
+            <div class="news-excerpt">2026 年 5 月 30 日,国家新闻出版署发布新修订的《网络游戏管理办法》。本次修订涉及 12 个核心条款,涉及付费机制、防沉迷、虚拟道具交易、广告投放等多个方面...</div>
+          </div>
+        </a>
+
+        <a href="#" class="news-item">
+          <div class="news-date">
+            <div class="news-date-day">12</div>
+            <div class="news-date-mon">2026/06</div>
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-tag industry">行业资讯</span>
+              <span>2026-06-12</span>
+            </div>
+            <div class="news-title">2026 H1 国内手游行业报告:小游戏逆势增长 28%</div>
+            <div class="news-excerpt">伽马数据最新发布的《2026 H1 中国游戏产业报告》显示,2026 年上半年国内游戏市场实际销售收入达 1,820 亿元,同比增长 4.2%。其中小游戏品类表现亮眼,逆势增长 28%...</div>
+          </div>
+        </a>
+
+        <a href="#" class="news-item">
+          <div class="news-date">
+            <div class="news-date-day">08</div>
+            <div class="news-date-mon">2026/06</div>
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-tag announce">平台公告</span>
+              <span>2026-06-08</span>
+            </div>
+            <div class="news-title">风控预警系统升级,新增 8 项自动监测规则</div>
+            <div class="news-excerpt">为提升平台风控能力,本次升级新增 8 项自动监测规则,涵盖:大额对局异常、IP 聚集、对账差异、客诉响应、未授权渠道、虚假交易、设备指纹、注册异常。规则详情请见商户后台...</div>
+          </div>
+        </a>
+
+        <a href="#" class="news-item">
+          <div class="news-date">
+            <div class="news-date-day">05</div>
+            <div class="news-date-mon">2026/06</div>
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-tag product">产品动态</span>
+              <span>2026-06-05</span>
+            </div>
+            <div class="news-title">商户自助提现功能上线,T+3 到账</div>
+            <div class="news-excerpt">商户后台新增「自助提现」功能。每月结算单生成后,商户可在「结算单」页面点击「申请提现」,资金将在 T+3 工作日内到账对公账户。单笔提现最低金额 ¥1,000...</div>
+          </div>
+        </a>
+
+        <a href="#" class="news-item">
+          <div class="news-date">
+            <div class="news-date-day">02</div>
+            <div class="news-date-mon">2026/06</div>
+          </div>
+          <div class="news-body">
+            <div class="news-meta">
+              <span class="news-tag industry">行业资讯</span>
+              <span>2026-06-02</span>
+            </div>
+            <div class="news-title">游戏版号 5 月通过 116 款,环比增长 12%</div>
+            <div class="news-excerpt">国家新闻出版署 5 月共发放国产网络游戏版号 116 款,较 4 月的 104 款环比增长 12%。其中,休闲益智类占比 38%,角色扮演类占比 22%,策略类占比 18%...</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button class="page-btn">‹</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">4</button>
+      <button class="page-btn">5</button>
+      <button class="page-btn">›</button>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-bottom">
+        <span>© 2026 Opulatrix · 游戏商户平台</span>
+        <span>京ICP备 20260001 号</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

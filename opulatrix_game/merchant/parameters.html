@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>核心参数 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .panel {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .panel-title-group { display: flex; align-items: center; gap: var(--space-3); }
+    .panel-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+    }
+    .panel-sub {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .panel-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: var(--weight-bold);
+    }
+    .panel-icon.ignite { background: var(--red-50); color: var(--red-700); border: 1px solid var(--red-border); }
+    .panel-icon.blaze { background: var(--green-50); color: var(--green-700); border: 1px solid var(--green-border); }
+    .panel-icon.neutral { background: var(--bg-muted); color: var(--text-primary); }
+
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .params-table th {
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      background: var(--bg-muted);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .params-table th:first-child { border-top-left-radius: var(--radius-md); }
+    .params-table th:last-child { border-top-right-radius: var(--radius-md); }
+    .params-table td {
+      padding: var(--space-4);
+      font-size: var(--text-sm);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .params-table tr:last-child td { border-bottom: 0; }
+    .param-name { font-weight: var(--weight-medium); color: var(--text-primary); }
+    .param-desc { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .param-value {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+    .param-value.ignite { color: var(--red-700); }
+    .param-value.blaze { color: var(--green-700); }
+    .param-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      font-weight: var(--weight-medium);
+    }
+    .param-status.locked { background: var(--bg-muted); color: var(--text-tertiary); }
+    .param-status.configurable { background: var(--green-50); color: var(--green-700); }
+
+    .params-meta {
+      display: flex;
+      gap: var(--space-6);
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      margin-top: var(--space-4);
+    }
+    .params-meta-item { display: flex; gap: var(--space-2); }
+    .params-meta-key { color: var(--text-tertiary); }
+    .params-meta-val { color: var(--text-primary); font-weight: var(--weight-medium); font-family: var(--font-mono); }
+
+    /* ===== 顶部说明卡 ===== */
+    .info-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    @media (max-width: 1023px) { .info-strip { grid-template-columns: repeat(2, 1fr); } }
+    .info-card {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .info-card-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-2);
+    }
+    .info-card-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .info-card-meta { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1); }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">核心参数</h1>
+          <span class="app-topbar-mode ignite">
+            <span class="mode-dot"></span>
+            参数只读 · 联系运营调整
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-ghost btn-sm">导出 PDF</button>
+          <button class="btn btn-outline btn-sm">联系运营</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- 顶部 4 件套 -->
+        <div class="info-strip">
+          <div class="info-card">
+            <div class="info-card-label">合同期</div>
+            <div class="info-card-value">2026.07 - 2027.07</div>
+            <div class="info-card-meta">1 年期 · 还有 12 个月</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">本档次</div>
+            <div class="info-card-value" style="color: var(--green-700);">A 档</div>
+            <div class="info-card-meta">流水 50-200 万/月</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">积分结算比例</div>
+            <div class="info-card-value" style="color: var(--red-700);">6.5%</div>
+            <div class="info-card-meta">按本档次规则</div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">抽佣率</div>
+            <div class="info-card-value" style="color: var(--green-700);">8.5%</div>
+            <div class="info-card-meta">流水分润比例</div>
+          </div>
+        </div>
+
+        <!-- 段一参数 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon ignite">火</div>
+              <div>
+                <div class="panel-title">星火养成期 · 段一参数</div>
+                <div class="panel-sub">积分消纳 + 养成进度相关</div>
+              </div>
+            </div>
+          </div>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>参数名</th>
+                <th>当前值</th>
+                <th>规则</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="param-name">积分结算比例</div>
+                  <div class="param-desc">我的消纳量占全局积分总量的结算分成</div>
+                </td>
+                <td><span class="param-value ignite">6.5%</span></td>
+                <td>本档次 (A 档) 固定</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">全局积分水位上限</div>
+                  <div class="param-desc">超过此值自动触发段一 → 段二</div>
+                </td>
+                <td><span class="param-value ignite">800 万</span></td>
+                <td>平台统一阈值</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">全局积分水位下限</div>
+                  <div class="param-desc">低于此值自动从段二 → 段一</div>
+                </td>
+                <td><span class="param-value ignite">200 万</span></td>
+                <td>平台统一阈值</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">月度养成目标</div>
+                  <div class="param-desc">本月养成进度达到此值自动切段</div>
+                </td>
+                <td><span class="param-value ignite">200 万</span></td>
+                <td>按本档次 A 档</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">VIC 充值分润</div>
+                  <div class="param-desc">用户通过 VIC 充值的分润比例</div>
+                </td>
+                <td><span class="param-value ignite">3.0%</span></td>
+                <td>本档次 (A 档) 固定</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="params-meta">
+            <div class="params-meta-item">
+              <span class="params-meta-key">档位规则来源:</span>
+              <span class="params-meta-val">《商户合同》第 3.2 条</span>
+            </div>
+            <div class="params-meta-item">
+              <span class="params-meta-key">下次审核:</span>
+              <span class="params-meta-val">2027-06-30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 段二参数 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon blaze">润</div>
+              <div>
+                <div class="panel-title">星火燎原期 · 段二参数</div>
+                <div class="panel-sub">流水抽佣 + 结算相关</div>
+              </div>
+            </div>
+          </div>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>参数名</th>
+                <th>当前值</th>
+                <th>规则</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="param-name">流水分润比例</div>
+                  <div class="param-desc">用户在商户侧产生的流水,商户分润比例</div>
+                </td>
+                <td><span class="param-value blaze">8.5%</span></td>
+                <td>本档次 (A 档) 固定</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">平台抽佣比例</div>
+                  <div class="param-desc">平台从商户分润中抽走的运营成本</div>
+                </td>
+                <td><span class="param-value blaze">20%</span></td>
+                <td>平台统一抽佣</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">结算周期</div>
+                  <div class="param-desc">每个自然月自动结算上月分润</div>
+                </td>
+                <td><span class="param-value blaze">月度</span></td>
+                <td>合同默认</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">结算日</div>
+                  <div class="param-desc">每月结算单的生成日</div>
+                </td>
+                <td><span class="param-value blaze">每月 1 日</span></td>
+                <td>合同默认</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">提现到账时间</div>
+                  <div class="param-desc">结算后申请提现,T+N 到账</div>
+                </td>
+                <td><span class="param-value blaze">T+3</span></td>
+                <td>合同默认</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">提现最低金额</div>
+                  <div class="param-desc">低于此金额不支持提现</div>
+                </td>
+                <td><span class="param-value blaze">¥1,000</span></td>
+                <td>合同默认</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="params-meta">
+            <div class="params-meta-item">
+              <span class="params-meta-key">档位规则来源:</span>
+              <span class="params-meta-val">《商户合同》第 4.1 条</span>
+            </div>
+            <div class="params-meta-item">
+              <span class="params-meta-key">下次审核:</span>
+              <span class="params-meta-val">2027-06-30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 账户参数 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon neutral">⚇</div>
+              <div>
+                <div class="panel-title">账户与系统参数</div>
+                <div class="panel-sub">商户身份与系统配置</div>
+              </div>
+            </div>
+          </div>
+
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>参数名</th>
+                <th>当前值</th>
+                <th>规则</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="param-name">商户 ID</div>
+                  <div class="param-desc">商户在平台的唯一标识</div>
+                </td>
+                <td><span class="param-value">M001</span></td>
+                <td>系统自动分配</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">商户名</div>
+                  <div class="param-desc">对外展示名</div>
+                </td>
+                <td><span class="param-value">音浪对决</span></td>
+                <td>—</td>
+                <td><span class="param-status configurable">可改</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">对公账户</div>
+                  <div class="param-desc">提现收款账户</div>
+                </td>
+                <td><span class="param-value">****6789 (招商银行)</span></td>
+                <td>—</td>
+                <td><span class="param-status configurable">可改</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">风控等级</div>
+                  <div class="param-desc">平台对商户的实时风控等级</div>
+                </td>
+                <td><span class="param-value" style="color: var(--green-700);">正常</span></td>
+                <td>平台自动评估</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="param-name">数据脱敏等级</div>
+                  <div class="param-desc">商户可看到的数据粒度</div>
+                </td>
+                <td><span class="param-value">L2 (中级)</span></td>
+                <td>合同默认</td>
+                <td><span class="param-status locked">只读</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../shared/js/mock-data.js"></script>
+  <script src="../shared/js/shared.js"></script>
+</body>
+</html>

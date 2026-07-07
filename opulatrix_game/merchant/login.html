@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商户登录 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    body { background: #FAFAFA; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-8); }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-10) var(--space-8);
+      box-shadow: var(--shadow-sm);
+    }
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      justify-content: center;
+      margin-bottom: var(--space-8);
+    }
+    .login-logo-mark {
+      width: 32px;
+      height: 32px;
+      background: var(--text-primary);
+      color: white;
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+    }
+    .login-logo-text { font-size: var(--text-base); font-weight: var(--weight-semibold); }
+    .login-title {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-2);
+      text-align: center;
+    }
+    .login-sub {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+    .login-form { display: flex; flex-direction: column; gap: var(--space-4); }
+    .form-field { display: flex; flex-direction: column; gap: var(--space-2); }
+    .form-label {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: white;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08);
+    }
+    .form-input::placeholder { color: var(--text-tertiary); }
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: var(--text-sm);
+    }
+    .form-checkbox { display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer; color: var(--text-secondary); }
+    .form-link { color: var(--text-primary); text-decoration: none; font-weight: var(--weight-medium); }
+    .form-link:hover { text-decoration: underline; }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--text-primary);
+      color: white;
+      border: 0;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: var(--space-2);
+    }
+    .login-btn:hover { background: var(--text-secondary); }
+    .login-btn:active { transform: scale(0.99); }
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      color: var(--text-tertiary);
+      font-size: var(--text-xs);
+      margin: var(--space-6) 0;
+    }
+    .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-muted); }
+    .login-footer {
+      text-align: center;
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-top: var(--space-6);
+    }
+    .login-extra {
+      display: flex;
+      justify-content: space-between;
+      margin-top: var(--space-4);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="login-logo-mark">G</span>
+      <span class="login-logo-text">游戏商户平台</span>
+    </div>
+    <h1 class="login-title">欢迎回来</h1>
+    <p class="login-sub">使用商户账号登录后台</p>
+
+    <form class="login-form" onsubmit="window.location.href='dashboard.html'; return false;">
+      <div class="form-field">
+        <label class="form-label" for="account">商户账号</label>
+        <input id="account" class="form-input" type="text" placeholder="请输入商户 ID 或手机号" value="M001 音浪对决" />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="password">密码</label>
+        <input id="password" class="form-input" type="password" placeholder="请输入密码" value="••••••••••" />
+      </div>
+      <div class="form-row">
+        <label class="form-checkbox">
+          <input type="checkbox" checked />
+          <span>记住账号</span>
+        </label>
+        <a href="#" class="form-link">忘记密码 →</a>
+      </div>
+      <button type="submit" class="login-btn">登录</button>
+    </form>
+
+    <div class="login-divider">或</div>
+
+    <div class="login-extra">
+      <a href="onboarding.html" class="form-link">申请入驻</a>
+      <a href="../website/index.html" class="form-link">返回官网</a>
+    </div>
+
+    <div class="login-footer">
+      登录即代表您已阅读并同意 <a href="#" class="form-link">《商户服务协议》</a>
+    </div>
+  </div>
+</body>
+</html>

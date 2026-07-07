@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>结算单 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .consumption-page { --mode-color: var(--green-600); }
+
+    /* 顶部 3 件套 */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    @media (max-width: 1023px) { .kpi-strip { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .kpi-card.blaze {
+      background: var(--green-50);
+      border-color: var(--green-border);
+    }
+    .kpi-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-2);
+    }
+    .kpi-card.blaze .kpi-label { color: var(--green-700); }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    .kpi-card.blaze .kpi-value { color: var(--green-700); }
+    .kpi-meta { font-size: var(--text-xs); color: var(--text-tertiary); }
+    .kpi-card.blaze .kpi-meta { color: var(--green-700); opacity: 0.75; }
+
+    /* 主面板 */
+    .panel {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .panel-title { font-size: var(--text-base); font-weight: var(--weight-semibold); }
+    .panel-sub { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .panel-actions { display: flex; gap: var(--space-2); }
+
+    /* 筛选 */
+    .filter-bar {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+      padding: var(--space-3);
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      align-items: center;
+    }
+    .filter-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: white;
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+    }
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: white;
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+    }
+
+    /* 结算单表格 */
+    .bills-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .bills-table th {
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      background: var(--bg-muted);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .bills-table td {
+      padding: var(--space-4);
+      font-size: var(--text-sm);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .bill-month {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+    .bill-amount {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+    }
+    .bill-amount.positive { color: var(--green-700); }
+    .bill-amount.zero { color: var(--text-tertiary); }
+    .bill-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      font-weight: var(--weight-medium);
+    }
+    .bill-status.settled { background: var(--green-50); color: var(--green-700); }
+    .bill-status.withdrawn { background: var(--blue-50); color: #1E40AF; }
+    .bill-status.current { background: var(--orange-50); color: #B45309; }
+    .bill-status.pending { background: var(--bg-muted); color: var(--text-tertiary); }
+    .bill-action { color: var(--green-700); text-decoration: none; font-weight: var(--weight-medium); font-size: var(--text-sm); }
+    .bill-action:hover { text-decoration: underline; }
+  </style>
+</head>
+<body class="consumption-page">
+  <div class="app-layout">
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">▦</span><span>工作台</span></a>
+        <a href="onboarding.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">○</span><span>入驻进度</span></a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">◐</span><span>模式状态</span></a>
+        <a href="mode-consumption.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">火</span><span>星火养成</span></a>
+        <a href="mode-commission.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">润</span><span>星火燎原</span></a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">⚙</span><span>核心参数</span></a>
+        <a href="settlement.html" class="app-sidebar-item active"><span class="app-sidebar-item-icon">¥</span><span>结算单</span></a>
+        <a href="reconciliation.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">⇄</span><span>数据对账</span></a>
+        <a href="data-analytics.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">▤</span><span>数据分析</span></a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">⚇</span><span>账户设置</span></a>
+        <a href="../website/index.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">↗</span><span>返回官网</span></a>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">结算单</h1>
+          <span class="app-topbar-mode blaze">
+            <span class="mode-dot"></span>
+            本月 6/30 自动结算
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-ghost btn-sm">刷新</button>
+          <button class="btn btn-outline btn-sm">申请提现</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="kpi-strip">
+          <div class="kpi-card blaze">
+            <div class="kpi-label">本月已分润(预估)</div>
+            <div class="kpi-value">¥42,800</div>
+            <div class="kpi-meta">6/30 自动结算</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">累计已结算</div>
+            <div class="kpi-value">¥203,650</div>
+            <div class="kpi-meta">2026-01 至 2026-05</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">待提现余额</div>
+            <div class="kpi-value">¥0</div>
+            <div class="kpi-meta">已全部提现</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">历史结算单</h3>
+              <div class="panel-sub">每月 1 日自动生成上月结算单</div>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-ghost btn-sm">导出 Excel</button>
+              <button class="btn btn-outline btn-sm">下载明细</button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <input class="filter-input" type="text" placeholder="按月份搜索 (如 2026-06)" />
+            <select class="filter-select">
+              <option>所有状态</option>
+              <option>已结算</option>
+              <option>已提现</option>
+              <option>当前月</option>
+            </select>
+            <button class="btn btn-sm" style="background: var(--green-600); color: white; border: 0;">查询</button>
+          </div>
+
+          <table class="bills-table">
+            <thead>
+              <tr>
+                <th>月份</th>
+                <th>流水金额</th>
+                <th>分润金额</th>
+                <th>实际到账</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="bill-month">2026-06</div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary);">当前月 · 预估</div>
+                </td>
+                <td class="bill-amount">¥503,529</td>
+                <td class="bill-amount positive">¥42,800</td>
+                <td class="bill-amount zero">—</td>
+                <td><span class="bill-status current">● 6/30 结算</span></td>
+                <td><a class="bill-action">查看预估 →</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bill-month">2026-05</div>
+                </td>
+                <td class="bill-amount">¥447,021</td>
+                <td class="bill-amount positive">¥38,000</td>
+                <td class="bill-amount positive">¥38,000</td>
+                <td><span class="bill-status withdrawn">✓ 已提现</span></td>
+                <td><a class="bill-action">查看明细 →</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bill-month">2026-04</div>
+                </td>
+                <td class="bill-amount">¥400,000</td>
+                <td class="bill-amount positive">¥34,000</td>
+                <td class="bill-amount positive">¥34,000</td>
+                <td><span class="bill-status withdrawn">✓ 已提现</span></td>
+                <td><a class="bill-action">查看明细 →</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bill-month">2026-03</div>
+                </td>
+                <td class="bill-amount">¥423,529</td>
+                <td class="bill-amount positive">¥36,000</td>
+                <td class="bill-amount positive">¥36,000</td>
+                <td><span class="bill-status withdrawn">✓ 已提现</span></td>
+                <td><a class="bill-action">查看明细 →</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bill-month">2026-02</div>
+                </td>
+                <td class="bill-amount">¥376,470</td>
+                <td class="bill-amount positive">¥32,000</td>
+                <td class="bill-amount positive">¥32,000</td>
+                <td><span class="bill-status withdrawn">✓ 已提现</span></td>
+                <td><a class="bill-action">查看明细 →</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bill-month">2026-01</div>
+                </td>
+                <td class="bill-amount">¥329,411</td>
+                <td class="bill-amount positive">¥28,000</td>
+                <td class="bill-amount positive">¥28,000</td>
+                <td><span class="bill-status withdrawn">✓ 已提现</span></td>
+                <td><a class="bill-action">查看明细 →</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bill-month">2025-12</div>
+                </td>
+                <td class="bill-amount">¥305,882</td>
+                <td class="bill-amount positive">¥26,000</td>
+                <td class="bill-amount positive">¥26,000</td>
+                <td><span class="bill-status withdrawn">✓ 已提现</span></td>
+                <td><a class="bill-action">查看明细 →</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="bill-month">2025-11</div>
+                </td>
+                <td class="bill-amount">¥270,588</td>
+                <td class="bill-amount positive">¥23,000</td>
+                <td class="bill-amount positive">¥23,000</td>
+                <td><span class="bill-status withdrawn">✓ 已提现</span></td>
+                <td><a class="bill-action">查看明细 →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../shared/js/mock-data.js"></script>
+  <script src="../shared/js/shared.js"></script>
+</body>
+</html>

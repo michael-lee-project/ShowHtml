@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>游戏商户平台 · 星火养成 流水分润</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    /* Hallmark · pre-emit critique: P5 H4 E5 S4 R5 V4
+     * Macrostructure: Stat-Led · theme: custom-palette(white+red+green) · genre: modern-minimal
+     * Enrichment: Tier-A CSS gauge + sparkline · Sections: 7 · Motion: gauge + number-roll + breathing-badge
+     * Slop test: pending
+     */
+
+    /* ========== Sticky CTA ========== */
+    .sticky-cta {
+      position: fixed;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      z-index: var(--z-fixed);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--text-primary);
+      color: var(--text-inverse);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-lg);
+      transition: all var(--duration-base) var(--ease-out);
+    }
+    .sticky-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+    }
+    .sticky-cta-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-500);
+      animation: breathe 2.4s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .sticky-cta-text {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+    }
+    @media (max-width: 640px) {
+      .sticky-cta { bottom: var(--space-4); right: var(--space-4); }
+      .sticky-cta-text { display: none; }
+    }
+
+    /* ========== Hero ========== */
+    .hero {
+      position: relative;
+      padding: var(--space-24) 0 var(--space-16);
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 0%, rgba(220, 38, 38, 0.05), transparent),
+        radial-gradient(ellipse 70% 50% at 80% 30%, rgba(22, 163, 74, 0.05), transparent),
+        var(--bg-base);
+    }
+    .hero-inner {
+      position: relative;
+      text-align: center;
+      max-width: 880px;
+      margin-inline: auto;
+    }
+    .hero h1 {
+      font-size: var(--text-5xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .hero h1 { font-size: var(--text-7xl); }
+    }
+    .hero h1 .accent-ignite { color: var(--red-600); }
+    .hero h1 .accent-blaze { color: var(--green-600); }
+    .hero-sub {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      max-width: 58ch;
+      margin: 0 auto var(--space-8);
+      line-height: var(--leading-relaxed);
+    }
+    @media (min-width: 768px) {
+      .hero-sub { font-size: var(--text-xl); }
+    }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-16);
+    }
+
+    /* ========== Live Data Strip ========== */
+    .live-strip {
+      margin-top: var(--space-8);
+      padding: var(--space-4) var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .live-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      white-space: nowrap;
+    }
+    .live-item-label {
+      color: var(--text-tertiary);
+    }
+    .live-item-value {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+    .live-item .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-500);
+      animation: breathe 2s ease-in-out infinite;
+    }
+    .live-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border-default);
+    }
+
+    /* ========== Hero Gauge Visual ========== */
+    .gauge-section {
+      margin-top: var(--space-12);
+      max-width: 1100px;
+      margin-inline: auto;
+    }
+    .gauge-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 0.7fr;
+      gap: 0;
+      background: var(--border-default);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+    }
+    @media (max-width: 1023px) {
+      .gauge-grid { grid-template-columns: 1fr; }
+    }
+    .gauge-cell {
+      padding: var(--space-8);
+      background: var(--bg-base);
+    }
+    .gauge-cell-main {
+      padding: var(--space-8);
+    }
+    .gauge-eyebrow {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-3);
+    }
+    .gauge-title {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-6);
+    }
+
+    /* Gauge dial */
+    .gauge-dial {
+      position: relative;
+      width: 100%;
+      max-width: 220px;
+      aspect-ratio: 1;
+      margin: 0 auto var(--space-4);
+    }
+    .gauge-dial svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .gauge-track {
+      fill: none;
+      stroke: var(--bg-muted);
+      stroke-width: 18;
+    }
+    .gauge-fill-ignite {
+      fill: none;
+      stroke: var(--red-600);
+      stroke-width: 18;
+      stroke-linecap: round;
+      stroke-dasharray: 691.15;
+      stroke-dashoffset: 691.15;
+      transition: stroke-dashoffset 1.6s var(--ease-out);
+    }
+    .gauge-fill-blaze {
+      fill: none;
+      stroke: var(--green-600);
+      stroke-width: 18;
+      stroke-linecap: round;
+      stroke-dasharray: 691.15;
+      stroke-dashoffset: 691.15;
+      transition: stroke-dashoffset 1.6s var(--ease-out);
+    }
+    .gauge-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .gauge-percent {
+      font-family: var(--font-mono);
+      font-size: var(--text-5xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .gauge-cell-ignite .gauge-percent { color: var(--red-700); }
+    .gauge-cell-blaze .gauge-percent { color: var(--green-700); }
+    .gauge-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: var(--space-1);
+    }
+    .gauge-mode {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      border-radius: var(--radius-pill);
+      margin-top: var(--space-3);
+    }
+    .gauge-mode.ignite {
+      background: var(--red-bg);
+      color: var(--red-700);
+      border: 1px solid var(--red-border);
+    }
+    .gauge-mode.blaze {
+      background: var(--green-bg);
+      color: var(--green-700);
+      border: 1px solid var(--green-border);
+    }
+    .gauge-mode .mode-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: breathe 2.4s ease-in-out infinite;
+    }
+
+    .gauge-meta {
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--border-muted);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      line-height: var(--leading-relaxed);
+    }
+    .gauge-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-2) 0;
+    }
+    .gauge-meta-label { color: var(--text-tertiary); }
+    .gauge-meta-value {
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+
+    /* Sparkline */
+    .sparkline {
+      width: 100%;
+      height: 56px;
+      margin-top: var(--space-4);
+    }
+    .sparkline-path {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .sparkline-ignite .sparkline-path { stroke: var(--red-500); }
+    .sparkline-blaze .sparkline-path { stroke: var(--green-500); }
+    .sparkline-fill {
+      opacity: 0.1;
+    }
+    .sparkline-ignite .sparkline-fill { fill: var(--red-500); }
+    .sparkline-blaze .sparkline-fill { fill: var(--green-500); }
+
+    /* ========== Dual Mode (Bento) ========== */
+    .modes-bento {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 1023px) {
+      .modes-bento { grid-template-columns: 1fr; }
+    }
+    .mode-card {
+      padding: var(--space-8);
+      border-radius: var(--radius-2xl);
+      border: 1px solid;
+      position: relative;
+      overflow: hidden;
+    }
+    .mode-card-ignite {
+      background: var(--red-bg);
+      border-color: var(--red-border);
+    }
+    .mode-card-blaze {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+    }
+    .mode-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-6);
+    }
+    .mode-card-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.1em;
+    }
+    .mode-card-ignite .mode-card-num { color: var(--red-700); }
+    .mode-card-blaze .mode-card-num { color: var(--green-700); }
+    .mode-card-title {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-2);
+    }
+    @media (min-width: 768px) {
+      .mode-card-title { font-size: var(--text-3xl); }
+    }
+    .mode-card-ignite .mode-card-title { color: var(--red-700); }
+    .mode-card-blaze .mode-card-title { color: var(--green-700); }
+    .mode-card-sub {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-6);
+    }
+    .mode-card-desc {
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-6);
+    }
+    .mode-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .mode-card-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+    }
+    .mode-card-list .check {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+    .mode-card-ignite .check { background: var(--red-600); color: white; }
+    .mode-card-blaze .check { background: var(--green-600); color: white; }
+
+    /* ========== Onboarding Timeline ========== */
+    .onboarding-timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    @media (max-width: 1023px) {
+      .onboarding-timeline { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    }
+    @media (max-width: 640px) {
+      .onboarding-timeline { grid-template-columns: 1fr; }
+    }
+    .timeline-step {
+      padding: 0 var(--space-4);
+      text-align: center;
+      position: relative;
+    }
+    @media (min-width: 1024px) {
+      .timeline-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 14px;
+        left: calc(50% + 18px);
+        right: calc(-50% + 18px);
+        height: 1px;
+        background: var(--border-default);
+      }
+    }
+    .timeline-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+      border-radius: 50%;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      margin-bottom: var(--space-3);
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-step h4 {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-1);
+    }
+    .timeline-step p {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* ========== Rules Compact ========== */
+    .rules-compact {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--space-12);
+      align-items: center;
+    }
+    @media (max-width: 1023px) {
+      .rules-compact { grid-template-columns: 1fr; gap: var(--space-6); }
+    }
+    .rules-compact h3 {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      margin-bottom: var(--space-3);
+    }
+    .rules-compact p {
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+    }
+    .rules-inline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+    }
+    @media (max-width: 1023px) {
+      .rules-inline { grid-template-columns: repeat(2, 1fr); }
+    }
+    .rule-mini {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border-right: 1px solid var(--border-default);
+    }
+    .rule-mini:last-child { border-right: 0; }
+    @media (max-width: 1023px) {
+      .rule-mini { border-right: 0; border-bottom: 1px solid var(--border-default); }
+      .rule-mini:nth-child(odd) { border-right: 1px solid var(--border-default); }
+      .rule-mini:nth-last-child(-n+2) { border-bottom: 0; }
+    }
+    .rule-mini-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      margin-bottom: var(--space-3);
+    }
+    .rule-mini-icon.ignite { background: var(--red-100); color: var(--red-700); }
+    .rule-mini-icon.blaze { background: var(--green-100); color: var(--green-700); }
+    .rule-mini-icon.cycle { background: var(--bg-muted); color: var(--text-secondary); }
+    .rule-mini-icon.shield { background: var(--red-100); color: var(--red-700); }
+    .rule-mini-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-1);
+    }
+    .rule-mini-desc {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* ========== Apply CTA ========== */
+    .apply-cta {
+      padding: var(--space-24) var(--space-8);
+      background:
+        radial-gradient(ellipse 60% 80% at 30% 50%, rgba(220, 38, 38, 0.04), transparent),
+        radial-gradient(ellipse 60% 80% at 70% 50%, rgba(22, 163, 74, 0.04), transparent),
+        var(--bg-subtle);
+      border-radius: var(--radius-2xl);
+      text-align: center;
+    }
+    .apply-cta h2 {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-4);
+    }
+    @media (min-width: 768px) {
+      .apply-cta h2 { font-size: var(--text-5xl); }
+    }
+    .apply-cta p {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      max-width: 56ch;
+      margin: 0 auto var(--space-8);
+    }
+    .apply-cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户平台</span>
+      </a>
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link nav-link-active">首页</a>
+        <a href="games.html" class="nav-link">游戏大厅</a>
+        <a href="rules.html" class="nav-link">合作规则</a>
+        <a href="about.html" class="nav-link">关于我们</a>
+        <a href="help.html" class="nav-link">帮助中心</a>
+        <a href="news.html" class="nav-link">公告</a>
+      </div>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost btn-sm">商家登录</a>
+        <a href="apply.html" class="btn btn-primary btn-sm">申请入驻</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <h1 class="text-balance">
+          <span class="accent-ignite">星火养成</span> · <span class="accent-blaze">星火燎原</span>
+        </h1>
+        <p class="hero-sub text-pretty">
+          平台不做庄、不参与对局。商家完成月度养成目标后，自动进入分润期，按游戏流水获得分润收益。
+        </p>
+        <div class="hero-ctas">
+          <a href="apply.html" class="btn btn-primary btn-lg">申请入驻</a>
+          <a href="#modes" class="btn btn-outline btn-lg">了解双阶段</a>
+        </div>
+
+        <!-- 实时数据条 -->
+        <div class="live-strip">
+          <div class="live-item">
+            <span class="dot"></span>
+            <span class="live-item-label">当前在养</span>
+            <span class="live-item-value">182 家</span>
+          </div>
+          <div class="live-divider"></div>
+          <div class="live-item">
+            <span class="live-item-label">当前在分润</span>
+            <span class="live-item-value">144 家</span>
+          </div>
+          <div class="live-divider"></div>
+          <div class="live-item">
+            <span class="live-item-label">全局星火值</span>
+            <span class="live-item-value">562 万</span>
+          </div>
+          <div class="live-divider"></div>
+          <div class="live-item">
+            <span class="live-item-label">本月养成</span>
+            <span class="live-item-value">842 万</span>
+          </div>
+          <div class="live-divider"></div>
+          <div class="live-item">
+            <span class="live-item-label">本月分润</span>
+            <span class="live-item-value">126 万</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gauge 可视化（核心叙事） -->
+      <div class="gauge-section fade-on-scroll">
+        <div class="gauge-grid">
+          <!-- 主：星火养成 -->
+          <div class="gauge-cell gauge-cell-main gauge-cell-ignite">
+            <div class="gauge-eyebrow">PHASE 01 · IGNITE</div>
+            <div class="gauge-title">星火养成期 · 实时进度</div>
+            <div class="gauge-dial">
+              <svg viewBox="0 0 240 240">
+                <circle class="gauge-track" cx="120" cy="120" r="110" />
+                <circle class="gauge-fill-ignite" cx="120" cy="120" r="110" data-target="62" />
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-percent" data-count="62">0</div>
+                <div class="gauge-label">养成进度</div>
+                <div class="gauge-mode ignite">
+                  <span class="mode-dot"></span>
+                  星火养成期
+                </div>
+              </div>
+            </div>
+            <div class="gauge-meta">
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">本月目标</span>
+                <span class="gauge-meta-value">200 万星火值</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">已养成</span>
+                <span class="gauge-meta-value">124 万</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">日均速率</span>
+                <span class="gauge-meta-value">6.2 万/天</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">预计达标日</span>
+                <span class="gauge-meta-value">6 月 23 日</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 副：星火燎原 -->
+          <div class="gauge-cell gauge-cell-blaze">
+            <div class="gauge-eyebrow">PHASE 02 · BLAZE</div>
+            <div class="gauge-title">星火燎原期 · 实时分润</div>
+            <div class="gauge-dial">
+              <svg viewBox="0 0 240 240">
+                <circle class="gauge-track" cx="120" cy="120" r="110" />
+                <circle class="gauge-fill-blaze" cx="120" cy="120" r="110" data-target="100" />
+              </svg>
+              <div class="gauge-center">
+                <div class="gauge-percent">48 万</div>
+                <div class="gauge-label">本月分润</div>
+                <div class="gauge-mode blaze">
+                  <span class="mode-dot"></span>
+                  星火燎原期
+                </div>
+              </div>
+            </div>
+            <div class="gauge-meta">
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">本期流水</span>
+                <span class="gauge-meta-value">1850 万</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">分润比例</span>
+                <span class="gauge-meta-value">25%</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">启动时间</span>
+                <span class="gauge-meta-value">6 月 12 日</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">月底结算</span>
+                <span class="gauge-meta-value">6 月 30 日</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 趋势 sparkline -->
+          <div class="gauge-cell">
+            <div class="gauge-eyebrow">30-DAY TREND</div>
+            <div class="gauge-title">养成速率</div>
+            <svg class="sparkline sparkline-ignite" viewBox="0 0 280 56" preserveAspectRatio="none">
+              <path class="sparkline-fill" d="M0 50 L20 35 L40 40 L60 30 L80 38 L100 25 L120 32 L140 22 L160 28 L180 18 L200 25 L220 15 L240 22 L260 10 L280 16 L280 56 L0 56 Z" />
+              <path class="sparkline-path" d="M0 50 L20 35 L40 40 L60 30 L80 38 L100 25 L120 32 L140 22 L160 28 L180 18 L200 25 L220 15 L240 22 L260 10 L280 16" />
+            </svg>
+            <div class="gauge-meta" style="border-top: 0; padding-top: var(--space-3);">
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">日均</span>
+                <span class="gauge-meta-value">4.2 万</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">峰值</span>
+                <span class="gauge-meta-value">6.8 万</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">同比上月</span>
+                <span class="gauge-meta-value" style="color: var(--green-600);">+12.4%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 双阶段说明 -->
+  <section class="section" id="modes">
+    <div class="container">
+      <div style="text-align: center; max-width: 720px; margin: 0 auto var(--space-12);">
+        <h2 class="section-title">两阶段自动启停</h2>
+        <p class="section-sub" style="margin: 0 auto;">系统根据平台星火水位自动切换模式。商家无需操作，水位达标即生效。</p>
+      </div>
+
+      <div class="modes-bento fade-on-scroll">
+        <div class="mode-card mode-card-ignite">
+          <div class="mode-card-head">
+            <span class="mode-card-num">01 / 星火养成</span>
+            <span class="badge badge-mode-1"><span class="badge-dot"></span>进行中</span>
+          </div>
+          <h3 class="mode-card-title">月度养成目标期</h3>
+          <p class="mode-card-sub">商家帮平台养成星火值，达成月度目标后自动切到分润期</p>
+          <p class="mode-card-desc">平台按月给商家配置养成目标。商家通过游戏让用户消耗星火值，目标达成即完成本月养成任务。</p>
+          <ul class="mode-card-list">
+            <li><span class="check">✓</span>按月配置，月初 1 号 00:00 生效</li>
+            <li><span class="check">✓</span>目标达成 100% 自动切到燎原期</li>
+            <li><span class="check">✓</span>养成期不分润现金</li>
+            <li><span class="check">✓</span>实时显示养成进度与日均速率</li>
+          </ul>
+        </div>
+
+        <div class="mode-card mode-card-blaze">
+          <div class="mode-card-head">
+            <span class="mode-card-num">02 / 星火燎原</span>
+            <span class="badge badge-mode-2"><span class="badge-dot"></span>达标切换</span>
+          </div>
+          <h3 class="mode-card-title">流水分润收获期</h3>
+          <p class="mode-card-sub">养成目标达标后立即切段，商家按流水获得分润收益</p>
+          <p class="mode-card-desc">商家推真实充值，按游戏流水 × 分润比例结算，分润金额全部归商家，月底一次性打到对公账户。</p>
+          <ul class="mode-card-list">
+            <li><span class="check">✓</span>基础档 20%-25%，进阶档最高 30%</li>
+            <li><span class="check">✓</span>按月一次性结算到对公账户</li>
+            <li><span class="check">✓</span>平台/商家分成比例独立配置</li>
+            <li><span class="check">✓</span>水位反弹超标自动回退养成</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 步入驻流程 -->
+  <section class="section" style="background: var(--bg-subtle);">
+    <div class="container">
+      <div style="text-align: center; max-width: 720px; margin: 0 auto var(--space-12);">
+        <h2 class="section-title">5 步完成入驻</h2>
+        <p class="section-sub" style="margin: 0 auto;">从提交资料到正式上线，全流程透明可追溯。</p>
+      </div>
+
+      <div class="onboarding-timeline fade-on-scroll">
+        <div class="timeline-step">
+          <div class="timeline-num">1</div>
+          <h4>主体资质初审</h4>
+          <p>营业执照 / 法人 / 对公账户，1-3 工作日</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-num">2</div>
+          <h4>游戏合规审核</h4>
+          <p>版号 / ICP / 软著 / 出版物经营许可</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-num">3</div>
+          <h4>技术对接试运营</h4>
+          <p>API / SDK 接入，数据上报闭环验证</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-num">4</div>
+          <h4>正式终审</h4>
+          <p>试运营数据达标 + 协议签署</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-num">5</div>
+          <h4>上线开通</h4>
+          <p>配置月度养成目标，正式运营</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 关键规则（精简） -->
+  <section class="section">
+    <div class="container">
+      <div class="rules-compact fade-on-scroll">
+        <div>
+          <h3>规则透明，结算清晰</h3>
+          <p>所有参数后台可视化配置，全程留痕 + 财务复核。商户可实时查看脱敏对账数据。</p>
+          <a href="#" class="btn btn-outline btn-sm">查看完整规则</a>
+        </div>
+
+        <div class="rules-inline">
+          <div class="rule-mini">
+            <div class="rule-mini-icon ignite">火</div>
+            <div class="rule-mini-title">星火水位区间</div>
+            <div class="rule-mini-desc">最高 800 万 / 最低 200 万，超出区间自动启停</div>
+          </div>
+          <div class="rule-mini">
+            <div class="rule-mini-icon blaze">润</div>
+            <div class="rule-mini-title">分润比例</div>
+            <div class="rule-mini-desc">基础 20%-25%，进阶最高 30%，按贡献上浮</div>
+          </div>
+          <div class="rule-mini">
+            <div class="rule-mini-icon cycle">期</div>
+            <div class="rule-mini-title">结算周期</div>
+            <div class="rule-mini-desc">实时 / T+0 / T+1 / 月结，后台一键切换</div>
+          </div>
+          <div class="rule-mini">
+            <div class="rule-mini-icon cycle">数</div>
+            <div class="rule-mini-title">数据脱敏同步</div>
+            <div class="rule-mini-desc">平台数据每日脱敏后同步商户，0.5% 差异自动预警</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 申请 CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="apply-cta fade-on-scroll">
+        <h2>准备好入驻了？</h2>
+        <p>提交资料，5 步完成入驻。灰度测试通过后即可正式上线运营。</p>
+        <div class="apply-cta-actions">
+          <a href="apply.html" class="btn btn-primary btn-lg">申请入驻</a>
+          <a href="#" class="btn btn-outline btn-lg">下载合作规则</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="index.html" class="nav-logo" style="margin-bottom: var(--space-4);">
+            <span class="nav-logo-mark">G</span>
+            <span>游戏商户平台</span>
+          </a>
+          <p style="font-size: var(--text-sm); color: var(--text-tertiary); max-width: 32ch; line-height: var(--leading-relaxed);">
+            居间联运平台，按两阶段自动结算收益。平台不做庄、不参与对局、不承担赔付。
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>商家</h4>
+          <ul>
+            <li><a href="apply.html">申请入驻</a></li>
+            <li><a href="#">合作规则</a></li>
+            <li><a href="#">技术对接文档</a></li>
+            <li><a href="#">商户登录</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>关于</h4>
+          <ul>
+            <li><a href="#">关于我们</a></li>
+            <li><a href="#">帮助中心</a></li>
+            <li><a href="#">联系客服</a></li>
+            <li><a href="#">公告资讯</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 游戏商户平台. All rights reserved.</span>
+        <span>Opulatrix</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Sticky CTA -->
+  <a href="apply.html" class="sticky-cta">
+    <span class="sticky-cta-dot"></span>
+    <span class="sticky-cta-text">立即申请入驻</span>
+  </a>
+
+  <script src="../shared/js/mock-data.js"></script>
+  <script src="../shared/js/shared.js"></script>
+  <script>
+    // Gauge 动画
+    document.addEventListener('DOMContentLoaded', () => {
+      const C = 2 * Math.PI * 110; // 691.15
+      const fills = document.querySelectorAll('.gauge-fill-ignite, .gauge-fill-blaze');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const target = parseFloat(entry.target.dataset.target) || 0;
+            const offset = C * (1 - target / 100);
+            setTimeout(() => {
+              entry.target.style.strokeDashoffset = offset;
+            }, 200);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      fills.forEach(el => observer.observe(el));
+
+      // 数字滚动
+      const percent = document.querySelector('.gauge-cell-ignite .gauge-percent[data-count]');
+      if (percent) {
+        const observerNum = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const target = parseInt(entry.target.dataset.count);
+              animateNumber(entry.target, target, 1200);
+              observerNum.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        observerNum.observe(percent);
+      }
+    });
+  </script>
+</body>
+</html>

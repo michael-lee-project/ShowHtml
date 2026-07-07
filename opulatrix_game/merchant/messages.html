@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>消息中心 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    /* ===== 页面布局 ===== */
+    .page-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-5);
+      min-height: calc(100vh - 200px);
+    }
+    @media (max-width: 1023px) {
+      .page-grid { grid-template-columns: 1fr; }
+    }
+    .msg-aside {
+      position: sticky;
+      top: 80px;
+      align-self: start;
+    }
+    .msg-stat-card {
+      background: var(--bg-page, white);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .msg-stat-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .msg-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-2) 0;
+      font-size: var(--text-sm);
+      border-bottom: 1px dashed var(--border-default);
+    }
+    .msg-stat-row:last-child { border-bottom: 0; }
+    .msg-stat-row .label { color: var(--text-secondary); display: inline-flex; align-items: center; gap: 6px; }
+    .msg-stat-row .val { font-family: var(--font-mono); font-weight: var(--weight-bold); color: var(--text-primary); }
+    .msg-stat-row .val.danger { color: var(--red-700, #B91C1C); }
+
+    .msg-pref-card {
+      background: var(--bg-page, white);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+    }
+    .msg-pref-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+    .msg-pref-desc {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-3);
+      line-height: 1.5;
+    }
+    .msg-pref-btn {
+      display: block;
+      text-align: center;
+      padding: 8px 12px;
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+    }
+    .msg-pref-btn:hover { background: var(--border-default); }
+
+    /* ===== 详情抽屉 ===== */
+    .msg-drawer-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.32);
+      z-index: var(--z-modal, 200);
+      display: none;
+    }
+    .msg-drawer-overlay.open { display: block; }
+    .msg-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 520px;
+      max-width: 90vw;
+      background: var(--bg-page, white);
+      z-index: var(--z-modal, 201);
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .msg-drawer.open { transform: translateX(0); }
+    .msg-drawer-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .msg-drawer-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+    }
+    .msg-drawer-close {
+      width: 28px; height: 28px;
+      border: 0; background: transparent;
+      cursor: pointer; font-size: 18px;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+    }
+    .msg-drawer-close:hover { background: var(--bg-subtle); color: var(--text-primary); }
+    .msg-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-5);
+    }
+    .msg-drawer-meta {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .msg-drawer-content {
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .msg-drawer-foot {
+      padding: var(--space-4) var(--space-5);
+      border-top: 1px solid var(--border-default);
+      display: flex;
+      gap: var(--space-2);
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- ===== Sidebar ===== -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+        <a href="messages.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ===== Main ===== -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">消息中心</h1>
+          <span class="app-topbar-mode ignite">
+            <span class="mode-dot"></span>
+            <span data-msg-summary>5 类消息</span>
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-outline btn-sm" onclick="MsgPage.markAllRead()">全部已读</button>
+          <button class="btn btn-ghost btn-sm" onclick="MsgPage.toggleBatch()">批量管理</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="page-grid">
+          <!-- 左侧：消息列表 -->
+          <section>
+            <!-- Tabs -->
+            <div class="msg-tabs" id="msg-tabs">
+              <button class="msg-tab active" data-type="all">全部 <span class="msg-tab-count" data-count="all">14</span></button>
+              <button class="msg-tab" data-type="unread">未读 <span class="msg-tab-count" data-count="unread">9</span></button>
+              <button class="msg-tab" data-type="announce">📢 平台公告 <span class="msg-tab-count" data-count="announce">2</span></button>
+              <button class="msg-tab" data-type="system">⚙ 系统通知 <span class="msg-tab-count" data-count="system">2</span></button>
+              <button class="msg-tab" data-type="review">✓ 审核进度 <span class="msg-tab-count" data-count="review">1</span></button>
+              <button class="msg-tab" data-type="finance">¥ 资金变动 <span class="msg-tab-count" data-count="finance">2</span></button>
+              <button class="msg-tab" data-type="appeal">⚖ 申诉处理 <span class="msg-tab-count" data-count="appeal">1</span></button>
+            </div>
+
+            <!-- 批量操作工具栏 -->
+            <div class="msg-toolbar" id="batch-bar" style="display: none; margin-top: var(--space-3); background: var(--bg-subtle); padding: var(--space-3); border-radius: var(--radius-md);">
+              <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                已选 <strong data-batch-count>0</strong> 条
+              </div>
+              <div class="msg-actions">
+                <button class="btn btn-outline btn-sm" onclick="MsgPage.batchMarkRead()">标记已读</button>
+                <button class="btn btn-ghost btn-sm" onclick="MsgPage.batchDelete()">删除</button>
+                <button class="btn btn-ghost btn-sm" onclick="MsgPage.toggleBatch()">取消</button>
+              </div>
+            </div>
+
+            <!-- 消息列表 -->
+            <div class="msg-list" id="msg-list" style="margin-top: var(--space-4);"></div>
+
+            <!-- 分页 -->
+            <div class="msg-pagination">
+              <span data-page-info>共 14 条 · 1/1 页</span>
+              <div class="msg-page-btns">
+                <button class="msg-page-btn" data-page-prev disabled>‹</button>
+                <button class="msg-page-btn active" data-page-cur>1</button>
+                <button class="msg-page-btn" data-page-next disabled>›</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 右侧：统计 + 偏好入口 -->
+          <aside class="msg-aside">
+            <div class="msg-stat-card">
+              <div class="msg-stat-title">📊 消息统计</div>
+              <div class="msg-stat-row">
+                <span class="label">未读消息</span>
+                <span class="val danger" data-stat-unread>9</span>
+              </div>
+              <div class="msg-stat-row">
+                <span class="label">📢 平台公告</span>
+                <span class="val" data-stat-announce>2</span>
+              </div>
+              <div class="msg-stat-row">
+                <span class="label">⚙ 系统通知</span>
+                <span class="val" data-stat-system>2</span>
+              </div>
+              <div class="msg-stat-row">
+                <span class="label">✓ 审核进度</span>
+                <span class="val" data-stat-review>1</span>
+              </div>
+              <div class="msg-stat-row">
+                <span class="label">¥ 资金变动</span>
+                <span class="val" data-stat-finance>2</span>
+              </div>
+              <div class="msg-stat-row">
+                <span class="label">⚖ 申诉处理</span>
+                <span class="val" data-stat-appeal>1</span>
+              </div>
+            </div>
+
+            <div class="msg-pref-card">
+              <div class="msg-pref-title">🔕 消息免打扰</div>
+              <div class="msg-pref-desc">夜间 22:00 - 08:00 仅保留「账户安全」「资金变动」类紧急通知，其余静默推送。</div>
+              <a class="msg-pref-btn" href="account.html#notification">前往通知偏好设置 →</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== 详情抽屉 ===== -->
+  <div class="msg-drawer-overlay" id="msg-drawer-overlay" onclick="MsgPage.closeDrawer()"></div>
+  <div class="msg-drawer" id="msg-drawer">
+    <div class="msg-drawer-head">
+      <div class="msg-drawer-title" data-drawer-title>消息详情</div>
+      <button class="msg-drawer-close" onclick="MsgPage.closeDrawer()" aria-label="关闭">×</button>
+    </div>
+    <div class="msg-drawer-body">
+      <div class="msg-drawer-meta" data-drawer-meta></div>
+      <div class="msg-drawer-content" data-drawer-content></div>
+    </div>
+    <div class="msg-drawer-foot">
+      <button class="btn btn-ghost btn-sm" data-drawer-link>查看关联页面</button>
+      <button class="btn btn-outline btn-sm" onclick="MsgPage.closeDrawer()">关闭</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="../shared/js/mock-data.js"></script>
+  <script src="../shared/js/shared.js"></script>
+  <script>
+    // ============================================
+    // 消息中心页面逻辑
+    // ============================================
+    window.MsgPage = {
+      currentType: 'all',
+      batchMode: false,
+      page: 1,
+      pageSize: 10,
+
+      get messages() {
+        return (window.MOCK && window.MOCK.messages) || [];
+      },
+
+      init() {
+        this.renderTabs();
+        this.renderList();
+        this.bindTabs();
+        this.bindDrawerEsc();
+        this.updateSidebarBadge();
+        this.updateTopbarSummary();
+      },
+
+      // 渲染 tab 计数
+      renderTabs() {
+        const counts = {
+          all: this.messages.length,
+          unread: this.messages.filter(m => !m.read).length,
+          announce: this.messages.filter(m => m.type === 'announce').length,
+          system: this.messages.filter(m => m.type === 'system').length,
+          review: this.messages.filter(m => m.type === 'review').length,
+          finance: this.messages.filter(m => m.type === 'finance').length,
+          appeal: this.messages.filter(m => m.type === 'appeal').length,
+        };
+        Object.entries(counts).forEach(([k, v]) => {
+          const el = document.querySelector(`[data-count="${k}"]`);
+          if (el) el.textContent = v;
+        });
+        document.querySelector('[data-stat-unread]').textContent = counts.unread;
+        document.querySelector('[data-stat-announce]').textContent = counts.announce;
+        document.querySelector('[data-stat-system]').textContent = counts.system;
+        document.querySelector('[data-stat-review]').textContent = counts.review;
+        document.querySelector('[data-stat-finance]').textContent = counts.finance;
+        document.querySelector('[data-stat-appeal]').textContent = counts.appeal;
+      },
+
+      // 渲染消息列表
+      renderList() {
+        let list = [...this.messages].sort((a, b) => {
+          if (a.pinned && !b.pinned) return -1;
+          if (!a.pinned && b.pinned) return 1;
+          return b.date.localeCompare(a.date);
+        });
+        if (this.currentType === 'unread') {
+          list = list.filter(m => !m.read);
+        } else if (this.currentType !== 'all') {
+          list = list.filter(m => m.type === this.currentType);
+        }
+        const el = document.getElementById('msg-list');
+        if (list.length === 0) {
+          el.innerHTML = `<div class="msg-empty"><div class="msg-empty-icon">📭</div><div class="msg-empty-text">${
+            this.currentType === 'unread' ? '没有未读消息' : '该分类暂无消息'
+          }</div></div>`;
+        } else {
+          const iconMap = {
+            announce: { l: '公', c: 'announce' },
+            system: { l: '系', c: 'system' },
+            review: { l: '审', c: 'review' },
+            finance: { l: '¥', c: 'finance' },
+            appeal: { l: '诉', c: 'appeal' },
+          };
+          el.innerHTML = list.map(m => {
+            const ic = iconMap[m.type] || { l: '?', c: 'system' };
+            return `
+              <div class="msg-row ${m.read ? 'read' : 'unread'}" data-msg-id="${m.id}">
+                ${this.batchMode ? `<input type="checkbox" class="msg-checkbox" data-msg-check="${m.id}" />` : ''}
+                <div class="msg-icon ${ic.c}">${ic.l}</div>
+                <div class="msg-body">
+                  <div class="msg-head-row">
+                    <div class="msg-title">${m.pinned ? '<span class="msg-pin">置顶</span> ' : ''}${this._esc(m.title)}</div>
+                    <div class="msg-time">${this._fmtDate(m.date)}</div>
+                  </div>
+                  <div class="msg-preview">${this._esc(m.preview)}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+          // 绑定点击
+          el.querySelectorAll('.msg-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+              if (e.target.matches('.msg-checkbox')) return;
+              this.openDrawer(row.dataset.msgId);
+            });
+          });
+          el.querySelectorAll('.msg-checkbox').forEach(cb => {
+            cb.addEventListener('change', () => this.updateBatchCount());
+          });
+        }
+        // 分页
+        const totalPages = Math.max(1, Math.ceil(list.length / this.pageSize));
+        document.querySelector('[data-page-info]').textContent = `共 ${list.length} 条 · ${this.page}/${totalPages} 页`;
+        document.querySelector('[data-page-cur]').textContent = this.page;
+        document.querySelector('[data-page-prev]').disabled = this.page <= 1;
+        document.querySelector('[data-page-next]').disabled = this.page >= totalPages;
+      },
+
+      bindTabs() {
+        document.querySelectorAll('.msg-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            document.querySelectorAll('.msg-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            this.currentType = tab.dataset.type;
+            this.page = 1;
+            this.renderList();
+          });
+        });
+      },
+
+      bindDrawerEsc() {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') this.closeDrawer();
+        });
+      },
+
+      openDrawer(id) {
+        const m = this.messages.find(x => x.id === id);
+        if (!m) return;
+        if (!m.read) {
+          m.read = true;
+          this.renderTabs();
+          this.renderList();
+          BellDropdown.refresh();
+        }
+        const iconMap = { announce:'📢 平台公告', system:'⚙ 系统通知', review:'✓ 审核进度', finance:'¥ 资金变动', appeal:'⚖ 申诉处理' };
+        document.querySelector('[data-drawer-title]').textContent = iconMap[m.type] || '消息';
+        document.querySelector('[data-drawer-meta]').innerHTML = `
+          <span>📅 ${m.date}</span>
+          ${m.link ? '<span>·</span><span style="color: var(--red-700, #B91C1C);">含跳转</span>' : ''}
+        `;
+        document.querySelector('[data-drawer-content]').textContent = m.body;
+        const linkBtn = document.querySelector('[data-drawer-link]');
+        if (m.link) {
+          linkBtn.style.display = '';
+          linkBtn.onclick = () => location.href = m.link;
+        } else {
+          linkBtn.style.display = 'none';
+        }
+        document.getElementById('msg-drawer').classList.add('open');
+        document.getElementById('msg-drawer-overlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      },
+
+      closeDrawer() {
+        document.getElementById('msg-drawer').classList.remove('open');
+        document.getElementById('msg-drawer-overlay').classList.remove('open');
+        document.body.style.overflow = '';
+      },
+
+      markAllRead() {
+        if (!confirm('确定将所有消息标记为已读？')) return;
+        this.messages.forEach(m => m.read = true);
+        this.renderTabs();
+        this.renderList();
+        BellDropdown.refresh();
+        this.updateSidebarBadge();
+      },
+
+      toggleBatch() {
+        this.batchMode = !this.batchMode;
+        document.getElementById('batch-bar').style.display = this.batchMode ? 'flex' : 'none';
+        this.renderList();
+      },
+
+      updateBatchCount() {
+        const checked = document.querySelectorAll('.msg-checkbox:checked').length;
+        document.querySelector('[data-batch-count]').textContent = checked;
+      },
+
+      batchMarkRead() {
+        const ids = [...document.querySelectorAll('.msg-checkbox:checked')].map(cb => cb.dataset.msgCheck);
+        this.messages.forEach(m => { if (ids.includes(m.id)) m.read = true; });
+        this.renderTabs();
+        this.renderList();
+        BellDropdown.refresh();
+        this.updateSidebarBadge();
+      },
+
+      batchDelete() {
+        const ids = [...document.querySelectorAll('.msg-checkbox:checked')].map(cb => cb.dataset.msgCheck);
+        if (ids.length === 0) return;
+        if (!confirm(`确定删除选中的 ${ids.length} 条消息？`)) return;
+        window.MOCK.messages = this.messages.filter(m => !ids.includes(m.id));
+        this.renderTabs();
+        this.renderList();
+        BellDropdown.refresh();
+        this.updateSidebarBadge();
+      },
+
+      updateSidebarBadge() {
+        const unread = this.messages.filter(m => !m.read).length;
+        const badge = document.querySelector('[data-sidebar-badge]');
+        if (badge) badge.textContent = unread > 0 ? unread : '';
+      },
+
+      updateTopbarSummary() {
+        const unread = this.messages.filter(m => !m.read).length;
+        const el = document.querySelector('[data-msg-summary]');
+        if (el) el.textContent = unread > 0 ? `${unread} 条未读 / 共 ${this.messages.length} 条` : `共 ${this.messages.length} 条 · 全部已读`;
+      },
+
+      _esc(s) {
+        return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      },
+
+      _fmtDate(d) {
+        if (!d) return '';
+        const dt = new Date(d.replace(' ', 'T'));
+        if (isNaN(dt)) return d;
+        const now = new Date();
+        const sameDay = dt.toDateString() === now.toDateString();
+        if (sameDay) return '今天 ' + dt.getHours().toString().padStart(2,'0') + ':' + dt.getMinutes().toString().padStart(2,'0');
+        const diff = (now - dt) / 86400000;
+        if (diff < 1) return '今天';
+        if (diff < 7) return Math.floor(diff) + ' 天前';
+        if (diff < 365) return (dt.getMonth()+1) + '月' + dt.getDate() + '日';
+        return dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
+      },
+    };
+
+    document.addEventListener('DOMContentLoaded', () => MsgPage.init());
+  </script>
+</body>
+</html>

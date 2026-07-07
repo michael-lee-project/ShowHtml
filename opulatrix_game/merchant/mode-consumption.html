@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>星火养成 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <link rel="stylesheet" href="../shared/css/water-gauge.css">
+  <style>
+    /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5
+     * Macrostructure: Stat-Led · theme: ignite-mode(red) · genre: modern-minimal
+     */
+
+    /* ===== 段一 ignite 主题主色变量覆盖 ===== */
+    .consumption-page {
+      --mode-color: var(--red-600);
+      --mode-color-light: var(--red-500);
+      --mode-color-bg: var(--red-50);
+      --mode-color-border: var(--red-200);
+    }
+
+    /* ===== 顶部模式卡（段一 ignite 红色） ===== */
+    .mode-hero.ignite {
+      padding: var(--space-8) var(--space-8);
+      border-radius: var(--radius-2xl);
+      margin-bottom: var(--space-6);
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(220, 38, 38, 0.12), transparent),
+        radial-gradient(ellipse 60% 80% at 100% 50%, rgba(220, 38, 38, 0.04), transparent),
+        linear-gradient(135deg, #FEF2F2, white 60%);
+      border: 1px solid var(--red-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    @media (max-width: 767px) { .mode-hero-grid { grid-template-columns: 1fr; } }
+
+    .mode-hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: var(--weight-semibold);
+      color: var(--red-700);
+      margin-bottom: var(--space-3);
+    }
+
+    .mode-hero-title {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      color: var(--red-700);
+      margin-bottom: var(--space-2);
+    }
+    @media (min-width: 768px) {
+      .mode-hero-title { font-size: var(--text-5xl); }
+    }
+
+    .mode-hero-sub {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+      max-width: 60ch;
+    }
+
+    .mode-hero-stat {
+      text-align: right;
+    }
+    @media (max-width: 767px) { .mode-hero-stat { text-align: left; } }
+    .mode-hero-stat-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-2);
+    }
+    .mode-hero-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-6xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--red-700);
+    }
+    .mode-hero-stat-meta {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      margin-top: var(--space-2);
+    }
+
+    /* ===== KPI 4 件套 ===== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    @media (max-width: 1023px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .kpi-grid { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .kpi-card.ignite {
+      background: var(--red-50);
+      border-color: var(--red-border);
+    }
+    .kpi-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+    .kpi-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+    }
+    .kpi-card.ignite .kpi-label { color: var(--red-700); }
+    .kpi-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+    }
+    .kpi-card.ignite .kpi-icon { background: var(--red-200); color: var(--red-700); }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    .kpi-card.ignite .kpi-value { color: var(--red-700); }
+    .kpi-meta { font-size: var(--text-xs); color: var(--text-tertiary); }
+    .kpi-card.ignite .kpi-meta { color: var(--red-700); opacity: 0.75; }
+    .kpi-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+    }
+    .kpi-trend.up { color: var(--green-600); }
+
+    /* ===== 主区两栏 ===== */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    @media (max-width: 1023px) { .main-grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .panel-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+    }
+    .panel-sub {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    /* ===== 进度池（段一专属） ===== */
+    .progress-pool {
+      position: relative;
+      width: 100%;
+      height: 64px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-muted);
+      overflow: visible;
+      border: 1px solid var(--border-default);
+      box-shadow: inset 0 1px 2px rgba(24, 24, 27, 0.04);
+    }
+    .progress-pool-segments {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+    .progress-segment {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+    .progress-segment.ignite-bg {
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #FEF2F2 0%, #FECACA 70%, #FCA5A5 100%);
+    }
+    .progress-pool-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      background: linear-gradient(90deg, #FCA5A5 0%, #DC2626 100%);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+    }
+    .progress-target-line {
+      position: absolute;
+      top: -8px;
+      bottom: -8px;
+      right: 0;
+      width: 2px;
+      background: var(--text-primary);
+      z-index: 3;
+    }
+    .progress-target-label {
+      position: absolute;
+      bottom: -22px;
+      right: 0;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+      transform: translateX(50%);
+    }
+    .progress-current-marker {
+      position: absolute;
+      top: -8px;
+      width: 16px;
+      height: 16px;
+      background: var(--red-600);
+      border: 3px solid white;
+      border-radius: 50%;
+      box-shadow: var(--shadow-md);
+      transform: translateX(-50%);
+    }
+    .progress-current-label {
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--red-600);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      white-space: nowrap;
+    }
+    .progress-current-label::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: var(--red-600);
+    }
+
+    /* ===== 排行（横向 bar） ===== */
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .ranking-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 110px;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-primary);
+    }
+    .ranking-marker {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .ranking-bar-track {
+      flex: 1;
+      height: 24px;
+      background: var(--bg-muted);
+      border-radius: var(--radius-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .ranking-bar-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: var(--radius-sm);
+    }
+    .ranking-bar-fill.me { background: linear-gradient(90deg, #FCA5A5, var(--red-600)); }
+    .ranking-bar-fill.avg { background: var(--text-primary); opacity: 0.5; }
+    .ranking-bar-fill.top10 { background: linear-gradient(90deg, #FCD34D, #F59E0B); }
+
+    .ranking-value {
+      min-width: 80px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+    }
+
+    /* ===== 实时养成记录 ===== */
+    .feed-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .feed-item {
+      display: grid;
+      grid-template-columns: 70px 1fr auto;
+      gap: var(--space-4);
+      align-items: center;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .feed-item:last-child { border-bottom: 0; }
+    .feed-time {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .feed-user {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .feed-amount {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--red-700);
+    }
+    .feed-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red-600);
+      margin-right: var(--space-2);
+      animation: breathe 2s ease-in-out infinite;
+    }
+
+    /* ===== ECharts 容器 ===== */
+    .chart-container {
+      width: 100%;
+      height: 260px;
+    }
+
+    /* ===== 模式规则 banner ===== */
+    .mode-rule-banner {
+      padding: var(--space-4) var(--space-5);
+      background: var(--red-50);
+      border: 1px solid var(--red-border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+    .mode-rule-banner-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: var(--red-200);
+      color: var(--red-700);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .mode-rule-banner-text {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+    .mode-rule-banner-text strong { color: var(--red-700); font-weight: var(--weight-semibold); }
+  </style>
+</head>
+<body class="consumption-page">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">星火养成</h1>
+          <span class="app-topbar-mode ignite">
+            <span class="mode-dot"></span>
+            星火养成期 · 段一 · 进行中
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-ghost btn-sm">刷新</button>
+          <button class="btn btn-outline btn-sm">切换至燎原期</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- 模式 hero -->
+        <div class="mode-hero ignite">
+          <div class="mode-hero-grid">
+            <div>
+              <div class="mode-hero-eyebrow">CURRENT PHASE · 01 IGNITE</div>
+              <h2 class="mode-hero-title">星火养成期</h2>
+              <p class="mode-hero-sub">商家帮平台养成星火值。达成月度目标后，自动切到星火燎原期，按流水分润收获。</p>
+            </div>
+            <div class="mode-hero-stat">
+              <div class="mode-hero-stat-label">本月养成进度</div>
+              <div class="mode-hero-stat-value">62%</div>
+              <div class="mode-hero-stat-meta">124 万 / 200 万 · 预计 6/23 达标</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card ignite">
+            <div class="kpi-head">
+              <span class="kpi-label">本月已养成</span>
+              <span class="kpi-icon">火</span>
+            </div>
+            <div class="kpi-value">124 万</div>
+            <div class="kpi-meta">累计 · 目标 200 万</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">日均速率</span>
+              <span class="kpi-icon">↗</span>
+            </div>
+            <div class="kpi-value">6.2 万</div>
+            <div class="kpi-meta">日均 · 较上周 +8.4%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">已运行</span>
+              <span class="kpi-icon">○</span>
+            </div>
+            <div class="kpi-value">18 天</div>
+            <div class="kpi-meta">本月 1 号开始</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">预计达标</span>
+              <span class="kpi-icon">→</span>
+            </div>
+            <div class="kpi-value">6/23</div>
+            <div class="kpi-meta">还有 5 天</div>
+          </div>
+        </div>
+
+        <!-- 进度池 -->
+        <div class="panel" style="margin-bottom: var(--space-6);">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">本月养成进度</h3>
+              <div class="panel-sub">达成 200 万星火值即切段到燎原期</div>
+            </div>
+            <span class="badge badge-mode-1"><span class="badge-dot"></span>段一 · 养成期</span>
+          </div>
+
+          <div style="padding: var(--space-6) 0;">
+            <div class="progress-pool">
+              <div class="progress-pool-segments">
+                <div class="progress-segment ignite-bg"></div>
+              </div>
+              <div class="progress-pool-fill" data-target-width="62"></div>
+              <div class="progress-target-line"></div>
+              <div class="progress-target-label">目标 200 万</div>
+              <div class="progress-current-marker" style="left: 62%;">
+                <div class="progress-current-label">124 万</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); margin-top: var(--space-3);">
+            <span>0</span>
+            <span>50 万</span>
+            <span>100 万</span>
+            <span>150 万</span>
+            <span>200 万</span>
+          </div>
+        </div>
+
+        <!-- 主区两栏：趋势 + 排行 -->
+        <div class="main-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">近 30 天养成速率</h3>
+                <div class="panel-sub">每日养成量趋势 · 红色为星火养成期</div>
+              </div>
+            </div>
+            <div id="trend-chart" class="chart-container"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">消纳占比排行</h3>
+                <div class="panel-sub">我在 1284 家入驻商家中的位置</div>
+              </div>
+            </div>
+            <div class="ranking-list">
+              <div class="ranking-item">
+                <div class="ranking-label">
+                  <span class="ranking-marker" style="background: var(--red-600);"></span>
+                  我（M001 音浪对决）
+                </div>
+                <div class="ranking-bar-track">
+                  <div class="ranking-bar-fill me" style="width: 4.6%;"></div>
+                </div>
+                <div class="ranking-value" style="color: var(--red-700);">4.6%</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-label">
+                  <span class="ranking-marker" style="background: var(--text-primary); opacity: 0.5;"></span>
+                  平台平均
+                </div>
+                <div class="ranking-bar-track">
+                  <div class="ranking-bar-fill avg" style="width: 3.2%;"></div>
+                </div>
+                <div class="ranking-value" style="color: var(--text-secondary);">3.2%</div>
+              </div>
+              <div class="ranking-item">
+                <div class="ranking-label">
+                  <span class="ranking-marker" style="background: #F59E0B;"></span>
+                  Top 10% 平均
+                </div>
+                <div class="ranking-bar-track">
+                  <div class="ranking-bar-fill top10" style="width: 6.9%;"></div>
+                </div>
+                <div class="ranking-value" style="color: #B45309;">6.9%</div>
+              </div>
+            </div>
+
+            <div style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--border-muted); font-size: var(--text-xs); color: var(--text-tertiary); line-height: var(--leading-relaxed);">
+              <div>当前排名：<strong style="color: var(--red-700); font-weight: var(--weight-semibold);">第 47 名</strong> / 1,284 家</div>
+              <div style="margin-top: var(--space-1);">距离 Top 10 还差 <strong style="color: var(--red-700);">+2.3 个百分点</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 实时养成记录 -->
+        <div class="panel" style="margin-bottom: var(--space-6);">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">实时养成记录</h3>
+              <div class="panel-sub">最近 8 条 · 每局用户对局后即时同步</div>
+            </div>
+            <a href="#" class="panel-link">查看全部 →</a>
+          </div>
+          <div class="feed-list">
+            <div class="feed-item">
+              <span class="feed-time">18:42</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 f***8</span>
+              <span class="feed-amount">+2,840</span>
+            </div>
+            <div class="feed-item">
+              <span class="feed-time">18:38</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 k***2</span>
+              <span class="feed-amount">+5,200</span>
+            </div>
+            <div class="feed-item">
+              <span class="feed-time">18:31</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 m***5</span>
+              <span class="feed-amount">+1,200</span>
+            </div>
+            <div class="feed-item">
+              <span class="feed-time">18:25</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 t***9</span>
+              <span class="feed-amount">+8,400</span>
+            </div>
+            <div class="feed-item">
+              <span class="feed-time">18:18</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 w***1</span>
+              <span class="feed-amount">+3,200</span>
+            </div>
+            <div class="feed-item">
+              <span class="feed-time">18:09</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 h***3</span>
+              <span class="feed-amount">+6,100</span>
+            </div>
+            <div class="feed-item">
+              <span class="feed-time">17:56</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 n***7</span>
+              <span class="feed-amount">+4,500</span>
+            </div>
+            <div class="feed-item">
+              <span class="feed-time">17:48</span>
+              <span class="feed-user"><span class="feed-dot"></span>玩家 q***4</span>
+              <span class="feed-amount">+2,900</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 模式规则 banner -->
+        <div class="mode-rule-banner">
+          <div class="mode-rule-banner-icon">!</div>
+          <div class="mode-rule-banner-text">
+            <strong>养成期规则：</strong>本月养成进度达到 <strong>200 万星火值（100%）</strong> 时自动切段到燎原期。
+            段一期间<strong>不结算现金</strong>，所有养成数据可在「数据对账」中下载明细。
+            当前月累计已养成 <strong>124 万</strong>，按当前速率预计 6/23 达标。
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../shared/js/mock-data.js"></script>
+  <script src="../shared/js/shared.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 进度池填充动画
+      const fill = document.querySelector('.progress-pool-fill');
+      if (fill) {
+        const targetWidth = fill.dataset.targetWidth;
+        requestAnimationFrame(() => {
+          fill.style.transition = 'width 1.4s cubic-bezier(0.16, 1, 0.3, 1)';
+          fill.style.width = targetWidth + '%';
+        });
+      }
+
+      // ECharts 趋势图
+      const chart = echarts.init(document.getElementById('trend-chart'));
+      const data = [];
+      for (let i = 1; i <= 30; i++) {
+        const isWeekend = [0, 6].includes((i - 1) % 7);
+        const base = 35000 + Math.random() * 15000;
+        const value = Math.round(base * (isWeekend ? 1.3 : 1.0));
+        data.push({ value, itemStyle: { color: isWeekend ? '#F87171' : '#DC2626' } });
+      }
+      chart.setOption({
+        grid: { top: 20, right: 20, bottom: 30, left: 50 },
+        tooltip: { trigger: 'axis' },
+        xAxis: {
+          type: 'category',
+          data: Array.from({ length: 30 }, (_, i) => `${i + 1}日`),
+          axisLine: { lineStyle: { color: '#E4E4E7' } },
+          axisLabel: { color: '#71717A', fontSize: 10, interval: 4 },
+          axisTick: { show: false },
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: { show: false },
+          axisLabel: { color: '#71717A', fontSize: 10, formatter: v => (v/10000).toFixed(0) + '万' },
+          splitLine: { lineStyle: { color: '#F4F4F5', type: 'dashed' } },
+        },
+        series: [{
+          type: 'bar',
+          data: data,
+          itemStyle: { borderRadius: [4, 4, 0, 0] },
+          barWidth: '60%',
+        }],
+      });
+      window.addEventListener('resize', () => chart.resize());
+    });
+  </script>
+</body>
+</html>

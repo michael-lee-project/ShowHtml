@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数据对账 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .consumption-page { --mode-color: var(--green-600); }
+
+    /* 顶部说明 banner */
+    .info-banner {
+      padding: var(--space-4) var(--space-5);
+      background: var(--green-50);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .info-banner-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: var(--green-200);
+      color: var(--green-700);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .info-banner-text {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+    .info-banner-text strong { color: var(--green-700); font-weight: var(--weight-semibold); }
+
+    /* KPI 4 件套 */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    @media (max-width: 1023px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+    .kpi-card {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .kpi-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-2);
+    }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    .kpi-card.good .kpi-value { color: var(--green-700); }
+    .kpi-card.warn .kpi-value { color: #B45309; }
+    .kpi-meta { font-size: var(--text-xs); color: var(--text-tertiary); }
+
+    /* 面板 */
+    .panel {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .panel-title { font-size: var(--text-base); font-weight: var(--weight-semibold); }
+    .panel-sub { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+
+    /* 对账表 */
+    .recon-table { width: 100%; border-collapse: collapse; }
+    .recon-table th {
+      text-align: left;
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      background: var(--bg-muted);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .recon-table td {
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+      border-bottom: 1px solid var(--border-muted);
+      font-family: var(--font-mono);
+    }
+    .recon-date { color: var(--text-primary); font-weight: var(--weight-medium); }
+    .recon-amount { color: var(--text-primary); }
+    .recon-diff {
+      font-weight: var(--weight-semibold);
+    }
+    .recon-diff.zero { color: var(--text-tertiary); }
+    .recon-diff.diff { color: #B45309; background: #FEF7E6; padding: 2px 6px; border-radius: var(--radius-sm); display: inline-block; }
+    .recon-status {
+      display: inline-block;
+      font-size: var(--text-xs);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      font-weight: var(--weight-medium);
+      font-family: var(--font-sans);
+    }
+    .recon-status.match { background: var(--green-50); color: var(--green-700); }
+    .recon-status.diff { background: #FEF7E6; color: #B45309; }
+    .recon-status.appealing { background: #DBEAFE; color: #1E40AF; }
+
+    /* 两栏 split */
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    @media (max-width: 1023px) { .split-grid { grid-template-columns: 1fr; } }
+    .diff-card {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .diff-card-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .diff-row {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-muted);
+      font-size: var(--text-sm);
+    }
+    .diff-row:last-child { border-bottom: 0; }
+    .diff-key { color: var(--text-tertiary); }
+    .diff-val { color: var(--text-primary); font-weight: var(--weight-medium); font-family: var(--font-mono); }
+
+    /* ===== 申诉弹窗专属样式 ===== */
+    .appeal-type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+    }
+    .appeal-type-option {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .appeal-type-option:has(input:checked) {
+      border-color: var(--mode-color);
+      background: rgba(37, 99, 235, 0.04);
+    }
+    .appeal-type-option:hover { border-color: var(--text-secondary); }
+    .appeal-type-option input[type="radio"] {
+      margin-top: 4px;
+      accent-color: var(--mode-color);
+    }
+    .appeal-type-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+    .appeal-type-desc {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    .contact-options {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    .contact-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .contact-option:has(input:checked) {
+      border-color: var(--mode-color);
+      background: rgba(37, 99, 235, 0.04);
+    }
+    .contact-option:hover { border-color: var(--text-secondary); }
+    .contact-option input[type="radio"] { accent-color: var(--mode-color); margin: 0; }
+    .contact-tag {
+      display: inline-block;
+      padding: 1px 6px;
+      background: var(--green-700);
+      color: white;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: var(--weight-bold);
+    }
+  </style>
+</head>
+<body class="consumption-page">
+  <div class="app-layout">
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">▦</span><span>工作台</span></a>
+        <a href="onboarding.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">○</span><span>入驻进度</span></a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">◐</span><span>模式状态</span></a>
+        <a href="mode-consumption.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">火</span><span>星火养成</span></a>
+        <a href="mode-commission.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">润</span><span>星火燎原</span></a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">⚙</span><span>核心参数</span></a>
+        <a href="settlement.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">¥</span><span>结算单</span></a>
+        <a href="reconciliation.html" class="app-sidebar-item active"><span class="app-sidebar-item-icon">⇄</span><span>数据对账</span></a>
+        <a href="data-analytics.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">▤</span><span>数据分析</span></a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">⚇</span><span>账户设置</span></a>
+        <a href="../website/index.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">↗</span><span>返回官网</span></a>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">数据对账</h1>
+          <span class="app-topbar-mode blaze">
+            <span class="mode-dot"></span>
+            平台数据 · 脱敏同步
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-ghost btn-sm">下载脱敏数据</button>
+          <button class="btn btn-primary btn-sm" onclick="AppealModal.open()">提交申诉</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="info-banner">
+          <div class="info-banner-icon">⇄</div>
+          <div class="info-banner-text">
+            <strong>脱敏同步规则：</strong>为保护平台和商户双方数据隐私,平台每日同步给我的数据 <strong>已经过脱敏处理</strong>(L2 等级)。
+            双方独立统计,允许 <strong>≤0.5%</strong> 的自然差异(数据上报时差导致)。超过此阈值可提交申诉。
+          </div>
+        </div>
+
+        <div class="kpi-strip">
+          <div class="kpi-card good">
+            <div class="kpi-label">本月一致率</div>
+            <div class="kpi-value">98.7%</div>
+            <div class="kpi-meta">20 天一致 / 23 天</div>
+          </div>
+          <div class="kpi-card warn">
+            <div class="kpi-label">差异天数</div>
+            <div class="kpi-value">1</div>
+            <div class="kpi-meta">6/22 差异率 0.8%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">累计差异金额</div>
+            <div class="kpi-value">¥3,247</div>
+            <div class="kpi-meta">本月累计</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">申诉处理中</div>
+            <div class="kpi-value">1</div>
+            <div class="kpi-meta">预计 3 日内回复</div>
+          </div>
+        </div>
+
+        <!-- 差异详情卡 -->
+        <div class="split-grid">
+          <div class="diff-card">
+            <div class="diff-card-title">
+              <span>6/22 差异详情</span>
+              <span class="recon-status diff">差异 0.8%</span>
+            </div>
+            <div class="diff-row">
+              <span class="diff-key">我方上报流水</span>
+              <span class="diff-val">¥405,832.50</span>
+            </div>
+            <div class="diff-row">
+              <span class="diff-key">平台同步流水</span>
+              <span class="diff-val">¥409,080.00</span>
+            </div>
+            <div class="diff-row">
+              <span class="diff-key">差异金额</span>
+              <span class="diff-val" style="color: #B45309;">+¥3,247.50</span>
+            </div>
+            <div class="diff-row">
+              <span class="diff-key">差异率</span>
+              <span class="diff-val" style="color: #B45309;">0.80%</span>
+            </div>
+            <div class="diff-row">
+              <span class="diff-key">阈值</span>
+              <span class="diff-val">0.50%</span>
+            </div>
+            <div class="diff-row">
+              <span class="diff-key">申诉状态</span>
+              <span class="recon-status appealing">处理中</span>
+            </div>
+            <div style="margin-top: var(--space-4); padding: var(--space-3); background: var(--bg-muted); border-radius: var(--radius-md); font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed);">
+              <strong style="color: var(--text-primary);">可能原因：</strong>6/22 22:30 平台侧服务重启,导致 18:00-22:00 部分对局流水未及时同步。已提交申诉,平台正在补录数据。
+            </div>
+          </div>
+
+          <div class="diff-card">
+            <div class="diff-card-title">
+              <span>申诉记录</span>
+              <span style="font-size: var(--text-xs); color: var(--text-tertiary);">最近 3 条</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+              <div style="padding: var(--space-3); background: var(--bg-muted); border-radius: var(--radius-md);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold);">#A20260623001</span>
+                  <span class="recon-status appealing">处理中</span>
+                </div>
+                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">6/23 09:30 提交 · 6/22 差异</div>
+                <div style="font-size: var(--text-sm); color: var(--text-secondary);">平台侧服务重启导致部分流水未及时同步</div>
+              </div>
+              <div style="padding: var(--space-3); background: var(--bg-muted); border-radius: var(--radius-md);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold);">#A20260516003</span>
+                  <span class="recon-status match">已解决</span>
+                </div>
+                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">5/16 提交 · 5/15 差异</div>
+                <div style="font-size: var(--text-sm); color: var(--text-secondary);">数据上报时差 · 平台已补录,无需调整</div>
+              </div>
+              <div style="padding: var(--space-3); background: var(--bg-muted); border-radius: var(--radius-md);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold);">#A20260420007</span>
+                  <span class="recon-status match">已驳回</span>
+                </div>
+                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">4/20 提交 · 4/19 差异</div>
+                <div style="font-size: var(--text-sm); color: var(--text-secondary);">差异在阈值内,申诉不成立</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">本月每日对账</h3>
+              <div class="panel-sub">最近 7 天 · 平台脱敏数据 vs 我方数据</div>
+            </div>
+          </div>
+          <table class="recon-table">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>我方流水</th>
+                <th>平台流水</th>
+                <th>差异</th>
+                <th>差异率</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="recon-date">2026-06-23</td>
+                <td class="recon-amount">¥98,420.00</td>
+                <td class="recon-amount">¥98,420.00</td>
+                <td class="recon-diff zero">¥0.00</td>
+                <td class="recon-diff zero">0.00%</td>
+                <td><span class="recon-status match">一致</span></td>
+              </tr>
+              <tr>
+                <td class="recon-date">2026-06-22</td>
+                <td class="recon-amount">¥405,832.50</td>
+                <td class="recon-amount">¥409,080.00</td>
+                <td class="recon-diff diff">+¥3,247.50</td>
+                <td class="recon-diff diff">0.80%</td>
+                <td><span class="recon-status diff">差异</span></td>
+              </tr>
+              <tr>
+                <td class="recon-date">2026-06-21</td>
+                <td class="recon-amount">¥182,940.00</td>
+                <td class="recon-amount">¥182,940.00</td>
+                <td class="recon-diff zero">¥0.00</td>
+                <td class="recon-diff zero">0.00%</td>
+                <td><span class="recon-status match">一致</span></td>
+              </tr>
+              <tr>
+                <td class="recon-date">2026-06-20</td>
+                <td class="recon-amount">¥168,520.00</td>
+                <td class="recon-amount">¥168,520.00</td>
+                <td class="recon-diff zero">¥0.00</td>
+                <td class="recon-diff zero">0.00%</td>
+                <td><span class="recon-status match">一致</span></td>
+              </tr>
+              <tr>
+                <td class="recon-date">2026-06-19</td>
+                <td class="recon-amount">¥194,820.00</td>
+                <td class="recon-amount">¥194,820.00</td>
+                <td class="recon-diff zero">¥0.00</td>
+                <td class="recon-diff zero">0.00%</td>
+                <td><span class="recon-status match">一致</span></td>
+              </tr>
+              <tr>
+                <td class="recon-date">2026-06-18</td>
+                <td class="recon-amount">¥178,440.00</td>
+                <td class="recon-amount">¥178,440.00</td>
+                <td class="recon-diff zero">¥0.00</td>
+                <td class="recon-diff zero">0.00%</td>
+                <td><span class="recon-status match">一致</span></td>
+              </tr>
+              <tr>
+                <td class="recon-date">2026-06-17</td>
+                <td class="recon-amount">¥145,380.00</td>
+                <td class="recon-amount">¥145,940.00</td>
+                <td class="recon-diff diff">+¥560.00</td>
+                <td class="recon-diff diff">0.38%</td>
+                <td><span class="recon-status match">阈值内</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== 提交申诉弹窗 ===== -->
+  <div class="modal-overlay" id="appeal-modal">
+    <div class="modal" style="max-width: 720px;" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">提交申诉</div>
+          <div class="modal-sub">对账数据差异申诉 · 平台 1-3 工作日内反馈</div>
+        </div>
+        <button class="modal-close" onclick="AppealModal.close()" aria-label="关闭">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 顶部提示 -->
+        <div class="alert alert-info" style="margin-bottom: var(--space-5);">
+          <span class="alert-icon">ⓘ</span>
+          <div>
+            阈值 <strong>0.5%</strong> 以上的差异可提交申诉。提交后请等待平台核查（1-3 工作日），期间可查看申诉进度。
+          </div>
+        </div>
+
+        <!-- 对账周期 -->
+        <div class="form-field" style="margin-bottom: var(--space-4);">
+          <label class="form-label">对账周期 <span class="required">*</span></label>
+          <select class="form-select">
+            <option>2026-06（6 月）· 当前周期</option>
+            <option>2026-05（5 月）</option>
+            <option>2026-04（4 月）</option>
+            <option>2026-03（3 月）</option>
+          </select>
+        </div>
+
+        <!-- 申诉类型 -->
+        <div class="form-field" style="margin-bottom: var(--space-4);">
+          <label class="form-label">申诉类型 <span class="required">*</span></label>
+          <div class="appeal-type-grid">
+            <label class="appeal-type-option">
+              <input type="radio" name="appeal-type" value="missing" checked />
+              <div class="appeal-type-content">
+                <div class="appeal-type-name">数据未同步</div>
+                <div class="appeal-type-desc">平台侧流水缺失 / 延迟</div>
+              </div>
+            </label>
+            <label class="appeal-type-option">
+              <input type="radio" name="appeal-type" value="mismatch" />
+              <div class="appeal-type-content">
+                <div class="appeal-type-name">数值不符</div>
+                <div class="appeal-type-desc">我方与平台数据不一致</div>
+              </div>
+            </label>
+            <label class="appeal-type-option">
+              <input type="radio" name="appeal-type" value="duplicate" />
+              <div class="appeal-type-content">
+                <div class="appeal-type-name">重复流水</div>
+                <div class="appeal-type-desc">同一笔交易被多次记录</div>
+              </div>
+            </label>
+            <label class="appeal-type-option">
+              <input type="radio" name="appeal-type" value="other" />
+              <div class="appeal-type-content">
+                <div class="appeal-type-name">其他</div>
+                <div class="appeal-type-desc">其他类型异常</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 涉及流水范围 -->
+        <div class="form-row cols-2" style="margin-bottom: var(--space-4);">
+          <div class="form-field">
+            <label class="form-label">涉及起期 <span class="required">*</span></label>
+            <input type="date" class="form-input" value="2026-06-18" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">涉及止期 <span class="required">*</span></label>
+            <input type="date" class="form-input" value="2026-06-22" />
+          </div>
+        </div>
+
+        <!-- 涉及流水总金额 -->
+        <div class="form-field" style="margin-bottom: var(--space-4);">
+          <label class="form-label">涉及流水总金额（我方统计）<span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="如：¥18,560.00" value="¥18,560.00" />
+          <span class="form-hint">平台侧同期数据为 <strong style="color: var(--text-primary);">¥18,000.00</strong>，差异 <strong style="color: var(--red-700);">¥560.00（3.11%）</strong>，超过 0.5% 阈值</span>
+        </div>
+
+        <!-- 详细描述 -->
+        <div class="form-field" style="margin-bottom: var(--space-4);">
+          <label class="form-label">详细描述 <span class="required">*</span></label>
+          <textarea class="form-textarea" rows="4" placeholder="请详细描述问题，包括：
+· 涉及哪些时间段的交易
+· 您认为可能的原因
+· 您期望的处理结果">6/22 22:30 平台侧服务重启，导致 18:00-22:00 部分对局流水未及时同步。我方后台显示该时段共 87 笔交易，平台侧仅同步 73 笔，缺失 14 笔（约 ¥1,840）。请核查并补录缺失数据。</textarea>
+        </div>
+
+        <!-- 证据材料 -->
+        <div class="form-field" style="margin-bottom: var(--space-4);">
+          <label class="form-label">
+            证据材料 <span class="optional">选填</span>
+          </label>
+          <div class="upload-zone" style="padding: var(--space-5);">
+            <div class="upload-zone-icon">📎</div>
+            <div class="upload-zone-title">上传证据材料</div>
+            <div class="upload-zone-hint">
+              <span class="constraint">PDF</span>
+              <span class="constraint">JPG/PNG</span>
+              <span class="constraint">XLSX</span>
+              最多 5 份，单份 ≤ 10 MB
+            </div>
+            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.xlsx" />
+          </div>
+          <span class="form-hint">建议提供：我方后台截图、流水明细、双方数据对比表</span>
+        </div>
+
+        <!-- 联系方式 -->
+        <div class="form-field" style="margin-bottom: var(--space-4);">
+          <label class="form-label">期望联系方式 <span class="required">*</span></label>
+          <div class="contact-options">
+            <label class="contact-option">
+              <input type="radio" name="contact-way" value="umakex" checked />
+              <span>UmakeX 即时</span>
+              <span class="contact-tag">推荐</span>
+            </label>
+            <label class="contact-option">
+              <input type="radio" name="contact-way" value="phone" />
+              <span>电话回访</span>
+            </label>
+            <label class="contact-option">
+              <input type="radio" name="contact-way" value="email" />
+              <span>邮件通知</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 协议 -->
+        <label style="display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer; padding: var(--space-3); background: var(--bg-subtle); border-radius: var(--radius-md);">
+          <input type="checkbox" id="appeal-agreement" checked style="margin-top: 4px;" />
+          <span style="font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">
+            我承诺所提交的申诉内容真实有效，并接受平台对差异进行独立核查。<br/>
+            同一笔流水 <strong>30 天内仅可申诉 1 次</strong>，恶意申诉将影响商户信用。
+          </span>
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">
+          提交后将自动进入审核队列 · 平台 1-3 工作日内反馈
+        </span>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="btn btn-ghost btn-sm" onclick="AppealModal.close()">取消</button>
+          <button class="btn btn-primary btn-sm" onclick="AppealModal.submit()">提交申诉</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/js/shared.js"></script>
+  <script>
+    // ============ 提交申诉弹窗 ============
+    window.AppealModal = {
+      open() {
+        const modal = document.getElementById('appeal-modal');
+        if (modal) modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      },
+      close() {
+        const modal = document.getElementById('appeal-modal');
+        if (modal) modal.classList.remove('open');
+        document.body.style.overflow = '';
+      },
+      submit() {
+        const checkbox = document.getElementById('appeal-agreement');
+        if (!checkbox || !checkbox.checked) {
+          alert('请先勾选申诉承诺');
+          return;
+        }
+        // 模拟提交成功：关闭弹窗
+        this.close();
+        // 实际接入后跳到申诉详情页
+        console.log('[Appeal] submitted');
+      },
+    };
+
+    // 点遮罩关闭 + ESC 关闭
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('appeal-modal');
+      if (modal && e.target === modal) AppealModal.close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') AppealModal.close();
+    });
+  </script>
+</body>
+</html>

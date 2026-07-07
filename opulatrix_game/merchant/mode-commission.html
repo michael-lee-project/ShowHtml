@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>星火燎原 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <link rel="stylesheet" href="../shared/css/water-gauge.css">
+  <style>
+    /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5
+     * Macrostructure: Stat-Led · theme: blaze-mode(green) · genre: modern-minimal
+     */
+
+    /* ===== 段二 blaze 主题主色变量覆盖 ===== */
+    .consumption-page {
+      --mode-color: var(--green-600);
+      --mode-color-light: var(--green-500);
+      --mode-color-bg: var(--green-50);
+      --mode-color-border: var(--green-200);
+    }
+
+    /* ===== 顶部模式卡（段二 blaze 绿色） ===== */
+    .mode-hero.blaze {
+      padding: var(--space-8) var(--space-8);
+      border-radius: var(--radius-2xl);
+      margin-bottom: var(--space-6);
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(22, 163, 74, 0.10), transparent),
+        radial-gradient(ellipse 60% 80% at 100% 50%, rgba(22, 163, 74, 0.04), transparent),
+        linear-gradient(135deg, #F0FDF4, white 60%);
+      border: 1px solid var(--green-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    @media (max-width: 767px) { .mode-hero-grid { grid-template-columns: 1fr; } }
+
+    .mode-hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: var(--weight-semibold);
+      color: var(--green-700);
+      margin-bottom: var(--space-3);
+    }
+
+    .mode-hero-title {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      color: var(--green-700);
+      margin-bottom: var(--space-2);
+    }
+    @media (min-width: 768px) {
+      .mode-hero-title { font-size: var(--text-5xl); }
+    }
+
+    .mode-hero-sub {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+      max-width: 60ch;
+    }
+
+    .mode-hero-stat {
+      text-align: right;
+    }
+    @media (max-width: 767px) { .mode-hero-stat { text-align: left; } }
+    .mode-hero-stat-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+      margin-bottom: var(--space-2);
+    }
+    .mode-hero-stat-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-6xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--green-700);
+    }
+    .mode-hero-stat-meta {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+      margin-top: var(--space-2);
+    }
+
+    /* ===== KPI 4 件套 ===== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    @media (max-width: 1023px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .kpi-grid { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .kpi-card.blaze {
+      background: var(--green-50);
+      border-color: var(--green-border);
+    }
+    .kpi-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+    .kpi-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+    }
+    .kpi-card.blaze .kpi-label { color: var(--green-700); }
+    .kpi-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+    }
+    .kpi-card.blaze .kpi-icon { background: var(--green-200); color: var(--green-700); }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    .kpi-card.blaze .kpi-value { color: var(--green-700); }
+    .kpi-meta { font-size: var(--text-xs); color: var(--text-tertiary); }
+    .kpi-card.blaze .kpi-meta { color: var(--green-700); opacity: 0.75; }
+    .kpi-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+    }
+    .kpi-trend.up { color: var(--green-600); }
+
+    /* ===== 进度池（段二专属） ===== */
+    .progress-pool {
+      position: relative;
+      width: 100%;
+      height: 64px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-muted);
+      overflow: visible;
+      border: 1px solid var(--border-default);
+      box-shadow: inset 0 1px 2px rgba(24, 24, 27, 0.04);
+    }
+    .progress-pool-segments {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+    .progress-segment {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+    .progress-segment.blaze-bg {
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #F0FDF4 0%, #BBF7D0 70%, #86EFAC 100%);
+    }
+    .progress-pool-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      background: linear-gradient(90deg, #86EFAC 0%, #16A34A 100%);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 0 20px rgba(22, 163, 74, 0.3);
+    }
+    .progress-target-line {
+      position: absolute;
+      top: -8px;
+      bottom: -8px;
+      right: 0;
+      width: 2px;
+      background: var(--text-primary);
+      z-index: 3;
+    }
+    .progress-target-label {
+      position: absolute;
+      bottom: -22px;
+      right: 0;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+      transform: translateX(50%);
+    }
+    .progress-current-marker {
+      position: absolute;
+      top: -8px;
+      width: 16px;
+      height: 16px;
+      background: var(--green-600);
+      border: 3px solid white;
+      border-radius: 50%;
+      box-shadow: var(--shadow-md);
+      transform: translateX(-50%);
+    }
+    .progress-current-label {
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--green-600);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      white-space: nowrap;
+    }
+    .progress-current-label::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: var(--green-600);
+    }
+
+    /* ===== 主区两栏 ===== */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    @media (max-width: 1023px) { .main-grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .panel-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+    }
+    .panel-sub {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .panel-link {
+      font-size: var(--text-sm);
+      color: var(--green-700);
+      text-decoration: none;
+      font-weight: var(--weight-medium);
+    }
+    .panel-link:hover { text-decoration: underline; }
+
+    /* ===== 6月历史对比柱状（special 横向布局） ===== */
+    .history-bars {
+      display: flex;
+      align-items: stretch;
+      gap: var(--space-2);
+      height: 220px;
+      padding: var(--space-2) 0 0;
+    }
+    .history-bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      position: relative;
+    }
+    .history-bar-track {
+      width: 100%;
+      flex: 1;
+      background: var(--bg-muted);
+      border-radius: var(--radius-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .history-bar-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, #86EFAC, #16A34A);
+      border-radius: var(--radius-sm);
+      transition: height 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .history-bar-col.current .history-bar-fill {
+      background: linear-gradient(180deg, #FCD34D, #F59E0B);
+    }
+    .history-bar-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      color: var(--text-secondary);
+    }
+    .history-bar-col.current .history-bar-value { color: var(--green-700); }
+    .history-bar-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-weight: var(--weight-medium);
+    }
+    .history-bar-col.current .history-bar-label { color: var(--green-700); font-weight: var(--weight-semibold); }
+
+    /* ===== 分润构成（special 横向条） ===== */
+    .composition-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+    .composition-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .composition-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .composition-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+    }
+    .composition-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .composition-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+    .composition-bar-track {
+      width: 100%;
+      height: 12px;
+      background: var(--bg-muted);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+    .composition-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+    .composition-bar-fill.vic {
+      width: 70%;
+      background: linear-gradient(90deg, #FCD34D, #F59E0B);
+    }
+    .composition-bar-fill.flow {
+      width: 25%;
+      background: linear-gradient(90deg, #86EFAC, #16A34A);
+    }
+    .composition-bar-fill.bonus {
+      width: 5%;
+      background: linear-gradient(90deg, #93C5FD, #2563EB);
+    }
+    .composition-bar-percent {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+
+    /* ===== 结算倒计时 banner ===== */
+    .settlement-banner {
+      padding: var(--space-5) var(--space-6);
+      background:
+        radial-gradient(ellipse 60% 100% at 100% 50%, rgba(22, 163, 74, 0.08), transparent),
+        linear-gradient(135deg, #F0FDF4, white 50%);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+    }
+    .settlement-countdown {
+      display: flex;
+      gap: var(--space-3);
+    }
+    .countdown-block {
+      background: white;
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      text-align: center;
+      min-width: 64px;
+    }
+    .countdown-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      color: var(--green-700);
+      line-height: 1;
+    }
+    .countdown-unit {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: var(--space-1);
+    }
+    .settlement-text {
+      flex: 1;
+    }
+    .settlement-text-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      color: var(--green-700);
+      margin-bottom: var(--space-1);
+    }
+    .settlement-text-sub {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+
+    /* ===== ECharts 容器 ===== */
+    .chart-container {
+      width: 100%;
+      height: 260px;
+    }
+  </style>
+</head>
+<body class="consumption-page">
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">星火燎原</h1>
+          <span class="app-topbar-mode blaze">
+            <span class="mode-dot"></span>
+            星火燎原期 · 段二 · 进行中
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-ghost btn-sm">刷新</button>
+          <button class="btn btn-outline btn-sm">申请提现</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- 模式 hero -->
+        <div class="mode-hero blaze">
+          <div class="mode-hero-grid">
+            <div>
+              <div class="mode-hero-eyebrow">CURRENT PHASE · 02 BLAZE</div>
+              <h2 class="mode-hero-title">星火燎原期</h2>
+              <p class="mode-hero-sub">基于流水的分润已启动,按规则每月底自动结算到平台钱包,可申请提现至对公账户。</p>
+            </div>
+            <div class="mode-hero-stat">
+              <div class="mode-hero-stat-label">本月已分润</div>
+              <div class="mode-hero-stat-value">¥42,800</div>
+              <div class="mode-hero-stat-meta">日均 ¥3,050 · 较上月同期 +12.4%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card blaze">
+            <div class="kpi-head">
+              <span class="kpi-label">本月已分润</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">42,800</div>
+            <div class="kpi-meta">较上月 +18.2%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">日均分润</span>
+              <span class="kpi-icon">↗</span>
+            </div>
+            <div class="kpi-value">3,050</div>
+            <div class="kpi-meta">日均 · 较上周 +12.4%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">分润比例</span>
+              <span class="kpi-icon">%</span>
+            </div>
+            <div class="kpi-value">8.5%</div>
+            <div class="kpi-meta">按本档次规则</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">月底结算倒计时</span>
+              <span class="kpi-icon">○</span>
+            </div>
+            <div class="kpi-value">8 天</div>
+            <div class="kpi-meta">6/30 23:59 自动结算</div>
+          </div>
+        </div>
+
+        <!-- 月度结算进度 -->
+        <div class="panel" style="margin-bottom: var(--space-6);">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">月度结算进度</h3>
+              <div class="panel-sub">6/30 月底自动结算,所有数据可在「结算单」查看明细</div>
+            </div>
+            <span class="badge badge-mode-2"><span class="badge-dot"></span>段二 · 燎原期</span>
+          </div>
+
+          <div style="padding: var(--space-6) 0;">
+            <div class="progress-pool">
+              <div class="progress-pool-segments">
+                <div class="progress-segment blaze-bg"></div>
+              </div>
+              <div class="progress-pool-fill" data-target-width="74"></div>
+              <div class="progress-target-line"></div>
+              <div class="progress-target-label">结算日 6/30</div>
+              <div class="progress-current-marker" style="left: 74%;">
+                <div class="progress-current-label">6/23 (已 23 天)</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); margin-top: var(--space-3);">
+            <span>6/1</span>
+            <span>6/8</span>
+            <span>6/15</span>
+            <span>6/23</span>
+            <span>6/30</span>
+          </div>
+        </div>
+
+        <!-- 主区两栏：14天曲线 + 分润构成 -->
+        <div class="main-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">近 14 天每日分润</h3>
+                <div class="panel-sub">按日累计分润金额 · 绿色为段二已开启</div>
+              </div>
+            </div>
+            <div id="trend-chart" class="chart-container"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">分润构成</h3>
+                <div class="panel-sub">本月分润由三部分组成</div>
+              </div>
+            </div>
+            <div class="composition-list">
+              <div class="composition-item">
+                <div class="composition-head">
+                  <div class="composition-label">
+                    <span class="composition-dot" style="background: #F59E0B;"></span>
+                    流水分润
+                  </div>
+                  <div class="composition-value">¥29,960 <span class="composition-bar-percent">· 70%</span></div>
+                </div>
+                <div class="composition-bar-track">
+                  <div class="composition-bar-fill vic"></div>
+                </div>
+              </div>
+              <div class="composition-item">
+                <div class="composition-head">
+                  <div class="composition-label">
+                    <span class="composition-dot" style="background: var(--green-600);"></span>
+                    VIC 充值
+                  </div>
+                  <div class="composition-value">¥10,700 <span class="composition-bar-percent">· 25%</span></div>
+                </div>
+                <div class="composition-bar-track">
+                  <div class="composition-bar-fill flow"></div>
+                </div>
+              </div>
+              <div class="composition-item">
+                <div class="composition-head">
+                  <div class="composition-label">
+                    <span class="composition-dot" style="background: var(--blue-600);"></span>
+                    活动奖励
+                  </div>
+                  <div class="composition-value">¥2,140 <span class="composition-bar-percent">· 5%</span></div>
+                </div>
+                <div class="composition-bar-track">
+                  <div class="composition-bar-fill bonus"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6月历史对比 -->
+        <div class="panel" style="margin-bottom: var(--space-6);">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">近 6 月分润对比</h3>
+              <div class="panel-sub">仅展示已结算月份,本月数据为预估</div>
+            </div>
+            <a href="#" class="panel-link">下载明细 →</a>
+          </div>
+          <div class="history-bars">
+            <div class="history-bar-col">
+              <div class="history-bar-value">¥2.8万</div>
+              <div class="history-bar-track">
+                <div class="history-bar-fill" style="height: 65%;"></div>
+              </div>
+              <div class="history-bar-label">1月</div>
+            </div>
+            <div class="history-bar-col">
+              <div class="history-bar-value">¥3.2万</div>
+              <div class="history-bar-track">
+                <div class="history-bar-fill" style="height: 75%;"></div>
+              </div>
+              <div class="history-bar-label">2月</div>
+            </div>
+            <div class="history-bar-col">
+              <div class="history-bar-value">¥3.6万</div>
+              <div class="history-bar-track">
+                <div class="history-bar-fill" style="height: 84%;"></div>
+              </div>
+              <div class="history-bar-label">3月</div>
+            </div>
+            <div class="history-bar-col">
+              <div class="history-bar-value">¥3.4万</div>
+              <div class="history-bar-track">
+                <div class="history-bar-fill" style="height: 79%;"></div>
+              </div>
+              <div class="history-bar-label">4月</div>
+            </div>
+            <div class="history-bar-col">
+              <div class="history-bar-value">¥3.8万</div>
+              <div class="history-bar-track">
+                <div class="history-bar-fill" style="height: 89%;"></div>
+              </div>
+              <div class="history-bar-label">5月</div>
+            </div>
+            <div class="history-bar-col current">
+              <div class="history-bar-value">¥4.28万</div>
+              <div class="history-bar-track">
+                <div class="history-bar-fill" data-target-height="100" style="height: 0;"></div>
+              </div>
+              <div class="history-bar-label">6月(预估)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 月底结算倒计时 banner -->
+        <div class="settlement-banner">
+          <div class="settlement-countdown">
+            <div class="countdown-block">
+              <div class="countdown-num">08</div>
+              <div class="countdown-unit">天</div>
+            </div>
+            <div class="countdown-block">
+              <div class="countdown-num">14</div>
+              <div class="countdown-unit">时</div>
+            </div>
+            <div class="countdown-block">
+              <div class="countdown-num">27</div>
+              <div class="countdown-unit">分</div>
+            </div>
+          </div>
+          <div class="settlement-text">
+            <div class="settlement-text-title">距月底自动结算还有 8 天 14 时</div>
+            <div class="settlement-text-sub">预计结算金额 <strong style="color: var(--green-700);">¥42,800</strong>,结算后可在「结算单」查看并申请提现到对公账户。</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../shared/js/mock-data.js"></script>
+  <script src="../shared/js/shared.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 进度池填充动画
+      const fill = document.querySelector('.progress-pool-fill');
+      if (fill) {
+        const targetWidth = fill.dataset.targetWidth;
+        requestAnimationFrame(() => {
+          fill.style.transition = 'width 1.4s cubic-bezier(0.16, 1, 0.3, 1)';
+          fill.style.width = targetWidth + '%';
+        });
+      }
+
+      // 6月历史柱状图动画
+      const currentBar = document.querySelector('.history-bar-col.current .history-bar-fill');
+      if (currentBar) {
+        const targetHeight = currentBar.dataset.targetHeight;
+        requestAnimationFrame(() => {
+          currentBar.style.height = targetHeight + '%';
+        });
+      }
+
+      // ECharts 14天分润曲线
+      const chart = echarts.init(document.getElementById('trend-chart'));
+      const data = [];
+      const dates = [];
+      for (let i = 1; i <= 14; i++) {
+        const isWeekend = [0, 6].includes((i - 1) % 7);
+        const base = 2200 + Math.random() * 1200;
+        const value = Math.round(base * (isWeekend ? 1.4 : 1.0));
+        data.push(value);
+        dates.push(`${6 + i}日`);
+      }
+      chart.setOption({
+        grid: { top: 20, right: 20, bottom: 30, left: 60 },
+        tooltip: { trigger: 'axis', valueFormatter: v => '¥' + v.toLocaleString() },
+        xAxis: {
+          type: 'category',
+          data: dates,
+          axisLine: { lineStyle: { color: '#E4E4E7' } },
+          axisLabel: { color: '#71717A', fontSize: 10 },
+          axisTick: { show: false },
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: { show: false },
+          axisLabel: { color: '#71717A', fontSize: 10, formatter: v => '¥' + v },
+          splitLine: { lineStyle: { color: '#F4F4F5', type: 'dashed' } },
+        },
+        series: [{
+          type: 'line',
+          smooth: true,
+          data: data,
+          symbol: 'circle',
+          symbolSize: 6,
+          itemStyle: { color: '#16A34A' },
+          lineStyle: { color: '#16A34A', width: 2.5 },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(22, 163, 74, 0.25)' },
+              { offset: 1, color: 'rgba(22, 163, 74, 0.02)' },
+            ]),
+          },
+        }],
+      });
+      window.addEventListener('resize', () => chart.resize());
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>账户设置 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    .account-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 1023px) { .account-layout { grid-template-columns: 1fr; } }
+
+    .subnav {
+      padding: var(--space-3);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      height: fit-content;
+    }
+    .subnav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-3);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .subnav-item:hover { background: var(--bg-muted); }
+    .subnav-item.active { background: var(--text-primary); color: white; font-weight: var(--weight-semibold); }
+    .subnav-item .icon { width: 18px; text-align: center; }
+
+    .content-panel {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .content-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .content-title { font-size: var(--text-lg); font-weight: var(--weight-semibold); }
+    .content-sub { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+
+    .form-section {
+      margin-bottom: var(--space-6);
+    }
+    .form-section:last-child { margin-bottom: 0; }
+    .form-section-title {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-3);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3) var(--space-4);
+    }
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-label {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      background: white;
+    }
+    .form-input:read-only { background: var(--bg-muted); color: var(--text-secondary); cursor: not-allowed; }
+    .form-hint {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: flex-end;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--border-muted);
+      margin-top: var(--space-4);
+    }
+
+    /* Avatar */
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-5);
+    }
+    .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563EB, #7C3AED);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: var(--weight-bold);
+    }
+    .avatar-info { flex: 1; }
+    .avatar-name { font-size: var(--text-base); font-weight: var(--weight-semibold); }
+    .avatar-meta { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; font-family: var(--font-mono); }
+
+    /* ===== 二级页面切换 ===== */
+    .subnav-item { cursor: pointer; }
+
+    /* ===== 资质信息 ===== */
+    .qualification-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .qual-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+    }
+    .qual-icon {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .qual-icon.pdf { background: #FEE2E2; color: #B91C1C; }
+    .qual-icon.image { background: #DBEAFE; color: #1D4ED8; }
+    .qual-icon.empty { background: var(--bg-muted); color: var(--text-tertiary); border: 2px dashed var(--border-default); font-size: 18px; }
+    .qual-info { flex: 1; min-width: 0; }
+    .qual-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-primary); }
+    .qual-meta { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .qual-status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+    }
+    .qual-status.passed { background: #D1FAE5; color: #065F46; }
+    .qual-status.pending { background: var(--bg-muted); color: var(--text-tertiary); }
+    .qual-action {
+      padding: 4px 12px;
+      border: 1px solid var(--border-default);
+      background: var(--bg-base);
+      border-radius: var(--radius-md);
+      font-size: var(--text-xs);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      background: transparent;
+    }
+    .qual-action:hover { background: var(--bg-muted); }
+
+    /* ===== 对公账户 ===== */
+    .bank-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      background: linear-gradient(135deg, #EFF6FF, white);
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius-lg);
+    }
+    .bank-card-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #2563EB, #1E40AF);
+      color: white;
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .bank-card-info { flex: 1; min-width: 0; }
+    .bank-card-name {
+      font-family: var(--font-mono);
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+    }
+    .bank-card-meta { font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px; }
+    .bank-card-tags { display: flex; gap: 6px; margin-top: var(--space-2); }
+    .bank-tag {
+      display: inline-block;
+      padding: 1px 8px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .bank-table, .login-table, .notif-table, .api-history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+    .bank-table th, .login-table th, .notif-table th, .api-history-table th {
+      text-align: left;
+      padding: var(--space-3);
+      background: var(--bg-subtle);
+      color: var(--text-tertiary);
+      font-weight: var(--weight-medium);
+      font-size: var(--text-xs);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .bank-table td, .login-table td, .notif-table td, .api-history-table td {
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .bank-table tr:last-child td, .login-table tr:last-child td, .notif-table tr:last-child td, .api-history-table tr:last-child td { border-bottom: 0; }
+    .bank-table .num { font-family: var(--font-mono); text-align: right; }
+
+    /* ===== 安全设置 ===== */
+    .security-overall {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 6px 14px;
+      background: #D1FAE5;
+      border-radius: var(--radius-pill);
+    }
+    .security-overall-label { font-size: var(--text-xs); color: #065F46; }
+    .security-overall-val { font-size: var(--text-sm); font-weight: var(--weight-bold); color: #065F46; }
+    .security-overall-val.high::before { content: '● '; color: var(--green-700); }
+
+    .security-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .security-item:last-child { border-bottom: 0; }
+    .security-item-info { flex: 1; min-width: 0; }
+    .security-item-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-primary); }
+    .security-item-desc { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .security-status {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+    }
+    .security-status.passed { background: #D1FAE5; color: #065F46; }
+    .security-status.pending { background: var(--bg-muted); color: var(--text-tertiary); }
+
+    /* 开关 */
+    .switch { position: relative; display: inline-block; width: 36px; height: 20px; cursor: pointer; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border-default);
+      border-radius: 20px;
+      transition: 0.2s;
+    }
+    .switch-slider::before {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      left: 2px; top: 2px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .switch input:checked + .switch-slider { background: var(--green-700); }
+    .switch input:checked + .switch-slider::before { transform: translateX(16px); }
+
+    /* 设备列表 */
+    .device-list { display: flex; flex-direction: column; gap: var(--space-2); }
+    .device-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-subtle);
+      border-radius: var(--radius-md);
+    }
+    .device-icon { font-size: 24px; flex-shrink: 0; }
+    .device-info { flex: 1; min-width: 0; }
+    .device-name { font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .device-meta { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .device-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      background: var(--green-700);
+      color: white;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+    }
+    .device-action {
+      padding: 4px 12px;
+      border: 1px solid var(--border-default);
+      background: var(--bg-base);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+    }
+
+    /* ===== 消息通知 ===== */
+    .notif-channel, .notif-check { text-align: center; }
+    .notif-cat {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+    .notif-desc { font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px; }
+    .notif-check input[type="checkbox"] { accent-color: var(--mode-color); }
+
+    /* ===== API 密钥 ===== */
+    .api-key-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .api-key-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-muted);
+    }
+    .api-key-row:last-child { border-bottom: 0; background: var(--bg-base); }
+    .api-key-label {
+      width: 100px;
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .api-key-val {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      word-break: break-all;
+    }
+    .api-key-val.redacted { letter-spacing: 2px; color: var(--text-tertiary); }
+    .api-key-copy, .api-key-toggle {
+      padding: 4px 10px;
+      border: 1px solid var(--border-default);
+      background: var(--bg-base);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-family: var(--font-sans);
+    }
+    .api-key-copy:hover, .api-key-toggle:hover { background: var(--bg-muted); }
+
+    .api-key-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3) var(--space-6);
+      margin-top: var(--space-4);
+    }
+    .api-key-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .api-key-meta-label { font-size: var(--text-xs); color: var(--text-tertiary); }
+    .api-key-meta-val { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: var(--text-sm); color: var(--text-primary); }
+    .api-key-meta-val code {
+      padding: 2px 6px;
+      background: var(--bg-muted);
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+    .api-key-scope {
+      display: inline-block;
+      padding: 1px 8px;
+      background: #D1FAE5;
+      color: #065F46;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+    }
+    .api-key-scope.small { font-size: 10px; }
+    .api-key-add {
+      padding: 2px 8px;
+      border: 1px dashed var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .status-tag {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+    }
+    .status-tag.active { background: #D1FAE5; color: #065F46; }
+    .status-tag.revoked { background: var(--bg-muted); color: var(--text-tertiary); }
+    .api-history-link {
+      color: var(--text-tertiary);
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .api-history-link:hover { color: var(--mode-color); }
+
+    .api-doc-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+    }
+    .api-doc-link {
+      display: flex;
+      align-items: center;
+      padding: var(--space-3) var(--space-4);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      transition: all 0.15s;
+    }
+    .api-doc-link:hover {
+      background: var(--bg-muted);
+      border-color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">账户设置</h1>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-ghost btn-sm">返回</button>
+          <button class="btn btn-outline btn-sm">退出登录</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="account-layout">
+          <!-- 子导航 -->
+          <nav class="subnav" id="subnav">
+            <a class="subnav-item active" data-tab="profile"><span class="icon">⚇</span><span>个人信息</span></a>
+            <a class="subnav-item" data-tab="qualification"><span class="icon">▣</span><span>资质信息</span></a>
+            <a class="subnav-item" data-tab="banking"><span class="icon">¥</span><span>对公账户</span></a>
+            <a class="subnav-item" data-tab="security"><span class="icon">⚿</span><span>安全设置</span></a>
+            <a class="subnav-item" data-tab="notification"><span class="icon">✉</span><span>消息通知</span></a>
+            <a class="subnav-item" data-tab="api"><span class="icon">⎙</span><span>API 密钥</span></a>
+          </nav>
+
+          <!-- 内容区 -->
+          <div class="content-panel-wrap">
+            <!-- ============ 1. 个人信息 ============ -->
+            <div class="content-panel" data-panel="profile">
+              <div class="content-head">
+                <div>
+                  <div class="content-title">个人信息</div>
+                  <div class="content-sub">管理您的商户身份信息</div>
+                </div>
+              </div>
+
+              <div class="avatar-row">
+                <div class="avatar">陈</div>
+                <div class="avatar-info">
+                  <div class="avatar-name">陈经理</div>
+                  <div class="avatar-meta">M001 · 注册于 2026-06-15</div>
+                </div>
+                <button class="btn btn-outline btn-sm">更换头像</button>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">基本信息</div>
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label class="form-label">商户 ID</label>
+                    <input class="form-input" type="text" value="M001" readonly />
+                    <div class="form-hint">系统分配,不可修改</div>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">商户名</label>
+                    <input class="form-input" type="text" value="音浪对决" />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">联系人</label>
+                    <input class="form-input" type="text" value="陈经理" />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">职务</label>
+                    <input class="form-input" type="text" value="商务总监" />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">手机号</label>
+                    <input class="form-input" type="tel" value="138****4567" />
+                    <div class="form-hint">已验证</div>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">邮箱</label>
+                    <input class="form-input" type="email" value="chen@yinlang.tech" />
+                  </div>
+                  <div class="form-field full">
+                    <label class="form-label">公司地址</label>
+                    <input class="form-input" type="text" value="广东省深圳市南山区科技园 8 栋 12 楼" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">主体公司</div>
+                <div class="form-grid">
+                  <div class="form-field full">
+                    <label class="form-label">公司全称</label>
+                    <input class="form-input" type="text" value="音浪网络科技有限公司" readonly />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">统一社会信用代码</label>
+                    <input class="form-input" type="text" value="91440300****MA5DP" readonly />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">法人代表</label>
+                    <input class="form-input" type="text" value="王**" readonly />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">注册时间</label>
+                    <input class="form-input" type="text" value="2023-08-12" readonly />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">注册资本</label>
+                    <input class="form-input" type="text" value="¥500 万" readonly />
+                  </div>
+                </div>
+                <div class="form-hint" style="margin-top: var(--space-2); color: #B45309; background: #FEF7E6; padding: var(--space-2) var(--space-3); border-radius: var(--radius-md);">
+                  ⚠ 主体公司信息由工商系统同步,如需修改请联系运营
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn btn-ghost btn-sm">取消</button>
+                <button class="btn btn-primary btn-sm">保存修改</button>
+              </div>
+            </div>
+
+            <!-- ============ 2. 资质信息 ============ -->
+            <div class="content-panel" data-panel="qualification" style="display: none;">
+              <div class="content-head">
+                <div>
+                  <div class="content-title">资质信息</div>
+                  <div class="content-sub">管理商户资质文件、合规凭证</div>
+                </div>
+                <button class="btn btn-primary btn-sm">+ 上传新资质</button>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">主体资质</div>
+                <div class="qualification-list">
+                  <div class="qual-item">
+                    <div class="qual-icon pdf">PDF</div>
+                    <div class="qual-info">
+                      <div class="qual-name">营业执照副本</div>
+                      <div class="qual-meta">91440300****MA5DP · 长期有效 · 2.4 MB</div>
+                    </div>
+                    <span class="qual-status passed">已审核</span>
+                    <button class="qual-action">查看</button>
+                  </div>
+                  <div class="qual-item">
+                    <div class="qual-icon pdf">PDF</div>
+                    <div class="qual-info">
+                      <div class="qual-name">法人身份证（正反面）</div>
+                      <div class="qual-meta">王** · 有效期至 2032-08 · 1.8 MB</div>
+                    </div>
+                    <span class="qual-status passed">已审核</span>
+                    <button class="qual-action">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">游戏版号 / 备案</div>
+                <div class="qualification-list">
+                  <div class="qual-item">
+                    <div class="qual-icon pdf">版</div>
+                    <div class="qual-info">
+                      <div class="qual-name">音浪对决 · 网络文化经营许可证</div>
+                      <div class="qual-meta">粤网文 [2024] 1234-56 号 · 有效期至 2027-06</div>
+                    </div>
+                    <span class="qual-status passed">已审核</span>
+                    <button class="qual-action">查看</button>
+                  </div>
+                  <div class="qual-item">
+                    <div class="qual-icon pdf">版</div>
+                    <div class="qual-info">
+                      <div class="qual-name">音浪对决 · ICP 备案</div>
+                      <div class="qual-meta">京ICP备 20260001 号 · 长期有效</div>
+                    </div>
+                    <span class="qual-status passed">已审核</span>
+                    <button class="qual-action">查看</button>
+                  </div>
+                </div>
+                <div class="form-hint" style="margin-top: var(--space-2); color: var(--text-tertiary);">
+                  每个上架游戏需提供：网络文化经营许可证 + ICP 备案 + 版号（如适用）
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">行业资质（选填）</div>
+                <div class="qualification-list">
+                  <div class="qual-item">
+                    <div class="qual-icon image">图</div>
+                    <div class="qual-info">
+                      <div class="qual-name">软件著作权登记证书</div>
+                      <div class="qual-meta">软著登字第 1234567 号 · 音浪对决 v1.0</div>
+                    </div>
+                    <span class="qual-status passed">已审核</span>
+                    <button class="qual-action">查看</button>
+                  </div>
+                  <div class="qual-item">
+                    <div class="qual-icon empty">+</div>
+                    <div class="qual-info">
+                      <div class="qual-name" style="color: var(--text-tertiary);">游戏出版备案（选填）</div>
+                      <div class="qual-meta">未提交 · 上传后可获得"已认证"标识</div>
+                    </div>
+                    <span class="qual-status pending">待补充</span>
+                    <button class="qual-action" style="color: var(--red-700);">立即上传 →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ============ 3. 对公账户 ============ -->
+            <div class="content-panel" data-panel="banking" style="display: none;">
+              <div class="content-head">
+                <div>
+                  <div class="content-title">对公账户</div>
+                  <div class="content-sub">结算账户与提现账户管理</div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">默认结算账户</div>
+                <div class="bank-card">
+                  <div class="bank-card-icon">¥</div>
+                  <div class="bank-card-info">
+                    <div class="bank-card-name">招商银行 · 1109 **** 0001</div>
+                    <div class="bank-card-meta">音浪网络科技有限公司 · 2023-08-12 开户</div>
+                    <div class="bank-card-tags">
+                      <span class="bank-tag">默认结算</span>
+                      <span class="bank-tag">已验证</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-actions" style="margin-top: var(--space-3);">
+                  <button class="btn btn-outline btn-sm">更换结算账户</button>
+                  <button class="btn btn-ghost btn-sm">查看开户许可证</button>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">提现记录（近 5 笔）</div>
+                <table class="bank-table">
+                  <thead>
+                    <tr>
+                      <th>提现单号</th>
+                      <th>提现日期</th>
+                      <th class="num">金额</th>
+                      <th>到账银行</th>
+                      <th>状态</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>WD-2026-0705-001</td><td>07-05 14:30</td><td class="num">¥18,560.00</td><td>招商银行 1109****0001</td><td><span style="color: var(--green-700);">✓ 已到账</span></td></tr>
+                    <tr><td>WD-2026-0628-002</td><td>06-28 11:00</td><td class="num">¥24,180.00</td><td>招商银行 1109****0001</td><td><span style="color: var(--green-700);">✓ 已到账</span></td></tr>
+                    <tr><td>WD-2026-0621-003</td><td>06-21 09:15</td><td class="num">¥32,440.00</td><td>招商银行 1109****0001</td><td><span style="color: var(--green-700);">✓ 已到账</span></td></tr>
+                    <tr><td>WD-2026-0614-004</td><td>06-14 16:00</td><td class="num">¥19,860.00</td><td>招商银行 1109****0001</td><td><span style="color: var(--green-700);">✓ 已到账</span></td></tr>
+                    <tr><td>WD-2026-0607-005</td><td>06-07 10:30</td><td class="num">¥26,930.00</td><td>招商银行 1109****0001</td><td><span style="color: var(--green-700);">✓ 已到账</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">提现设置</div>
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label class="form-label">自动提现</label>
+                    <select class="form-select">
+                      <option>每月 1 号自动提现</option>
+                      <option>每周一自动提现</option>
+                      <option>手动提现</option>
+                    </select>
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">提现门槛</label>
+                    <input class="form-input" type="text" value="¥1,000" />
+                    <div class="form-hint">低于此金额累积到下月</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ============ 4. 安全设置 ============ -->
+            <div class="content-panel" data-panel="security" style="display: none;">
+              <div class="content-head">
+                <div>
+                  <div class="content-title">安全设置</div>
+                  <div class="content-sub">登录密码、双因素认证、设备管理</div>
+                </div>
+                <div class="security-overall">
+                  <span class="security-overall-label">安全等级</span>
+                  <span class="security-overall-val high">高</span>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">登录密码</div>
+                <div class="security-item">
+                  <div class="security-item-info">
+                    <div class="security-item-name">登录密码</div>
+                    <div class="security-item-desc">最近修改：2026-05-12 · 建议 90 天更换一次</div>
+                  </div>
+                  <span class="security-status passed">已设置</span>
+                  <button class="btn btn-outline btn-sm">修改密码</button>
+                </div>
+                <div class="security-item">
+                  <div class="security-item-info">
+                    <div class="security-item-name">提现密码</div>
+                    <div class="security-item-desc">独立于登录密码，6 位数字</div>
+                  </div>
+                  <span class="security-status passed">已设置</span>
+                  <button class="btn btn-outline btn-sm">修改</button>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">双因素认证</div>
+                <div class="security-item">
+                  <div class="security-item-info">
+                    <div class="security-item-name">手机短信验证</div>
+                    <div class="security-item-desc">138****4567 · 登录时需要短信验证</div>
+                  </div>
+                  <span class="security-status passed">已开启</span>
+                  <label class="switch"><input type="checkbox" checked /><span class="switch-slider"></span></label>
+                </div>
+                <div class="security-item">
+                  <div class="security-item-info">
+                    <div class="security-item-name">UmakeX 扫码验证</div>
+                    <div class="security-item-desc">通过 UmakeX APP 扫码登录，更安全</div>
+                  </div>
+                  <span class="security-status pending">未开启</span>
+                  <label class="switch"><input type="checkbox" /><span class="switch-slider"></span></label>
+                </div>
+                <div class="security-item">
+                  <div class="security-item-info">
+                    <div class="security-item-name">硬件安全密钥（U盾）</div>
+                    <div class="security-item-desc">FIDO2 标准 · 推荐企业级商户使用</div>
+                  </div>
+                  <span class="security-status pending">未配置</span>
+                  <button class="btn btn-outline btn-sm">添加</button>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">已登录设备</div>
+                <div class="device-list">
+                  <div class="device-item">
+                    <div class="device-icon">💻</div>
+                    <div class="device-info">
+                      <div class="device-name">MacBook Pro · Chrome 126</div>
+                      <div class="device-meta">macOS · 当前会话 · 广东深圳</div>
+                    </div>
+                    <span class="device-tag current">本机</span>
+                  </div>
+                  <div class="device-item">
+                    <div class="device-icon">📱</div>
+                    <div class="device-info">
+                      <div class="device-name">iPhone 15 · Safari Mobile</div>
+                      <div class="device-meta">iOS 18 · 2 天前 · 广东深圳</div>
+                    </div>
+                    <button class="device-action">退出</button>
+                  </div>
+                  <div class="device-item">
+                    <div class="device-icon">💻</div>
+                    <div class="device-info">
+                      <div class="device-name">Windows 11 · Edge 124</div>
+                      <div class="device-meta">5 天前 · 北京</div>
+                    </div>
+                    <button class="device-action">退出</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">最近登录记录（近 10 次）</div>
+                <table class="login-table">
+                  <thead>
+                    <tr><th>时间</th><th>设备</th><th>IP</th><th>地点</th><th>状态</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>07-07 11:30</td><td>MacBook Pro</td><td>113.87.***.**</td><td>广东深圳</td><td><span style="color: var(--green-700);">✓ 成功</span></td></tr>
+                    <tr><td>07-06 09:15</td><td>iPhone 15</td><td>113.87.***.**</td><td>广东深圳</td><td><span style="color: var(--green-700);">✓ 成功</span></td></tr>
+                    <tr><td>07-05 14:30</td><td>Windows 11</td><td>218.241.***.**</td><td>北京</td><td><span style="color: var(--green-700);">✓ 成功</span></td></tr>
+                    <tr><td>07-05 02:13</td><td>未知设备</td><td>102.45.***.**</td><td>俄罗斯莫斯科</td><td><span style="color: var(--red-700);">✕ 已拦截</span></td></tr>
+                    <tr><td>07-04 10:00</td><td>MacBook Pro</td><td>113.87.***.**</td><td>广东深圳</td><td><span style="color: var(--green-700);">✓ 成功</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ============ 5. 消息通知 ============ -->
+            <div class="content-panel" data-panel="notification" style="display: none;">
+              <div class="content-head">
+                <div>
+                  <div class="content-title">消息通知</div>
+                  <div class="content-sub">通知类别、渠道、免打扰设置</div>
+                </div>
+                <button class="btn btn-outline btn-sm">一键全开</button>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">通知类别</div>
+                <table class="notif-table">
+                  <thead>
+                    <tr>
+                      <th>类别</th>
+                      <th class="notif-channel">站内信</th>
+                      <th class="notif-channel">邮件</th>
+                      <th class="notif-channel">短信</th>
+                      <th class="notif-channel">UmakeX</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="notif-cat">账户安全</span><div class="notif-desc">登录、密码、API Key 变更</div></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                    </tr>
+                    <tr>
+                      <td><span class="notif-cat">资金变动</span><div class="notif-desc">结算单生成、提现到账、扣款</div></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                    </tr>
+                    <tr>
+                      <td><span class="notif-cat">流量预警</span><div class="notif-desc">水位异常、段位切换</div></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" /></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                    </tr>
+                    <tr>
+                      <td><span class="notif-cat">申诉处理</span><div class="notif-desc">对账申诉审核结果</div></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" /></td>
+                      <td class="notif-check"><input type="checkbox" /></td>
+                      <td class="notif-check"><input type="checkbox" /></td>
+                    </tr>
+                    <tr>
+                      <td><span class="notif-cat">活动通知</span><div class="notif-desc">政策更新、版本升级、运营活动</div></td>
+                      <td class="notif-check"><input type="checkbox" checked /></td>
+                      <td class="notif-check"><input type="checkbox" /></td>
+                      <td class="notif-check"><input type="checkbox" /></td>
+                      <td class="notif-check"><input type="checkbox" /></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">免打扰时段</div>
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label class="form-label">开始时间</label>
+                    <input type="time" class="form-input" value="22:00" />
+                  </div>
+                  <div class="form-field">
+                    <label class="form-label">结束时间</label>
+                    <input type="time" class="form-input" value="08:00" />
+                  </div>
+                </div>
+                <div class="form-hint" style="margin-top: var(--space-2);">免打扰时段内仅保留「账户安全」「资金变动」类紧急通知</div>
+              </div>
+            </div>
+
+            <!-- ============ 6. API 密钥 ============ -->
+            <div class="content-panel" data-panel="api" style="display: none;">
+              <div class="content-head">
+                <div>
+                  <div class="content-title">API 密钥</div>
+                  <div class="content-sub">对接 Opulatrix OpenAPI · 用于服务端调用</div>
+                </div>
+                <button class="btn btn-primary btn-sm">+ 生成新密钥</button>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">当前活跃密钥</div>
+                <div class="api-key-card">
+                  <div class="api-key-row">
+                    <span class="api-key-label">Merchant ID</span>
+                    <span class="api-key-val mono">M001</span>
+                    <button class="api-key-copy">复制</button>
+                  </div>
+                  <div class="api-key-row">
+                    <span class="api-key-label">API Key</span>
+                    <span class="api-key-val mono">ak_live_*****************7f3a</span>
+                    <button class="api-key-copy">复制</button>
+                    <button class="api-key-toggle">显示</button>
+                  </div>
+                  <div class="api-key-row">
+                    <span class="api-key-label">Secret Key</span>
+                    <span class="api-key-val mono redacted">••••••••••••••••••••••••••••••••••••</span>
+                    <button class="api-key-copy">复制</button>
+                    <button class="api-key-toggle">显示</button>
+                  </div>
+                </div>
+                <div class="api-key-meta">
+                  <div class="api-key-meta-item">
+                    <span class="api-key-meta-label">权限范围</span>
+                    <div class="api-key-meta-val">
+                      <span class="api-key-scope">✓ 读取</span>
+                      <span class="api-key-scope">✓ 写入</span>
+                      <span class="api-key-scope">✓ 结算</span>
+                      <span class="api-key-scope">✗ 提现</span>
+                    </div>
+                  </div>
+                  <div class="api-key-meta-item">
+                    <span class="api-key-meta-label">IP 白名单</span>
+                    <div class="api-key-meta-val">
+                      <code>113.87.***.**</code>
+                      <code>218.241.***.**</code>
+                      <span class="api-key-add">+ 添加</span>
+                    </div>
+                  </div>
+                  <div class="api-key-meta-item">
+                    <span class="api-key-meta-label">创建时间</span>
+                    <span class="api-key-meta-val">2026-05-20 14:30</span>
+                  </div>
+                  <div class="api-key-meta-item">
+                    <span class="api-key-meta-label">最近使用</span>
+                    <span class="api-key-meta-val">2026-07-07 09:15 (2 小时前)</span>
+                  </div>
+                  <div class="api-key-meta-item">
+                    <span class="api-key-meta-label">过期时间</span>
+                    <span class="api-key-meta-val">2027-05-20 · 永不过期（建议 1 年轮换）</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">历史密钥</div>
+                <table class="api-history-table">
+                  <thead>
+                    <tr><th>名称</th><th>权限</th><th>创建</th><th>最近使用</th><th>状态</th><th></th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>生产环境 v2</td>
+                      <td><span class="api-key-scope small">读/写/结算</span></td>
+                      <td>2026-05-20</td>
+                      <td>07-07 09:15</td>
+                      <td><span class="status-tag active">● 活跃</span></td>
+                      <td><a href="#" class="api-history-link">详情</a></td>
+                    </tr>
+                    <tr>
+                      <td>生产环境 v1</td>
+                      <td><span class="api-key-scope small">读/写</span></td>
+                      <td>2025-11-08</td>
+                      <td>2026-05-19</td>
+                      <td><span class="status-tag revoked">○ 已撤销</span></td>
+                      <td><a href="#" class="api-history-link">详情</a></td>
+                    </tr>
+                    <tr>
+                      <td>测试环境</td>
+                      <td><span class="api-key-scope small">只读</span></td>
+                      <td>2025-08-15</td>
+                      <td>2025-10-30</td>
+                      <td><span class="status-tag revoked">○ 已撤销</span></td>
+                      <td><a href="#" class="api-history-link">详情</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="form-section">
+                <div class="form-section-title">开发文档</div>
+                <div class="api-doc-links">
+                  <a href="#" class="api-doc-link">📘 OpenAPI 3.0 规范 →</a>
+                  <a href="#" class="api-doc-link">📗 接入指南（Node.js / Python / Go） →</a>
+                  <a href="#" class="api-doc-link">📙 Webhook 事件订阅 →</a>
+                  <a href="#" class="api-doc-link">📕 错误码速查 →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../shared/js/shared.js"></script>
+  <script>
+    // ============ 二级页面 Tab 切换 ============
+    (function() {
+      const subnavItems = document.querySelectorAll('.subnav-item[data-tab]');
+      const panels = document.querySelectorAll('.content-panel[data-panel]');
+
+      function switchTab(tabName) {
+        // 切换 subnav active
+        subnavItems.forEach(item => {
+          if (item.dataset.tab === tabName) item.classList.add('active');
+          else item.classList.remove('active');
+        });
+        // 切换 panel 显示
+        panels.forEach(panel => {
+          if (panel.dataset.panel === tabName) {
+            panel.style.display = '';
+          } else {
+            panel.style.display = 'none';
+          }
+        });
+        // 同步 URL hash
+        if (location.hash !== '#' + tabName) {
+          history.replaceState(null, '', '#' + tabName);
+        }
+        // 滚到顶部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      subnavItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchTab(item.dataset.tab);
+        });
+      });
+
+      // 从 URL hash 初始化（#qualification / #banking 等）
+      const hashTab = location.hash.replace('#', '');
+      const validTabs = Array.from(subnavItems).map(i => i.dataset.tab);
+      if (validTabs.includes(hashTab)) {
+        switchTab(hashTab);
+      }
+    })();
+  </script>
+</body>
+</html>

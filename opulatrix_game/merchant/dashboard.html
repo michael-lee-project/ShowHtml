@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>工作台 · 游戏商户中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <link rel="stylesheet" href="../shared/css/water-gauge.css">
+  <style>
+    /* Hallmark · pre-emit critique: P5 H5 E5 S4 R5 V4
+     * Macrostructure: Stat-Led Dashboard · theme: custom-palette · genre: modern-minimal
+     * Enrichment: ECharts sparkline + gauge · Motion: number-roll + breathing-dot
+     */
+
+    /* ===== 指标卡 ===== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    @media (max-width: 1023px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+    .kpi-card {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .kpi-card.mode-ignite {
+      background: var(--red-bg);
+      border-color: var(--red-border);
+    }
+    .kpi-card.mode-blaze {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+    }
+    .kpi-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+    .kpi-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: var(--weight-medium);
+    }
+    .kpi-card.mode-ignite .kpi-label { color: var(--red-700); }
+    .kpi-card.mode-blaze .kpi-label { color: var(--green-700); }
+    .kpi-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+    }
+    .kpi-card.mode-ignite .kpi-icon { background: var(--red-200); color: var(--red-700); }
+    .kpi-card.mode-blaze .kpi-icon { background: var(--green-200); color: var(--green-700); }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    .kpi-card.mode-ignite .kpi-value { color: var(--red-700); }
+    .kpi-card.mode-blaze .kpi-value { color: var(--green-700); }
+    .kpi-meta {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .kpi-card.mode-ignite .kpi-meta { color: var(--red-700); opacity: 0.7; }
+    .kpi-card.mode-blaze .kpi-meta { color: var(--green-700); opacity: 0.7; }
+    .kpi-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+    }
+    .kpi-trend.up { color: var(--green-600); }
+    .kpi-trend.down { color: var(--red-600); }
+    .kpi-trend.flat { color: var(--text-tertiary); }
+
+    /* ===== 主区两栏 ===== */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    @media (max-width: 1023px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      padding: var(--space-6);
+      background: var(--bg-base);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .panel-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+    }
+    .panel-sub {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .panel-link {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .panel-link:hover { color: var(--text-primary); }
+
+    /* ===== 全局水位仪表盘（hallmark v2.2 紧凑态） ===== */
+    .gauge-info-list {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ===== 趋势图（ECharts） ===== */
+    .trend-chart {
+      width: 100%;
+      height: 200px;
+    }
+
+    /* 紧凑指标网格（chart 下方 2x2） */
+    .stat-grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: var(--space-4);
+      border-top: 1px solid var(--border-muted);
+    }
+    .stat-cell {
+      padding: var(--space-3) var(--space-2);
+      border-right: 1px solid var(--border-muted);
+    }
+    .stat-cell:nth-child(even) { border-right: 0; padding-right: 0; }
+    .stat-cell:nth-child(odd) { padding-left: 0; }
+    .stat-cell:nth-child(n+3) { border-top: 1px solid var(--border-muted); }
+    .stat-cell-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-bottom: 2px;
+    }
+    .stat-cell-val {
+      font-family: var(--font-mono);
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+    }
+    .stat-cell-delta {
+      font-size: var(--text-xs);
+      margin-left: 4px;
+    }
+    .stat-cell-delta.up { color: var(--green-700); }
+    .stat-cell-delta.down { color: var(--red-700); }
+    .stat-cell-sub {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    /* 趋势解读 banner */
+    .trend-insight {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.04), rgba(220, 38, 38, 0.02));
+      border: 1px solid rgba(220, 38, 38, 0.15);
+      border-radius: var(--radius-md);
+      margin-top: var(--space-4);
+      font-size: var(--text-sm);
+      align-items: flex-start;
+    }
+    .trend-insight-icon {
+      flex-shrink: 0;
+      color: var(--red-700);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .trend-insight-body { flex: 1; }
+    .trend-insight-title {
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .trend-insight-desc {
+      color: var(--text-secondary);
+      font-size: var(--text-xs);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* ===== 弹窗 CSS 移到 shared/components.css ===== */
+
+    /* ===== 快捷入口 ===== */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      background: var(--border-default);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    @media (max-width: 1023px) {
+      .quick-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .quick-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .quick-item {
+      padding: var(--space-5);
+      background: var(--bg-base);
+      text-align: center;
+      border-right: 1px solid var(--border-default);
+      transition: background var(--duration-fast) var(--ease-out);
+    }
+    .quick-item:hover { background: var(--bg-subtle); }
+    .quick-item:last-child { border-right: 0; }
+    @media (max-width: 1023px) {
+      .quick-item { border-right: 0; border-bottom: 1px solid var(--border-default); }
+    }
+    .quick-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto var(--space-3);
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+    .quick-icon.ignite { background: var(--red-100); color: var(--red-700); }
+    .quick-icon.blaze { background: var(--green-100); color: var(--green-700); }
+    .quick-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      margin-bottom: 2px;
+    }
+    .quick-desc {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+
+    /* ===== KPI 可点击 ===== */
+    .kpi-card-link {
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .kpi-card-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border-color: var(--text-tertiary);
+    }
+    .kpi-card-link:hover .kpi-meta {
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="app-sidebar-logo">
+        <span class="nav-logo-mark">G</span>
+        <span>游戏商户中心</span>
+      </a>
+
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">工作区</div>
+        <a href="dashboard.html" class="app-sidebar-item active">
+          <span class="app-sidebar-item-icon">▦</span>
+          <span>工作台</span>
+        </a>
+        <a href="onboarding.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">○</span>
+          <span>入驻进度</span>
+        </a>
+              <a href="messages.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">🔔</span>
+          <span>消息中心</span>
+          <span class="sidebar-badge" data-sidebar-badge style="margin-left: auto; background: var(--red-600, #DC2626); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono);"></span>
+        </a>
+      </div>
+
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">模式</div>
+        <a href="mode-status.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">◐</span>
+          <span>模式状态</span>
+        </a>
+        <a href="mode-consumption.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">火</span>
+          <span>星火养成</span>
+        </a>
+        <a href="mode-commission.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">润</span>
+          <span>星火燎原</span>
+        </a>
+      </div>
+
+      <div class="app-sidebar-section">
+        <div class="app-sidebar-label">数据</div>
+        <a href="parameters.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚙</span>
+          <span>核心参数</span>
+        </a>
+        <a href="settlement.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">¥</span>
+          <span>结算单</span>
+        </a>
+        <a href="reconciliation.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⇄</span>
+          <span>数据对账</span>
+        </a>
+        <a href="data-analytics.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">▤</span>
+          <span>数据分析</span>
+        </a>
+      </div>
+
+      <div class="app-sidebar-section" style="margin-top: auto;">
+        <a href="account.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">⚇</span>
+          <span>账户设置</span>
+        </a>
+        <a href="../website/index.html" class="app-sidebar-item">
+          <span class="app-sidebar-item-icon">↗</span>
+          <span>返回官网</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="app-main">
+      <header class="app-topbar">
+        <div class="app-topbar-left">
+          <h1 class="app-topbar-title">工作台</h1>
+          <span class="app-topbar-mode ignite">
+            <span class="mode-dot"></span>
+            星火养成期 · 进行中
+          </span>
+        </div>
+        <div class="app-topbar-actions">
+          <button class="btn btn-ghost btn-sm">刷新</button>
+          <button class="btn btn-outline btn-sm">导出报表</button>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid fade-on-scroll">
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">当前模式</span>
+              <span class="kpi-icon">◐</span>
+            </div>
+            <div class="kpi-value">养成期</div>
+            <div class="kpi-meta">已运行 18 天 · 预计 6/23 切段</div>
+          </div>
+          <div class="kpi-card mode-ignite">
+            <div class="kpi-head">
+              <span class="kpi-label">本月养成进度</span>
+              <span class="kpi-icon">火</span>
+            </div>
+            <div class="kpi-value" data-count="62">0%</div>
+            <div class="kpi-meta">124 万 / 200 万 · 日均 6.2 万</div>
+          </div>
+          <div class="kpi-card kpi-card-link" onclick="location.href='settlement.html'">
+            <div class="kpi-head">
+              <span class="kpi-label">待结算金额</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value" data-count="26.84">0 万</div>
+            <div class="kpi-meta">预计 7/10 到账 · 距今 <strong style="color: var(--text-primary);">3 天</strong> · <span style="color: var(--text-link);">前往结算 →</span></div>
+          </div>
+          <div class="kpi-card kpi-card-link mode-blaze" onclick="location.href='data-analytics.html'">
+            <div class="kpi-head">
+              <span class="kpi-label">本月利润预估</span>
+              <span class="kpi-icon">▲</span>
+            </div>
+            <div class="kpi-value">172 万</div>
+            <div class="kpi-meta">
+              <span style="color: var(--green-700, #047857);">↑ 18.4%</span> 较上月 145.2 万 ·
+              月末预估 <strong style="color: var(--text-primary);">190 万</strong> · 置信度 87%
+            </div>
+          </div>
+        </div>
+
+        <!-- 主区两栏 -->
+        <div class="main-grid fade-on-scroll">
+          <!-- 全局水位 -->
+          <div class="panel">
+            <div class="water-pool" data-current="562" data-min="200" data-max="800" data-mode="ignite">
+              <div class="water-pool-head">
+                 <div>
+                   <h3 class="water-pool-title">
+                     平台积分池水位
+                     <span class="info-icon" data-tooltip="平台积分池水位是平台视角的总星火值余额（积分池里还剩多少积分没消纳），不是商户的养成进度。水位高低会自动触发段一/段二切换：水位高 → 段一（积分消纳）；水位低 → 段二（流水分润）。">ⓘ</span>
+                   </h3>
+                   <div class="water-pool-sub">平台总星火值 · 阈值触发段一/段二自动切换</div>
+                 </div>
+            <div class="water-pool-status ignite">
+              <span class="status-dot"></span>
+              段一激活中
+            </div>
+              </div>
+
+              <div class="water-headline">
+                <div class="water-value" data-count="562">0</div>
+                 <div class="water-value-unit">万 积分池水位</div>
+                <div class="water-value-delta">+12.4% 本月</div>
+              </div>
+
+              <div class="water-bar-container">
+                <div class="water-bar">
+                  <div class="water-bar-segments">
+                    <div class="water-segment dry"></div>
+                    <div class="water-segment safe"></div>
+                  </div>
+                  <div class="water-bar-fill ignite" data-target-width="70.25"></div>
+                  <div class="water-wave">
+                    <svg viewBox="0 0 1200 72" preserveAspectRatio="none">
+                      <path class="wave-path-1" d="M0 36 Q150 16 300 36 T600 36 T900 36 T1200 36 V72 H0 Z" />
+                    </svg>
+                  </div>
+                  <div class="water-threshold min" style="left: 25%;">
+                    <span class="water-threshold-label">200 万</span>
+                  </div>
+                  <div class="water-threshold max" style="left: 100%;">
+                    <span class="water-threshold-label">800 万</span>
+                  </div>
+                  <div class="water-indicator" style="left: 70.25%;">
+                    <div class="water-indicator-label">562 万</div>
+                    <div class="water-indicator-dot"></div>
+                  </div>
+                </div>
+                <div class="water-axis">
+                  <span>0</span>
+                  <span>200 万</span>
+                  <span>400 万</span>
+                  <span>600 万</span>
+                  <span>800 万</span>
+                </div>
+              </div>
+
+              <div class="water-metrics">
+                <div class="water-metric-row">
+                  <span class="water-metric-label">
+                    <span class="water-metric-marker curr"></span>
+                    当前积分池水位
+                  </span>
+                  <span class="water-metric-value">562 万</span>
+                </div>
+                <div class="water-metric-row">
+                  <span class="water-metric-label">
+                    <span class="water-metric-marker warn"></span>
+                    最高阈值 · 超此值自动切段一
+                  </span>
+                  <span class="water-metric-value" style="color: var(--red-600);">800 万</span>
+                </div>
+                <div class="water-metric-row">
+                  <span class="water-metric-label">
+                    <span class="water-metric-marker safe"></span>
+                    最低阈值 · 低于此值自动切段二
+                  </span>
+                  <span class="water-metric-value" style="color: var(--green-600);">200 万</span>
+                </div>
+                <div class="water-metric-row">
+                  <span class="water-metric-label">
+                    <span class="water-metric-marker up"></span>
+                    距离上限余量
+                  </span>
+                  <span class="water-metric-value">238 万<span class="delta">+12.4%</span></span>
+                </div>
+                <div class="water-metric-row">
+                  <span class="water-metric-label">
+                    <span class="water-metric-marker down"></span>
+                    距离下限
+                  </span>
+                  <span class="water-metric-value">362 万</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 趋势图 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">近 30 天养成速率</h3>
+                <div class="panel-sub">每日养成量趋势 · 红色为星火养成期</div>
+              </div>
+              <button class="panel-link" onclick="TrendDetail.open()" style="background: transparent; border: 0; cursor: pointer; font-family: var(--font-sans);">查看明细 →</button>
+            </div>
+            <div id="trend-chart" class="trend-chart"></div>
+
+            <!-- 2x2 关键指标 -->
+            <div class="stat-grid-2x2">
+              <div class="stat-cell">
+                <div class="stat-cell-label">日均养成</div>
+                <div class="stat-cell-val">6.2 万</div>
+                <div class="stat-cell-sub">较上月 +12.4%</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-cell-label">峰值</div>
+                <div class="stat-cell-val">6.8 万</div>
+                <div class="stat-cell-sub">06-15 周一</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-cell-label">最低</div>
+                <div class="stat-cell-val">5.1 万</div>
+                <div class="stat-cell-sub">06-22 周日</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-cell-label">较上周</div>
+                <div class="stat-cell-val">↑ 12.4%</div>
+                <div class="stat-cell-sub">日均 5.5 → 6.2 万</div>
+              </div>
+            </div>
+
+            <!-- 趋势解读 -->
+            <div class="trend-insight">
+              <span class="trend-insight-icon">ⓘ</span>
+              <div class="trend-insight-body">
+                <div class="trend-insight-title">节奏良好，预计 6/23 达标</div>
+                <div class="trend-insight-desc">
+                  当前累计 124 万 / 目标 200 万（62%）。按当前日均 6.2 万节奏，剩余 12 天需达到 6.3 万 / 天即可按计划切段。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 快捷入口 -->
+        <div class="panel fade-on-scroll" style="margin-bottom: var(--space-6);">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">快捷入口</h3>
+              <div class="panel-sub">常用功能快速跳转</div>
+            </div>
+          </div>
+          <div class="quick-grid">
+            <a href="onboarding.html" class="quick-item">
+              <div class="quick-icon">○</div>
+              <div class="quick-name">入驻进度</div>
+              <div class="quick-desc">5 节点跟踪</div>
+            </a>
+            <a href="mode-consumption.html" class="quick-item">
+              <div class="quick-icon ignite">火</div>
+              <div class="quick-name">星火养成</div>
+              <div class="quick-desc">段一进度</div>
+            </a>
+            <a href="mode-commission.html" class="quick-item">
+              <div class="quick-icon blaze">润</div>
+              <div class="quick-name">星火燎原</div>
+              <div class="quick-desc">段二分润</div>
+            </a>
+            <a href="settlement.html" class="quick-item">
+              <div class="quick-icon">¥</div>
+              <div class="quick-name">结算单</div>
+              <div class="quick-desc">历史对账</div>
+            </a>
+            <a href="data-analytics.html" class="quick-item">
+              <div class="quick-icon">▤</div>
+              <div class="quick-name">数据分析</div>
+              <div class="quick-desc">用户 + 漏斗 + 画像</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== 查看明细弹窗 ===== -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title">近 30 天养成速率明细</div>
+          <div class="modal-sub">2026-06-08 至 2026-07-07 · 数据每日 00:00 更新</div>
+        </div>
+        <button class="modal-close" onclick="TrendDetail.close()" aria-label="关闭">×</button>
+      </div>
+
+      <div class="modal-toolbar">
+        <div class="modal-toolbar-left" style="font-size: var(--text-sm); color: var(--text-secondary);">
+          共 <strong>30</strong> 条记录 · 当前显示 <strong>1-30</strong>
+        </div>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="btn btn-ghost btn-sm">📋 复制表格</button>
+          <button class="btn btn-ghost btn-sm">⬇ 导出 CSV</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- 汇总 -->
+        <div class="modal-summary">
+          <div class="modal-summary-cell">
+            <div class="modal-summary-label">累计养成</div>
+            <div class="modal-summary-val" style="color: var(--red-700);">124 万</div>
+          </div>
+          <div class="modal-summary-cell">
+            <div class="modal-summary-label">日均</div>
+            <div class="modal-summary-val">6.2 万</div>
+          </div>
+          <div class="modal-summary-cell">
+            <div class="modal-summary-label">峰值</div>
+            <div class="modal-summary-val">6.8 万</div>
+          </div>
+          <div class="modal-summary-cell">
+            <div class="modal-summary-label">达标率</div>
+            <div class="modal-summary-val" style="color: var(--green-700);">62%</div>
+          </div>
+        </div>
+
+        <!-- 明细表 -->
+        <div class="modal-section-title">每日明细</div>
+        <table class="modal-table">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>阶段</th>
+              <th class="num">养成量</th>
+              <th class="num">累计</th>
+              <th class="num">距目标</th>
+              <th>达标状态</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>06-08</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.2 万</td><td class="num">6.2 万</td><td class="num">93.8 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-09</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">5.8 万</td><td class="num">12.0 万</td><td class="num">88.0 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-10</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.5 万</td><td class="num">18.5 万</td><td class="num">81.5 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-11</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.1 万</td><td class="num">24.6 万</td><td class="num">75.4 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-12</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.4 万</td><td class="num">31.0 万</td><td class="num">69.0 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-13</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">5.9 万</td><td class="num">36.9 万</td><td class="num">63.1 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-14</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.3 万</td><td class="num">43.2 万</td><td class="num">56.8 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-15</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.8 万</td><td class="num">50.0 万</td><td class="num">50.0 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-16</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.0 万</td><td class="num">56.0 万</td><td class="num">44.0 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-17</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">5.5 万</td><td class="num">61.5 万</td><td class="num">38.5 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-18</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.2 万</td><td class="num">67.7 万</td><td class="num">32.3 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-19</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.5 万</td><td class="num">74.2 万</td><td class="num">25.8 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-20</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.3 万</td><td class="num">80.5 万</td><td class="num">19.5 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-21</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">5.7 万</td><td class="num">86.2 万</td><td class="num">13.8 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-22</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">5.1 万</td><td class="num">91.3 万</td><td class="num">8.7 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-23</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.4 万</td><td class="num">97.7 万</td><td class="num">2.3 万</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-24</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.6 万</td><td class="num">104.3 万</td><td class="num" style="color: var(--green-700); font-weight: 600;">✓ 达标</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr><td>06-25</td><td><span style="color: var(--red-700);">●</span> 段一</td><td class="num">6.5 万</td><td class="num">110.8 万</td><td class="num">—</td><td><span style="color: var(--green-700);">✓ 已达标</span></td><td><a href="#" style="color: var(--text-tertiary); font-size: 12px;">详情</a></td></tr>
+            <tr style="background: rgba(245, 158, 11, 0.06);"><td>06-26 ~ 07-07</td><td><span style="color: var(--text-tertiary);">—</span> 段二</td><td class="num">—</td><td class="num">124 万</td><td class="num">—</td><td><span style="color: var(--text-tertiary);">⏳ 待切换</span></td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-pagination">
+          <button disabled>← 上一页</button>
+          <span>第 <strong>1</strong> / 1 页</span>
+          <button disabled>下一页 →</button>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="TrendDetail.close()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/js/mock-data.js"></script>
+  <script src="../shared/js/shared.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // ============== GSAP Water Pool Timeline (taste-skill v1.1) ==============
+      const pool = document.querySelector('.water-pool');
+      if (pool) {
+        const current = parseInt(pool.dataset.current);
+        const maxV = parseInt(pool.dataset.max);
+        const targetWidth = (current / maxV) * 100;
+
+        // 立即 set 数字（保证静态截图正确）
+        const valueEl = pool.querySelector('.water-value[data-count]');
+        if (valueEl) valueEl.textContent = current;
+
+        const tl = gsap.timeline();
+
+        // Step 1: 当前水位条 0→targetWidth%
+        const fill = pool.querySelector('.water-bar-fill');
+        fill.style.opacity = 1;
+        tl.to(fill, {
+          width: targetWidth + '%',
+          duration: 1.4,
+          ease: 'power3.out',
+        }, 0);
+
+        // Step 2: 阈值竖线 stagger fade-in
+        tl.to('.water-threshold', {
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: 'power2.out',
+        }, 0.5);
+
+        tl.to('.water-threshold-label', {
+          opacity: 1,
+          duration: 0.4,
+          stagger: 0.1,
+          ease: 'power2.out',
+        }, 0.6);
+
+        // Step 3: 水波纹 fade-in
+        const wave = pool.querySelector('.water-wave svg');
+        tl.to(wave, {
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+        }, 0.7);
+
+        // 持续水波纹 sin morph
+        const wavePath = pool.querySelector('.wave-path-1');
+        gsap.to(wavePath, {
+          attr: { d: 'M0 36 Q150 56 300 36 T600 36 T900 36 T1200 36 V72 H0 Z' },
+          duration: 2.4,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
+
+        // Step 4: 当前值指示器 spring
+        const indicator = pool.querySelector('.water-indicator');
+        tl.to(indicator, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          ease: 'back.out(2)',
+        }, 1.2);
+
+        // Step 5: 状态徽章弹入
+        const status = pool.querySelector('.water-pool-status');
+        tl.to(status, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(1.7)',
+        }, 1.4);
+      }
+
+      // ============== KPI 数字滚动 ==============
+      document.querySelectorAll('.kpi-value[data-count]').forEach(el => {
+        const raw = el.dataset.count;
+        const target = parseFloat(raw);
+        const isPct = el.textContent.includes('%');
+        const isFloat = raw.includes('.');
+        if (isPct) {
+          el.textContent = target + '%';
+        } else if (isFloat) {
+          el.textContent = target.toFixed(2);
+        } else {
+          el.textContent = target;
+        }
+      });
+
+      // ============== ECharts 趋势图 ==============
+      const chart = echarts.init(document.getElementById('trend-chart'));
+      const data = [];
+      const igniteColor = '#DC2626';
+      for (let i = 1; i <= 30; i++) {
+        const v = i <= 18 ? 35000 + Math.random() * 15000 : 0;
+        data.push([`${i}日`, Math.round(v), i <= 18 ? igniteColor : 'transparent']);
+      }
+      chart.setOption({
+        grid: { top: 20, right: 20, bottom: 30, left: 50 },
+        tooltip: { trigger: 'axis' },
+        xAxis: {
+          type: 'category',
+          data: data.map(d => d[0]),
+          axisLine: { lineStyle: { color: '#E4E4E7' } },
+          axisLabel: { color: '#71717A', fontSize: 10, interval: 4 },
+          axisTick: { show: false },
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: { show: false },
+          axisLabel: { color: '#71717A', fontSize: 10, formatter: v => (v/10000).toFixed(0) + '万' },
+          splitLine: { lineStyle: { color: '#F4F4F5', type: 'dashed' } },
+        },
+        series: [{
+          type: 'bar',
+          data: data.map(d => d[1]),
+          itemStyle: { color: igniteColor, borderRadius: [4, 4, 0, 0] },
+          barWidth: '60%',
+        }],
+      });
+      window.addEventListener('resize', () => chart.resize());
+    });
+  </script>
+
+  <script>
+    // ============ 查看明细弹窗 ============
+    window.TrendDetail = {
+      open() {
+        const modal = document.getElementById('detail-modal');
+        if (modal) modal.classList.add('open');
+        // 锁滚动
+        document.body.style.overflow = 'hidden';
+      },
+      close() {
+        const modal = document.getElementById('detail-modal');
+        if (modal) modal.classList.remove('open');
+        document.body.style.overflow = '';
+      },
+    };
+
+    // 点击遮罩关闭
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('detail-modal');
+      if (modal && e.target === modal) {
+        TrendDetail.close();
+      }
+    });
+
+    // ESC 关闭
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') TrendDetail.close();
+    });
+  </script>
+</body>
+</html>

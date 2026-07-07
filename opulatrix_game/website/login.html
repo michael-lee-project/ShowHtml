@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商家登录 · 游戏商户平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/common.css">
+  <link rel="stylesheet" href="../shared/css/components.css">
+  <style>
+    body { background: #0A0A0A; min-height: 100vh; display: flex; align-items: stretch; }
+
+    /* Split layout */
+    .login-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      min-height: 100vh;
+    }
+    @media (max-width: 1023px) { .login-split { grid-template-columns: 1fr; } }
+
+    /* Left: brand showcase */
+    .login-brand {
+      position: relative;
+      padding: var(--space-12) var(--space-12);
+      background:
+        radial-gradient(ellipse 60% 80% at 20% 30%, rgba(220, 38, 38, 0.25), transparent),
+        radial-gradient(ellipse 60% 80% at 80% 70%, rgba(22, 163, 74, 0.2), transparent),
+        linear-gradient(135deg, #0A0A0A, #1F1F1F);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .login-brand-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .login-brand-mark {
+      width: 32px; height: 32px;
+      background: white;
+      color: black;
+      border-radius: var(--radius-md);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+    }
+    .login-brand-text { font-size: var(--text-base); font-weight: var(--weight-semibold); }
+
+    .login-brand-content { max-width: 480px; }
+    .login-brand-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: var(--space-4);
+    }
+    .login-brand-title {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-4);
+    }
+    .login-brand-sub {
+      font-size: var(--text-lg);
+      color: rgba(255,255,255,0.7);
+      line-height: var(--leading-relaxed);
+    }
+
+    .login-brand-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+      padding-top: var(--space-8);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .login-brand-stat-val {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+    }
+    .login-brand-stat-val.red { color: #FCA5A5; }
+    .login-brand-stat-val.green { color: #86EFAC; }
+    .login-brand-stat-val.amber { color: #FCD34D; }
+    .login-brand-stat-label { font-size: var(--text-xs); color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    /* Floating games */
+    .login-brand-floats {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .float-game {
+      position: absolute;
+      width: 80px; height: 80px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      color: white;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      opacity: 0.6;
+    }
+    .float-game:nth-child(1) { top: 10%; right: 8%; background: linear-gradient(135deg, #DC2626, #7F1D1D); transform: rotate(-6deg); }
+    .float-game:nth-child(2) { top: 30%; right: 18%; background: linear-gradient(135deg, #16A34A, #14532D); transform: rotate(8deg); }
+    .float-game:nth-child(3) { bottom: 25%; right: 12%; background: linear-gradient(135deg, #7C3AED, #4C1D95); transform: rotate(-4deg); }
+    .float-game:nth-child(4) { bottom: 12%; right: 22%; background: linear-gradient(135deg, #F59E0B, #B45309); transform: rotate(6deg); }
+
+    /* Right: login form */
+    .login-form-side {
+      background: white;
+      padding: var(--space-12) var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .login-form-wrap { max-width: 420px; margin: 0 auto; width: 100%; }
+
+    /* Tabs */
+    .login-tabs {
+      display: flex;
+      background: var(--bg-muted);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      margin-bottom: var(--space-6);
+    }
+    .login-tab {
+      flex: 1;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      font-family: var(--font-sans);
+    }
+    .login-tab.active { background: white; color: var(--text-primary); font-weight: var(--weight-semibold); box-shadow: var(--shadow-sm); }
+
+    .login-form-title { font-size: var(--text-2xl); font-weight: var(--weight-bold); letter-spacing: -0.02em; margin-bottom: var(--space-2); }
+    .login-form-sub { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-6); }
+
+    .form-field { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); }
+    .form-label { font-size: var(--text-xs); color: var(--text-secondary); font-weight: var(--weight-medium); }
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      background: white;
+    }
+    .form-input:focus { outline: none; border-color: var(--text-primary); box-shadow: 0 0 0 3px rgba(24,24,27,0.08); }
+    .form-row {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-4);
+    }
+    .form-link { color: var(--text-primary); text-decoration: none; font-weight: var(--weight-medium); }
+    .form-link:hover { text-decoration: underline; }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--text-primary);
+      color: white;
+      border: 0;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      cursor: pointer;
+      margin-bottom: var(--space-4);
+    }
+    .login-btn:hover { background: var(--text-secondary); }
+
+    .login-divider {
+      display: flex; align-items: center; gap: var(--space-3);
+      color: var(--text-tertiary);
+      font-size: var(--text-xs);
+      margin: var(--space-4) 0;
+    }
+    .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-muted); }
+
+    .social-btns { display: flex; gap: var(--space-2); }
+    .social-btn {
+      flex: 1;
+      padding: 10px;
+      background: white;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .social-btn:hover { background: var(--bg-muted); }
+
+    .login-form-footer {
+      margin-top: var(--space-6);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--border-muted);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-align: center;
+    }
+
+    .login-aside-toggle {
+      position: absolute;
+      top: var(--space-6); right: var(--space-6);
+      display: flex; align-items: center; gap: var(--space-2);
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-xs);
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+    }
+    .login-aside-toggle:hover { background: rgba(255,255,255,0.15); color: white; }
+  </style>
+</head>
+<body>
+  <div class="login-split">
+    <!-- Left: brand -->
+    <div class="login-brand">
+      <a href="index.html" class="login-aside-toggle">← 返回官网</a>
+
+      <div class="login-brand-floats">
+        <div class="float-game">⚔</div>
+        <div class="float-game">♟</div>
+        <div class="float-game">🌸</div>
+        <div class="float-game">🏎</div>
+      </div>
+
+      <div class="login-brand-logo">
+        <span class="login-brand-mark">G</span>
+        <span class="login-brand-text">游戏商户平台</span>
+      </div>
+
+      <div class="login-brand-content">
+        <div class="login-brand-eyebrow">WELCOME BACK</div>
+        <h1 class="login-brand-title">1,284 家入驻商户<br/>月分润 2,800 万</h1>
+        <p class="login-brand-sub">登录后查看您的养成进度、分润收益与数据看板,与 Opulatrix 一起为玩家提供好游戏。</p>
+      </div>
+
+      <div class="login-brand-stats">
+        <div>
+          <div class="login-brand-stat-val red">1,284</div>
+          <div class="login-brand-stat-label">入驻商户</div>
+        </div>
+        <div>
+          <div class="login-brand-stat-val green">2,800 万</div>
+          <div class="login-brand-stat-label">月分润总额</div>
+        </div>
+        <div>
+          <div class="login-brand-stat-val amber">99.6%</div>
+          <div class="login-brand-stat-label">数据同步率</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div class="login-form-side">
+      <div class="login-form-wrap">
+        <div class="login-tabs">
+          <button class="login-tab active">登录</button>
+          <button class="login-tab">注册</button>
+        </div>
+
+        <h2 class="login-form-title">欢迎回来</h2>
+        <p class="login-form-sub">使用手机号或第三方账号登录</p>
+
+        <form>
+          <div class="form-field">
+            <label class="form-label">手机号 / 邮箱</label>
+            <input class="form-input" type="text" placeholder="请输入手机号或邮箱" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">密码</label>
+            <input class="form-input" type="password" placeholder="请输入密码" />
+          </div>
+          <div class="form-row">
+            <label style="display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-sm); color: var(--text-secondary);">
+              <input type="checkbox" checked />
+              <span>记住我</span>
+            </label>
+            <a href="#" class="form-link">忘记密码 →</a>
+          </div>
+          <button type="button" class="login-btn">登录</button>
+        </form>
+
+        <div class="login-divider">其他方式登录</div>
+
+        <div class="social-btns">
+          <button class="social-btn">💬 微信</button>
+          <button class="social-btn">💚 QQ</button>
+          <button class="social-btn">🅰 支付宝</button>
+        </div>
+
+        <div class="login-form-footer">
+          登录即代表您已阅读并同意 <a href="#" class="form-link">《用户服务协议》</a> 和 <a href="#" class="form-link">《隐私政策》</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,441 @@
+/* ============================================
+   Water Gauge - 全局星火水位（taste-skill v1.1）
+   水平水位条 + 模式色填充 + 连续渐变底色
+   不用黑色 · 三色分段清晰 · 模式色语义化
+   ============================================ */
+
+.water-pool {
+  position: relative;
+  width: 100%;
+  padding: var(--space-8);
+  background: var(--bg-base);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl);
+}
+
+@media (max-width: 767px) {
+  .water-pool { padding: var(--space-6); }
+}
+
+.water-pool-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.water-pool-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-1);
+  letter-spacing: -0.01em;
+}
+
+.water-pool-sub {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.water-pool-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-pill);
+  transform: scale(1);
+}
+
+.water-pool-status.normal {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+}
+
+.water-pool-status.ignite {
+  background: var(--red-100);
+  color: var(--red-700);
+}
+
+.water-pool-status.blaze {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+
+.water-pool-status .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+/* 大数字 + 标签 */
+.water-headline {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.water-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-6xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.water-value-unit {
+  font-size: var(--text-xl);
+  color: var(--text-tertiary);
+  font-weight: var(--weight-medium);
+}
+
+.water-value-delta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--green-700);
+  font-weight: var(--weight-semibold);
+  margin-left: auto;
+  padding: var(--space-1) var(--space-3);
+  align-self: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 100%;
+  background: var(--green-100);
+  border: 1px solid var(--green-border);
+  border-radius: var(--radius-pill);
+}
+
+/* 水位条容器（更高 + 更有存在感） */
+.water-bar-container {
+  position: relative;
+  width: 100%;
+  height: 72px;
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-8);
+}
+
+.water-bar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--bg-muted);
+  overflow: visible;
+  border: 1px solid var(--border-default);
+  box-shadow: inset 0 1px 2px rgba(24, 24, 27, 0.04);
+}
+
+/* 三色分段底色（连续渐变 + 关键阈值） */
+.water-bar-segments {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.water-segment {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.water-segment.dry {
+  left: 0;
+  width: 25%;
+  background: #FAFAF7;
+}
+
+.water-segment.safe {
+  left: 25%;
+  width: 75%;
+  background: linear-gradient(to right,
+    #ECFDF5 0%,
+    #ECFDF5 70%,
+    #FEF7E6 85%,
+    #FEF2F2 100%
+  );
+}
+
+.water-segment.warn {
+  display: none; /* 800+ 是分界点 */
+}
+
+/* 当前水位填充（关键：模式色 · 不用黑色） */
+.water-bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  border-radius: var(--radius-pill);
+  opacity: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 50%, rgba(0, 0, 0, 0.04) 100%);
+}
+
+/* 模式色叠加（用 mix-blend） */
+.water-bar-fill.ignite {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 50%, rgba(0, 0, 0, 0.06) 100%),
+    linear-gradient(90deg, #FCA5A5 0%, #DC2626 100%);
+}
+
+.water-bar-fill.blaze {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 50%, rgba(0, 0, 0, 0.06) 100%),
+    linear-gradient(90deg, #86EFAC 0%, #16A34A 100%);
+}
+
+/* 水波纹（白色半透明 sin morph） */
+.water-wave {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+}
+
+.water-wave svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  opacity: 0;
+}
+
+.water-wave path {
+  fill: rgba(255, 255, 255, 0.45);
+}
+
+/* 阈值线（清晰竖线 + 标签 + box-shadow 凸起） */
+.water-threshold {
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  width: 2px;
+  border-radius: 1px;
+  z-index: 4;
+  opacity: 1;
+}
+
+.water-threshold.min {
+  background: var(--green-600);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.water-threshold.max {
+  background: var(--red-600);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.water-threshold-label {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  opacity: 1;
+}
+
+.water-threshold.min .water-threshold-label {
+  background: var(--green-600);
+  color: white;
+}
+
+.water-threshold.max .water-threshold-label {
+  background: var(--red-600);
+  color: white;
+}
+
+/* 当前值指示器（小圆点 + 标签 + 引线） */
+.water-indicator {
+  position: absolute;
+  top: -8px;
+  transform: translateX(-50%) scale(1);
+  z-index: 5;
+  opacity: 1;
+}
+
+.water-indicator-dot {
+  width: 16px;
+  height: 16px;
+  background: var(--text-primary);
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+}
+
+.water-indicator-label {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--text-primary);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+}
+
+.water-indicator-label::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--text-primary);
+}
+
+/* 信息图标 + tooltip */
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-muted);
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  font-style: normal;
+  cursor: help;
+  margin-left: var(--space-1);
+  vertical-align: middle;
+  position: relative;
+  transition: background 0.15s, color 0.15s;
+}
+.info-icon:hover {
+  background: var(--text-primary);
+  color: white;
+}
+.info-icon:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--text-primary);
+  color: white;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-relaxed);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  white-space: normal;
+  text-align: left;
+  cursor: default;
+  pointer-events: none;
+}
+.info-icon:hover::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: var(--text-primary);
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* 轴标签 */
+.water-axis {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-3);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.04em;
+  padding: 0 2px;
+}
+
+.water-axis span { text-align: center; flex: 0 0 auto; }
+.water-axis span:first-child { text-align: left; }
+.water-axis span:last-child { text-align: right; }
+
+/* 指标列表（divide-y） */
+.water-metrics {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-muted);
+}
+
+.water-metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-muted);
+  gap: var(--space-3);
+}
+
+.water-metric-row:last-child { border-bottom: 0; }
+
+.water-metric-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.water-metric-marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.water-metric-marker.dry { background: #D4D4D8; }
+.water-metric-marker.safe { background: var(--green-600); }
+.water-metric-marker.curr { background: var(--text-primary); }
+.water-metric-marker.warn { background: var(--red-600); }
+.water-metric-marker.up { background: var(--green-600); }
+.water-metric-marker.down { background: var(--red-600); }
+
+.water-metric-value {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.water-metric-value .delta {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--green-700);
+}
