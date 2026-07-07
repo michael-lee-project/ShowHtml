@@ -72,7 +72,7 @@
             <div class="ws__topbar-sep"></div>
             <div class="ws__online">
               <span class="ws__online-dot"></span>
-              <span><strong id="wsOnlineCount">8</strong> / 8 专家在线</span>
+              <span><strong id="wsOnlineCount">9</strong> / 9 专家在线</span>
             </div>
             <div class="ws__topbar-sep"></div>
             <div class="ws__clock" id="wsClock">17:54:00</div>
@@ -120,8 +120,8 @@
             <!-- 8 专家列表 -->
             <div class="ws__left-section">
               <div class="ws__left-title">
-                <span>8 位专家</span>
-                <span class="ws__left-count">在线 8</span>
+                <span>9 位专家</span>
+                <span class="ws__left-count">在线 9</span>
               </div>
               <div class="ws__expert-list" id="wsExpertList">
                 <!-- JS 动态注入 -->
@@ -152,7 +152,7 @@
             </div>
 
             <!-- 算力消耗 -->
-            <div class="ws__right-block">
+            <div class="ws__right-block" id="wsConsumptionBlock">
               <div class="ws__right-head">
                 <span class="eyebrow eyebrow--gold">
                   <span class="eyebrow__dot"></span>
@@ -171,8 +171,8 @@
               </div>
             </div>
 
-            <!-- 销冠模式入口 -->
-            <div class="ws__sales-entry">
+            <!-- 销冠模式入口（仅销冠专家显示） -->
+            <div class="ws__sales-entry" id="wsSalesEntry">
               <div class="ws__sales-entry-icon">★</div>
               <div class="ws__sales-entry-body">
                 <div class="ws__sales-entry-title">销冠模式</div>
@@ -207,10 +207,11 @@
       <div class="ws-result-modal__body" id="wsResultModalBody">
         <!-- JS 动态注入 -->
       </div>
-      <footer class="ws-result-modal__foot">
-        <button class="ws-result-modal__btn" id="wsResultCopy" type="button">复制内容</button>
+      <footer class="ws-result-modal__foot" id="wsResultModalFoot">
+        <!-- JS 按专家类型动态注入按钮文字 -->
+        <button class="ws-result-modal__btn" id="wsResultCopy" type="button" data-default="复制内容">复制内容</button>
         <button class="ws-result-modal__btn ws-result-modal__btn--ghost" id="wsResultRerun" type="button">↻ 重新生成</button>
-        <button class="ws-result-modal__btn ws-result-modal__btn--primary" id="wsResultShare" type="button">分享</button>
+        <button class="ws-result-modal__btn ws-result-modal__btn--primary" id="wsResultShare" type="button" data-default="分享">分享</button>
       </footer>
     </div>
   </div>

@@ -261,28 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ---------- 菜单管理：tree stagger + phone preview ---------- */
-  if (page === 'menu') {
-    gsap.fromTo('.oa__menu-node',
-      { opacity: 0, x: -8 },
-      { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out', stagger: 0.06, delay: 0.2, clearProps: 'transform,opacity' }
-    );
-    if (document.querySelector('.oa__phone')) {
-      gsap.fromTo('.oa__phone',
-        { opacity: 0, x: 24, rotate: 5 },
-        { opacity: 1, x: 0, rotate: 0, duration: 0.7, ease: 'power3.out', delay: 0.4, clearProps: 'transform,opacity' }
-      );
-    }
-    if (document.querySelector('.oa__menu-foot')) {
-      gsap.fromTo('.oa__menu-foot',
-        { opacity: 0, y: 8 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.8, clearProps: 'transform,opacity' }
-      );
-    }
-  }
-
   /* ---------- 通用：按钮 / chip click 微动效 ---------- */
-  document.querySelectorAll('.oa__chip, .oa__subtab-item, .oa__action-btn, .oa__menu-btn').forEach(btn => {
+  document.querySelectorAll('.oa__chip, .oa__subtab-item, .oa__action-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       gsap.fromTo(btn,
         { scale: 0.95 },
@@ -301,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const PROJECTS = {
   desktop:    { name: 'UMakex_Desktop',   tag: 'AI 协同',     icon: 'UM', color: '#7C5CFF', desc: 'AI Agent 协同工作平台 · 8 专家 + CEO 全场景协同',          articles: 3, reads: '12.6w', followers: '8,652' },
   chain:      { name: '企业星链',          tag: 'Web3',       icon: '链', color: '#5D3FE5', desc: '企业数字资产 + 盈科合约 + 智能合约量化策略全栈',              articles: 3, reads: '8.4w',  followers: '5,213' },
-  'opul-umc':   { name: 'Opul+UMC',         tag: '跨境支付',    icon: 'O+', color: '#07C160', desc: '稳定币结算 + USDT/UMDT + 商家接入一站式服务',                articles: 3, reads: '6.8w',  followers: '3,841' },
+  'opul-umc':   { name: 'Opul+UMC',         tag: '跨境支付',    icon: 'O+', color: '#07C160', desc: '稳定币结算 + 跨币种支持 + 商家接入一站式服务',                articles: 3, reads: '6.8w',  followers: '3,841' },
   'opu-univ':   { name: 'OPU 大学',         tag: '知识付费',    icon: 'OPU',color: '#FF6B35', desc: 'AI 创作 + 写作训练 + 企业内训 + 学员成长体系',                articles: 3, reads: '15.2w', followers: '12,604' },
   opulnx:     { name: 'OpulnX 量化',       tag: 'AI 量化',     icon: '◇', color: '#D4A574', desc: 'AI 多因子模型 + 实时风控 + 量化 vs 主观交易',                 articles: 3, reads: '4.6w',  followers: '2,189' },
   cishang:    { name: '慈商联营',          tag: '公益透明化',  icon: '慈', color: '#E85D5D', desc: '物资全流程追溯 + 5 角色协同 + Token 化公益',                 articles: 3, reads: '3.2w',  followers: '1,587' },
@@ -327,11 +307,11 @@ const PROJECT_ARTICLES = {
     { id: 'c6', title: 'NFT 2.0：从头像到企业数字资产的进化路径',                    lead: '过去 6 个月 NFT 2.0 项目融资总额达 ¥18.4 亿。',                tag: 'B 端', read: '1.5w', like: '154',  time: '2026-05-15 09:30', new: true }
   ],
   'opul-umc': [
-    { id: 'o1', title: '跨境支付新选择：稳定币结算全解析',                            lead: 'T+0 到账，手续费 0.3%，单笔上限 100 万 USDT。',              tag: '支付', read: '4.1w', like: '487',  time: '2026-06-26 09:50' },
-    { id: 'o2', title: 'USDT vs UMDT：差异、应用场景与选择建议',                     lead: 'UMDT 由 UMC 背书的稳定币，1:1 兑付 + 链上可查。',             tag: '科普', read: '3.3w', like: '356',  time: '2026-06-17 13:20' },
+    { id: 'o1', title: '跨境支付新选择：稳定币结算全解析',                            lead: 'T+0 到账，手续费 0.3%，单笔上限 100 万 UMDT。',              tag: '支付', read: '4.1w', like: '487',  time: '2026-06-26 09:50' },
+    { id: 'o2', title: '稳定币科普：USDT 与 UMDT 的差异、应用场景与选择建议',       lead: 'UMDT 由 UMC 生态背书的稳定币，1:1 兑付 + 链上可查。',           tag: '科普', read: '3.3w', like: '356',  time: '2026-06-17 13:20' },
     { id: 'o3', title: 'Opul+ 商家接入指南：3 步开通，30 分钟上线',                   lead: 'SDK / API / H5 三种接入方式任选，工程师 30 分钟搞定。',     tag: '教程', read: '2.5w', like: '274',  time: '2026-06-10 15:08' },
-    { id: 'o4', title: '真实案例：一家外贸公司用稳定币 90 天回款 2.3 亿',              lead: '从 SWIFT 7 天到 USDT 30 秒，资金周转率提升 4.2 倍。',        tag: 'B 端', read: '2.1w', like: '228',  time: '2026-05-28 11:00', new: true },
-    { id: 'o5', title: 'Web3 钱包安全 10 条铁律：保住你的 100 万 USDT',                lead: '90% 的丢币事件都是这 3 个低级错误。',                        tag: '科普', read: '3.4w', like: '372',  time: '2026-05-20 14:15', new: true },
+    { id: 'o4', title: '真实案例：一家外贸公司用稳定币 90 天回款 2.3 亿',              lead: '从 SWIFT 7 天到 UMDT 30 秒，资金周转率提升 4.2 倍。',        tag: 'B 端', read: '2.1w', like: '228',  time: '2026-05-28 11:00', new: true },
+    { id: 'o5', title: 'Web3 钱包安全 10 条铁律：保住你的 100 万 UMDT',                lead: '90% 的丢币事件都是这 3 个低级错误。',                        tag: '科普', read: '3.4w', like: '372',  time: '2026-05-20 14:15', new: true },
     { id: 'o6', title: '稳定币合规手册：新加坡 / 香港 / 迪拜三地对比',                lead: '一张图看懂三地牌照申请流程、税务处理、运营限制。',           tag: '教程', read: '1.6w', like: '163',  time: '2026-05-12 10:30', new: true }
   ],
   'opu-univ': [
@@ -692,23 +672,23 @@ const BODY_TEMPLATES = {
     { type: 'p',     text: () => '欧盟 AI Act 正式生效，对高风险 AI 系统实施准入审核。国内网信办发布《生成式 AI 服务管理暂行办法》修订版，新增"未成年人保护"专章。AI 行业进入"强监管 + 高质量发展"双轨期。' }
   ],
   '支付': [
-    { type: 'p',     text: (a) => `${a.lead}稳定币正在重塑跨境支付：T+0 到账 + 0.3% 手续费 + 100 万 USDT 单笔上限。` },
+    { type: 'p',     text: (a) => `${a.lead}稳定币正在重塑跨境支付：T+0 到账 + 0.3% 手续费 + 100 万 UMDT 单笔上限。` },
     { type: 'h2',    text: () => '为什么是稳定币？' },
     { type: 'p',     text: () => '传统跨境支付：SWIFT 中转 3-5 天 + 1.5-3% 手续费 + 复杂合规。稳定币：链上直转 30 秒 + 0.3% 手续费 + 自动合规。优势一目了然。' },
     { type: 'callout', num: 1, text: () => '"稳定币 = 跨境支付的 SWIFT 杀手。" 未来 3 年，50% 的 B2B 跨境支付将迁移到稳定币。' },
     { type: 'h2',    text: () => '3 大应用场景' },
     { type: 'ul',    items: () => [
       '<strong>B2B 贸易结算</strong>：东南亚、非洲、中东等美元稀缺地区',
-      '<strong>跨境电商</strong>：Shopify、WooCommerce 已支持 USDT 收款',
-      '<strong>跨境工资发放</strong>：远程工作团队的 USDT 工资，绕过 SWIFT'
+      '<strong>跨境电商</strong>：Shopify、WooCommerce 已支持 UMDT 收款',
+      '<strong>跨境工资发放</strong>：远程工作团队的 UMDT 工资，绕过 SWIFT'
     ] },
     { type: 'h2',    text: () => '风险与对策' },
-    { type: 'p',     text: () => '稳定币风险：① 价格波动（用 USDT/USDC 等法币型稳定币规避）② 合规风险（选择持牌机构）③ 链上安全（用多签 + 冷钱包）。Opul+ 提供完整的风控方案。' }
+    { type: 'p',     text: () => '稳定币风险：① 价格波动（用 UMDT/USDC 等法币型稳定币规避）② 合规风险（选择持牌机构）③ 链上安全（用多签 + 冷钱包）。Opul+ 提供完整的风控方案。' }
   ],
   '科普': [
-    { type: 'p',     text: (a) => `${a.lead}USDT 是市场老大，UMDT 是 UMC 生态稳定币。2 者的核心差异：发行方、透明度、用途。` },
-    { type: 'h2',    text: () => 'USDT 是什么？' },
-    { type: 'p',     text: () => 'USDT（Tether USD）由 Tether 公司发行，1:1 锚定美元，是目前市值最大、流通最广的稳定币（>830 亿 USDT）。主要用于加密货币交易、跨境转账、DeFi 流动性。' },
+    { type: 'p',     text: (a) => `${a.lead}UMDT 是市场老大，UMDT 是 UMC 生态稳定币。2 者的核心差异：发行方、透明度、用途。` },
+    { type: 'h2',    text: () => 'UMDT 是什么？' },
+    { type: 'p',     text: () => 'UMDT 由 UMC 生态背书的稳定币，1:1 兑付美元 + 链上可查 + UMakex 平台内通用。UMC 体系内消费、公益捐赠、会员服务、算力结算均以 UMDT 计价。' },
     { type: 'callout', num: 2, text: () => 'UMDT = UMC 背书 + 1:1 兑付 + 链上可查 + 生态内流通。核心差异不是"技术"，而是"信任锚"。' },
     { type: 'h2',    text: () => 'UMDT 是什么？' },
     { type: 'ul',    items: () => [
@@ -718,21 +698,21 @@ const BODY_TEMPLATES = {
       '<strong>生态内流通</strong>：UMC 生态内 8 大项目通用，可兑换 200+ 商品/服务'
     ] },
     { type: 'h2',    text: () => '如何选择？' },
-    { type: 'p',     text: () => '加密交易 / DeFi 选 USDT（流动性最好）。UMC 生态消费 / 公益捐赠 / 会员服务选 UMDT（信任锚 + 生态激励）。两者并不冲突，可同时使用。' }
+    { type: 'p',     text: () => '加密交易 / DeFi 选 UMDT（流动性最好）。UMC 生态消费 / 公益捐赠 / 会员服务选 UMDT（信任锚 + 生态激励）。两者并不冲突，可同时使用。' }
   ],
   '教程': [
     { type: 'p',     text: (a) => `${a.lead}Opul+ 提供 3 种接入方式，最快 30 分钟上线，慢也只要 2 小时。` },
     { type: 'h2',    text: () => '3 步开通流程' },
     { type: 'p',     text: () => '① 注册商家账号（KYC + 银行账户绑定，10 分钟）② 选择接入方式（SDK / API / H5，5 分钟）③ 测试 + 上线（沙盒测试 15 分钟，生产上线 5 分钟）。' },
-    { type: 'callout', num: 3, text: () => '"30 分钟上线"是真实数据：92% 商家在 30 分钟内完成首单 USDT 收款。' },
+    { type: 'callout', num: 3, text: () => '"30 分钟上线"是真实数据：92% 商家在 30 分钟内完成首单 UMDT 收款。' },
     { type: 'h2',    text: () => '3 种接入方式对比' },
     { type: 'ul',    items: () => [
-      '<strong>SDK 接入</strong>：原生 iOS / Android，30 分钟集成，支持 USDT/UMDT/EOS',
+      '<strong>SDK 接入</strong>：原生 iOS / Android，30 分钟集成，支持 UMDT、EOS 等多币种',
       '<strong>API 接入</strong>：RESTful API，2 小时集成，30+ 字段自由组合',
       '<strong>H5 接入</strong>：无需开发，10 分钟配置，扫码即用，适合个人小商家'
     ] },
     { type: 'h2',    text: () => '常见问题' },
-    { type: 'p',     text: () => 'Q：手续费多少？A：0.3%，无最低消费。Q：结算周期？A：T+0 实时结算到银行卡。Q：支持哪些币？A：USDT/UMDT/EOS，未来扩展 BTC/ETH。Q：合规吗？A：MAS 牌照 + 国内合规备案。' }
+    { type: 'p',     text: () => 'Q：手续费多少？A：0.3%，无最低消费。Q：结算周期？A：T+0 实时结算到银行卡。Q：支持哪些币？A：UMDT、EOS，未来扩展 BTC/ETH。Q：合规吗？A：MAS 牌照 + 国内合规备案。' }
   ],
   '工具': [
     { type: 'p',     text: (a) => `${a.lead}不是 ChatGPT 不够强，是你没用对"组合拳"。5 个被严重低估的小工具，能让 ChatGPT 提升 10 倍效率。` },
@@ -1203,7 +1183,6 @@ function bindInteractions(page) {
 
   // 菜单管理：subtab 切换
   const subtabMap = {
-    '自定义菜单': 'menu',
     '关键词回复': 'keywords',
     '被关注回复': 'subscribe',
     '客服消息': 'service',

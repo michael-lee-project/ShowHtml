@@ -39,10 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const HAS_GSAP = typeof gsap !== 'undefined';
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // 2a. 4 统计数字 count-up (GSAP object tween)
-  document.querySelectorAll('.stat-card__num').forEach((el, idx) => {
+  // 2a. 4 统计数字 count-up (GSAP object tween) + 我的算力档案 6 格子
+  const countUpTargets = document.querySelectorAll('.stat-card__num, .personal-archive__cell-num');
+  countUpTargets.forEach((el, idx) => {
     const target = parseInt(el.dataset.target || '0', 10);
     const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    const initialText = prefix + target.toLocaleString('en-US') + suffix;
     if (HAS_GSAP && !reduceMotion) {
       const obj = { v: 0 };
       gsap.to(obj, {
@@ -51,10 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
         delay: 0.15 + idx * 0.08,  // 错开
         ease: 'power3.out',
         onUpdate: () => {
-          el.textContent = prefix + Math.floor(obj.v).toLocaleString('en-US');
+          el.textContent = prefix + Math.floor(obj.v).toLocaleString('en-US') + suffix;
         },
         onComplete: () => {
-          el.textContent = prefix + target.toLocaleString('en-US');
+          el.textContent = initialText;
         }
       });
     } else {
@@ -137,6 +140,156 @@ document.addEventListener('DOMContentLoaded', () => {
         { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out', delay: 1.0 }
       );
     }
+  }
+
+  /* ---------- 2c. D: 9 专家实时工作状态 ---------- */
+  // 与 agent-workstation.js EXPERTS 顺序保持一致
+  const EXPERTS = [
+    { id: 'ceo',     name: 'CEO',           short: 'CEO',       emoji: '🌞', role: '调度',   gradient: 'linear-gradient(135deg, #FFD700, #FF8C42)' },
+    { id: 'sales',   name: '销冠专家',     short: '销冠',      emoji: '★', role: '客户对话', gradient: 'linear-gradient(135deg, #7BC498, #4DD890)' },
+    { id: 'brand',   name: '品牌设计专家', short: '设计',      emoji: '◆', role: 'Logo/VI', gradient: 'linear-gradient(135deg, #F8718B, #FF7B7B)' },
+    { id: 'writing', name: '写作文案专家', short: '写作',      emoji: '✎', role: '公众号',  gradient: 'linear-gradient(135deg, #B695FF, #7C5CFF)' },
+    { id: 'audio',   name: '录音会议专家', short: '录音',      emoji: '♪', role: '转录',   gradient: 'linear-gradient(135deg, #7BD4FF, #1FB6FF)' },
+    { id: 'video',   name: '视频制作专家', short: '视频',      emoji: '▶', role: '短视频',  gradient: 'linear-gradient(135deg, #FF9F75, #FF8C42)' },
+    { id: 'data',    name: '数据分析专家', short: '数据',      emoji: '◐', role: '报表',   gradient: 'linear-gradient(135deg, #7BAFFF, #5D8FE5)' },
+    { id: 'fengshui',name: '五行风水专家', short: '风水',      emoji: '☯', role: '八字',   gradient: 'linear-gradient(135deg, #5BD897, #07C160)' },
+    { id: 'zodiac',  name: '十二星座专家', short: '星座',      emoji: '☽', role: '运势',   gradient: 'linear-gradient(135deg, #9F87E8, #7C5CFF)' }
+  ];
+
+  const EXPERT_TASKS = {
+    ceo:      ['协调 Q4 营销全案', '调度 3 子任务', '拆解需求中'],
+    sales:    ['客户「张总」对话接管中', '推送报价单 v2', '意向客户跟进'],
+    brand:    ['Logo 方案 #4 渲染中', 'VI 系统导出 PDF', '海报收尾'],
+    writing:  ['公众号《AI Agent》初稿', '短视频脚本 v3', 'SEO 关键词优化'],
+    audio:    ['会议《周复盘》转录', '12 分钟待整理', '智能纪要生成'],
+    video:    ['60s 短视频合成', '数字人主播 + 字幕', '抖音/视频号适配'],
+    data:     ['本周消费趋势分析', '异常预警 #3 推送', '复盘 Q3 数据'],
+    fengshui: ['李先生八字排盘', '流年 2026 大运解析', '居家风水咨询'],
+    zodiac:   ['狮子座本周运势', '12 星座配对报告', '桃花/财运解读']
+  };
+
+  // 当前 expert 状态（state: 'online'/'busy'/'idle', load: 0-100）
+  const expertState = EXPERTS.map((_, i) => ({
+    state: 'online',
+    load: Math.floor(20 + Math.random() * 60),
+    finishedToday: Math.floor(50 + Math.random() * 200),
+    minsAgo: Math.floor(Math.random() * 8)
+  }));
+  // CEO 始终在线不忙（调度中心，状态 idle）
+  expertState[0].state = 'online';
+  expertState[0].load = 38;
+
+  function renderExpertList() {
+    const list = document.getElementById('expertStatusList');
+    if (!list) return;
+    list.innerHTML = EXPERTS.map((e, i) => {
+      const s = expertState[i];
+      const isCeo = e.id === 'ceo';
+      const cls = s.state === 'busy' ? 'is-busy' : (s.state === 'idle' ? 'is-idle' : '');
+      const statusLabel = s.state === 'busy' ? '忙碌' : (s.state === 'idle' ? '空闲' : '在线');
+      const statusClass = s.state === 'busy' ? 'expert-status-row__status--busy' : (s.state === 'idle' ? 'expert-status-row__status--idle' : 'expert-status-row__status--online');
+      const taskText = isCeo ? '协调 9 位专家协同工作' : (EXPERT_TASKS[e.id] || ['处理中任务'])[Math.floor(s.minsAgo / 3) % 3];
+      const agoText = s.minsAgo === 0 ? '刚刚' : (s.minsAgo < 60 ? s.minsAgo + ' 分钟前' : Math.floor(s.minsAgo / 60) + ' 小时前');
+      return (
+        '<div class="expert-status-row ' + (isCeo ? 'is-ceo ' : '') + cls + '" data-expert-id="' + e.id + '">' +
+          '<div class="expert-status-row__avatar" style="background:' + e.gradient + ';">' + e.emoji + '</div>' +
+          '<div class="expert-status-row__body">' +
+            '<div class="expert-status-row__name">' +
+              '<span>' + e.name + '</span>' +
+              (isCeo ? '<span class="expert-status-row__name-ceo-tag">★ CEO 调度员</span>' : '<span style="font-size: 9px; color: rgba(26,34,56,0.4); font-weight: 700;">· ' + e.role + '</span>') +
+            '</div>' +
+            '<div class="expert-status-row__task">📌 ' + taskText + ' · ' + agoText + '完成</div>' +
+          '</div>' +
+          '<div class="expert-status-row__load" title="负载 ' + s.load + '%">' +
+            '<span style="width: ' + s.load + '%;"></span>' +
+          '</div>' +
+          '<span class="expert-status-row__status ' + statusClass + '">' + statusLabel + '</span>' +
+        '</div>'
+      );
+    }).join('');
+    updateExpertSummary();
+  }
+
+  function updateExpertSummary() {
+    const onlineEl = document.getElementById('esOnlineCount');
+    const busyEl = document.getElementById('esBusyCount');
+    const idleEl = document.getElementById('esIdleCount');
+    const totalEl = document.getElementById('esTotalToday');
+    if (!onlineEl) return;
+    const busy = expertState.filter(s => s.state === 'busy').length;
+    const idle = expertState.filter(s => s.state === 'idle').length;
+    const online = expertState.length - idle;
+    onlineEl.textContent = online;
+    if (busyEl) busyEl.textContent = busy;
+    if (idleEl) idleEl.textContent = idle;
+    if (totalEl) {
+      const total = expertState.reduce((acc, s) => acc + s.finishedToday, 0);
+      if (HAS_GSAP && !reduceMotion) {
+        const obj = { v: parseInt(totalEl.textContent.replace(/\D/g, '') || '0', 10) };
+        gsap.to(obj, {
+          v: total,
+          duration: 0.6,
+          ease: 'power2.out',
+          onUpdate: () => { totalEl.textContent = Math.floor(obj.v); }
+        });
+      } else {
+        totalEl.textContent = total;
+      }
+    }
+  }
+
+  // 模拟 8 秒一次的实时刷新（让 load 数字 + 状态变化）
+  function tickExpertState() {
+    let changed = false;
+    expertState.forEach((s, i) => {
+      if (i === 0) return;  // CEO 不变
+      const r = Math.random();
+      // 30% 概率改 load ±15
+      if (r < 0.3) {
+        s.load = Math.max(10, Math.min(95, s.load + (Math.random() < 0.5 ? -15 : 15)));
+        changed = true;
+      }
+      // 15% 概率切状态
+      if (Math.random() < 0.15) {
+        s.state = s.state === 'busy' ? 'online' : (s.state === 'online' && Math.random() < 0.6 ? 'busy' : 'idle');
+        changed = true;
+      }
+      // 5% 概率 minsAgo 重置（刚完成一个任务）
+      if (Math.random() < 0.05) {
+        s.minsAgo = 0;
+        s.finishedToday += 1;
+        changed = true;
+      } else {
+        s.minsAgo = Math.min(120, s.minsAgo + 1);
+      }
+    });
+    if (changed) renderExpertList();
+  }
+
+  renderExpertList();
+  // 测试钩子：headless 截图模式 — 立即设到目标态，避免 GSAP fromTo 卡在 opacity:0
+  if (location.search.indexOf('test=d') !== -1 || location.search.indexOf('test=experts') !== -1) {
+    if (HAS_GSAP) {
+      gsap.killTweensOf(['.personal-archive__cell', '.personal-archive__hero', '.personal-archive__rank', '.expert-status-row']);
+      gsap.set('.personal-archive__cell, .personal-archive__hero, .personal-archive__rank', { opacity: 1, y: 0, scale: 1, clearProps: 'opacity,y,scale' });
+      gsap.set('.expert-status-row', { opacity: 1, x: 0, clearProps: 'opacity,x' });
+    }
+  } else if (HAS_GSAP && !reduceMotion) {
+    gsap.fromTo('.expert-status-row',
+      { opacity: 0, x: -16 },
+      { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', stagger: 0.05, delay: 0.9 }
+    );
+    gsap.fromTo('.personal-archive__cell, .personal-archive__hero, .personal-archive__rank',
+      { opacity: 0, y: 12, scale: 0.97 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power3.out', stagger: 0.04, delay: 0.7 }
+    );
+  }
+  setInterval(tickExpertState, 8000);
+
+  // 测试钩子：?test=experts 让 8 秒 tick 加速到 800ms
+  if (location.search.indexOf('test=experts') !== -1) {
+    let n = 0;
+    setInterval(() => { tickExpertState(); n++; }, 800);
   }
 
   /* ---------- 3. 转盘：8 扇区 + 旋转 ---------- */
@@ -285,6 +438,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* ---------- 4.5 Hallmark 按钮状态机 helper ---------- */
+  // 通用状态机: loading → success (90%) / error (10%) → reset
+  // 适应现有按钮结构: <button><span>主文字</span><span class="btn-pill__icon">icon</span></button>
+  function runBtnStateMachine(btn, opts) {
+    if (!btn) return;
+    if (btn.dataset.busy === '1') return; // 防止重复点击
+    btn.dataset.busy = '1';
+    // 找主文字 span (第一个 span，不是 btn-pill__icon)
+    const mainSpan = Array.from(btn.querySelectorAll(':scope > span'))
+      .find(s => !s.classList.contains('btn-pill__icon'));
+    const origText = mainSpan ? mainSpan.textContent : '';
+    // 进入 loading
+    btn.setAttribute('data-state', 'loading');
+    if (mainSpan) mainSpan.textContent = opts.loadingMain;
+    // AC: loading 阶段分 2 段文字（700ms 后切到 step2）
+    let step2Timer = null;
+    if (opts.loadingStep2) {
+      step2Timer = setTimeout(() => {
+        if (btn.dataset.busy === '1' && btn.getAttribute('data-state') === 'loading') {
+          if (mainSpan) mainSpan.textContent = opts.loadingStep2;
+        }
+      }, 700);
+    }
+    // 1500ms 后判定 success / error
+    setTimeout(() => {
+      if (step2Timer) clearTimeout(step2Timer);
+      const isError = Math.random() < 0.1; // 10% 演示错误
+      const resetDelay = opts.resetDelay || 2500; // AC: 默认 2.5s（之前 1.8s）
+      if (isError) {
+        btn.setAttribute('data-state', 'error');
+        if (mainSpan) mainSpan.textContent = opts.errorMain;
+        // 错误状态停留 resetDelay
+        setTimeout(() => {
+          btn.removeAttribute('data-state');
+          if (mainSpan) mainSpan.textContent = origText;
+          btn.dataset.busy = '';
+        }, resetDelay);
+      } else {
+        btn.setAttribute('data-state', 'success');
+        if (mainSpan) mainSpan.textContent = opts.successMain;
+        // success 后调用回调
+        if (typeof opts.onSuccess === 'function') opts.onSuccess();
+        // resetDelay 后重置
+        setTimeout(() => {
+          btn.removeAttribute('data-state');
+          if (mainSpan) mainSpan.textContent = origText;
+          btn.dataset.busy = '';
+        }, resetDelay);
+      }
+    }, 1500);
+  }
+
   /* ---------- 5. 认购 modal ---------- */
   /* ---------- 5. 认购 / 购买 modal（超级 AI 老板认购 + 用户按等级购买） ---------- */
   const SALES_TIERS = [
@@ -305,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const amountEl = document.getElementById('buyPoolAmount');
         const totalEl = document.getElementById('buyPoolTotal');
         if (amountEl) amountEl.textContent = amount;
-        if (totalEl) totalEl.textContent = total.toFixed(1) + ' USDT';
+        if (totalEl) totalEl.textContent = total.toFixed(1) + ' UMDT';
         openModal('buyPoolModal');
       } else if (kind === 'sales') {
         // 用户按等级购买
@@ -318,43 +523,73 @@ document.addEventListener('DOMContentLoaded', () => {
         const priceEl = document.getElementById('buySalesUnitPrice');
         if (amountEl) amountEl.textContent = amount;
         if (tierEl) tierEl.textContent = tier.cn + ' · ' + tier.discount;
-        if (priceEl) priceEl.textContent = tier.price.toFixed(1) + ' USDT / 100 万 Token';
-        if (totalEl) totalEl.textContent = total.toFixed(1) + ' USDT';
+        if (priceEl) priceEl.textContent = tier.price.toFixed(1) + ' UMDT / 100 万 Token';
+        if (totalEl) totalEl.textContent = total.toFixed(1) + ' UMDT';
         openModal('buySalesModal');
       }
     });
   });
 
-  // 确认认购（超级 AI 老板）
-  document.getElementById('buyPoolConfirm')?.addEventListener('click', () => {
-    closeModal(document.getElementById('buyPoolModal'));
-    const balanceEl = document.getElementById('userBalance');
-    if (balanceEl) {
-      balanceEl.style.transition = 'color 600ms';
-      balanceEl.style.color = '#E54B4B';
-      setTimeout(() => { balanceEl.style.color = ''; }, 1200);
-    }
-    // 模拟：认购明细 prepend 一条（用统一 pushBuyerItem）
+  // 确认认购（超级 AI 老板）— Hallmark 状态机联动
+  document.getElementById('buyPoolConfirm')?.addEventListener('click', (e) => {
+    const btn = e.currentTarget;
     const amountInput = document.getElementById('buyPoolAmountInput');
     const amount = amountInput ? parseInt(amountInput.value, 10) : 100;
-    pushBuyerItem({
-      avatarBg: 'linear-gradient(135deg, #1A2238, #4A5688)',
-      initial: '您',
-      name: '您（超级 AI 老板）',
-      amount: amount,
-      sub: '刚刚 · 认购成功'
+    runBtnStateMachine(btn, {
+      loadingMain: '认购中...',
+      loadingStep2: '链上确认中...',
+      successMain: '已认购',
+      successSub: amount + ' Token · 0x4a..f3e',
+      errorMain: '认购失败',
+      errorSub: '链上拥堵 · 点击重试',
+      resetDelay: 2500,
+      onSuccess: () => {
+        // 跟随 resetDelay（2.5s）关闭 modal
+        setTimeout(() => {
+          closeModal(document.getElementById('buyPoolModal'));
+        }, 2500);
+        const balanceEl = document.getElementById('userBalance');
+        if (balanceEl) {
+          balanceEl.style.transition = 'color 600ms';
+          balanceEl.style.color = '#E54B4B';
+          setTimeout(() => { balanceEl.style.color = ''; }, 1200);
+        }
+        pushBuyerItem({
+          avatarBg: 'linear-gradient(135deg, #1A2238, #4A5688)',
+          initial: '您',
+          name: '您（超级 AI 老板）',
+          amount: amount,
+          sub: '刚刚 · 认购成功'
+        });
+      }
     });
   });
 
-  // 确认购买（用户按等级）
-  document.getElementById('buySalesConfirm')?.addEventListener('click', () => {
-    closeModal(document.getElementById('buySalesModal'));
-    const balanceEl = document.getElementById('userBalance');
-    if (balanceEl) {
-      balanceEl.style.transition = 'color 600ms';
-      balanceEl.style.color = '#07C160';
-      setTimeout(() => { balanceEl.style.color = ''; }, 1200);
-    }
+  // 确认购买（用户按等级）— Hallmark 状态机联动
+  document.getElementById('buySalesConfirm')?.addEventListener('click', (e) => {
+    const btn = e.currentTarget;
+    const amountInput = document.getElementById('buySalesAmountInput');
+    const amount = amountInput ? parseInt(amountInput.value, 10) : 50;
+    runBtnStateMachine(btn, {
+      loadingMain: '支付中...',
+      loadingStep2: '钱包签名中...',
+      successMain: '已支付',
+      successSub: amount + ' Token · 0x7b..d2c',
+      errorMain: '支付失败',
+      errorSub: '余额不足 · 充值后重试',
+      resetDelay: 2500,
+      onSuccess: () => {
+        setTimeout(() => {
+          closeModal(document.getElementById('buySalesModal'));
+        }, 2500);
+        const balanceEl = document.getElementById('userBalance');
+        if (balanceEl) {
+          balanceEl.style.transition = 'color 600ms';
+          balanceEl.style.color = '#07C160';
+          setTimeout(() => { balanceEl.style.color = ''; }, 1200);
+        }
+      }
+    });
   });
 
   // 点击 sales-tier 卡片：可选择等级（demo: 仅提示 + selected 状态）
@@ -370,8 +605,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const tierEl = document.getElementById('buySalesTier');
         const priceEl = document.getElementById('buySalesUnitPrice');
         if (tierEl) tierEl.textContent = tierData.cn + ' · ' + tierData.discount;
-        if (priceEl) priceEl.textContent = tierData.price.toFixed(1) + ' USDT / 100 万 Token';
-        // 触发 picker updateTotal 刷新"应付 USDT"
+        if (priceEl) priceEl.textContent = tierData.price.toFixed(1) + ' UMDT / 100 万 Token';
+        // 触发 picker updateTotal 刷新"应付 UMDT"
         const salesModal = document.getElementById('buySalesModal');
         if (salesModal && salesModal._pickerUpdate) salesModal._pickerUpdate();
       }
@@ -481,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (amount % 10 !== 0) amount = Math.round(amount / 10) * 10;
       input.value = amount;
       const total = (amount / 100) * getPrice();
-      if (totalEl) totalEl.textContent = total.toFixed(2) + ' USDT';
+      if (totalEl) totalEl.textContent = total.toFixed(2) + ' UMDT';
       if (amountLabel) amountLabel.textContent = amount + ' 万 Token';
       quickBtns.forEach(function(b) {
         if (parseInt(b.dataset.amount, 10) === amount) b.classList.add('is-active');
@@ -515,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTotal();
   }
 
-  // 认购池 picker（固定价格 3.6 USDT）
+  // 认购池 picker（固定价格 3.6 UMDT）
   setupAmountPicker('buyPoolModal', 3.6, 'buyPool');
 
   // 销售池 picker（动态价格：根据当前选择等级）
@@ -588,9 +823,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  document.getElementById('luckyAgain')?.addEventListener('click', () => {
-    closeModal(document.getElementById('luckyModal'));
-    setTimeout(() => spinWheel(1), 300);
+  document.getElementById('luckyAgain')?.addEventListener('click', (e) => {
+    const btn = e.currentTarget;
+    runBtnStateMachine(btn, {
+      loadingMain: '再抽一次...',
+      loadingStep2: '生成随机种子...',
+      successMain: '已抽出',
+      successSub: 'SSR · 算力 ×5',
+      errorMain: '抽奖失败',
+      errorSub: '网络超时 · 点击重试',
+      resetDelay: 2500,
+      onSuccess: () => {
+        setTimeout(() => {
+          closeModal(document.getElementById('luckyModal'));
+          setTimeout(() => spinWheel(1), 300);
+        }, 2500);
+      }
+    });
   });
 
   /* ---------- 8. 实时动态（每 8 秒加一条）---------- */

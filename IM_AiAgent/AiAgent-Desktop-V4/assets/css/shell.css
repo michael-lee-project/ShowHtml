@@ -7,7 +7,10 @@
   width: var(--window-w);
   height: var(--window-h);
   margin: 24px auto;
-  background: var(--bg-main);
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255, 215, 0, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(124, 92, 255, 0.04) 0%, transparent 70%),
+    var(--bg-main);
   border-radius: 10px;
   overflow: hidden;
   box-shadow:
@@ -16,6 +19,20 @@
     inset 0 0.5px 0 rgba(255, 255, 255, 0.6);
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+/* 算力中心专用：film grain + 双 radial 灯效 · 营造物理质感 */
+body.compute-page .window::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 100;
+  border-radius: inherit;
 }
 
 /* ---- 标题栏（macOS 红黄绿三按钮 + hover 显 × / − / +） ---- */

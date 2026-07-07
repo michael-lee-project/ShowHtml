@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="assets/css/shell.css" />
   <link rel="stylesheet" href="assets/css/compute-center.css" />
 </head>
-<body>
+<body class="compute-page">
   <div class="window">
     <div class="titlebar">
       <div class="titlebar__lights">
@@ -153,8 +153,8 @@
                   </svg>
                 </div>
                 <div class="stat-card__body">
-                  <div class="stat-card__label">USDT 余额</div>
-                  <div class="stat-card__num" data-target="58400" data-prefix="USDT ">USDT 58,400</div>
+                  <div class="stat-card__label">UMDT 余额</div>
+                  <div class="stat-card__num" data-target="58400" data-prefix="UMDT ">UMDT 58,400</div>
                   <div class="stat-card__trend stat-card__trend--up">+12.4% · 7d 增长</div>
                 </div>
               </div>
@@ -179,6 +179,156 @@
           </div>
         </section>
 
+        <!-- ===== D: 个人算力档案 + 9 专家实时状态（新）===== -->
+        <section class="compute-row">
+
+          <!-- 我的算力档案：5 KPI 网格 + 一句洞察 -->
+          <div class="compute-block">
+            <div class="compute-block__shell">
+              <div class="compute-block__inner">
+                <header class="compute-block__head">
+                  <div class="compute-block__title">
+                    <span class="eyebrow eyebrow--gold">
+                      <span class="eyebrow__dot"></span>
+                      <span>PERSONAL · 个人</span>
+                    </span>
+                    <h3 class="compute-block__h3">我的算力档案</h3>
+                    <p class="compute-block__desc">30 天个人算力使用画像 · 一句话画像由 AI 生成</p>
+                  </div>
+                  <div class="compute-block__live">
+                    <span class="live-dot"></span>
+                    <span>实时</span>
+                  </div>
+                </header>
+
+                <div class="personal-archive">
+                  <div class="personal-archive__hero">
+                    <div class="personal-archive__avatar">MK</div>
+                    <div class="personal-archive__hero-body">
+                      <div class="personal-archive__name">Michael · MB · 尊享黑卡</div>
+                      <div class="personal-archive__insight" id="personalInsight">你是「品牌 + 写作」高频用户，近 30 天调用 47 次 · 平均节省 2.3 小时/任务</div>
+                    </div>
+                    <div class="personal-archive__level-tag">
+                      <span class="compute__level-icon">★</span>
+                      <span>Lv.5</span>
+                    </div>
+                  </div>
+
+                  <div class="personal-archive__grid">
+                    <div class="personal-archive__cell">
+                      <div class="personal-archive__cell-label">今日消耗</div>
+                      <div class="personal-archive__cell-num" data-target="1280" data-suffix="">1,280</div>
+                      <div class="personal-archive__cell-trend personal-archive__cell-trend--up">↑ 12% · 昨日 1,142</div>
+                    </div>
+                    <div class="personal-archive__cell">
+                      <div class="personal-archive__cell-label">30 天累计</div>
+                      <div class="personal-archive__cell-num" data-target="32180">32,180</div>
+                      <div class="personal-archive__cell-trend">月上限 50,000 · 余 35.6%</div>
+                    </div>
+                    <div class="personal-archive__cell">
+                      <div class="personal-archive__cell-label">平均效率</div>
+                      <div class="personal-archive__cell-num" data-target="94" data-suffix="%">94%</div>
+                      <div class="personal-archive__cell-trend personal-archive__cell-trend--up">↑ 2.1% · 高于 86% 用户</div>
+                    </div>
+                    <div class="personal-archive__cell">
+                      <div class="personal-archive__cell-label">节省时间</div>
+                      <div class="personal-archive__cell-num" data-target="108" data-suffix=" h">108 h</div>
+                      <div class="personal-archive__cell-trend">≈ 13 个工作日</div>
+                    </div>
+                    <div class="personal-archive__cell">
+                      <div class="personal-archive__cell-label">调用次数</div>
+                      <div class="personal-archive__cell-num" data-target="47">47</div>
+                      <div class="personal-archive__cell-trend">日均 1.6 · 峰值 4</div>
+                    </div>
+                    <div class="personal-archive__cell">
+                      <div class="personal-archive__cell-label">活跃天数</div>
+                      <div class="personal-archive__cell-num" data-target="22" data-suffix=" / 30">22 / 30</div>
+                      <div class="personal-archive__cell-trend personal-archive__cell-trend--up">↑ 连续 12 天</div>
+                    </div>
+                  </div>
+
+                  <div class="personal-archive__ranking">
+                    <div class="personal-archive__ranking-head">
+                      <span class="personal-archive__ranking-title">本月调用排行 · TOP 3</span>
+                      <span class="personal-archive__ranking-tip">点查看详情</span>
+                    </div>
+                    <div class="personal-archive__ranking-list" id="personalRanking">
+                      <div class="personal-archive__rank" data-rank="1">
+                        <span class="personal-archive__rank-medal">🥇</span>
+                        <span class="personal-archive__rank-avatar" style="background: linear-gradient(135deg, #B695FF, #7C5CFF);">✎</span>
+                        <span class="personal-archive__rank-name">写作文案专家</span>
+                        <span class="personal-archive__rank-bar"><span style="width: 78%;"></span></span>
+                        <span class="personal-archive__rank-num">16 次 · 8,000</span>
+                      </div>
+                      <div class="personal-archive__rank" data-rank="2">
+                        <span class="personal-archive__rank-medal">🥈</span>
+                        <span class="personal-archive__rank-avatar" style="background: linear-gradient(135deg, #F8718B, #FF7B7B);">◆</span>
+                        <span class="personal-archive__rank-name">品牌设计专家</span>
+                        <span class="personal-archive__rank-bar"><span style="width: 54%;"></span></span>
+                        <span class="personal-archive__rank-num">11 次 · 13,200</span>
+                      </div>
+                      <div class="personal-archive__rank" data-rank="3">
+                        <span class="personal-archive__rank-medal">🥉</span>
+                        <span class="personal-archive__rank-avatar" style="background: linear-gradient(135deg, #7BAFFF, #5D8FE5);">◐</span>
+                        <span class="personal-archive__rank-name">数据分析专家</span>
+                        <span class="personal-archive__rank-bar"><span style="width: 38%;"></span></span>
+                        <span class="personal-archive__rank-num">8 次 · 5,600</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 9 专家实时工作状态 -->
+          <div class="compute-block">
+            <div class="compute-block__shell">
+              <div class="compute-block__inner">
+                <header class="compute-block__head">
+                  <div class="compute-block__title">
+                    <span class="eyebrow eyebrow--purple">
+                      <span class="eyebrow__dot"></span>
+                      <span>EXPERTS · 专家</span>
+                    </span>
+                    <h3 class="compute-block__h3">9 专家实时工作状态</h3>
+                    <p class="compute-block__desc">每 8 秒自动刷新 · 每行可点查看个人档案</p>
+                  </div>
+                  <div class="compute-block__live">
+                    <span class="live-dot"></span>
+                    <span>实时</span>
+                  </div>
+                </header>
+
+                <div class="expert-status">
+                  <div class="expert-status__summary">
+                    <div class="expert-status__summary-cell">
+                      <span class="expert-status__summary-label">在线</span>
+                      <span class="expert-status__summary-num" id="esOnlineCount">9</span>
+                      <span class="expert-status__summary-suffix">/ 9</span>
+                    </div>
+                    <div class="expert-status__summary-cell">
+                      <span class="expert-status__summary-label">忙碌</span>
+                      <span class="expert-status__summary-num" id="esBusyCount">3</span>
+                    </div>
+                    <div class="expert-status__summary-cell">
+                      <span class="expert-status__summary-label">空闲</span>
+                      <span class="expert-status__summary-num expert-status__summary-num--idle" id="esIdleCount">6</span>
+                    </div>
+                    <div class="expert-status__summary-cell">
+                      <span class="expert-status__summary-label">今日累计任务</span>
+                      <span class="expert-status__summary-num" id="esTotalToday">238</span>
+                    </div>
+                  </div>
+                  <div class="expert-status__list" id="expertStatusList">
+                    <!-- 由 JS 动态生成 -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- 中部：认购池（超级 AI 老板）+ 销售池（用户购买） -->
         <section class="compute-row">
 
@@ -193,7 +343,7 @@
                       <span>POOL · 认购池</span>
                     </span>
                     <h3 class="compute-block__h3">超级 AI 老板认购</h3>
-                    <p class="compute-block__desc">平台每日放出 1,000 万 Token · 3.6 USDT / 100 万 Token</p>
+                    <p class="compute-block__desc">平台每日放出 1,000 万 Token · 3.6 UMDT / 100 万 Token</p>
                   </div>
                   <div class="compute-block__live">
                     <span class="live-dot"></span>
@@ -274,10 +424,10 @@
                   </div>
                 </div>
 
-                <button class="btn-pill btn-pill--primary" data-buy="pool">
+                <button class="btn-pill btn-pill--primary btn-pill--static" data-buy="pool" style="margin-top: 20px;">
                   <span>立即认购</span>
                   <span class="btn-pill__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                   </span>
                 </button>
               </div>
@@ -318,7 +468,7 @@
                     </div>
                     <div class="sales-tier__price">
                       <span class="sales-tier__num">6</span>
-                      <span class="sales-tier__unit">USDT / 100 万 Token</span>
+                      <span class="sales-tier__unit">UMDT / 100 万 Token</span>
                     </div>
                   </div>
 
@@ -332,7 +482,7 @@
                     </div>
                     <div class="sales-tier__price">
                       <span class="sales-tier__num sales-tier__num--green">5.4</span>
-                      <span class="sales-tier__unit">USDT / 100 万 Token</span>
+                      <span class="sales-tier__unit">UMDT / 100 万 Token</span>
                     </div>
                   </div>
 
@@ -346,7 +496,7 @@
                     </div>
                     <div class="sales-tier__price">
                       <span class="sales-tier__num sales-tier__num--purple">4.8</span>
-                      <span class="sales-tier__unit">USDT / 100 万 Token</span>
+                      <span class="sales-tier__unit">UMDT / 100 万 Token</span>
                     </div>
                   </div>
 
@@ -361,7 +511,7 @@
                     </div>
                     <div class="sales-tier__price">
                       <span class="sales-tier__num sales-tier__num--gold">4.2</span>
-                      <span class="sales-tier__unit">USDT / 100 万 Token</span>
+                      <span class="sales-tier__unit">UMDT / 100 万 Token</span>
                     </div>
                   </div>
                 </div>
@@ -371,13 +521,13 @@
                   <span class="sales-rule__dot">·</span>
                   <span><strong>10 万</strong>整数倍</span>
                   <span class="sales-rule__dot">·</span>
-                  <span>支付 USDT</span>
+                  <span>支付 UMDT</span>
                 </div>
 
-                <button class="btn-pill btn-pill--primary" data-buy="sales">
+                <button class="btn-pill btn-pill--primary btn-pill--static" data-buy="sales">
                   <span>立即购买</span>
                   <span class="btn-pill__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                   </span>
                 </button>
               </div>
@@ -607,7 +757,7 @@
           <div class="modal__detail">
             <div class="modal__detail-row">
               <span>认购价格</span>
-              <strong id="buyPoolPrice">3.6 USDT / 100 万 Token</strong>
+              <strong id="buyPoolPrice">3.6 UMDT / 100 万 Token</strong>
             </div>
             <div class="modal__detail-row">
               <span>本期数量</span>
@@ -615,7 +765,7 @@
             </div>
             <div class="modal__detail-row">
               <span>本期应付</span>
-              <strong class="modal__detail-profit" id="buyPoolTotal">3.60 USDT</strong>
+              <strong class="modal__detail-profit" id="buyPoolTotal">3.60 UMDT</strong>
             </div>
             <div class="modal__detail-row">
               <span>今日剩余额度</span>
@@ -626,8 +776,8 @@
               <strong>销售池</strong>
             </div>
             <div class="modal__detail-row">
-              <span>USDT 余额</span>
-              <strong id="buyPoolUSDT">58,400</strong>
+              <span>UMDT 余额</span>
+              <strong id="buyPoolUMDT">58,400</strong>
             </div>
           </div>
         </div>
@@ -638,7 +788,7 @@
           <button class="btn-pill btn-pill--primary" id="buyPoolConfirm">
             <span>确认认购</span>
             <span class="btn-pill__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </span>
           </button>
         </footer>
@@ -680,15 +830,15 @@
             </div>
             <div class="modal__detail-row">
               <span>等级单价</span>
-              <strong id="buySalesUnitPrice">4.2 USDT / 100 万 Token</strong>
+              <strong id="buySalesUnitPrice">4.2 UMDT / 100 万 Token</strong>
             </div>
             <div class="modal__detail-row">
               <span>原单价</span>
-              <strong style="text-decoration: line-through; color: rgba(26,34,56,0.4);">6 USDT</strong>
+              <strong style="text-decoration: line-through; color: rgba(26,34,56,0.4);">6 UMDT</strong>
             </div>
             <div class="modal__detail-row">
-              <span>应付 USDT</span>
-              <strong class="modal__detail-profit" id="buySalesTotal">2.10 USDT</strong>
+              <span>应付 UMDT</span>
+              <strong class="modal__detail-profit" id="buySalesTotal">2.10 UMDT</strong>
             </div>
             <div class="modal__detail-row">
               <span>购买规则</span>
@@ -703,7 +853,7 @@
           <button class="btn-pill btn-pill--primary" id="buySalesConfirm">
             <span>确认购买</span>
             <span class="btn-pill__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </span>
           </button>
         </footer>

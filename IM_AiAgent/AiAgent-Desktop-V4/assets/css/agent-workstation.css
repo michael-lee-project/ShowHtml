@@ -362,6 +362,48 @@
   box-shadow: 0 0 4px rgba(7, 193, 96, 0.5);
 }
 .ws-expert-row.is-busy .ws-expert-row__status { background: #FF8C42; box-shadow: 0 0 4px rgba(255, 140, 66, 0.5); }
+.ws-expert-row.is-drop-target {
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.12) 0%, rgba(255, 140, 66, 0.08) 100%) !important;
+  border: 1px dashed rgba(255, 140, 66, 0.6) !important;
+  transform: translateX(2px);
+  transition: all 150ms;
+}
+.ws-ceo-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #FFFCF0 0%, #FFF5E0 100%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 8px;
+  font-size: 11px;
+  color: rgba(26, 34, 56, 0.7);
+}
+.ws-ceo-confirm__btn {
+  margin-left: auto;
+  background: linear-gradient(135deg, #FFD700, #FF8C42);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform 150ms;
+}
+.ws-ceo-confirm__btn:hover {
+  transform: translateY(-1px);
+}
+.ws-ceo-confirm__btn:active {
+  transform: translateY(0);
+}
+.ws-ceo-confirm__hint {
+  font-weight: 600;
+  color: rgba(26, 34, 56, 0.55);
+  font-size: 10.5px;
+}
 
 /* ============================================================
  * 中列 - 详情 / 派单 / 进度
@@ -2422,4 +2464,719 @@
   background: linear-gradient(135deg, #07C160, #4DD890);
   color: white;
   box-shadow: 0 4px 12px rgba(7, 193, 96, 0.3);
+}
+
+/* ============================================================
+ * Chat 模式：派单后用户消息 + AI 消息气泡
+ * ============================================================ */
+.ws-chat-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+.ws-chat-msg {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  max-width: 88%;
+  animation: ws-chat-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes ws-chat-pop {
+  0% { opacity: 0; transform: translateY(8px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.ws-chat-msg--user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.ws-chat-msg--ai { align-self: flex-start; }
+.ws-chat-msg__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.ws-chat-msg__avatar--user {
+  background: linear-gradient(135deg, #1A2238 0%, #4A5688 100%);
+  color: white;
+}
+.ws-chat-msg__bubble {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(26, 34, 56, 0.85);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(26, 34, 56, 0.06);
+  flex: 1;
+  min-width: 0;
+}
+.ws-chat-msg--user .ws-chat-msg__bubble {
+  background: linear-gradient(135deg, #1A2238 0%, #2E3A5C 100%);
+  color: white;
+  border-color: rgba(124, 92, 255, 0.2);
+}
+.ws-chat-msg__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 10px;
+  flex-wrap: wrap;
+}
+.ws-chat-msg__tag {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.ws-chat-msg--ai .ws-chat-msg__tag {
+  background: rgba(124, 92, 255, 0.12);
+  color: #7C5CFF;
+}
+.ws-chat-msg__time {
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+}
+.ws-chat-msg--ai .ws-chat-msg__time {
+  color: rgba(26, 34, 56, 0.45);
+}
+.ws-chat-msg__text {
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-weight: 600;
+  text-wrap: pretty;
+}
+.ws-chat-msg__content {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.ws-chat-msg__content .ws-mr-section { margin-top: 6px; }
+.ws-chat-msg__actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.ws-chat-msg__actions .ws-result__action {
+  flex: 1 1 auto;
+  min-width: 80px;
+  padding: 6px 10px;
+  font-size: 10.5px;
+  border-radius: 6px;
+}
+
+/* 右列 history 在算力消耗下方 */
+.ws__right .ws-history.ws__right-block {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7F4ED 100%);
+  border: 1px solid rgba(26, 34, 56, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+.ws__right .ws-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ============================================================
+ * AL: 打字中 3 dot 动画
+ * ============================================================ */
+.ws-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.ws-typing__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #7C5CFF;
+  animation: ws-typing-bounce 1.2s ease-in-out infinite;
+}
+.ws-typing__dot:nth-child(2) { animation-delay: 0.15s; background: #5D3FE5; }
+.ws-typing__dot:nth-child(3) { animation-delay: 0.3s;  background: #4A2FCC; }
+.ws-typing--lg { padding: 6px 0; }
+.ws-typing--lg .ws-typing__dot {
+  width: 7px;
+  height: 7px;
+}
+@keyframes ws-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ============================================================
+ * AK: Chat input 框（追问 / 继续对话）
+ * ============================================================ */
+.ws-chat-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid rgba(26, 34, 56, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(26, 34, 56, 0.04);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.ws-chat-input:focus-within {
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.1);
+}
+.ws-chat-input__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.ws-chat-input__field {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(26, 34, 56, 0.85);
+  background: transparent;
+  padding: 4px 0;
+  min-height: 22px;
+  max-height: 80px;
+}
+.ws-chat-input__field::placeholder {
+  color: rgba(26, 34, 56, 0.4);
+}
+.ws-chat-input__send {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #7C5CFF 0%, #5D3FE5 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 200ms ease;
+  box-shadow: 0 2px 4px rgba(124, 92, 255, 0.3);
+}
+.ws-chat-input__send:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(124, 92, 255, 0.4);
+}
+.ws-chat-input__send:active {
+  transform: scale(0.95);
+}
+.ws-chat-input__send svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 聊天气泡内的 typing（追问中） */
+.ws-chat-msg--typing .ws-chat-msg__bubble {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7F4ED 100%);
+  min-width: 90px;
+}
+
+/* ============================================================
+ * AM: history item 摘要样式（小卡片）
+ * ============================================================ */
+.ws-history__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  background: white;
+  border: 1px solid rgba(26, 34, 56, 0.06);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ws-history__item:hover {
+  border-color: rgba(124, 92, 255, 0.3);
+  transform: translateX(2px);
+  box-shadow: 0 2px 6px rgba(124, 92, 255, 0.1);
+}
+.ws-history__item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ws-history__item-head-info {
+  flex: 1;
+  min-width: 0;
+}
+.ws-history__item-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+.ws-history__item-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: #1A2238;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ws-history__item-meta {
+  font-size: 9.5px;
+  color: rgba(26, 34, 56, 0.45);
+  font-weight: 600;
+}
+.ws-history__item-summary {
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: rgba(26, 34, 56, 0.7);
+  font-weight: 600;
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-left: 30px;
+  position: relative;
+}
+.ws-history__item-summary::before {
+  content: '✦';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  color: #7C5CFF;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+/* ============================================================
+ * V6 CEO 模式：计划卡 + 子任务流 + 完成横幅
+ * ============================================================ */
+/* CEO 卡片特殊边框（金色） */
+.ws-expert-row[data-id="ceo"] {
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.06) 0%, rgba(255, 140, 66, 0.04) 100%);
+  position: relative;
+  /* 给左上 / 右上胶囊预留位置（不被 overflow 裁掉） */
+  padding-top: 18px;
+}
+.ws-expert-row[data-id="ceo"]::before {
+  /* 改成左上角胶囊：完全在行内 + 不与右侧状态 pill 冲突 */
+  content: '★ CEO 调度员';
+  position: absolute;
+  top: 3px;
+  left: 8px;
+  font-size: 8px;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, #FFD700, #FF8C42);
+  padding: 1px 6px 2px;
+  border-radius: 999px;
+  letter-spacing: 0.4px;
+  box-shadow: 0 1px 2px rgba(255, 140, 66, 0.4);
+  z-index: 3;
+}
+.ws-expert-row[data-id="ceo"].is-active {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.18) 0%, rgba(255, 140, 66, 0.12) 100%);
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+/* CEO 思考阶段 */
+.ws-ceo-progress {
+  background: linear-gradient(135deg, #FFF8E0 0%, #FFE4C4 100%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.ws-ceo-progress__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ws-ceo-progress__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(255, 140, 66, 0.3);
+}
+.ws-ceo-progress__head-body { flex: 1; }
+.ws-ceo-progress__title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1A2238;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ws-ceo-progress__sub {
+  font-size: 10.5px;
+  color: rgba(26, 34, 56, 0.55);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* CEO 计划卡 */
+.ws-ceo-plan {
+  background: white;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ws-ceo-plan__head {
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(26, 34, 56, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(26, 34, 56, 0.06);
+}
+.ws-ceo-plan__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: linear-gradient(180deg, #FFFCF0 0%, #FFF5E0 100%);
+  border-radius: 6px;
+  font-size: 11px;
+  transition: all 200ms;
+}
+.ws-ceo-plan__item:hover {
+  background: linear-gradient(180deg, #FFF5C2 0%, #FFEAA0 100%);
+}
+.ws-ceo-plan__item[draggable="true"] {
+  cursor: grab;
+  user-select: none;
+}
+.ws-ceo-plan__item[draggable="true"]:active {
+  cursor: grabbing;
+}
+.ws-ceo-plan__item.is-dragging {
+  opacity: 0.4;
+  transform: scale(0.96);
+  background: linear-gradient(180deg, #FFE08A 0%, #FFCB52 100%);
+}
+.ws-ceo-plan__item .ws-ceo-plan__grip {
+  font-size: 9px;
+  color: rgba(26, 34, 56, 0.35);
+  margin-left: -2px;
+  letter-spacing: -1px;
+  transition: color 200ms, text-shadow 200ms, transform 200ms;
+}
+.ws-ceo-plan__item:hover .ws-ceo-plan__grip {
+  color: #FF8C42;
+  text-shadow: 0 0 6px rgba(255, 140, 66, 0.6);
+  transform: translateX(1px);
+}
+.ws-ceo-plan__item:active .ws-ceo-plan__grip {
+  color: #FFD700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* Drop 重分配瞬间：金色高亮 flash */
+@keyframes ws-plan-item-flash {
+  0%   { background: linear-gradient(180deg, rgba(255, 215, 0, 0.4) 0%, rgba(255, 140, 66, 0.3) 100%); transform: scale(1); box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.5); }
+  35%  { background: linear-gradient(180deg, rgba(255, 215, 0, 0.25) 0%, rgba(255, 140, 66, 0.18) 100%); transform: scale(1.02); box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3); }
+  100% { background: white; transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+}
+.ws-ceo-plan__item.is-just-dropped {
+  animation: ws-plan-item-flash 800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* cost 数字脉冲（重分配后该子任务的成本数字短暂放大 + 颜色变化） */
+@keyframes ws-plan-cost-pulse {
+  0%   { transform: scale(1); color: rgba(26, 34, 56, 0.65); }
+  40%  { transform: scale(1.25); color: #FF6B00; }
+  100% { transform: scale(1); color: rgba(26, 34, 56, 0.65); }
+}
+.ws-ceo-plan__cost.is-just-dropped {
+  animation: ws-plan-cost-pulse 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+
+/* B: 历史回放头标 + tag */
+.ws-replay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.08) 0%, rgba(182, 149, 255, 0.04) 100%);
+  border: 1px solid rgba(124, 92, 255, 0.18);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.ws-replay-head__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+.ws-replay-head__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.ws-replay-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  background: rgba(124, 92, 255, 0.12);
+  color: #5D3FE5;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 92, 255, 0.2);
+  flex-shrink: 0;
+}
+.ws-replay-tag--ceo {
+  background: linear-gradient(135deg, #FFD700 0%, #FF8C42 100%);
+  color: white;
+  border: none;
+  letter-spacing: 0;
+}
+.ws-replay-head__title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #1A2238;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ws-replay-head__meta {
+  font-size: 9.5px;
+  color: rgba(26, 34, 56, 0.55);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ws-replay-head__close {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(26, 34, 56, 0.06);
+  border: none;
+  font-size: 14px;
+  color: rgba(26, 34, 56, 0.55);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms;
+  line-height: 1;
+}
+.ws-replay-head__close:hover {
+  background: rgba(229, 75, 75, 0.12);
+  color: #E54B4B;
+}
+
+/* Toast: drop 提示 - 轻量、底部居中、自动消失 */
+@keyframes ws-drop-toast-in {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.9); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+@keyframes ws-drop-toast-out {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.95); }
+}
+.ws-drop-toast {
+  position: fixed;
+  left: 50%;
+  top: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #1A2238 0%, #2A3458 100%);
+  color: white;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(26, 34, 56, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  animation: ws-drop-toast-in 280ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.ws-drop-toast.is-leaving {
+  animation: ws-drop-toast-out 240ms ease-in forwards;
+}
+.ws-drop-toast__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD700, #FF8C42);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+}
+.ws-drop-toast__delta {
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+  color: #FFD700;
+  font-weight: 800;
+}
+.ws-ceo-plan__index {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD700, #FF8C42);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ws-ceo-plan__avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+.ws-ceo-plan__name {
+  font-weight: 800;
+  color: #1A2238;
+  font-size: 11.5px;
+}
+.ws-ceo-plan__task {
+  flex: 1;
+  color: rgba(26, 34, 56, 0.7);
+  font-weight: 600;
+  font-size: 10.5px;
+}
+.ws-ceo-plan__cost {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #B8941F;
+  background: rgba(255, 215, 0, 0.18);
+  padding: 1px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.ws-ceo-plan__total {
+  font-size: 11px;
+  color: rgba(26, 34, 56, 0.7);
+  font-weight: 700;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(26, 34, 56, 0.12);
+  text-align: right;
+}
+.ws-ceo-plan__total strong {
+  color: #B8941F;
+  font-size: 12px;
+}
+
+/* CEO 气泡特殊颜色 */
+.ws-chat-msg--ceo .ws-chat-msg__bubble--ceo {
+  background: linear-gradient(135deg, #FFFCF0 0%, #FFF5E0 100%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+.ws-chat-msg__tag--ceo {
+  background: linear-gradient(135deg, #FFD700, #FF8C42) !important;
+  color: white !important;
+  font-weight: 800;
+}
+
+/* 子任务流 */
+.ws-ceo-subtask-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* CEO 完成横幅 */
+.ws-ceo-complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 18px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #07C160 0%, #0E7C3A 100%);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(7, 193, 96, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  color: white;
+}
+.ws-ceo-complete__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: white;
+  color: #07C160;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.ws-ceo-complete__text {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+/* CEO 销冠模式入口特殊（"全托管"） */
+.ws__sales-entry .ws__sales-entry-icon {
+  background: linear-gradient(135deg, #FFD700 0%, #FF8C42 100%) !important;
 }

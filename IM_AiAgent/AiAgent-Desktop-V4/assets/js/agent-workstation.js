@@ -14,8 +14,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const HAS_GSAP = typeof gsap !== 'undefined';
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- 1. 8 专家数据 ---------- */
+  /* ---------- 1. 9 专家数据（CEO + 8 领域）---------- */
   const EXPERTS = [
+    {
+      id: 'ceo',
+      name: 'CEO',
+      role: 'Chief Coordinator · 8 专家协同调度',
+      avatar: { emoji: '🌞', gradient: 'linear-gradient(135deg, #FFD700 0%, #FF8C42 100%)' },
+      cost: 200,  // 调度费
+      ceoFee: 200,  // 显式标记
+      timeMs: 5000,
+      successRate: 99,
+      completed: 842,
+      desc: '8 专家协同调度 · 自动判断拆解 · 一次发需求，多专家执行 · 节省 80% 沟通成本',
+      samples: [
+        { icon: '📋', name: 'Q4 营销全案', meta: '拆 3 任务 · 3,900 token' },
+        { icon: '🤝', name: '新员工入职', meta: '拆 2 任务 · 1,300 token' },
+        { icon: '📊', name: 'Q3 数据复盘', meta: '拆 1 任务 · 1,200 token' }
+      ],
+      isCeo: true
+    },
     {
       id: 'sales',
       name: '销冠专家',
@@ -148,6 +166,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const TASK_MAX_ITEMS = 12;
 
+  /* ---------- 1.5 CEO 路由表 + 拆解函数 ---------- */
+  // CEO 调度费（固定）
+  const CEO_DISPATCH_FEE = 200;
+  // CEO 子任务最多 3 个
+  const CEO_MAX_SUBTASKS = 3;
+  // 关键词路由
+  const CEO_ROUTING = [
+    { kw: ['营销', '活动', '推广', '产品发布', '品牌推广', 'campaign'], experts: ['writing', 'brand', 'video'] },
+    { kw: ['客户', '销售', '咨询', '回复', '接单', '谈客户', '跟进'],     experts: ['sales'] },
+    { kw: ['数据', '分析', '复盘', '报告', '统计', '指标', 'q1', 'q2', 'q3', 'q4'], experts: ['data'] },
+    { kw: ['文章', '文案', '脚本', '视频脚本', '公众号', '内容'],          experts: ['writing', 'video'] },
+    { kw: ['logo', 'vi', '设计', '海报', '包装', '视觉'],                 experts: ['brand'] },
+    { kw: ['录音', '会议', '转录', '纪要', '培训'],                       experts: ['audio'] },
+    { kw: ['运势', '星盘', '星座', '桃花', '财运', '八字'],                 experts: ['zodiac', 'fengshui'] },
+    { kw: ['入职', '培训', '员工', 'onboarding'],                          experts: ['writing', 'audio'] },
+    { kw: ['短视频', '抖音', '视频号', 'tiktok'],                          experts: ['video', 'writing'] }
+  ];
+  // 默认拆 2 个
+  const CEO_DEFAULT_EXPERTS = ['writing', 'brand'];
+
+  // CEO 拆解：返回子任务数组 [{ expertId, taskName, cost, timeMs }]
+  function ceoRoute(requirement) {
+    let expertIds = null;
+    for (const route of CEO_ROUTING) {
+      if (route.kw.some(k => requirement.includes(k))) {
+        expertIds = route.experts;
+        break;
+      }
+    }
+    if (!expertIds) expertIds = CEO_DEFAULT_EXPERTS;
+    // 截断到最多 3 个
+    expertIds = expertIds.slice(0, CEO_MAX_SUBTASKS);
+    // 生成子任务
+    return expertIds.map((eid, idx) => {
+      const expert = EXPERTS.find(e => e.id === eid);
+      if (!expert) return null;
+      return {
+        index: idx + 1,
+        expertId: eid,
+        expertName: expert.name,
+        avatar: expert.avatar,
+        taskName: synthesizeSubtaskName(eid, requirement),
+        cost: expert.cost,
+        timeMs: expert.timeMs
+      };
+    }).filter(Boolean);
+  }
+
+  // 根据专家类型 + 需求生成子任务名
+  function synthesizeSubtaskName(expertId, requirement) {
+    const templates = {
+      sales:    '客户接管与跟进',
+      brand:    '视觉设计与物料',
+      writing:  '内容文案撰写',
+      audio:    '会议转录与纪要',
+      video:    '视频素材制作',
+      data:     '数据分析报告',
+      fengshui: '命理运势解析',
+      zodiac:   '星座运势解读'
+    };
+    return templates[expertId] || ('智能处理 · ' + requirement.substring(0, 16));
+  }
+
   let currentExpertId = 'sales';       // 当前选中专家
   let quotaBalance = 128500;           // Token 余额
   let consumedToday = 0;               // 今日消耗
@@ -202,6 +283,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const expert = EXPERTS.find(e => e.id === currentExpertId);
     if (!expert) return;
 
+    // 销冠模式入口：销冠专家显示"销冠模式" · 其他隐藏
+    const salesEntry = document.getElementById('wsSalesEntry');
+    if (salesEntry) {
+      const salesIcon = salesEntry.querySelector('.ws__sales-entry-icon');
+      const salesTitle = salesEntry.querySelector('.ws__sales-entry-title');
+      const salesDesc = salesEntry.querySelector('.ws__sales-entry-desc');
+      if (expert.id === 'sales') {
+        salesEntry.style.display = 'flex';
+        if (salesIcon) salesIcon.textContent = '★';
+        if (salesTitle) salesTitle.textContent = '销冠模式';
+        if (salesDesc) salesDesc.textContent = 'AI 全自动接管对话 · 24h 不打烊';
+      } else {
+        salesEntry.style.display = 'none';
+      }
+    }
+
     const samples = expert.samples.map(s => (
       '<div class="ws-detail__sample">' +
         '<div class="ws-detail__sample-thumb" style="background:' + expert.avatar.gradient + ';">' + s.icon + '</div>' +
@@ -223,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
           '<div class="ws-detail__heading">' +
             '<div class="ws-detail__name">' + expert.name + '</div>' +
             '<div class="ws-detail__role">' + expert.role + '</div>' +
-            '<div class="ws-detail__status"><span class="ws-detail__status-dot"></span>在线 · 可接单</div>' +
+            '<div class="ws-detail__status"><span class="ws-detail__status-dot"></span>在线</div>' +
           '</div>' +
         '</div>' +
         '<div class="ws-detail__stats">' +
@@ -264,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '<textarea class="ws-dispatch__input" id="wsDispatchInput" placeholder="或输入会议主题、参会人、转录要求..." maxlength="200" style="display:none;"></textarea>'
           : '<textarea class="ws-dispatch__input" id="wsDispatchInput" placeholder="例：帮我写一篇关于 AI Agent 协同办公的公众号文章，要求轻松幽默，800 字以内..." maxlength="200"></textarea>'
         ) +
-        '<button class="ws-dispatch__submit" id="wsDispatchSubmit" type="button">派单给 ' + expert.name + '</button>' +
+        '<button class="ws-dispatch__submit" id="wsDispatchSubmit" type="button">发需求给 ' + expert.name + '</button>' +
       '</div>' +
       '</div>' +  // 关闭 ws-tabpanel[dispatch]
       buildDataPanel()
@@ -367,7 +464,12 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
       }
-      submitTask(expert, req);
+      // CEO 模式：自动拆解为子任务
+      if (expert.id === 'ceo') {
+        submitCeoTask(expert, req);
+      } else {
+        submitTask(expert, req);
+      }
     });
 
     // 绑定 tab 切换
@@ -487,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '<div class="ws-data-block">' +
           '<div class="ws-data-block__head">' +
             '<div class="ws-data-block__title">专家效率排行 · 按成功率</div>' +
-            '<div class="ws-data-block__hint">8 位专家</div>' +
+            '<div class="ws-data-block__hint">9 位专家</div>' +
           '</div>' +
           '<div class="ws-rank">' + rankItems + '</div>' +
         '</div>' +
@@ -562,7 +664,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onComplete: () => {
           task.status = 'done';
-          markExpertBusy(expert.id, false);
+          task.progress = 100;
+          task.resultSummary = generateResultSummary(expert, task);
           renderCenterResult(expert, task);
           renderTaskList();
           updateTaskCount();
@@ -573,7 +676,8 @@ document.addEventListener('DOMContentLoaded', () => {
             expertName: expert.name,
             avatar: expert.avatar,
             cost: task.cost,
-            requirement: task.requirement
+            requirement: task.requirement,
+            resultSummary: task.resultSummary
           });
           while (resultHistory.length > HISTORY_MAX) resultHistory.pop();
         }
@@ -583,6 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         task.status = 'done';
         task.progress = 100;
+        task.resultSummary = generateResultSummary(expert, task);
         markExpertBusy(expert.id, false);
         renderCenterResult(expert, task);
         renderTaskList();
@@ -603,7 +708,15 @@ document.addEventListener('DOMContentLoaded', () => {
     center.innerHTML = (
       '<div class="ws-progress">' +
         '<div class="ws-progress__head">' +
-          '<div class="ws-progress__title">⚡ 任务进行中</div>' +
+          '<div class="ws-progress__title">' +
+            '<span>⚡ 任务进行中</span>' +
+            // AL: 打字中动画 · 3 dot 跳动
+            '<span class="ws-typing">' +
+              '<span class="ws-typing__dot"></span>' +
+              '<span class="ws-typing__dot"></span>' +
+              '<span class="ws-typing__dot"></span>' +
+            '</span>' +
+          '</div>' +
           '<div class="ws-progress__pct" id="wsProgressPct">0%</div>' +
         '</div>' +
         '<div class="ws-progress__bar">' +
@@ -627,26 +740,141 @@ document.addEventListener('DOMContentLoaded', () => {
     const center = document.getElementById('wsCenter');
     if (!center) return;
     const results = generateResult(expert, task);
+    // 按专家类型定制 result 标题 + actions
+    const resultMeta = {
+      sales:    { title: '✓ 客户对话已接管',  primary: '查看对话',  secondary: ['调整话术', '导出话术'] },
+      brand:    { title: '✓ Logo 方案已生成', primary: '查看大图',  secondary: ['下载源文件', '导出 VI'] },
+      writing:  { title: '✓ 公众号文章已生成', primary: '查看全文',  secondary: ['复制正文', '一键发布'] },
+      audio:    { title: '✓ 会议纪要已生成',  primary: '查看纪要',  secondary: ['下载录音', '导出 Markdown'] },
+      video:    { title: '✓ 60s 短视频已生成', primary: '播放视频',  secondary: ['下载成片', '多平台发布'] },
+      data:     { title: '✓ 数据分析已完成',  primary: '查看报告',  secondary: ['导出 PDF', '复制摘要'] },
+      fengshui: { title: '✓ 八字排盘已生成',  primary: '查看排盘',  secondary: ['复制八字', '分享解析'] },
+      zodiac:   { title: '✓ 星座运势已生成',  primary: '查看运势',  secondary: ['分享给朋友', '收藏'] }
+    };
+    const meta = resultMeta[expert.id] || { title: '✓ 任务完成', primary: '查看结果', secondary: ['采纳', '收藏'] };
+    const sec1 = meta.secondary[0] || '采纳';
+    const sec2 = meta.secondary[1] || '收藏';
     center.innerHTML = (
       '<div class="ws-result">' +
         '<div class="ws-result__head">' +
-          '<div class="ws-result__title">✓ 任务完成</div>' +
+          '<div class="ws-result__title">' + meta.title + '</div>' +
           '<div class="ws-result__cost">消耗 ' + task.cost + ' 算力</div>' +
         '</div>' +
-        '<div class="ws-result__content">' + results + '</div>' +
-        '<div class="ws-result__actions">' +
-          '<button class="ws-result__action" data-action="rerun">↻ 重新生成</button>' +
-          '<button class="ws-result__action ws-result__action--primary" data-action="view">查看大图</button>' +
-          '<button class="ws-result__action" data-action="apply">采纳</button>' +
-          '<button class="ws-result__action" data-action="save">收藏</button>' +
+        // Chat 模式：用户消息 + AI 消息气泡
+        '<div class="ws-chat-stream" id="wsChatStream">' +
+          // 用户消息（右侧气泡）
+          '<div class="ws-chat-msg ws-chat-msg--user">' +
+            '<div class="ws-chat-msg__bubble">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag">→ 派给 ' + expert.name + '</span>' +
+                '<span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + '</span>' +
+              '</div>' +
+              '<div class="ws-chat-msg__text">' + (task.requirement || '（无具体需求）') + '</div>' +
+            '</div>' +
+            '<div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div>' +
+          '</div>' +
+          // AI 消息（左侧气泡）
+          '<div class="ws-chat-msg ws-chat-msg--ai">' +
+            '<div class="ws-chat-msg__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div>' +
+            '<div class="ws-chat-msg__bubble">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + expert.name + '</span>' +
+                '<span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + ' · ⚡ ' + (task.timeMs / 1000).toFixed(1) + 's · ' + task.cost + ' 算力</span>' +
+              '</div>' +
+              '<div class="ws-chat-msg__content">' + results + '</div>' +
+              '<div class="ws-chat-msg__actions">' +
+                '<button class="ws-result__action" data-action="rerun">↻ 重新生成</button>' +
+                '<button class="ws-result__action ws-result__action--primary" data-action="view">' + meta.primary + '</button>' +
+                '<button class="ws-result__action" data-action="secondary">' + sec1 + '</button>' +
+                '<button class="ws-result__action" data-action="save">' + sec2 + '</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        // AK: Chat input 框（追问 / 继续对话）
+        '<div class="ws-chat-input">' +
+          '<div class="ws-chat-input__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div>' +
+          '<textarea class="ws-chat-input__field" id="wsChatInput" placeholder="继续对话 · 追问、补充需求、让 ' + expert.name + ' 调整..." maxlength="500"></textarea>' +
+          '<button class="ws-chat-input__send" id="wsChatSend" type="button">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+          '</button>' +
         '</div>' +
       '</div>' +
-      '<button class="ws-dispatch__submit" id="wsDispatchReset" type="button" style="background: linear-gradient(135deg, #8B8B9E, #6E6E84); box-shadow: none;">← 返回继续派单</button>'
+      '<button class="ws-dispatch__submit" id="wsDispatchReset" type="button" style="background: linear-gradient(135deg, #8B8B9E, #6E6E84); box-shadow: none;">← 返回继续发需求</button>'
     );
     if (HAS_GSAP) {
       gsap.fromTo('.ws-result', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' });
     }
     document.getElementById('wsDispatchReset').addEventListener('click', renderCenter);
+    // AK: Chat input 框交互
+    const wsChatInput = document.getElementById('wsChatInput');
+    const wsChatSend = document.getElementById('wsChatSend');
+    if (wsChatInput && wsChatSend) {
+      const sendFollowup = () => {
+        const text = wsChatInput.value.trim();
+        if (!text) return;
+        // AN: 检查 Token 余额（追问也要扣）
+        const currentCost = expert.cost;
+        if (quotaBalance < currentCost) {
+          alert('Token 余额不足！请到算力中心充值。');
+          return;
+        }
+        // AN: 扣 Token + 更新 UI（数字滚动动画）
+        quotaBalance -= currentCost;
+        consumedToday += currentCost;
+        updateQuotaUI();
+        // 1. 追加 user 气泡（含消耗算力标记）
+        const stream = document.getElementById('wsChatStream');
+        const userMsg = document.createElement('div');
+        userMsg.className = 'ws-chat-msg ws-chat-msg--user';
+        userMsg.innerHTML = '<div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag">追问</span><span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + ' · ⚡' + currentCost + '</span></div><div class="ws-chat-msg__text">' + text + '</div></div><div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div>';
+        stream.appendChild(userMsg);
+        wsChatInput.value = '';
+        stream.scrollTop = stream.scrollHeight;
+        // 2. 显示 typing 指示器
+        const typingMsg = document.createElement('div');
+        typingMsg.className = 'ws-chat-msg ws-chat-msg--ai ws-chat-msg--typing';
+        typingMsg.innerHTML = '<div class="ws-chat-msg__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div><div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + expert.name + '</span><span class="ws-chat-msg__time">思考中...</span></div><div class="ws-typing ws-typing--lg"><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span></div></div>';
+        stream.appendChild(typingMsg);
+        if (HAS_GSAP) gsap.fromTo(typingMsg, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 });
+        stream.scrollTop = stream.scrollHeight;
+        // 3. 1.5s 后追加 AI 气泡
+        setTimeout(() => {
+          typingMsg.remove();
+          // 创建一个虚拟 task 给 generateResult 用
+          const followupTask = { id: 'F' + Date.now(), requirement: text, cost: currentCost, timeMs: expert.timeMs };
+          const aiContent = generateResult(expert, followupTask);
+          const aiMsg = document.createElement('div');
+          aiMsg.className = 'ws-chat-msg ws-chat-msg--ai';
+          aiMsg.innerHTML = '<div class="ws-chat-msg__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div><div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + expert.name + '</span><span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + ' · 追问回复 · ⚡' + currentCost + ' 算力</span></div><div class="ws-chat-msg__content">' + aiContent + '</div></div>';
+          stream.appendChild(aiMsg);
+          if (HAS_GSAP) gsap.fromTo(aiMsg, { opacity: 0, y: 8, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.4)' });
+          stream.scrollTop = stream.scrollHeight;
+          // AN: 写入历史需求（不消耗 HISTORY_MAX 槽位，但写一条 summary 记录）
+          taskCounter++;
+          const fTaskId = 'F' + String(taskCounter).padStart(3, '0');
+          resultHistory.unshift({
+            taskId: fTaskId,
+            expertId: expert.id,
+            expertName: expert.name,
+            avatar: expert.avatar,
+            cost: currentCost,
+            requirement: text,
+            resultSummary: '追问 · ' + text.substring(0, 18) + (text.length > 18 ? '...' : ''),
+            isFollowup: true
+          });
+          while (resultHistory.length > HISTORY_MAX) resultHistory.pop();
+          renderHistory();
+        }, 1500);
+      };
+      wsChatSend.addEventListener('click', sendFollowup);
+      wsChatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendFollowup();
+        }
+      });
+    }
     renderHistory();
     center.querySelectorAll('.ws-result__action').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -682,6 +910,21 @@ document.addEventListener('DOMContentLoaded', () => {
     return samples[expert.id] || '已为 ' + expert.name + ' 生成结果，采纳即可应用到工作流。';
   }
 
+  // AM: 生成 1 句话 result 摘要（给 history 小卡片用）
+  function generateResultSummary(expert, task) {
+    const summary = {
+      sales:    '已生成 12 句话术 · 半自动接管 · 23% 转化提升',
+      brand:    '已生成 4 套 Logo + VI 系统 · 最佳方案采纳 78%',
+      writing:  '已生成 856 字文章 · 3 个金句 · 预测阅读 12k+',
+      audio:    '已转录 ' + (task.timeMs / 1000).toFixed(0) + 's 会议 · 准确率 98.5%',
+      video:    '已生成 60s 短视频 · 数字人主播 · 3 平台适配',
+      data:     '已分析 ' + task.cost + ' 条数据 · 3 个趋势预测',
+      fengshui: '八字排盘完成 · 2026 事业 ★★★★☆ · 春季宜攻',
+      zodiac:   '12 星座运势已生成 · 狮子/水瓶桃花最旺'
+    };
+    return summary[expert.id] || expert.name + '已生成结果';
+  }
+
   /* ---------- 7.5. V4.2 大图 modal + 复制分享 + 历史对比 ---------- */
   let currentResult = null;          // 当前结果详情（供 modal 用）
   const resultHistory = [];          // 历史派单结果（最多 3 条）
@@ -700,6 +943,23 @@ document.addEventListener('DOMContentLoaded', () => {
     name.textContent = expert.name;
     meta.textContent = task.id + ' · ' + task.cost + ' 算力 · 完成于 ' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
     body.innerHTML = buildResultBody(expert, task, contentText);
+
+    // 按专家类型定制 footer 按钮文字
+    const footerLabels = {
+      sales:    { copy: '复制话术', share: '应用到对话' },
+      brand:    { copy: '下载源文件', share: '下载 VI 套件' },
+      writing:  { copy: '复制全文', share: '一键发布' },
+      audio:    { copy: '复制纪要', share: '发送纪要' },
+      video:    { copy: '复制链接', share: '多平台发布' },
+      data:     { copy: '复制摘要', share: '导出 PDF' },
+      fengshui: { copy: '复制八字', share: '分享解析' },
+      zodiac:   { copy: '复制运势', share: '分享给朋友' }
+    };
+    const labels = footerLabels[expert.id] || { copy: '复制内容', share: '分享' };
+    const copyBtn = document.getElementById('wsResultCopy');
+    const shareBtn = document.getElementById('wsResultShare');
+    if (copyBtn) copyBtn.textContent = labels.copy;
+    if (shareBtn) shareBtn.textContent = labels.share;
 
     modal.dataset.state = 'open';
     if (HAS_GSAP) {
@@ -810,7 +1070,7 @@ document.addEventListener('DOMContentLoaded', () => {
           '<div class="ws-mr-tags">' +
             '<span class="ws-mr-tag">AI Agent</span>' +
             '<span class="ws-mr-tag">协同办公</span>' +
-            '<span class="ws-mr-tag">CEO 调度</span>' +
+            '<span class="ws-mr-tag">☀ CEO</span>' +
             '<span class="ws-mr-tag ws-mr-tag--green">预测阅读 12k+</span>' +
             '<span class="ws-mr-tag ws-mr-tag--gold">爆款概率 67%</span>' +
           '</div>' +
@@ -925,6 +1185,523 @@ document.addEventListener('DOMContentLoaded', () => {
     return '<div class="ws-mr-section"><div class="ws-mr-section__content">' + plainText + '</div></div>';
   }
 
+  /* ============================================================
+   * 4.8 CEO 派单：自动拆解 + 顺序执行子任务
+   * ============================================================ */
+  function submitCeoTask(ceo, requirement) {
+    // 1. 拆解
+    const subtasks = ceoRoute(requirement);
+    if (subtasks.length === 0) {
+      alert('CEO 拆解失败，请重新描述需求。');
+      return;
+    }
+    // 2. 算初始总成本 = CEO 调度费 + 子任务累加
+    const calcTotal = () => CEO_DISPATCH_FEE + subtasks.reduce((s, t) => s + t.cost, 0);
+    let totalCost = calcTotal();
+    if (quotaBalance < totalCost) {
+      alert('Token 余额不足！' + ceo.name + ' 需要 ' + totalCost + ' Token（当前 ' + quotaBalance + '）。请到算力中心充值。');
+      return;
+    }
+    // 3. 创建主任务（先不扣费，等用户确认派单再扣）
+    taskCounter++;
+    const taskId = 'C' + String(taskCounter).padStart(3, '0');
+    const task = {
+      id: taskId,
+      expertId: 'ceo',
+      expertName: ceo.name,
+      avatar: ceo.avatar,
+      requirement: requirement,
+      cost: totalCost,
+      timeMs: subtasks.reduce((s, t) => s + t.timeMs, 0) + 1500,
+      subtasks: subtasks,
+      isCeo: true,
+      status: 'planning',
+      progress: 0
+    };
+    tasks.unshift(task);
+    // 4. 渲染 progress（CEO 思考阶段 + 可拖拽调整）
+    renderCenterCeoProgress(ceo, task, subtasks, totalCost);
+    renderTaskList();
+    updateTaskCount();
+  }
+
+  // 用户点"确认派单"才真正扣费 + 开始执行子任务
+  function confirmCeoDispatch(ceo, task, subtasks, totalCost) {
+    // 1. 扣费
+    quotaBalance -= totalCost;
+    consumedToday += totalCost;
+    updateQuotaUI();
+    // 2. 写历史
+    task.status = 'done';
+    task.progress = 100;
+    task.resultSummary = 'CEO · 拆 ' + subtasks.length + ' 子任务 · ' + subtasks.map(t => t.expertName.replace('专家', '')).join('+') + ' · ' + totalCost + ' token';
+    resultHistory.unshift({
+      taskId: task.id,
+      expertId: 'ceo',
+      expertName: '☀ CEO',
+      avatar: ceo.avatar,
+      cost: totalCost,
+      requirement: task.requirement,
+      resultSummary: task.resultSummary,
+      isCeo: true,
+      subtaskCount: subtasks.length
+    });
+    while (resultHistory.length > HISTORY_MAX) resultHistory.pop();
+    // 3. 渲染 result
+    renderCenterCeoResult(ceo, task, subtasks, totalCost);
+  }
+
+  // 拖拽重分配子任务
+  function assignSubtaskToExpert(ceo, task, subtasks, idx, newExpertId) {
+    const newExpert = EXPERTS.find(e => e.id === newExpertId);
+    if (!newExpert) return;
+    const sub = subtasks[idx];
+    if (sub.expertId === newExpertId) return;
+    const oldExpertId = sub.expertId;
+    const oldCost = sub.cost;
+    sub.expertId = newExpert.id;
+    sub.expertName = newExpert.name;
+    sub.avatar = newExpert.avatar;
+    sub.cost = newExpert.cost;
+    sub.timeMs = newExpert.timeMs;
+    sub.taskName = synthesizeSubtaskName(newExpert.id, task.requirement);
+    // 重算 totalCost
+    const newTotalCost = CEO_DISPATCH_FEE + subtasks.reduce((s, t) => s + t.cost, 0);
+    const oldTotalCost = task.cost;
+    task.cost = newTotalCost;
+    task.timeMs = subtasks.reduce((s, t) => s + t.timeMs, 0) + 1500;
+    // 重渲染 plan（保留其他状态）
+    rerenderCeoPlan(ceo, task, subtasks, newTotalCost);
+    // A1: 高亮 flash + cost 数字 pulse
+    const newItem = document.querySelector('.ws-ceo-plan__item[data-sub-idx="' + idx + '"]');
+    if (newItem) {
+      newItem.classList.add('is-just-dropped');
+      setTimeout(() => newItem.classList.remove('is-just-dropped'), 850);
+      const costEl = newItem.querySelector('.ws-ceo-plan__cost');
+      if (costEl) {
+        costEl.classList.add('is-just-dropped');
+        setTimeout(() => costEl.classList.remove('is-just-dropped'), 720);
+      }
+    }
+    // A2: drop toast
+    const oldExpert = EXPERTS.find(e => e.id === oldExpertId);
+    const delta = newExpert.cost - oldCost;
+    const deltaText = delta > 0 ? '+' + delta : (delta < 0 ? String(delta) : '±0');
+    showDropToast({
+      fromName: oldExpert ? oldExpert.name : '原专家',
+      toName: newExpert.name,
+      toEmoji: newExpert.avatar.emoji,
+      deltaText: deltaText,
+      fromTotalCost: oldTotalCost,
+      toTotalCost: newTotalCost
+    });
+  }
+
+  // A2: 顶部 toast 提示（drop 重分配后）
+  function showDropToast(opts) {
+    // 同时只显示 1 个，先清掉旧的
+    document.querySelectorAll('.ws-drop-toast').forEach(el => el.remove());
+    const el = document.createElement('div');
+    el.className = 'ws-drop-toast';
+    el.innerHTML =
+      '<span class="ws-drop-toast__icon">' + (opts.toEmoji || '★') + '</span>' +
+      '<span>已分配 · ' + (opts.fromName || '原专家') + ' → ' + opts.toName + '</span>' +
+      '<span class="ws-drop-toast__delta">成本 ' + opts.deltaText + '</span>' +
+      '<span style="opacity:0.55;">· 总额 ' + opts.fromTotalCost + ' → ' + opts.toTotalCost + '</span>';
+    document.body.appendChild(el);
+    // 1500ms 后开始淡出，300ms 后移除
+    setTimeout(() => {
+      el.classList.add('is-leaving');
+      setTimeout(() => el.remove(), 260);
+    }, 1500);
+  }
+
+  // 重新渲染 plan 区域（不重建整个 center）
+  function rerenderCeoPlan(ceo, task, subtasks, totalCost) {
+    const plan = document.querySelector('.ws-ceo-plan');
+    if (!plan) return;
+    const planHtml = subtasks.map((t, i) =>
+      '<div class="ws-ceo-plan__item" data-sub-idx="' + i + '" draggable="true">' +
+        '<span class="ws-ceo-plan__grip">⋮⋮</span>' +
+        '<span class="ws-ceo-plan__index">' + (i + 1) + '</span>' +
+        '<span class="ws-ceo-plan__avatar" style="background:' + t.avatar.gradient + ';">' + t.avatar.emoji + '</span>' +
+        '<span class="ws-ceo-plan__name">' + t.expertName + '</span>' +
+        '<span class="ws-ceo-plan__task">' + t.taskName + '</span>' +
+        '<span class="ws-ceo-plan__cost">⚡' + t.cost + '</span>' +
+      '</div>'
+    ).join('');
+    plan.innerHTML =
+      '<div class="ws-ceo-plan__head">📋 调度计划 · 拖拽子任务可调整分配</div>' +
+      planHtml +
+      '<div class="ws-ceo-plan__total">调度费 ' + CEO_DISPATCH_FEE + ' + 子任务 ' + (totalCost - CEO_DISPATCH_FEE) + ' = <strong>' + totalCost + ' Token</strong></div>';
+    // 重绑拖拽 + 确认按钮
+    setupCeoPlanDrag(ceo, task, subtasks, totalCost);
+  }
+
+  // 拖拽监听
+  function setupCeoPlanDrag(ceo, task, subtasks, totalCost) {
+    const planItems = document.querySelectorAll('.ws-ceo-plan__item[data-sub-idx]');
+    planItems.forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', item.dataset.subIdx);
+        e.dataTransfer.effectAllowed = 'move';
+        item.classList.add('is-dragging');
+      });
+      item.addEventListener('dragend', () => {
+        item.classList.remove('is-dragging');
+        document.querySelectorAll('.ws-expert-row').forEach(r => r.classList.remove('is-drop-target'));
+      });
+    });
+    document.querySelectorAll('.ws-expert-row').forEach(row => {
+      // CEO 是调度员，不作为 drop target
+      if (row.dataset.id === 'ceo') {
+        row.addEventListener('dragover', (e) => {
+          e.dataTransfer.dropEffect = 'none';
+        });
+        return;
+      }
+      row.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        row.classList.add('is-drop-target');
+      });
+      row.addEventListener('dragleave', () => {
+        row.classList.remove('is-drop-target');
+      });
+      row.addEventListener('drop', (e) => {
+        e.preventDefault();
+        row.classList.remove('is-drop-target');
+        const idx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+        const newExpertId = row.dataset.id;
+        if (isNaN(idx) || !newExpertId) return;
+        assignSubtaskToExpert(ceo, task, subtasks, idx, newExpertId);
+      });
+    });
+    // 确认派单按钮
+    const confirmBtn = document.getElementById('wsCeoConfirm');
+    if (confirmBtn) {
+      confirmBtn.onclick = () => {
+        // 余额再次检查
+        if (quotaBalance < task.cost) {
+          alert('Token 余额不足！需要 ' + task.cost + ' Token（当前 ' + quotaBalance + '）。请到算力中心充值。');
+          return;
+        }
+        confirmCeoDispatch(ceo, task, subtasks, task.cost);
+      };
+    }
+  }
+
+  // CEO 思考阶段（含可拖拽调整 + 确认派单）
+  function renderCenterCeoProgress(ceo, task, subtasks, totalCost) {
+    const center = document.getElementById('wsCenter');
+    if (!center) return;
+    const planHtml = subtasks.map((t, i) =>
+      '<div class="ws-ceo-plan__item" data-sub-idx="' + i + '" draggable="true">' +
+        '<span class="ws-ceo-plan__grip">⋮⋮</span>' +
+        '<span class="ws-ceo-plan__index">' + (i + 1) + '</span>' +
+        '<span class="ws-ceo-plan__avatar" style="background:' + t.avatar.gradient + ';">' + t.avatar.emoji + '</span>' +
+        '<span class="ws-ceo-plan__name">' + t.expertName + '</span>' +
+        '<span class="ws-ceo-plan__task">' + t.taskName + '</span>' +
+        '<span class="ws-ceo-plan__cost">⚡' + t.cost + '</span>' +
+      '</div>'
+    ).join('');
+    center.innerHTML = (
+      '<div class="ws-ceo-progress">' +
+        '<div class="ws-ceo-progress__head">' +
+          '<div class="ws-ceo-progress__avatar" style="background:' + ceo.avatar.gradient + ';">' + ceo.avatar.emoji + '</div>' +
+          '<div class="ws-ceo-progress__head-body">' +
+            '<div class="ws-ceo-progress__title">★ CEO 已完成拆解 · 待你确认' +
+              '<span class="ws-typing"><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span></span>' +
+            '</div>' +
+            '<div class="ws-ceo-progress__sub">已识别 ' + subtasks.length + ' 个子任务 · 总消耗 ' + totalCost + ' Token</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ws-ceo-plan">' +
+          '<div class="ws-ceo-plan__head">📋 调度计划 · 拖拽子任务可调整分配</div>' +
+          planHtml +
+          '<div class="ws-ceo-plan__total">调度费 ' + CEO_DISPATCH_FEE + ' + 子任务 ' + (totalCost - CEO_DISPATCH_FEE) + ' = <strong>' + totalCost + ' Token</strong></div>' +
+        '</div>' +
+        '<div class="ws-ceo-confirm">' +
+          '<span class="ws-ceo-confirm__hint">拖拽子任务到左侧专家行调整 · 点确认后扣费</span>' +
+          '<button class="ws-ceo-confirm__btn" id="wsCeoConfirm" type="button">✓ 确认派单</button>' +
+        '</div>' +
+      '</div>'
+    );
+    if (HAS_GSAP) {
+      gsap.fromTo('.ws-ceo-progress', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' });
+    }
+    // 测试模式：立即设到目标态，绕过 headless 截图捕获动画中间帧
+    if (location.search.indexOf('test=au') !== -1) {
+      if (HAS_GSAP) gsap.set('.ws-ceo-progress', { opacity: 1, y: 0, clearProps: 'opacity,y' });
+    }
+    // 绑定拖拽 + 确认派单
+    setupCeoPlanDrag(ceo, task, subtasks, totalCost);
+  }
+
+  // CEO 计划 + 子任务执行流（chat 视觉）
+  function renderCenterCeoResult(ceo, task, subtasks, totalCost) {
+    const center = document.getElementById('wsCenter');
+    if (!center) return;
+    // 1. 计算每个子任务的累计时间（用于排序 setTimeout）
+    let cumTime = 800; // 起始 0.8s
+    const subTimings = subtasks.map(t => {
+      const start = cumTime;
+      cumTime += t.timeMs;
+      return { start, end: cumTime };
+    });
+    // 2. 渲染初始骨架
+    const planHtml = subtasks.map((t, i) =>
+      '<div class="ws-ceo-plan__item" data-sub-idx="' + i + '">' +
+        '<span class="ws-ceo-plan__index">' + (i + 1) + '</span>' +
+        '<span class="ws-ceo-plan__avatar" style="background:' + t.avatar.gradient + ';">' + t.avatar.emoji + '</span>' +
+        '<span class="ws-ceo-plan__name">' + t.expertName + '</span>' +
+        '<span class="ws-ceo-plan__task">' + t.taskName + '</span>' +
+        '<span class="ws-ceo-plan__cost">⚡' + t.cost + '</span>' +
+      '</div>'
+    ).join('');
+    center.innerHTML = (
+      '<div class="ws-result">' +
+        '<div class="ws-result__head">' +
+          '<div class="ws-result__title">★ CEO 已调度完成 · 拆 ' + subtasks.length + ' 子任务</div>' +
+          '<div class="ws-result__cost">消耗 ' + totalCost + ' 算力</div>' +
+        '</div>' +
+        // Chat 模式：用户气泡 + CEO 计划气泡 + 子任务流
+        '<div class="ws-chat-stream" id="wsChatStream">' +
+          // 用户气泡
+          '<div class="ws-chat-msg ws-chat-msg--user">' +
+            '<div class="ws-chat-msg__bubble">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag">→ 发给 CEO</span>' +
+                '<span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + '</span>' +
+              '</div>' +
+              '<div class="ws-chat-msg__text">' + task.requirement + '</div>' +
+            '</div>' +
+            '<div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div>' +
+          '</div>' +
+          // CEO 计划气泡
+          '<div class="ws-chat-msg ws-chat-msg--ai ws-chat-msg--ceo">' +
+            '<div class="ws-chat-msg__avatar" style="background:' + ceo.avatar.gradient + ';">' + ceo.avatar.emoji + '</div>' +
+            '<div class="ws-chat-msg__bubble ws-chat-msg__bubble--ceo">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag ws-chat-msg__tag--ceo">☀ CEO</span>' +
+                '<span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + ' · ⚡' + totalCost + ' token</span>' +
+              '</div>' +
+              '<div class="ws-chat-msg__content">' +
+                '<div class="ws-ceo-plan__head">📋 调度计划 · ' + subtasks.length + ' 子任务</div>' +
+                planHtml +
+                '<div class="ws-ceo-plan__total">调度费 ' + CEO_DISPATCH_FEE + ' + 子任务 ' + (totalCost - CEO_DISPATCH_FEE) + ' = <strong>' + totalCost + ' Token</strong></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          // 子任务流容器（动态注入）
+          '<div class="ws-ceo-subtask-list" id="wsCeoSubtaskList"></div>' +
+          // 完成横幅（初始隐藏）
+          '<div class="ws-ceo-complete" id="wsCeoComplete" style="display:none;">' +
+            '<div class="ws-ceo-complete__icon">✓</div>' +
+            '<div class="ws-ceo-complete__text">全部完成 · ' + subtasks.length + ' 子任务 · 消耗 ' + totalCost + ' token</div>' +
+          '</div>' +
+        '</div>' +
+        // AK: input 框
+        '<div class="ws-chat-input">' +
+          '<div class="ws-chat-input__avatar" style="background:' + ceo.avatar.gradient + ';">' + ceo.avatar.emoji + '</div>' +
+          '<textarea class="ws-chat-input__field" id="wsChatInput" placeholder="继续发需求 · CEO 会重新拆解并调度..." maxlength="500"></textarea>' +
+          '<button class="ws-chat-input__send" id="wsChatSend" type="button">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+      '<button class="ws-dispatch__submit" id="wsDispatchReset" type="button" style="background: linear-gradient(135deg, #8B8B9E, #6E6E84); box-shadow: none;">← 返回继续发需求</button>'
+    );
+    if (HAS_GSAP) {
+      gsap.fromTo('.ws-result', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' });
+    }
+    document.getElementById('wsDispatchReset').addEventListener('click', renderCenter);
+    // AK: 追问（CEO 模式追问 = 重新拆解）
+    setupCeoChatInput(ceo, totalCost);
+    renderHistory();
+
+    // 3. 顺序执行子任务（按时序 setTimeout）
+    const stream = document.getElementById('wsCeoSubtaskList');
+    subtasks.forEach((sub, idx) => {
+      const timing = subTimings[idx];
+      setTimeout(() => {
+        // 推送"派给 X 专家" + typing
+        const dispatchHtml =
+          '<div class="ws-chat-msg ws-chat-msg--user" data-sub-task="' + sub.expertId + '">' +
+            '<div class="ws-chat-msg__bubble">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag">→ 子任务 ' + (idx + 1) + ' · ' + sub.expertName + '</span>' +
+                '<span class="ws-chat-msg__time">执行中</span>' +
+              '</div>' +
+              '<div class="ws-chat-msg__text">' + sub.taskName + '</div>' +
+            '</div>' +
+            '<div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div>' +
+          '</div>' +
+          '<div class="ws-chat-msg ws-chat-msg--ai ws-chat-msg--typing">' +
+            '<div class="ws-chat-msg__avatar" style="background:' + sub.avatar.gradient + ';">' + sub.avatar.emoji + '</div>' +
+            '<div class="ws-chat-msg__bubble">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + sub.expertName + '</span>' +
+                '<span class="ws-chat-msg__time">子任务 ' + (idx + 1) + '/' + subtasks.length + ' · 处理中...</span>' +
+              '</div>' +
+              '<div class="ws-typing ws-typing--lg"><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span></div>' +
+            '</div>' +
+          '</div>';
+        stream.insertAdjacentHTML('beforeend', dispatchHtml);
+        if (typeof wsChatStream !== 'undefined' && wsChatStream) wsChatStream.scrollTop = wsChatStream.scrollHeight;
+        // 子任务完成（timeMs 后）
+        setTimeout(() => {
+          // 移除 typing（找最后一个 typing msg）
+          const typingMsgs = stream.querySelectorAll('.ws-chat-msg--typing');
+          const lastTyping = typingMsgs[typingMsgs.length - 1];
+          if (lastTyping) lastTyping.remove();
+          // 推送 AI 完成
+          const subTask = { id: 'S' + sub.index, requirement: sub.taskName, cost: sub.cost, timeMs: sub.timeMs };
+          const subExpert = EXPERTS.find(e => e.id === sub.expertId);
+          const subContent = generateResult(subExpert, subTask);
+          const completeHtml =
+            '<div class="ws-chat-msg ws-chat-msg--ai">' +
+              '<div class="ws-chat-msg__avatar" style="background:' + sub.avatar.gradient + ';">' + sub.avatar.emoji + '</div>' +
+              '<div class="ws-chat-msg__bubble">' +
+                '<div class="ws-chat-msg__meta">' +
+                  '<span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + sub.expertName + '</span>' +
+                  '<span class="ws-chat-msg__time">子任务 ' + (idx + 1) + '/' + subtasks.length + ' · ✓ 完成 · ⚡' + sub.cost + ' token</span>' +
+                '</div>' +
+                '<div class="ws-chat-msg__content">' + subContent + '</div>' +
+              '</div>' +
+            '</div>';
+          stream.insertAdjacentHTML('beforeend', completeHtml);
+          if (HAS_GSAP) {
+            const last = stream.lastElementChild;
+            if (last) gsap.fromTo(last, { opacity: 0, y: 8, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.4)' });
+          }
+          // 所有子任务完成
+          if (idx === subtasks.length - 1) {
+            setTimeout(() => {
+              const completeEl = document.getElementById('wsCeoComplete');
+              if (completeEl) {
+                completeEl.style.display = 'flex';
+                if (HAS_GSAP) gsap.fromTo(completeEl, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' });
+              }
+            }, 300);
+          }
+        }, Math.max(800, sub.timeMs));
+      }, timing.start);
+    });
+  }
+
+  // CEO 模式 input 框
+  function setupCeoChatInput(ceo, originalTotalCost) {
+    const wsChatInput = document.getElementById('wsChatInput');
+    const wsChatSend = document.getElementById('wsChatSend');
+    if (!wsChatInput || !wsChatSend) return;
+    const sendFollowup = () => {
+      const text = wsChatInput.value.trim();
+      if (!text) return;
+      const followupSubtasks = ceoRoute(text);
+      if (followupSubtasks.length === 0) {
+        alert('拆解失败，请重新描述。');
+        return;
+      }
+      const followupCost = CEO_DISPATCH_FEE + followupSubtasks.reduce((s, t) => s + t.cost, 0);
+      if (quotaBalance < followupCost) {
+        alert('Token 余额不足！CEO 追问需要 ' + followupCost + ' Token。');
+        return;
+      }
+      quotaBalance -= followupCost;
+      consumedToday += followupCost;
+      updateQuotaUI();
+      // 追加 user 气泡
+      const stream = document.getElementById('wsChatStream');
+      const userMsg = document.createElement('div');
+      userMsg.className = 'ws-chat-msg ws-chat-msg--user';
+      userMsg.innerHTML = '<div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag">追问</span><span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + ' · ⚡' + followupCost + '</span></div><div class="ws-chat-msg__text">' + text + '</div></div><div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div>';
+      stream.appendChild(userMsg);
+      wsChatInput.value = '';
+      stream.scrollTop = stream.scrollHeight;
+      // 隐藏完成横幅
+      const completeEl = document.getElementById('wsCeoComplete');
+      if (completeEl) completeEl.style.display = 'none';
+      // CEO 拆解提示
+      const typingMsg = document.createElement('div');
+      typingMsg.className = 'ws-chat-msg ws-chat-msg--ai ws-chat-msg--typing';
+      typingMsg.innerHTML = '<div class="ws-chat-msg__avatar" style="background:' + ceo.avatar.gradient + ';">' + ceo.avatar.emoji + '</div><div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag ws-chat-msg__tag--ceo">☀ CEO</span><span class="ws-chat-msg__time">重新拆解...</span></div><div class="ws-typing ws-typing--lg"><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span></div></div>';
+      stream.appendChild(typingMsg);
+      stream.scrollTop = stream.scrollHeight;
+      setTimeout(() => {
+        typingMsg.remove();
+        // 推 CEO 计划气泡
+        const planHtml = followupSubtasks.map((t, i) =>
+          '<div class="ws-ceo-plan__item"><span class="ws-ceo-plan__index">' + (i + 1) + '</span><span class="ws-ceo-plan__avatar" style="background:' + t.avatar.gradient + ';">' + t.avatar.emoji + '</span><span class="ws-ceo-plan__name">' + t.expertName + '</span><span class="ws-ceo-plan__task">' + t.taskName + '</span><span class="ws-ceo-plan__cost">⚡' + t.cost + '</span></div>'
+        ).join('');
+        const planBubble = document.createElement('div');
+        planBubble.className = 'ws-chat-msg ws-chat-msg--ai ws-chat-msg--ceo';
+        planBubble.innerHTML = '<div class="ws-chat-msg__avatar" style="background:' + ceo.avatar.gradient + ';">' + ceo.avatar.emoji + '</div><div class="ws-chat-msg__bubble ws-chat-msg__bubble--ceo"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag ws-chat-msg__tag--ceo">☀ CEO</span><span class="ws-chat-msg__time">追问拆解 · 拆 ' + followupSubtasks.length + ' 子任务 · ⚡' + followupCost + ' token</span></div><div class="ws-chat-msg__content"><div class="ws-ceo-plan__head">📋 追问计划</div>' + planHtml + '<div class="ws-ceo-plan__total">调度费 ' + CEO_DISPATCH_FEE + ' + 子任务 ' + (followupCost - CEO_DISPATCH_FEE) + ' = <strong>' + followupCost + ' Token</strong></div></div></div>';
+        stream.appendChild(planBubble);
+        if (HAS_GSAP) gsap.fromTo(planBubble, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.4)' });
+        stream.scrollTop = stream.scrollHeight;
+        // 顺序执行子任务
+        let cumT = 600;
+        followupSubtasks.forEach((sub, idx) => {
+          const start = cumT;
+          cumT += Math.max(1200, sub.timeMs);
+          setTimeout(() => {
+            const dispatchHtml = '<div class="ws-chat-msg ws-chat-msg--user"><div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag">→ 子任务 ' + (idx + 1) + ' · ' + sub.expertName + '</span><span class="ws-chat-msg__time">追问执行</span></div><div class="ws-chat-msg__text">' + sub.taskName + '</div></div><div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div></div><div class="ws-chat-msg ws-chat-msg--ai ws-chat-msg--typing"><div class="ws-chat-msg__avatar" style="background:' + sub.avatar.gradient + ';">' + sub.avatar.emoji + '</div><div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + sub.expertName + '</span><span class="ws-chat-msg__time">追问子任务 ' + (idx + 1) + '/' + followupSubtasks.length + ' · 处理中...</span></div><div class="ws-typing ws-typing--lg"><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span><span class="ws-typing__dot"></span></div></div></div>';
+            stream.insertAdjacentHTML('beforeend', dispatchHtml);
+            stream.scrollTop = stream.scrollHeight;
+            setTimeout(() => {
+              const typingMsgs = stream.querySelectorAll('.ws-chat-msg--typing');
+              const lastT = typingMsgs[typingMsgs.length - 1];
+              if (lastT) lastT.remove();
+              const subTask = { id: 'Q' + sub.index, requirement: sub.taskName, cost: sub.cost, timeMs: sub.timeMs };
+              const subExpert = EXPERTS.find(e => e.id === sub.expertId);
+              const subContent = generateResult(subExpert, subTask);
+              const completeHtml = '<div class="ws-chat-msg ws-chat-msg--ai"><div class="ws-chat-msg__avatar" style="background:' + sub.avatar.gradient + ';">' + sub.avatar.emoji + '</div><div class="ws-chat-msg__bubble"><div class="ws-chat-msg__meta"><span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + sub.expertName + '</span><span class="ws-chat-msg__time">追问子任务 ' + (idx + 1) + '/' + followupSubtasks.length + ' · ✓ 完成 · ⚡' + sub.cost + ' token</span></div><div class="ws-chat-msg__content">' + subContent + '</div></div></div>';
+              stream.insertAdjacentHTML('beforeend', completeHtml);
+              if (HAS_GSAP) {
+                const last = stream.lastElementChild;
+                if (last) gsap.fromTo(last, { opacity: 0, y: 8, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.4)' });
+              }
+              stream.scrollTop = stream.scrollHeight;
+              if (idx === followupSubtasks.length - 1) {
+                setTimeout(() => {
+                  if (completeEl) {
+                    completeEl.style.display = 'flex';
+                    completeEl.querySelector('.ws-ceo-complete__text').textContent = '追问完成 · ' + followupSubtasks.length + ' 子任务 · 消耗 ' + followupCost + ' token';
+                    if (HAS_GSAP) gsap.fromTo(completeEl, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' });
+                  }
+                }, 300);
+              }
+            }, Math.max(800, sub.timeMs));
+          }, start);
+        });
+        // 写 history
+        taskCounter++;
+        const fTaskId = 'C' + String(taskCounter).padStart(3, '0');
+        resultHistory.unshift({
+          taskId: fTaskId,
+          expertId: 'ceo',
+          expertName: '☀ CEO',
+          avatar: ceo.avatar,
+          cost: followupCost,
+          requirement: text,
+          resultSummary: 'CEO · 追问拆 ' + followupSubtasks.length + ' 子任务 · ' + followupSubtasks.map(t => t.expertName.replace('专家', '')).join('+') + ' · ' + followupCost + ' token',
+          isCeo: true,
+          subtaskCount: followupSubtasks.length
+        });
+        while (resultHistory.length > HISTORY_MAX) resultHistory.pop();
+        renderHistory();
+      }, 1000);
+    };
+    wsChatSend.addEventListener('click', sendFollowup);
+    wsChatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendFollowup();
+      }
+    });
+  }
+
   // 历史对比缩略
   function renderHistory() {
     const center = document.getElementById('wsCenter');
@@ -934,37 +1711,138 @@ document.addEventListener('DOMContentLoaded', () => {
     if (old) old.remove();
     if (resultHistory.length === 0) return;
 
-    const items = resultHistory.slice(0, HISTORY_MAX).map(t => (
-      '<div class="ws-history__item" data-task-id="' + t.taskId + '">' +
-        '<div class="ws-history__item-thumb" style="background:' + t.avatar.gradient + ';">' + t.avatar.emoji + '</div>' +
-        '<div class="ws-history__item-name">' + t.expertName + '</div>' +
-        '<div class="ws-history__item-meta">' + t.taskId + ' · ' + t.cost + ' 算力</div>' +
-      '</div>'
-    )).join('');
+    const items = resultHistory.slice(0, HISTORY_MAX).map(t => {
+      const fullTask = tasks.find(x => x.id === t.taskId);
+      const summary = t.resultSummary || (fullTask && fullTask.resultSummary) || t.expertName + ' · 已生成结果';
+      return (
+        '<div class="ws-history__item" data-task-id="' + t.taskId + '">' +
+          '<div class="ws-history__item-head">' +
+            '<div class="ws-history__item-thumb" style="background:' + t.avatar.gradient + ';">' + t.avatar.emoji + '</div>' +
+            '<div class="ws-history__item-head-info">' +
+              '<div class="ws-history__item-name">' + t.expertName + '</div>' +
+              '<div class="ws-history__item-meta">' + t.taskId + ' · ' + t.cost + ' 算力</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="ws-history__item-summary">' + summary + '</div>' +
+        '</div>'
+      );
+    }).join('');
 
     const block = document.createElement('div');
     block.id = 'wsHistory';
-    block.className = 'ws-history';
+    block.className = 'ws-history ws__right-block';
     block.innerHTML = (
       '<div class="ws-history__head">' +
-        '<div class="ws-history__title">↺ 历史派单 · 快速回看</div>' +
+        '<div class="ws-history__title">↺ 历史需求 · 快速回看</div>' +
         '<div class="ws-history__count">' + resultHistory.length + ' 条</div>' +
       '</div>' +
       '<div class="ws-history__list">' + items + '</div>'
     );
-    center.appendChild(block);
+    // 移到右列：插在算力消耗块之后
+    const rightCol = document.querySelector('.ws__right');
+    const consumptionBlock = document.getElementById('wsConsumptionBlock');
+    if (rightCol && consumptionBlock) {
+      // 先删除旧的位置（如果在中间区）
+      const oldInCenter = document.getElementById('wsHistory');
+      if (oldInCenter && oldInCenter.closest('.ws__center')) oldInCenter.remove();
+      rightCol.insertBefore(block, consumptionBlock.nextSibling);
+    } else {
+      center.appendChild(block);
+    }
 
-    // 绑定点击 → 打开 modal
+    // B: 绑定点击 → 重渲染 result 区（历史回放）
     block.querySelectorAll('.ws-history__item').forEach(item => {
       item.addEventListener('click', () => {
         const taskId = item.dataset.taskId;
         const fullTask = tasks.find(t => t.id === taskId);
+        if (!fullTask) return;
         const expert = EXPERTS.find(e => e.id === fullTask.expertId);
-        if (fullTask && expert) {
-          openResultModal(fullTask, expert, fullTask.requirement);
-        }
+        if (!expert) return;
+        replayHistoryResult(fullTask, expert);
       });
     });
+  }
+
+  // B: 历史回放 — 把历史任务的结果重渲染到中列（替代之前的 modal 行为）
+  function replayHistoryResult(task, expert) {
+    const center = document.getElementById('wsCenter');
+    if (!center) return;
+    // 用现有的 chat-stream 结构 + 历史回放头标 + 关闭按钮 + 返回按钮
+    const results = generateResult(expert, task);
+    const isCeo = task.isCeo || expert.id === 'ceo';
+    const headerTitle = isCeo
+      ? '↺ 历史回放 · ' + expert.name + ' 调度任务'
+      : '↺ 历史回放 · ' + expert.name + ' 生成结果';
+    const headerTag = isCeo
+      ? '<span class="ws-replay-tag ws-replay-tag--ceo">CEO 调度</span>'
+      : '<span class="ws-replay-tag">普通派单</span>';
+    const tsText = '完成于 ' + new Date(task.completedAt || Date.now()).toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+    center.innerHTML = (
+      '<div class="ws-result ws-result--replay">' +
+        '<div class="ws-replay-head">' +
+          '<div class="ws-replay-head__left">' +
+            headerTag +
+            '<span class="ws-replay-head__title">' + headerTitle + '</span>' +
+          '</div>' +
+          '<div class="ws-replay-head__right">' +
+            '<span class="ws-replay-head__meta">' + task.id + ' · 消耗 ' + task.cost + ' 算力 · ' + tsText + '</span>' +
+            '<button class="ws-replay-head__close" id="wsReplayClose" type="button" title="返回发新需求">×</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ws-chat-stream" id="wsChatStream">' +
+          '<div class="ws-chat-msg ws-chat-msg--user">' +
+            '<div class="ws-chat-msg__bubble">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag">→ 派给 ' + expert.name + '</span>' +
+                '<span class="ws-chat-msg__time">历史需求</span>' +
+              '</div>' +
+              '<div class="ws-chat-msg__text">' + (task.requirement || '（无具体需求）') + '</div>' +
+            '</div>' +
+            '<div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div>' +
+          '</div>' +
+          '<div class="ws-chat-msg ws-chat-msg--ai">' +
+            '<div class="ws-chat-msg__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div>' +
+            '<div class="ws-chat-msg__bubble">' +
+              '<div class="ws-chat-msg__meta">' +
+                '<span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + expert.name + '</span>' +
+                '<span class="ws-chat-msg__time">' + tsText + ' · ⚡ ' + (task.timeMs / 1000).toFixed(1) + 's · ' + task.cost + ' 算力</span>' +
+              '</div>' +
+              '<div class="ws-chat-msg__content">' + results + '</div>' +
+              '<div class="ws-chat-msg__actions">' +
+                '<button class="ws-result__action" data-action="rerun">↻ 重新生成</button>' +
+                '<button class="ws-result__action" data-action="copy" id="wsReplayCopy">复制结果</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<button class="ws-dispatch__submit" id="wsReplayBack" type="button" style="background: linear-gradient(135deg, #8B8B9E, #6E6E84); box-shadow: none;">← 返回发新需求</button>' +
+      '</div>'
+    );
+    // 行动画入场
+    if (HAS_GSAP) {
+      gsap.fromTo('.ws-result--replay', { opacity: 0, y: 8, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'power3.out' });
+    }
+    // 返回按钮 → 默认 dispatch 视图
+    document.getElementById('wsReplayBack').addEventListener('click', renderCenter);
+    document.getElementById('wsReplayClose').addEventListener('click', renderCenter);
+    // 重新生成（仍走正常流程）
+    center.querySelector('[data-action="rerun"]').addEventListener('click', () => {
+      renderCenter();
+      setTimeout(() => submitTask(expert, task.requirement), 200);
+    });
+    // 复制
+    const copyBtn = document.getElementById('wsReplayCopy');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const txt = expert.name + ' 生成结果：\n\n' + (task.requirement || '') + '\n\n' + results.replace(/<[^>]+>/g, '');
+        copyToClipboard(txt).then(() => {
+          const orig = copyBtn.textContent;
+          copyBtn.textContent = '✓ 已复制';
+          setTimeout(() => { copyBtn.textContent = orig; }, 1500);
+        });
+      });
+    }
   }
 
   // Modal 关闭（背景 + 按钮）
@@ -1329,4 +2207,135 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTaskList();
   updateTaskCount();
   updateQuotaUI();
+
+  // 测试触发：?test=replay-direct 直接预填充一条 history + 打开 replay 视图（截图用）
+  if (location.search.indexOf('test=replay-direct') !== -1) {
+    setTimeout(() => {
+      try {
+        // 注入一条假历史任务
+        const ceo = EXPERTS[0];
+        const writing = EXPERTS.find(e => e.id === 'writing');
+        const fakeTask = {
+          id: 'C007',
+          expertId: 'ceo',
+          isCeo: true,
+          requirement: 'Q4 营销全案：写品牌文案 + 拍短视频 + 数据分析',
+          cost: 4100,
+          timeMs: 8500,
+          completedAt: Date.now() - 3600 * 1000
+        };
+        tasks.unshift(fakeTask);
+        resultHistory.unshift({
+          taskId: fakeTask.id,
+          expertId: 'ceo',
+          expertName: '☀ CEO',
+          avatar: ceo.avatar,
+          cost: fakeTask.cost,
+          requirement: fakeTask.requirement,
+          resultSummary: 'CEO · 拆 3 子任务 · 写作+品牌+视频 · 4,100 token',
+          isCeo: true,
+          subtaskCount: 3
+        });
+        renderHistory();
+        setTimeout(() => {
+          document.title = 'READY';
+          const historyCard = document.querySelector('.ws-history__item');
+          if (historyCard) historyCard.click();
+          if (HAS_GSAP) {
+            gsap.killTweensOf('.ws-result--replay');
+            gsap.set('.ws-result--replay', { opacity: 1, y: 0, scale: 1, clearProps: 'opacity,y,scale' });
+          }
+        }, 100);
+      } catch (e) { document.title = 'ERR-replay:' + e.message; }
+    }, 50);
+  }
+
+  // 测试触发：?test=au 模拟点击 CEO + 派单（仅用于截图验证）
+  if (location.search.indexOf('test=au') !== -1) {
+    // 1. 立即杀掉所有入场 GSAP 动画 + 强制可见（headless 截图模式）
+    if (HAS_GSAP) {
+      gsap.killTweensOf(['.ws__left', '.ws__center', '.ws__right', '.ws-expert-row', '.ws-ceo-progress']);
+      gsap.set(['.ws__left', '.ws__center', '.ws__right'], { opacity: 1, y: 0, clearProps: 'opacity,y' });
+      gsap.set('.ws-expert-row', { opacity: 1, x: 0, clearProps: 'opacity,x' });
+    }
+    setTimeout(() => {
+      try {
+        const ceoRow = document.querySelector('.ws-expert-row[data-id="ceo"]');
+        if (ceoRow) ceoRow.click();
+        setTimeout(() => {
+          try {
+            const ta = document.querySelector('.ws-dispatch__input');
+            if (ta) {
+              ta.value = 'Q4 营销全案：写品牌文案 + 拍短视频 + 数据分析';
+              ta.dispatchEvent(new Event('input', { bubbles: true }));
+              const submit = document.getElementById('wsDispatchSubmit');
+              if (submit) submit.click();
+              // 派单后再清一次
+              if (HAS_GSAP) {
+                gsap.killTweensOf('.ws-ceo-progress');
+                gsap.set('.ws-ceo-progress', { opacity: 1, y: 0, clearProps: 'opacity,y' });
+              }
+              // test=au-drag 额外模拟：把第 1 个子任务（写作）拖到"数据"专家
+              if (location.search.indexOf('test=au-drag') !== -1) {
+                setTimeout(() => {
+                  try {
+                    const planItem = document.querySelector('.ws-ceo-plan__item[data-sub-idx="0"]');
+                    const targetRow = document.querySelector('.ws-expert-row[data-id="data"]');
+                    if (planItem && targetRow) {
+                      const dt = new DataTransfer();
+                      dt.setData('text/plain', '0');
+                      planItem.dispatchEvent(new DragEvent('dragstart', { dataTransfer: dt, bubbles: true }));
+                      targetRow.dispatchEvent(new DragEvent('dragover', { dataTransfer: dt, bubbles: true }));
+                      targetRow.dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
+                      planItem.dispatchEvent(new DragEvent('dragend', { dataTransfer: dt, bubbles: true }));
+                    }
+                    if (HAS_GSAP) {
+                      gsap.killTweensOf('.ws-ceo-progress');
+                      gsap.set('.ws-ceo-progress', { opacity: 1, y: 0, clearProps: 'opacity,y' });
+                    }
+                  } catch (e3) { document.title = 'ERR3:' + e3.message; }
+                }, 300);
+              }
+              // test=au-confirm 额外模拟：点"确认派单"
+              if (location.search.indexOf('test=au-confirm') !== -1) {
+                setTimeout(() => {
+                  try {
+                    const confirmBtn = document.getElementById('wsCeoConfirm');
+                    if (confirmBtn) confirmBtn.click();
+                    // 等待子任务流渲染（几个子任务总时间 ~3s）
+                    setTimeout(() => {
+                      if (HAS_GSAP) {
+                        gsap.killTweensOf(['.ws-result', '.ws-ceo-complete', '.ws-chat-msg--user', '.ws-chat-msg--ai', '.ws-chat-msg--ceo']);
+                        gsap.set(['.ws-result', '.ws-ceo-complete', '.ws-chat-msg--user', '.ws-chat-msg--ai', '.ws-chat-msg--ceo'],
+                          { opacity: 1, y: 0, scale: 1, clearProps: 'opacity,y,scale' });
+                      }
+                      // test=history 再额外模拟：点第一个历史卡 → 重渲染 result 区
+                      if (location.search.indexOf('test=history') !== -1) {
+                        setTimeout(() => {
+                          try {
+                            const historyCard = document.querySelector('.ws-history__item');
+                            document.title = historyCard ? 'HC-FOUND' : 'HC-MISSING';
+                            if (historyCard) historyCard.click();
+                            setTimeout(() => {
+                              document.title = (document.getElementById('wsReplayBack') ? 'REPLAY-OK' : 'REPLAY-MISS');
+                              if (HAS_GSAP) {
+                                gsap.killTweensOf('.ws-result--replay');
+                                gsap.set('.ws-result--replay', { opacity: 1, y: 0, scale: 1, clearProps: 'opacity,y,scale' });
+                              }
+                            }, 200);
+                          } catch (e5) { document.title = 'ERR5:' + e5.message; }
+                        }, 600);
+                      }
+                    }, 3500);
+                  } catch (e4) { document.title = 'ERR4:' + e4.message; }
+                }, 300);
+              }
+            } else {
+              document.title = 'NO-TA';
+            }
+          } catch (e2) { document.title = 'ERR2:' + e2.message; }
+        }, 200);
+      } catch (e) { document.title = 'ERR:' + e.message; }
+    }, 100);
+  }
 });
