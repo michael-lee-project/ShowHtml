@@ -339,6 +339,148 @@
       font-weight: var(--weight-semibold);
     }
 
+    /* ===== Top 5 排行 ===== */
+    .top5-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .top5-item {
+      display: grid;
+      grid-template-columns: 28px 1fr 1fr 56px;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .top5-rank {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.04em;
+      text-align: right;
+    }
+    .top5-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-primary);
+    }
+    .top5-bar {
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(90deg, #C7D2FE, #818CF8);
+    }
+    .top5-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    /* ellipsis 分隔线 */
+    .ranking-ellipsis {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+    }
+    .ranking-ellipsis-line {
+      flex: 1;
+      height: 1px;
+      background: repeating-linear-gradient(90deg, var(--border-strong) 0 4px, transparent 4px 8px);
+    }
+    .ranking-ellipsis-mono {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.06em;
+    }
+
+    /* 我（当前商家）一行 */
+    .me-rank-row {
+      display: grid;
+      grid-template-columns: 28px auto 1fr 1fr 56px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-3);
+      margin: 0 calc(-1 * var(--space-3));
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.06), rgba(239, 68, 68, 0.02));
+      border-left: 2px solid var(--red-600);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    .me-rank-num {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: var(--weight-black);
+      color: var(--red-600);
+      letter-spacing: -0.02em;
+      text-align: right;
+      line-height: 1;
+    }
+    .me-rank-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--red-600);
+      color: white;
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+    }
+    .me-rank-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+    }
+    .me-track {
+      border: 1px solid var(--red-200);
+    }
+    .me-bar {
+      background: linear-gradient(90deg, #FCA5A5, var(--red-600));
+    }
+    .me-rank-value {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      color: var(--red-700);
+      text-align: right;
+    }
+
+    /* 底部分类 meta */
+    .ranking-meta {
+      margin-top: var(--space-5);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--border-muted);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .ranking-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ranking-meta-key {
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+    .ranking-meta-val {
+      color: var(--text-secondary);
+    }
+    .ranking-meta-val strong {
+      color: var(--red-700);
+      font-weight: var(--weight-semibold);
+    }
+
     /* ===== 实时养成记录 ===== */
     .feed-list {
       display: flex;
@@ -484,6 +626,11 @@
           <span>返回官网</span>
         </a>
       </div>
+    
+      <div class="sidebar-brand-foot">
+        <div class="sidebar-brand-foot-title">Opulatrix Game Hub</div>
+        <div class="sidebar-brand-foot-sub">Enterprise Link 生态</div>
+      </div>
     </aside>
 
     <!-- Main -->
@@ -503,6 +650,21 @@
       </header>
 
       <div class="app-content">
+        <!-- 《Game Hub 合作协议》生效提示 -->
+        <div style="display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); background: linear-gradient(135deg, #F0F9FF 0%, #FFFFFF 100%); border: 1px solid #BFDBFE; border-radius: var(--radius-md); margin-bottom: var(--space-4);">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #2563EB, #1D4ED8); color: white; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; font-size: 14px;">📄</div>
+          <div style="flex: 1; line-height: 1.5;">
+            <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">
+              《Game Hub 合作协议》<span style="color: var(--green-700, #047857); font-weight: var(--weight-semibold);">已签署生效</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 11px; margin-left: var(--space-2);">AGREEMENT-2026-M001-V3 · 当前模式：生态合作</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-tertiary);">
+              签署日 2026-06-30 · 版本 v3.2 · 平台按协议约定提供 5 类支持（用户/测试/社区/数据/商业）
+            </div>
+          </div>
+          <a href="javascript:void(0)" onclick="AgreementModal.open(); return false;" style="font-size: var(--text-sm); color: var(--text-link); white-space: nowrap; cursor: pointer;">查看协议 →</a>
+        </div>
+
         <!-- 模式 hero -->
         <div class="mode-hero ignite">
           <div class="mode-hero-grid">
@@ -604,45 +766,70 @@
             <div class="panel-head">
               <div>
                 <h3 class="panel-title">消纳占比排行</h3>
-                <div class="panel-sub">我在 1284 家入驻商家中的位置</div>
-              </div>
-            </div>
-            <div class="ranking-list">
-              <div class="ranking-item">
-                <div class="ranking-label">
-                  <span class="ranking-marker" style="background: var(--red-600);"></span>
-                  我（M001 音浪对决）
-                </div>
-                <div class="ranking-bar-track">
-                  <div class="ranking-bar-fill me" style="width: 4.6%;"></div>
-                </div>
-                <div class="ranking-value" style="color: var(--red-700);">4.6%</div>
-              </div>
-              <div class="ranking-item">
-                <div class="ranking-label">
-                  <span class="ranking-marker" style="background: var(--text-primary); opacity: 0.5;"></span>
-                  平台平均
-                </div>
-                <div class="ranking-bar-track">
-                  <div class="ranking-bar-fill avg" style="width: 3.2%;"></div>
-                </div>
-                <div class="ranking-value" style="color: var(--text-secondary);">3.2%</div>
-              </div>
-              <div class="ranking-item">
-                <div class="ranking-label">
-                  <span class="ranking-marker" style="background: #F59E0B;"></span>
-                  Top 10% 平均
-                </div>
-                <div class="ranking-bar-track">
-                  <div class="ranking-bar-fill top10" style="width: 6.9%;"></div>
-                </div>
-                <div class="ranking-value" style="color: #B45309;">6.9%</div>
+                <div class="panel-sub">我在 1,284 家入驻商家中的位置 · Top 5 + 当前</div>
               </div>
             </div>
 
-            <div style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--border-muted); font-size: var(--text-xs); color: var(--text-tertiary); line-height: var(--leading-relaxed);">
-              <div>当前排名：<strong style="color: var(--red-700); font-weight: var(--weight-semibold);">第 47 名</strong> / 1,284 家</div>
-              <div style="margin-top: var(--space-1);">距离 Top 10 还差 <strong style="color: var(--red-700);">+2.3 个百分点</strong></div>
+            <ol class="top5-list">
+              <li class="top5-item">
+                <span class="top5-rank">01</span>
+                <span class="top5-name">K003 风语启示录</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 95%;"></div></div>
+                <span class="top5-value">12.8%</span>
+              </li>
+              <li class="top5-item">
+                <span class="top5-rank">02</span>
+                <span class="top5-name">M019 银河拓荒者</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 86%;"></div></div>
+                <span class="top5-value">11.4%</span>
+              </li>
+              <li class="top5-item">
+                <span class="top5-rank">03</span>
+                <span class="top5-name">M007 萤火奇航</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 76%;"></div></div>
+                <span class="top5-value">10.2%</span>
+              </li>
+              <li class="top5-item">
+                <span class="top5-rank">04</span>
+                <span class="top5-name">K012 七海冒险家</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 66%;"></div></div>
+                <span class="top5-value">8.7%</span>
+              </li>
+              <li class="top5-item">
+                <span class="top5-rank">05</span>
+                <span class="top5-name">M029 星河绘卷</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 61%;"></div></div>
+                <span class="top5-value">8.1%</span>
+              </li>
+            </ol>
+
+            <div class="ranking-ellipsis" aria-hidden="true">
+              <span class="ranking-ellipsis-line"></span>
+              <span class="ranking-ellipsis-mono">第 6 — 46 名</span>
+              <span class="ranking-ellipsis-line"></span>
+            </div>
+
+            <div class="me-rank-row">
+              <span class="me-rank-num">47</span>
+              <span class="me-rank-tag">这是你</span>
+              <span class="me-rank-name">M001 音浪对决</span>
+              <div class="ranking-bar-track me-track"><div class="top5-bar me-bar" style="width: 36%;"></div></div>
+              <span class="me-rank-value">4.6%</span>
+            </div>
+
+            <div class="ranking-meta">
+              <div class="ranking-meta-row">
+                <span class="ranking-meta-key">当前排名</span>
+                <span class="ranking-meta-val">第 <strong>47</strong> 名 · 1,284 家</span>
+              </div>
+              <div class="ranking-meta-row">
+                <span class="ranking-meta-key">距离 Top 10</span>
+                <span class="ranking-meta-val">还差 <strong>+2.3</strong> 个百分点</span>
+              </div>
+              <div class="ranking-meta-row">
+                <span class="ranking-meta-key">平台平均 / Top 10%</span>
+                <span class="ranking-meta-val">3.2% · <span style="color: #B45309;">6.9%</span></span>
+              </div>
             </div>
           </div>
         </div>
@@ -704,8 +891,8 @@
         <div class="mode-rule-banner">
           <div class="mode-rule-banner-icon">!</div>
           <div class="mode-rule-banner-text">
-            <strong>养成期规则：</strong>本月养成进度达到 <strong>200 万星火值（100%）</strong> 时自动切段到燎原期。
-            段一期间<strong>不结算现金</strong>，所有养成数据可在「数据对账」中下载明细。
+            <strong>养成期规则：</strong>本月养成进度达到 <strong>200 万星火值（100%）</strong> 时，按《合作协议》v3.2 第 6 条约定进入分润结算期。
+            养成期按积分消纳贡献比例结算，所有养成数据可在「数据对账」中下载明细。
             当前月累计已养成 <strong>124 万</strong>，按当前速率预计 6/23 达标。
           </div>
         </div>

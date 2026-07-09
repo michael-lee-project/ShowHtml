@@ -208,6 +208,11 @@
           <span>返回官网</span>
         </a>
       </div>
+    
+      <div class="sidebar-brand-foot">
+        <div class="sidebar-brand-foot-title">Opulatrix Game Hub</div>
+        <div class="sidebar-brand-foot-sub">Enterprise Link 生态</div>
+      </div>
     </aside>
 
     <!-- Main -->
@@ -240,14 +245,61 @@
             <div class="info-card-meta">流水 50-200 万/月</div>
           </div>
           <div class="info-card">
-            <div class="info-card-label">积分结算比例</div>
+            <div class="info-card-label">协议分成比例</div>
             <div class="info-card-value" style="color: var(--red-700);">6.5%</div>
-            <div class="info-card-meta">按本档次规则</div>
+            <div class="info-card-meta">按《合作协议》约定</div>
           </div>
           <div class="info-card">
-            <div class="info-card-label">抽佣率</div>
+            <div class="info-card-label">协议分润率</div>
             <div class="info-card-value" style="color: var(--green-700);">8.5%</div>
-            <div class="info-card-meta">流水分润比例</div>
+            <div class="info-card-meta">按《合作协议》约定比例</div>
+          </div>
+        </div>
+
+        <!-- 协议信息 -->
+        <div class="panel" id="agreement-info" style="margin-bottom: var(--space-5);">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon" style="background: linear-gradient(135deg, #2563EB, #1D4ED8); color: white;">📄</div>
+              <div>
+                <div class="panel-title">《Game Hub 合作协议》信息</div>
+                <div class="panel-sub">基于双方协议约定，明确合作模式与结算规则</div>
+              </div>
+            </div>
+            <div class="panel-actions">
+              <span class="status-pill success">已生效</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); padding: var(--space-4); background: var(--bg-subtle); border-radius: var(--radius-md);">
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">协议编号</div>
+              <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">AGREEMENT-2026-M001-V3</div>
+            </div>
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">协议版本</div>
+              <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">v3.2</div>
+            </div>
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">签署日</div>
+              <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">2026-06-30</div>
+            </div>
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">合同期限</div>
+              <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">2027-06-30</div>
+            </div>
+          </div>
+          <div style="margin-top: var(--space-4); padding: var(--space-4); border: 1px dashed var(--border-default); border-radius: var(--radius-md);">
+            <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium); margin-bottom: var(--space-2);">📌 协议关键约定</div>
+            <ul style="margin: 0; padding-left: var(--space-5); font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.8;">
+              <li>第 3 条 · 合作模式：本商户当前按<strong>生态分润模式</strong>运行</li>
+              <li>第 5 条 · 分润比例：按协议约定比例（当前档次 A · 8.5%）</li>
+              <li>第 6 条 · 重新评估：水位显著变化时按协议约定开展协商</li>
+              <li>第 8 条 · 双方权利：模式切换、补充协议、争议处理</li>
+            </ul>
+          </div>
+          <div style="margin-top: var(--space-3); display: flex; gap: var(--space-2); justify-content: flex-end;">
+            <button class="btn btn-ghost btn-sm" onclick="RoleContactModal.open({...ADVISOR_CONFIG, title: '申请补充协议', sub: '由审核顾问跟进 · 1-2 个工作日内回复'})">申请补充协议</button>
+            <button class="btn btn-outline btn-sm" onclick="AgreementModal.open()">查看协议全文</button>
           </div>
         </div>
 
@@ -285,7 +337,7 @@
               <tr>
                 <td>
                   <div class="param-name">全局积分水位上限</div>
-                  <div class="param-desc">超过此值自动触发段一 → 段二</div>
+                  <div class="param-desc">高于此值触发协议重新评估</div>
                 </td>
                 <td><span class="param-value ignite">800 万</span></td>
                 <td>平台统一阈值</td>
@@ -294,7 +346,7 @@
               <tr>
                 <td>
                   <div class="param-name">全局积分水位下限</div>
-                  <div class="param-desc">低于此值自动从段二 → 段一</div>
+                  <div class="param-desc">低于此值触发协议重新评估</div>
                 </td>
                 <td><span class="param-value ignite">200 万</span></td>
                 <td>平台统一阈值</td>
@@ -303,7 +355,7 @@
               <tr>
                 <td>
                   <div class="param-name">月度养成目标</div>
-                  <div class="param-desc">本月养成进度达到此值自动切段</div>
+                  <div class="param-desc">本月养成进度达到此值，按《合作协议》v3.2 第 6 条约定</div>
                 </td>
                 <td><span class="param-value ignite">200 万</span></td>
                 <td>按本档次 A 档</td>
@@ -311,8 +363,8 @@
               </tr>
               <tr>
                 <td>
-                  <div class="param-name">VIC 充值分润</div>
-                  <div class="param-desc">用户通过 VIC 充值的分润比例</div>
+                  <div class="param-name">UMDT 充值分润</div>
+                  <div class="param-desc">用户通过 UMDT 充值的分润 · 按《合作协议》约定比例</div>
                 </td>
                 <td><span class="param-value ignite">3.0%</span></td>
                 <td>本档次 (A 档) 固定</td>
@@ -340,7 +392,7 @@
               <div class="panel-icon blaze">润</div>
               <div>
                 <div class="panel-title">星火燎原期 · 段二参数</div>
-                <div class="panel-sub">流水抽佣 + 结算相关</div>
+                <div class="panel-sub">按《合作协议》约定 · 分润结算参数</div>
               </div>
             </div>
           </div>
@@ -357,20 +409,11 @@
             <tbody>
               <tr>
                 <td>
-                  <div class="param-name">流水分润比例</div>
-                  <div class="param-desc">用户在商户侧产生的流水,商户分润比例</div>
+                  <div class="param-name">协议分润比例</div>
+                  <div class="param-desc">用户在商户侧产生的流水 · 按《合作协议》约定比例</div>
                 </td>
                 <td><span class="param-value blaze">8.5%</span></td>
-                <td>本档次 (A 档) 固定</td>
-                <td><span class="param-status locked">只读</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="param-name">平台抽佣比例</div>
-                  <div class="param-desc">平台从商户分润中抽走的运营成本</div>
-                </td>
-                <td><span class="param-value blaze">20%</span></td>
-                <td>平台统一抽佣</td>
+                <td>本档次 (A 档) · 协议约定</td>
                 <td><span class="param-status locked">只读</span></td>
               </tr>
               <tr>
@@ -388,24 +431,6 @@
                   <div class="param-desc">每月结算单的生成日</div>
                 </td>
                 <td><span class="param-value blaze">每月 1 日</span></td>
-                <td>合同默认</td>
-                <td><span class="param-status locked">只读</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="param-name">提现到账时间</div>
-                  <div class="param-desc">结算后申请提现,T+N 到账</div>
-                </td>
-                <td><span class="param-value blaze">T+3</span></td>
-                <td>合同默认</td>
-                <td><span class="param-status locked">只读</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="param-name">提现最低金额</div>
-                  <div class="param-desc">低于此金额不支持提现</div>
-                </td>
-                <td><span class="param-value blaze">¥1,000</span></td>
                 <td>合同默认</td>
                 <td><span class="param-status locked">只读</span></td>
               </tr>

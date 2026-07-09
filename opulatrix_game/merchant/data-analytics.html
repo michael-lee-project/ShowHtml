@@ -265,6 +265,11 @@
         <a href="account.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">⚇</span><span>账户设置</span></a>
         <a href="../website/index.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">↗</span><span>返回官网</span></a>
       </div>
+    
+      <div class="sidebar-brand-foot">
+        <div class="sidebar-brand-foot-title">Opulatrix Game Hub</div>
+        <div class="sidebar-brand-foot-sub">Enterprise Link 生态</div>
+      </div>
     </aside>
 
     <main class="app-main">
@@ -291,11 +296,11 @@
             <div class="kpi-meta">本月 · DAU 均值 1,247</div>
             <div class="kpi-trend up">↗ +12.4%</div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-label">付费用户</div>
-            <div class="kpi-value">2,148</div>
-            <div class="kpi-meta">付费率 25.5%</div>
-            <div class="kpi-trend up">↗ +8.1%</div>
+          <div class="kpi-card kpi-card-link" onclick="alert('Hub 生态用户来源：Game Hub 全球分发网络 + 已对接的 286 个市场渠道')">
+            <div class="kpi-label">Hub 生态用户</div>
+            <div class="kpi-value">12,480</div>
+            <div class="kpi-meta">平台导入 85% · 沉淀活跃 41%</div>
+            <div class="kpi-trend up">↗ +18.4%</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">ARPU</div>
@@ -314,8 +319,8 @@
         <div class="panel">
           <div class="panel-head">
             <div>
-              <h3 class="panel-title">活跃 / 付费趋势</h3>
-              <div class="panel-sub">近 30 天 · 双轴折线</div>
+              <h3 class="panel-title">Hub 导入 vs 沉淀活跃</h3>
+              <div class="panel-sub">近 30 天 · 玩家接入与长期留存</div>
             </div>
           </div>
           <div id="trend-chart" class="chart-container"></div>
@@ -332,35 +337,35 @@
             <div class="funnel-step">
               <div class="funnel-step-name">注册</div>
               <div class="funnel-bar-track">
-                <div class="funnel-bar-fill" style="width: 100%;">3,840 人</div>
+                <div class="funnel-bar-fill" style="width: 100%;">12,480 人</div>
               </div>
               <div class="funnel-step-value">100%</div>
             </div>
             <div class="funnel-step">
-              <div class="funnel-step-name">完成新手引导</div>
+              <div class="funnel-step-name">完成首次接入</div>
               <div class="funnel-bar-track">
-                <div class="funnel-bar-fill" style="width: 84%; background: linear-gradient(90deg, #FCA5A5, #EF4444);">3,225 人</div>
+                <div class="funnel-bar-fill" style="width: 84%; background: linear-gradient(90deg, #FCA5A5, #EF4444);">10,483 人</div>
               </div>
               <div class="funnel-step-value">84%</div>
             </div>
             <div class="funnel-step">
               <div class="funnel-step-name">完成首充</div>
               <div class="funnel-bar-track">
-                <div class="funnel-bar-fill" style="width: 36%; background: linear-gradient(90deg, #F87171, #DC2626);">1,382 人</div>
+                <div class="funnel-bar-fill" style="width: 36%; background: linear-gradient(90deg, #F87171, #DC2626);">4,493 人</div>
               </div>
               <div class="funnel-step-value">36%</div>
             </div>
             <div class="funnel-step">
               <div class="funnel-step-name">7 日内复购</div>
               <div class="funnel-bar-track">
-                <div class="funnel-bar-fill" style="width: 18%; background: linear-gradient(90deg, #EF4444, #B91C1C);">691 人</div>
+                <div class="funnel-bar-fill" style="width: 18%; background: linear-gradient(90deg, #EF4444, #B91C1C);">2,246 人</div>
               </div>
               <div class="funnel-step-value">18%</div>
             </div>
             <div class="funnel-step">
               <div class="funnel-step-name">月度活跃</div>
               <div class="funnel-bar-track">
-                <div class="funnel-bar-fill" style="width: 12%; background: linear-gradient(90deg, #DC2626, #991B1B);">461 人</div>
+                <div class="funnel-bar-fill" style="width: 12%; background: linear-gradient(90deg, #DC2626, #991B1B);">1,498 人</div>
               </div>
               <div class="funnel-step-value">12%</div>
             </div>
@@ -370,65 +375,74 @@
         <div class="panel">
           <div class="panel-head">
             <div>
-              <h3 class="panel-title">用户画像</h3>
-              <div class="panel-sub">性别 / 年龄 / 地域 分布</div>
+              <h3 class="panel-title">社区运营效果</h3>
+              <div class="panel-sub">Game Hub 5 类支持之一 · 玩家社群长期运营 · 平台按《合作协议》持续投入</div>
+            </div>
+            <div class="panel-actions">
+              <span class="status-pill" style="background: #E0F2FE; color: #0369A1;">Hub 运营中</span>
+              <a href="#" class="form-link" style="font-size: var(--text-xs);">查看运营日报 →</a>
             </div>
           </div>
-          <div class="profile-grid">
+
+          <!-- 3 个核心指标 -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); padding: 0 var(--space-4) var(--space-4);">
+            <div style="padding: var(--space-4); background: var(--bg-subtle); border-radius: var(--radius-md); border-left: 3px solid #3B82F6;">
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">月度活动参与人次</div>
+              <div style="font-size: var(--text-2xl); font-weight: var(--weight-bold); color: var(--text-primary); font-family: var(--font-mono);">12,847</div>
+              <div style="font-size: var(--text-xs); color: var(--green-700, #047857); margin-top: 2px;">↗ +34.2% vs 上月</div>
+            </div>
+            <div style="padding: var(--space-4); background: var(--bg-subtle); border-radius: var(--radius-md); border-left: 3px solid #10B981;">
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">30 日社群留存</div>
+              <div style="font-size: var(--text-2xl); font-weight: var(--weight-bold); color: var(--text-primary); font-family: var(--font-mono);">76.2<span style="font-size: 16px;">%</span></div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">沉淀玩家（>30 日活跃）</div>
+            </div>
+            <div style="padding: var(--space-4); background: var(--bg-subtle); border-radius: var(--radius-md); border-left: 3px solid #F59E0B;">
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 4px;">玩家日均消息</div>
+              <div style="font-size: var(--text-2xl); font-weight: var(--weight-bold); color: var(--text-primary); font-family: var(--font-mono);">5.6<span style="font-size: 16px;">/人</span></div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">社群 UGC / 反馈 / 互动</div>
+            </div>
+          </div>
+
+          <!-- Hub 平台最近运营动作 + 玩家地域分布 -->
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-5); padding: var(--space-4) var(--space-4) 0; border-top: 1px solid var(--border-default); padding-top: var(--space-4);">
+            <!-- Hub 平台运营动作 -->
             <div>
-              <div class="profile-section-title">性别</div>
-              <div class="profile-bars">
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">62%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 62%;"></div></div>
-                  <div class="profile-bar-label">男</div>
+              <div class="profile-section-title" style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">📋 Hub 平台最近运营动作</div>
+              <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+                <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3); background: var(--bg-page); border: 1px solid var(--border-default); border-radius: var(--radius-md);">
+                  <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 70px; padding: 2px 6px; background: #DCFCE7; color: #166534; border-radius: 4px; font-size: 10px; font-weight: 600;">07-08</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium); margin-bottom: 2px;">"夏日狂欢节" 玩家活动启动</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">覆盖 9,200 用户 · 5,400 已参与 · 平台投放预算 ¥12,000</div>
+                  </div>
                 </div>
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">36%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 36%;"></div></div>
-                  <div class="profile-bar-label">女</div>
+                <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3); background: var(--bg-page); border: 1px solid var(--border-default); border-radius: var(--radius-md);">
+                  <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 70px; padding: 2px 6px; background: #DBEAFE; color: #1E40AF; border-radius: 4px; font-size: 10px; font-weight: 600;">07-05</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium); margin-bottom: 2px;">玩家社群话题运营 · #反馈有奖#</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">UGC 收集 247 条玩家反馈 · 其中 18 条已形成产品改进议题</div>
+                  </div>
                 </div>
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">2%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 2%;"></div></div>
-                  <div class="profile-bar-label">未知</div>
+                <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3); background: var(--bg-page); border: 1px solid var(--border-default); border-radius: var(--radius-md);">
+                  <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 70px; padding: 2px 6px; background: #FEF3C7; color: #92400E; border-radius: 4px; font-size: 10px; font-weight: 600;">07-02</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium); margin-bottom: 2px;">新玩家社群 VIP 试用 · Discord 千人服</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">已招募 86 名核心玩家 · 提供优先体验 + 内测渠道</div>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3); background: var(--bg-page); border: 1px solid var(--border-default); border-radius: var(--radius-md);">
+                  <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 70px; padding: 2px 6px; background: #FCE7F3; color: #BE185D; border-radius: 4px; font-size: 10px; font-weight: 600;">06-28</span>
+                  <div style="flex: 1;">
+                    <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium); margin-bottom: 2px;">月度活跃低频玩家召回活动</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">触达 3,800 名沉默玩家 · 召回 412 名 · 召回率 10.8%</div>
+                  </div>
                 </div>
               </div>
             </div>
 
+            <!-- 玩家地域分布 Top 5 -->
             <div>
-              <div class="profile-section-title">年龄</div>
-              <div class="profile-bars">
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">8%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 8%;"></div></div>
-                  <div class="profile-bar-label">18-</div>
-                </div>
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">42%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 42%;"></div></div>
-                  <div class="profile-bar-label">18-24</div>
-                </div>
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">35%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 35%;"></div></div>
-                  <div class="profile-bar-label">25-34</div>
-                </div>
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">12%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 12%;"></div></div>
-                  <div class="profile-bar-label">35-44</div>
-                </div>
-                <div class="profile-bar-col">
-                  <div class="profile-bar-val">3%</div>
-                  <div class="profile-bar-track"><div class="profile-bar-fill" style="height: 3%;"></div></div>
-                  <div class="profile-bar-label">45+</div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div class="profile-section-title">地域 Top 5</div>
+              <div class="profile-section-title" style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">🗺 玩家地域分布 Top 5</div>
               <div class="geo-list">
                 <div class="geo-row">
                   <span style="color: var(--text-primary); font-weight: var(--weight-medium);">广东</span>
@@ -468,29 +482,29 @@
     document.addEventListener('DOMContentLoaded', () => {
       const chart = echarts.init(document.getElementById('trend-chart'));
       const dates = Array.from({ length: 30 }, (_, i) => `${i + 1}日`);
-      const active = [];
-      const paying = [];
+      const importedByHub = [];
+      const retained = [];
       for (let i = 0; i < 30; i++) {
-        active.push(Math.round(1100 + Math.random() * 400));
-        paying.push(Math.round(280 + Math.random() * 120));
+        importedByHub.push(Math.round(380 + Math.random() * 60));
+        retained.push(Math.round(180 + Math.random() * 60));
       }
       chart.setOption({
         grid: { top: 30, right: 60, bottom: 30, left: 60 },
         tooltip: { trigger: 'axis' },
-        legend: { data: ['活跃用户', '付费用户'], top: 0, right: 0, textStyle: { fontSize: 12 } },
+        legend: { data: ['Hub 导入用户', '沉淀活跃用户'], top: 0, right: 0, textStyle: { fontSize: 12 } },
         xAxis: { type: 'category', data: dates, axisLine: { lineStyle: { color: '#E4E4E7' } }, axisLabel: { color: '#71717A', fontSize: 10, interval: 4 }, axisTick: { show: false } },
         yAxis: [
-          { type: 'value', name: '活跃', position: 'left', axisLine: { show: false }, axisLabel: { color: '#71717A', fontSize: 10 }, splitLine: { lineStyle: { color: '#F4F4F5', type: 'dashed' } }, nameTextStyle: { color: '#71717A', fontSize: 10 } },
-          { type: 'value', name: '付费', position: 'right', axisLine: { show: false }, axisLabel: { color: '#71717A', fontSize: 10 }, splitLine: { show: false }, nameTextStyle: { color: '#71717A', fontSize: 10 } },
+          { type: 'value', name: '导入', position: 'left', axisLine: { show: false }, axisLabel: { color: '#71717A', fontSize: 10 }, splitLine: { lineStyle: { color: '#F4F4F5', type: 'dashed' } }, nameTextStyle: { color: '#71717A', fontSize: 10 } },
+          { type: 'value', name: '沉淀', position: 'right', axisLine: { show: false }, axisLabel: { color: '#71717A', fontSize: 10 }, splitLine: { show: false }, nameTextStyle: { color: '#71717A', fontSize: 10 } },
         ],
         series: [
           {
-            name: '活跃用户', type: 'line', smooth: true, data: active, symbol: 'circle', symbolSize: 5,
+            name: 'Hub 导入用户', type: 'line', smooth: true, data: importedByHub, symbol: 'circle', symbolSize: 5,
             itemStyle: { color: '#DC2626' }, lineStyle: { color: '#DC2626', width: 2 },
             areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(220, 38, 38, 0.2)' }, { offset: 1, color: 'rgba(220, 38, 38, 0.02)' }]) },
           },
           {
-            name: '付费用户', type: 'line', smooth: true, data: paying, yAxisIndex: 1, symbol: 'circle', symbolSize: 5,
+            name: '沉淀活跃用户', type: 'line', smooth: true, data: retained, yAxisIndex: 1, symbol: 'circle', symbolSize: 5,
             itemStyle: { color: '#F59E0B' }, lineStyle: { color: '#F59E0B', width: 2 },
           },
         ],

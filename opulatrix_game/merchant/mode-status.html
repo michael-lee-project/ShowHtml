@@ -349,6 +349,11 @@
           <span>返回官网</span>
         </a>
       </div>
+    
+      <div class="sidebar-brand-foot">
+        <div class="sidebar-brand-foot-title">Opulatrix Game Hub</div>
+        <div class="sidebar-brand-foot-sub">Enterprise Link 生态</div>
+      </div>
     </aside>
 
     <!-- Main -->
@@ -367,13 +372,28 @@
       </header>
 
       <div class="app-content">
+        <!-- 《Game Hub 合作协议》生效提示 -->
+        <div style="display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); background: linear-gradient(135deg, #F0F9FF 0%, #FFFFFF 100%); border: 1px solid #BFDBFE; border-radius: var(--radius-md); margin-bottom: var(--space-4);">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #2563EB, #1D4ED8); color: white; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; font-size: 14px;">📄</div>
+          <div style="flex: 1; line-height: 1.5;">
+            <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">
+              《Game Hub 合作协议》<span style="color: var(--green-700, #047857); font-weight: var(--weight-semibold);">已签署生效</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 11px; margin-left: var(--space-2);">AGREEMENT-2026-M001-V3</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-tertiary);">
+              签署日 2026-06-30 · 版本 v3.2 · 当前模式及收益结算均按协议约定执行
+            </div>
+          </div>
+          <a href="javascript:void(0)" onclick="AgreementModal.open(); return false;" style="font-size: var(--text-sm); color: var(--text-link); white-space: nowrap; cursor: pointer;">查看协议 →</a>
+        </div>
+
         <!-- 当前模式 hero -->
         <div class="mode-hero ignite fade-on-scroll">
           <div class="mode-hero-grid">
             <div>
               <div class="mode-hero-eyebrow">CURRENT PHASE · 01 IGNITE</div>
               <h2 class="mode-hero-title">星火养成期</h2>
-              <p class="mode-hero-sub">商家帮平台养成星火值，达成月度目标后自动切到分润期。已运行 18 天，进度 62%。</p>
+              <p class="mode-hero-sub">按《合作协议》约定，月度目标达成后将按协议规则进入分润结算期。已运行 18 天，进度 62%。</p>
             </div>
             <div class="mode-hero-stat">
               <div class="mode-hero-stat-label">本月养成进度</div>
@@ -389,9 +409,9 @@
             <div>
               <h3 class="water-pool-title">
                 平台积分池水位
-                <span class="info-icon" data-tooltip="平台积分池水位是平台视角的总星火值余额（积分池里还剩多少积分没消纳），不是商户的养成进度。水位高低会自动触发段一/段二切换：水位高 → 段一（积分消纳）；水位低 → 段二（流水分润）。">ⓘ</span>
+                <span class="info-icon" data-tooltip="平台积分池水位是平台视角的总星火值余额（积分池里还剩多少积分没消纳），是协议结算的参考数据，不直接代表商户收益。具体的模式生效与结算按《Game Hub 合作协议》约定执行。">ⓘ</span>
               </h3>
-              <div class="water-pool-sub">平台总星火值 · 阈值触发段一/段二自动切换</div>
+              <div class="water-pool-sub">平台总星火值 · 结算按《合作协议》约定执行</div>
             </div>
             <div class="water-pool-status ignite">
               <span class="status-dot"></span>
@@ -404,7 +424,7 @@
             <span class="water-relation-icon">⇌</span>
             <span class="water-relation-text">
               <strong>水位</strong> = 平台总星火值（积分池余额） · <strong>段位</strong> = 商户当前业务模式
-              · 水位高低自动切换段位
+              · 结算按《Game Hub 合作协议》约定执行
             </span>
           </div>
 
@@ -457,14 +477,14 @@
             <div class="water-metric-row">
               <span class="water-metric-label">
                 <span class="water-metric-marker warn"></span>
-                最高阈值 · 超此值自动切段一
+                最高阈值 · 高于此值触发协议重新评估
               </span>
               <span class="water-metric-value" style="color: var(--red-600);">800 万</span>
             </div>
             <div class="water-metric-row">
               <span class="water-metric-label">
                 <span class="water-metric-marker safe"></span>
-                最低阈值 · 低于此值自动切段二
+                最低阈值 · 低于此值触发协议重新评估
               </span>
               <span class="water-metric-value" style="color: var(--green-600);">200 万</span>
             </div>
@@ -510,7 +530,7 @@
                     切换到星火养成期
                     <span class="timeline-mode ignite">回退 · 自动</span>
                   </div>
-                  <div class="timeline-desc">检测到平台积分池水位反弹至 562 万，达到最高阈值 800 万的 70%。系统自动从燎原期回退到养成期。</div>
+                  <div class="timeline-desc">检测到平台积分池水位反弹至 562 万，触发《Game Hub 合作协议》v3.2 第 6 条重新评估约定，对当前合作模式开展协商。</div>
                 </div>
               </div>
             </div>
@@ -548,7 +568,7 @@
           <div class="panel-head">
             <div>
               <h3 class="water-title">模式启停规则</h3>
-              <div class="water-sub">平台根据平台积分池水位自动判定 · 支持高权限人工锁定</div>
+              <div class="water-sub">模式结算按《合作协议》约定执行 · 平台按协议规则开展动态评估</div>
             </div>
           </div>
           <div class="rules-list">
@@ -567,13 +587,13 @@
             <div class="rule-item">
               <span class="rule-num">3</span>
               <div class="rule-text">
-                <strong>回退机制</strong>：燎原期期间，若水位反弹 &gt; 最高阈值，<strong>自动回退到养成期</strong>，形成闭环动态调控。
+                <strong>协议重新评估</strong>：当前合作模式期间，若出现显著状态变化，双方按《Game Hub 合作协议》第 6 条约定开展协商，重新确认合作条款。
               </div>
             </div>
             <div class="rule-item">
               <span class="rule-num">4</span>
               <div class="rule-text">
-                <strong>人工锁定</strong>：平台可对单个商家进行模式锁定，锁定期间系统不会自动切换。
+                <strong>协议变更</strong>：合作期内任一方可提出协商修订合作模式，经双方同意后签署补充协议生效。
               </div>
             </div>
           </div>

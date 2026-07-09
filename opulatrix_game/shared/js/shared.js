@@ -483,6 +483,145 @@ window.CS_CONFIG = {
 })();
 
 // ============================================
+// AgreementModal - "查看协议全文" 弹窗
+// 用法：onclick="AgreementModal.open()"
+// 默认从 #agreement-info 数据自动取编号/版本/签署日
+// ============================================
+window.AgreementModal = {
+  _el: null,
+
+  _ensureDOM() {
+    if (this._el) return this._el;
+    const div = document.createElement('div');
+    div.className = 'modal-overlay agreement-modal';
+    div.id = 'agreement-modal';
+    div.innerHTML = `
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-head">
+          <div>
+            <div class="modal-title">Game Hub 合作协议（全文）</div>
+            <div class="modal-sub" data-ag="meta">—</div>
+          </div>
+          <button class="modal-close" data-ag="close" aria-label="关闭">×</button>
+        </div>
+        <div class="modal-body agreement-body">
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 1 条 · 合作模式</div>
+            <p>本商户按<strong>「生态分润模式」</strong>运行，不参与游戏开发，不主导游戏运营。Game Hub 提供用户接入、社区、市场推广、数据反馈等连接性服务；开发团队保有游戏的运营主权与创作主权。</p>
+          </section>
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 2 条 · 数据接入与反馈</div>
+            <p>双方按《数据接入规范 v3.2》执行 API / SDK 接入。平台数据每日脱敏后同步商户，差异 ≥ 0.5% 时自动预警并触发对账工单。</p>
+          </section>
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 3 条 · 平台角色</div>
+            <p>Game Hub 不下场与玩家对局，不为任何一方承担输赢。平台角色是<strong>规则维护者</strong>，不是对局者；具体细化条款见《平台行为准则》。</p>
+          </section>
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 4 条 · 双方责任</div>
+            <p>开发团队保有游戏运营主权与创作主权，平台只提供用户、社区、市场、数据反馈等连接性服务，绝不主导商户的产品决策。运营与版本节奏由开发团队决定。</p>
+          </section>
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 5 条 · 分润比例</div>
+            <p>按协议附件约定比例（当前档次 A · 8.5%）执行。本月分润由<strong>流水分润</strong>与<strong>UMDT 充值分润</strong>两部分组成，依据实际业务数据计算，全部台账可查。</p>
+          </section>
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 6 条 · 重新评估机制</div>
+            <p>水位显著变化时按协议约定开展协商。协商流程、档位升降条款见附件 A《档位规则》。必要时签订补充协议，补充协议与本协议具有同等效力。</p>
+          </section>
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 7 条 · 数据脱敏与隐私</div>
+            <p>玩家个人信息严格遵守《个人信息保护法》及相关法律法规。平台数据每日脱敏后同步商户，原始数据不公开、不导出、不向第三方披露。</p>
+          </section>
+
+          <section class="agreement-section">
+            <div class="agreement-section-no">第 8 条 · 双方权利与争议处理</div>
+            <p>模式切换、补充协议、争议处理按本协议附件执行。协商不成时，提交<strong>北京仲裁委员会</strong>按其届时有效的仲裁规则进行仲裁，仲裁裁决为终局裁决。</p>
+          </section>
+
+          <section class="agreement-section agreement-appendix">
+            <div class="agreement-section-no">附录 A · 档位规则</div>
+            <p>A 档 50-200 万 / B 档 200-500 万 / C 档 500-1000 万 / D 档 1000 万以上。档位越高，协议分润比例与 UMDT 充值分润比例越优。</p>
+          </section>
+          <section class="agreement-section agreement-appendix">
+            <div class="agreement-section-no">附录 B · 数据接入规范</div>
+            <p>API 接口、Webhook、SDK、数据上报顺序、脱敏字段表、错误码表详见《数据接入规范 v3.2》。本协议附件与正文具有同等效力。</p>
+          </section>
+
+          <div class="agreement-signoff">
+            本协议自签署日起生效，双方各执一份，具有同等法律效力。
+          </div>
+        </div>
+        <div class="modal-footer">
+          <span class="agreement-foot-meta" data-ag="footMeta">—</span>
+          <div style="display: inline-flex; gap: var(--space-2);">
+            <button class="btn btn-ghost btn-sm" data-ag="downloadPdf">下载 PDF 副本</button>
+            <button class="btn btn-outline btn-sm" data-ag="supplement">申请补充协议</button>
+            <button class="btn btn-primary btn-sm" data-ag="closeFooter">已阅读 · 关闭</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(div);
+    div.querySelector('[data-ag="close"]').addEventListener('click', () => this.close());
+    div.querySelector('[data-ag="closeFooter"]').addEventListener('click', () => this.close());
+    div.querySelector('[data-ag="downloadPdf"]').addEventListener('click', () => {
+      this._toast('PDF 副本生成中 · 完成后将发送至本商户的对公联系人邮箱');
+    });
+    div.querySelector('[data-ag="supplement"]').addEventListener('click', () => {
+      this.close();
+      if (window.RoleContactModal && window.ADVISOR_CONFIG) {
+        window.RoleContactModal.open({
+          ...window.ADVISOR_CONFIG,
+          title: '申请补充协议',
+          sub: '由对接审核顾问跟进 · 1-2 个工作日内回复',
+          footerNote: '提交后请保持 UmakeX / 微信畅通',
+        });
+      } else {
+        this._toast('已记录 · 审核顾问会在 1-2 个工作日内联系您');
+      }
+    });
+    div.addEventListener('click', (e) => { if (e.target === div) this.close(); });
+    this._el = div;
+    return div;
+  },
+
+  open() {
+    const el = this._ensureDOM();
+    // 直接用 mock 数据（避免与 #agreement-info 内嵌套 div 误抓重复 label）
+    el.querySelector('[data-ag="meta"]').textContent =
+      '编号 AGREEMENT-2026-M001-V3 · 版本 v3.2 · 签署日 2026-06-30 · 有效期至 2027-06-30';
+    el.querySelector('[data-ag="footMeta"]').textContent =
+      '完整生效文本 · 编号 AGREEMENT-2026-M001-V3 · 版本 v3.2';
+    el.classList.add('open');
+  },
+
+  close() {
+    if (this._el) this._el.classList.remove('open');
+  },
+
+  _toast(msg) {
+    let t = document.getElementById('ag-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'ag-toast';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  },
+};
+
+// ============================================
 // BellDropdown - 顶栏消息铃铛下拉
 // 渲染位置：.app-topbar-actions 之前
 // 用法：见 _renderBellIntoTopbar() 末尾 init 块

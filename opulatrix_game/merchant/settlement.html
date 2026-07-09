@@ -16,9 +16,9 @@
     /* 顶部 3 件套 */
     .kpi-strip {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: var(--space-4);
-      margin-bottom: var(--space-4);
+      margin-bottom: var(--space-6);
     }
     @media (max-width: 1023px) { .kpi-strip { grid-template-columns: 1fr; } }
 
@@ -181,6 +181,11 @@
         <a href="account.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">⚇</span><span>账户设置</span></a>
         <a href="../website/index.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">↗</span><span>返回官网</span></a>
       </div>
+    
+      <div class="sidebar-brand-foot">
+        <div class="sidebar-brand-foot-title">Opulatrix Game Hub</div>
+        <div class="sidebar-brand-foot-sub">Enterprise Link 生态</div>
+      </div>
     </aside>
 
     <main class="app-main">
@@ -209,11 +214,6 @@
             <div class="kpi-label">累计已结算</div>
             <div class="kpi-value">¥203,650</div>
             <div class="kpi-meta">2026-01 至 2026-05</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">待提现余额</div>
-            <div class="kpi-value">¥0</div>
-            <div class="kpi-meta">已全部提现</div>
           </div>
         </div>
 
@@ -254,24 +254,13 @@
             <tbody>
               <tr>
                 <td>
-                  <div class="bill-month">2026-06</div>
-                  <div style="font-size: var(--text-xs); color: var(--text-tertiary);">当前月 · 预估</div>
-                </td>
-                <td class="bill-amount">¥503,529</td>
-                <td class="bill-amount positive">¥42,800</td>
-                <td class="bill-amount zero">—</td>
-                <td><span class="bill-status current">● 6/30 结算</span></td>
-                <td><a class="bill-action">查看预估 →</a></td>
-              </tr>
-              <tr>
-                <td>
                   <div class="bill-month">2026-05</div>
                 </td>
                 <td class="bill-amount">¥447,021</td>
                 <td class="bill-amount positive">¥38,000</td>
                 <td class="bill-amount positive">¥38,000</td>
                 <td><span class="bill-status withdrawn">✓ 已提现</span></td>
-                <td><a class="bill-action">查看明细 →</a></td>
+                <td><a class="bill-action" onclick="SettlementDetail.open('2026-05')" style="cursor: pointer;">查看明细 →</a></td>
               </tr>
               <tr>
                 <td>
@@ -281,7 +270,7 @@
                 <td class="bill-amount positive">¥34,000</td>
                 <td class="bill-amount positive">¥34,000</td>
                 <td><span class="bill-status withdrawn">✓ 已提现</span></td>
-                <td><a class="bill-action">查看明细 →</a></td>
+                <td><a class="bill-action" onclick="SettlementDetail.open('2026-04')" style="cursor: pointer;">查看明细 →</a></td>
               </tr>
               <tr>
                 <td>
@@ -291,7 +280,7 @@
                 <td class="bill-amount positive">¥36,000</td>
                 <td class="bill-amount positive">¥36,000</td>
                 <td><span class="bill-status withdrawn">✓ 已提现</span></td>
-                <td><a class="bill-action">查看明细 →</a></td>
+                <td><a class="bill-action" onclick="SettlementDetail.open('2026-03')" style="cursor: pointer;">查看明细 →</a></td>
               </tr>
               <tr>
                 <td>
@@ -301,7 +290,7 @@
                 <td class="bill-amount positive">¥32,000</td>
                 <td class="bill-amount positive">¥32,000</td>
                 <td><span class="bill-status withdrawn">✓ 已提现</span></td>
-                <td><a class="bill-action">查看明细 →</a></td>
+                <td><a class="bill-action" onclick="SettlementDetail.open('2026-02')" style="cursor: pointer;">查看明细 →</a></td>
               </tr>
               <tr>
                 <td>
@@ -311,7 +300,7 @@
                 <td class="bill-amount positive">¥28,000</td>
                 <td class="bill-amount positive">¥28,000</td>
                 <td><span class="bill-status withdrawn">✓ 已提现</span></td>
-                <td><a class="bill-action">查看明细 →</a></td>
+                <td><a class="bill-action" onclick="SettlementDetail.open('2026-01')" style="cursor: pointer;">查看明细 →</a></td>
               </tr>
               <tr>
                 <td>
@@ -321,7 +310,7 @@
                 <td class="bill-amount positive">¥26,000</td>
                 <td class="bill-amount positive">¥26,000</td>
                 <td><span class="bill-status withdrawn">✓ 已提现</span></td>
-                <td><a class="bill-action">查看明细 →</a></td>
+                <td><a class="bill-action" onclick="SettlementDetail.open('2025-12')" style="cursor: pointer;">查看明细 →</a></td>
               </tr>
               <tr>
                 <td>
@@ -331,7 +320,7 @@
                 <td class="bill-amount positive">¥23,000</td>
                 <td class="bill-amount positive">¥23,000</td>
                 <td><span class="bill-status withdrawn">✓ 已提现</span></td>
-                <td><a class="bill-action">查看明细 →</a></td>
+                <td><a class="bill-action" onclick="SettlementDetail.open('2025-11')" style="cursor: pointer;">查看明细 →</a></td>
               </tr>
             </tbody>
           </table>
@@ -339,7 +328,284 @@
       </div>
     </main>
   </div>
+  <!-- ===== 结算单明细弹窗 ===== -->
+  <div class="modal-overlay" id="settlement-detail-modal" onclick="SettlementDetail.close()">
+    <div class="modal" style="max-width: 720px;" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" data-sd-title>结算单明细</div>
+          <div class="modal-sub" data-sd-sub>按《Game Hub 合作协议》约定 · 分润结算明细</div>
+        </div>
+        <button class="modal-close" onclick="SettlementDetail.close()" aria-label="关闭">×</button>
+      </div>
+
+      <div class="modal-toolbar">
+        <div class="modal-toolbar-left" style="font-size: var(--text-sm); color: var(--text-secondary);">
+          <span data-sd-status>已提现</span> ·
+          <span data-sd-period></span> ·
+          协议版本 <strong>v3.2</strong>
+        </div>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="btn btn-ghost btn-sm">下载结算单 PDF</button>
+        </div>
+      </div>
+
+      <div class="modal-body" data-sd-body>
+        <!-- 由 JS 动态填充 -->
+      </div>
+
+      <div class="modal-footer">
+        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">
+          分润比例与结算方式均按《Game Hub 合作协议》v3.2 约定执行
+        </span>
+        <button class="btn btn-ghost btn-sm" onclick="SettlementDetail.close()">关闭</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../shared/js/mock-data.js"></script>
   <script src="../shared/js/shared.js"></script>
+
+  <script>
+    // ============ 结算单明细数据 ============
+    const BILLS = {
+      '2026-05': {
+        period: '2026-05', monthLabel: '2026 年 5 月', withdrawn: true, withdrawnAt: '2026-06-08',
+        monthlyFlow: 447021,
+        breakdown: [
+          { name: '流水分润', amount: 26600, percent: 70, color: '#2563EB' },
+          { name: 'UMDT 充值',   amount:  9500, percent: 25, color: '#10B981' },
+        ],
+        sources: [
+          { type: '消纳玩家', count: 3120, avg: 21.5 },
+          { type: '付费玩家', count: 1820, avg: 47.8 },
+          { type: '高留存玩家', count: 416, avg: 98.4 },
+        ],
+        agreementClause: '第 5 条 · 协议约定比例（当前档次 A）',
+      },
+      '2026-04': {
+        period: '2026-04', monthLabel: '2026 年 4 月', withdrawn: true, withdrawnAt: '2026-05-08',
+        monthlyFlow: 400000,
+        breakdown: [
+          { name: '流水分润', amount: 23800, percent: 70, color: '#2563EB' },
+          { name: 'UMDT 充值',   amount:  8500, percent: 25, color: '#10B981' },
+        ],
+        sources: [
+          { type: '消纳玩家', count: 2980, avg: 20.5 },
+          { type: '付费玩家', count: 1640, avg: 44.2 },
+          { type: '高留存玩家', count: 380, avg: 92.1 },
+        ],
+        agreementClause: '第 5 条 · 协议约定比例（当前档次 A）',
+      },
+      '2026-03': {
+        period: '2026-03', monthLabel: '2026 年 3 月', withdrawn: true, withdrawnAt: '2026-04-08',
+        monthlyFlow: 432500,
+        breakdown: [
+          { name: '流水分润', amount: 25700, percent: 70, color: '#2563EB' },
+          { name: 'UMDT 充值',   amount:  9200, percent: 25, color: '#10B981' },
+        ],
+        sources: [
+          { type: '消纳玩家', count: 3050, avg: 21.0 },
+          { type: '付费玩家', count: 1750, avg: 46.5 },
+          { type: '高留存玩家', count: 400, avg: 95.0 },
+        ],
+        agreementClause: '第 5 条 · 协议约定比例（当前档次 A）',
+      },
+      '2026-02': {
+        period: '2026-02', monthLabel: '2026 年 2 月', withdrawn: true, withdrawnAt: '2026-03-08',
+        monthlyFlow: 396000,
+        breakdown: [
+          { name: '流水分润', amount: 23500, percent: 70, color: '#2563EB' },
+          { name: 'UMDT 充值',   amount:  8400, percent: 25, color: '#10B981' },
+        ],
+        sources: [
+          { type: '消纳玩家', count: 2920, avg: 20.0 },
+          { type: '付费玩家', count: 1600, avg: 43.5 },
+          { type: '高留存玩家', count: 360, avg: 90.0 },
+        ],
+        agreementClause: '第 5 条 · 协议约定比例（当前档次 A）',
+      },
+      '2026-01': {
+        period: '2026-01', monthLabel: '2026 年 1 月', withdrawn: true, withdrawnAt: '2026-02-08',
+        monthlyFlow: 348000,
+        breakdown: [
+          { name: '流水分润', amount: 20700, percent: 70, color: '#2563EB' },
+          { name: 'UMDT 充值',   amount:  7400, percent: 25, color: '#10B981' },
+        ],
+        sources: [
+          { type: '消纳玩家', count: 2700, avg: 18.5 },
+          { type: '付费玩家', count: 1480, avg: 40.5 },
+          { type: '高留存玩家', count: 320, avg: 85.0 },
+        ],
+        agreementClause: '第 5 条 · 协议约定比例（当前档次 A）',
+      },
+      '2025-12': {
+        period: '2025-12', monthLabel: '2025 年 12 月', withdrawn: true, withdrawnAt: '2026-01-08',
+        monthlyFlow: 382000,
+        breakdown: [
+          { name: '流水分润', amount: 22750, percent: 70, color: '#2563EB' },
+          { name: 'UMDT 充值',   amount:  8100, percent: 25, color: '#10B981' },
+        ],
+        sources: [
+          { type: '消纳玩家', count: 2860, avg: 19.5 },
+          { type: '付费玩家', count: 1560, avg: 42.6 },
+          { type: '高留存玩家', count: 340, avg: 88.0 },
+        ],
+        agreementClause: '第 5 条 · 协议约定比例（当时档次 B → 2026-01 起升 A 档）',
+      },
+      '2025-11': {
+        period: '2025-11', monthLabel: '2025 年 11 月', withdrawn: true, withdrawnAt: '2025-12-08',
+        monthlyFlow: 346000,
+        breakdown: [
+          { name: '流水分润', amount: 20650, percent: 70, color: '#2563EB' },
+          { name: 'UMDT 充值',   amount:  7400, percent: 25, color: '#10B981' },
+        ],
+        sources: [
+          { type: '消纳玩家', count: 2680, avg: 18.0 },
+          { type: '付费玩家', count: 1460, avg: 39.0 },
+          { type: '高留存玩家', count: 300, avg: 80.0 },
+        ],
+        agreementClause: '第 5 条 · 协议约定比例（当时档次 B）',
+      },
+    };
+
+    // 计算单月分润 = 流水 × 协议比例 (按 8.5%)
+    function _calc(bill, ratio) {
+      return {
+        total: bill.breakdown.reduce((s, x) => s + x.amount, 0),
+        breakdown: bill.breakdown,
+        sources: bill.sources,
+        agreementClause: bill.agreementClause,
+      };
+    }
+
+    // ============ SettlementDetail 弹窗 ============
+    window.SettlementDetail = {
+      open(billId) {
+        const bill = BILLS[billId];
+        if (!bill) { alert('该月结算单暂未生成'); return; }
+        const settlement = _calc(bill, 0.085);
+
+        // 头部
+        document.querySelector('[data-sd-title]').textContent = `${bill.monthLabel} 结算单 · 按《合作协议》约定`;
+        document.querySelector('[data-sd-sub]').innerHTML = `分润结算明细 · 协议编号 <span style="font-family: var(--font-mono);">AGREEMENT-2026-M001-V3</span> · ${bill.agreementClause}`;
+        document.querySelector('[data-sd-period]').textContent = bill.monthLabel;
+
+        // 状态
+        const statusBadge = bill.withdrawn
+          ? `<span style="color: var(--green-700, #047857); font-weight: 600;">✓ 已提现</span> · ${bill.withdrawnAt}`
+          : `<span style="color: var(--red-700, #B91C1C); font-weight: 600;">⏳ 待提现</span>`;
+        document.querySelector('[data-sd-status]').innerHTML = statusBadge;
+
+        // body 内容
+        document.querySelector('[data-sd-body]').innerHTML = `
+          <!-- 4 个汇总 -->
+          <div class="modal-summary">
+            <div class="modal-summary-cell">
+              <div class="modal-summary-label">本月总流水</div>
+              <div class="modal-summary-val">¥ ${(bill.monthlyFlow / 10000).toFixed(1)} 万</div>
+            </div>
+            <div class="modal-summary-cell">
+              <div class="modal-summary-label">协议分润（8.5%）</div>
+              <div class="modal-summary-val" style="color: var(--green-700, #047857);">¥ ${(settlement.total / 10000).toFixed(2)} 万</div>
+            </div>
+            <div class="modal-summary-cell">
+              <div class="modal-summary-label">已提现</div>
+              <div class="modal-summary-val" style="color: var(--green-700, #047857);">¥ ${(settlement.total / 10000).toFixed(2)} 万</div>
+            </div>
+            <div class="modal-summary-cell">
+              <div class="modal-summary-label">协议条款</div>
+              <div class="modal-summary-val" style="font-size: 14px;">${bill.agreementClause.split(' · ')[1] || '—'}</div>
+            </div>
+          </div>
+
+          <!-- 分润构成 -->
+          <div class="modal-section-title">分润构成</div>
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th>类别</th>
+                <th class="num">金额（元）</th>
+                <th class="num">占比</th>
+                <th style="width: 240px;">分布</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${settlement.breakdown.map(b => `
+                <tr>
+                  <td><span style="display: inline-block; width: 8px; height: 8px; background: ${b.color}; border-radius: 50%; margin-right: 6px; vertical-align: middle;"></span>${b.name}</td>
+                  <td class="num">${b.amount.toLocaleString()}</td>
+                  <td class="num">${b.percent}%</td>
+                  <td><div style="height: 6px; background: var(--bg-subtle); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${b.percent}%; background: ${b.color}; border-radius: 3px;"></div></div></td>
+                </tr>
+              `).join('')}
+              <tr style="background: var(--bg-subtle); font-weight: var(--weight-semibold);">
+                <td>合计</td>
+                <td class="num">${settlement.total.toLocaleString()}</td>
+                <td class="num">100%</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 流水来源 -->
+          <div class="modal-section-title">流水来源（按玩家类型）</div>
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th>玩家类型</th>
+                <th class="num">人数</th>
+                <th class="num">人均贡献（元）</th>
+                <th class="num">占比</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${settlement.sources.map(s => `
+                <tr>
+                  <td>${s.type}</td>
+                  <td class="num">${s.count.toLocaleString()}</td>
+                  <td class="num">¥${s.avg.toFixed(1)}</td>
+                  <td class="num">${((s.count * s.avg / bill.monthlyFlow * 100)).toFixed(1)}%</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <!-- 协议依据引用 -->
+          <div style="margin-top: var(--space-5); padding: var(--space-4); background: linear-gradient(135deg, #F0F9FF 0%, #FFFFFF 100%); border: 1px solid #BFDBFE; border-radius: var(--radius-md);">
+            <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-semibold); margin-bottom: var(--space-2); display: flex; align-items: center; gap: var(--space-2);">
+              📄 协议依据
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.7;">
+              · ${bill.agreementClause} · 分润由流水分润 + UMDT 充值两部分组成<br>
+              · 第 6 条 · 重新评估 · 水位显著变化时按协议约定开展协商<br>
+              · 第 8 条 · 双方权利 · 商户与平台按协议共同确定分润条款
+            </div>
+            <div style="margin-top: var(--space-3); display: flex; gap: var(--space-2); justify-content: flex-end;">
+              <a href="parameters.html#agreement-info" class="form-link" style="font-size: var(--text-xs);">查看完整《合作协议》 →</a>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('settlement-detail-modal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      },
+      close() {
+        document.getElementById('settlement-detail-modal').classList.remove('open');
+        document.body.style.overflow = '';
+      },
+    };
+
+    // ESC 关闭
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') SettlementDetail.close();
+    });
+
+    // test hook: ?bill=2026-05 自动开弹窗
+    (function () {
+      const bill = new URLSearchParams(location.search).get('bill');
+      if (bill) document.addEventListener('DOMContentLoaded', () => setTimeout(() => SettlementDetail.open(bill), 100));
+    })();
+  </script>
 </body>
 </html>

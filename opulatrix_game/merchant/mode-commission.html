@@ -389,17 +389,13 @@
       height: 100%;
       border-radius: var(--radius-pill);
     }
-    .composition-bar-fill.vic {
-      width: 70%;
+    .composition-bar-fill.streams {
+      width: 80%;
       background: linear-gradient(90deg, #FCD34D, #F59E0B);
     }
-    .composition-bar-fill.flow {
-      width: 25%;
+    .composition-bar-fill.umdt {
+      width: 20%;
       background: linear-gradient(90deg, #86EFAC, #16A34A);
-    }
-    .composition-bar-fill.bonus {
-      width: 5%;
-      background: linear-gradient(90deg, #93C5FD, #2563EB);
     }
     .composition-bar-percent {
       font-size: var(--text-xs);
@@ -531,6 +527,11 @@
           <span>返回官网</span>
         </a>
       </div>
+    
+      <div class="sidebar-brand-foot">
+        <div class="sidebar-brand-foot-title">Opulatrix Game Hub</div>
+        <div class="sidebar-brand-foot-sub">Enterprise Link 生态</div>
+      </div>
     </aside>
 
     <!-- Main -->
@@ -550,6 +551,21 @@
       </header>
 
       <div class="app-content">
+        <!-- 《Game Hub 合作协议》生效提示 -->
+        <div style="display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); background: linear-gradient(135deg, #F0F9FF 0%, #FFFFFF 100%); border: 1px solid #BFDBFE; border-radius: var(--radius-md); margin-bottom: var(--space-4);">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #2563EB, #1D4ED8); color: white; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; font-size: 14px;">📄</div>
+          <div style="flex: 1; line-height: 1.5;">
+            <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">
+              《Game Hub 合作协议》<span style="color: var(--green-700, #047857); font-weight: var(--weight-semibold);">已签署生效</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 11px; margin-left: var(--space-2);">AGREEMENT-2026-M001-V3 · 当前模式：生态分润</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-tertiary);">
+              签署日 2026-06-30 · 版本 v3.2 · 分润比例与结算方式均按协议约定比例执行
+            </div>
+          </div>
+          <a href="javascript:void(0)" onclick="AgreementModal.open(); return false;" style="font-size: var(--text-sm); color: var(--text-link); white-space: nowrap; cursor: pointer;">查看协议 →</a>
+        </div>
+
         <!-- 模式 hero -->
         <div class="mode-hero blaze">
           <div class="mode-hero-grid">
@@ -586,11 +602,11 @@
           </div>
           <div class="kpi-card">
             <div class="kpi-head">
-              <span class="kpi-label">分润比例</span>
+              <span class="kpi-label">协议分润比例</span>
               <span class="kpi-icon">%</span>
             </div>
             <div class="kpi-value">8.5%</div>
-            <div class="kpi-meta">按本档次规则</div>
+            <div class="kpi-meta">按《合作协议》约定</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-head">
@@ -651,7 +667,7 @@
             <div class="panel-head">
               <div>
                 <h3 class="panel-title">分润构成</h3>
-                <div class="panel-sub">本月分润由三部分组成</div>
+                <div class="panel-sub">本月分润由两部分组成</div>
               </div>
             </div>
             <div class="composition-list">
@@ -661,34 +677,22 @@
                     <span class="composition-dot" style="background: #F59E0B;"></span>
                     流水分润
                   </div>
-                  <div class="composition-value">¥29,960 <span class="composition-bar-percent">· 70%</span></div>
+                  <div class="composition-value">¥34,240 <span class="composition-bar-percent">· 80%</span></div>
                 </div>
                 <div class="composition-bar-track">
-                  <div class="composition-bar-fill vic"></div>
+                  <div class="composition-bar-fill streams"></div>
                 </div>
               </div>
               <div class="composition-item">
                 <div class="composition-head">
                   <div class="composition-label">
                     <span class="composition-dot" style="background: var(--green-600);"></span>
-                    VIC 充值
+                    UMDT 充值
                   </div>
-                  <div class="composition-value">¥10,700 <span class="composition-bar-percent">· 25%</span></div>
+                  <div class="composition-value">¥8,560 <span class="composition-bar-percent">· 20%</span></div>
                 </div>
                 <div class="composition-bar-track">
-                  <div class="composition-bar-fill flow"></div>
-                </div>
-              </div>
-              <div class="composition-item">
-                <div class="composition-head">
-                  <div class="composition-label">
-                    <span class="composition-dot" style="background: var(--blue-600);"></span>
-                    活动奖励
-                  </div>
-                  <div class="composition-value">¥2,140 <span class="composition-bar-percent">· 5%</span></div>
-                </div>
-                <div class="composition-bar-track">
-                  <div class="composition-bar-fill bonus"></div>
+                  <div class="composition-bar-fill umdt"></div>
                 </div>
               </div>
             </div>
