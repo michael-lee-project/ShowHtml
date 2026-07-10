@@ -2413,6 +2413,44 @@ document.addEventListener('DOMContentLoaded', () => {
   // 9.3 chip 当前选择状态（按 expert.id 隔离）
   const quickState = {};   // { brand: { '风格': ['极简'] }, ... }
 
+  // 9.x 本地历史：{ expertId: { chipKey: count } }  每次选 chip 写一次
+  const WS_HISTORY_KEY = 'ws_qc_history_v1';
+  function readHistory() {
+    try { return JSON.parse(localStorage.getItem(WS_HISTORY_KEY) || '{}'); } catch (e) { return {}; }
+  }
+  function writeHistory(h) {
+    try { localStorage.setItem(WS_HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
+  }
+  function bumpHistory(expertId, chipKey) {
+    const h = readHistory();
+    if (!h[expertId]) h[expertId] = {};
+    h[expertId][chipKey] = (h[expertId][chipKey] || 0) + 1;
+    writeHistory(h);
+  }
+  // 取最近用过 top N (按频次降序)
+  function getRecentChips(expertId, n) {
+    const h = readHistory();
+    const arr = Object.entries(h[expertId] || {}).map(([k, c]) => ({ k, c }));
+    arr.sort((a, b) => b.c - a.c);
+    return arr.slice(0, n).map((x) => x.k);
+  }
+  // AI 猜你想加：每个 row 的首个 option（场景预设）
+  function getAiGuess(expertId, presets) {
+    const out = [];
+    presets.forEach((r) => { if (r.options && r.options[0]) out.push(r.label + ':' + r.options[0]); });
+    return out.slice(0, 4);
+  }
+  // 把 "label:val" 形式 chip 解析
+  function parseChipKey(k) {
+    const idx = k.indexOf(':');
+    if (idx < 0) return null;
+    return { label: k.slice(0, idx), val: k.slice(idx + 1) };
+  }
+  // 渲染 spark 按钮（AI 闪光图标）
+  function sparkSvg() {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 16l.7 1.8L21.5 18.5l-1.8.7L19 21l-.7-1.8L16.5 18.5l1.8-.7L19 16z"/></svg>';
+  }
+
   function renderQuickPresets(expert) {
     const quickEl = document.getElementById('wsDispatchQuick');
     const clearBtn = document.getElementById('wsQuickClear');
@@ -2420,7 +2458,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const presets = QUICK_PRESETS[expert.id];
     if (!presets) {
-      // ceo / sales 不出 popover
+      // ceo / sales 不出 modal
       quickEl.setAttribute('data-state', 'hidden');
       quickEl.innerHTML = '';
       if (clearBtn) clearBtn.setAttribute('data-state', 'hidden');
@@ -2430,45 +2468,178 @@ document.addEventListener('DOMContentLoaded', () => {
     const color = EXPERT_QUICK_COLOR[expert.id] || 'var(--text-primary)';
     quickEl.style.setProperty('--qc-color', color);
 
-    // 1. 已选 chip 区（input 上方）
-    // 2. 单 trigger（占 1 行）
-    // 3. popover（absolute 定位，含所有字段所有 chip）
+    // 算 AI 猜你想加 + 最近用过（按 chip key 形式：label:val）
+    const aiGuess = getAiGuess(expert.id, presets);
+    const recent = getRecentChips(expert.id, 6);
+    const hotSet = new Set(aiGuess);
+
+    // 1. trigger（简化版 · spark 24×24 · 36px 高）
+    // 2. modal（body 注入到 body 末）
     quickEl.innerHTML = (
-      // 1) 已选 chip 区
-      '<div class="ws-qc-selected" id="wsQcSelected"></div>' +
-      // 2) trigger
       '<div class="ws-qc-trigger-wrap">' +
         '<button class="ws-qc-trigger-single" id="wsQcTrigger" type="button" aria-expanded="false">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
-            '<path d="M3 6h18M7 12h10M10 18h4"/>' +
-          '</svg>' +
-          '<span class="ws-qc-trigger-single__label">快捷条件</span>' +
-          '<span class="ws-qc-trigger-single__count" id="wsQcCount" data-state="hidden">0</span>' +
-          '<span class="ws-qc-trigger-single__hint" id="wsQcHint" data-state="visible">点选风格 / 主色 / 比例...</span>' +
+          '<span class="ws-qc-trigger-single__spark">' + sparkSvg() + '</span>' +
+          '<span class="ws-qc-trigger-single__text">' +
+            '<span class="ws-qc-trigger-single__label">快捷条件</span>' +
+            '<span class="ws-qc-trigger-single__count" id="wsQcCount" data-state="hidden">0</span>' +
+          '</span>' +
           '<span class="ws-qc-trigger-single__caret">▾</span>' +
         '</button>' +
-      '</div>' +
-      // 3) popover（绝对定位浮层，含所有字段所有 chip）
-      '<div class="ws-qc-popover" id="wsQcPopover" data-state="closed">' +
-        presets.map((row, ri) => {
-          const initActive = (quickState[expert.id] && quickState[expert.id][row.label]) || [];
-          return (
-            '<div class="ws-qc-popover__row" data-row-idx="' + ri + '">' +
-              '<span class="ws-qc-popover__label">' + escHtml(row.label) + '</span>' +
-              '<div class="ws-qc-popover__chips">' +
-                row.options.map((opt, oi) => (
-                  '<button class="ws-quick-chip' + (initActive.indexOf(opt) >= 0 ? ' is-active' : '') + '" type="button"' +
-                    ' data-row-idx="' + ri + '" data-opt-idx="' + oi + '"' +
-                    ' style="--qc-color:' + color + '">' +
-                    escHtml(opt) +
-                  '</button>'
-                )).join('') +
-              '</div>' +
-            '</div>'
-          );
-        }).join('') +
       '</div>'
     );
+
+    // modal HTML（注入到 .window 容器内 — 桌面端弹窗必须限制在 app 窗口内）
+    // 移除旧的
+    const oldModal = document.getElementById('wsQcModal');
+    if (oldModal) oldModal.remove();
+    const expertName = expert.name || expert.id;
+    const modal = document.createElement('div');
+    modal.className = 'ws-qc-modal';
+    modal.id = 'wsQcModal';
+    modal.setAttribute('data-state', 'closed');
+    modal.setAttribute('data-expert-id', expert.id);
+    modal.innerHTML = (
+      '<div class="ws-qc-modal__backdrop" data-modal-close></div>' +
+      '<div class="ws-qc-modal__card">' +
+        // 头部
+        '<div class="ws-qc-modal__head">' +
+          '<div class="ws-qc-modal__head-spark">' + sparkSvg() + '</div>' +
+          '<div class="ws-qc-modal__head-text">' +
+            '<div class="ws-qc-modal__head-title">快捷条件 <span class="ws-qc-modal__head-title__expert">' + escHtml(expertName) + ' 专家</span></div>' +
+            '<div class="ws-qc-modal__head-sub">点选 AI 推荐的 3-5 个条件，或自己挑</div>' +
+          '</div>' +
+          '<button class="ws-qc-modal__head-close" data-modal-close type="button" title="关闭">×</button>' +
+        '</div>' +
+        // 工具栏
+        '<div class="ws-qc-modal__toolbar">' +
+          '<div class="ws-qc-modal__search">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>' +
+            '</svg>' +
+            '<input type="text" id="wsQcSearch" placeholder="搜索 风格 / 主色 / 行业 ..." />' +
+          '</div>' +
+          '<button class="ws-qc-modal__ai-sort" id="wsQcAiSort" type="button" title="按 AI 智能匹配度重排已选">' + sparkSvg() + ' 智能排序</button>' +
+        '</div>' +
+        // 主体
+        '<div class="ws-qc-modal__body">' +
+          // 左 200 分类导航
+          '<div class="ws-qc-modal__nav" id="wsQcNav">' +
+            '<div class="ws-qc-modal__nav-title">分类</div>' +
+            '<div class="ws-qc-modal__nav-item is-active" data-nav-target="all" data-nav-type="all">' +
+              '<span class="ws-qc-modal__nav-item__icon">📂</span>' +
+              '<span class="ws-qc-modal__nav-item__label">全部条件</span>' +
+              '<span class="ws-qc-modal__nav-item__count">' + presets.reduce((s, r) => s + r.options.length, 0) + '</span>' +
+            '</div>' +
+            (aiGuess.length ? (
+              '<div class="ws-qc-modal__nav-item is-hot" data-nav-target="ai" data-nav-type="ai">' +
+                '<span class="ws-qc-modal__nav-item__icon">✨</span>' +
+                '<span class="ws-qc-modal__nav-item__label">AI 猜你想加</span>' +
+                '<span class="ws-qc-modal__nav-item__count">' + aiGuess.length + '</span>' +
+              '</div>'
+            ) : '') +
+            (recent.length ? (
+              '<div class="ws-qc-modal__nav-item" data-nav-target="recent" data-nav-type="recent">' +
+                '<span class="ws-qc-modal__nav-item__icon">🕐</span>' +
+                '<span class="ws-qc-modal__nav-item__label">最近用过</span>' +
+                '<span class="ws-qc-modal__nav-item__count">' + recent.length + '</span>' +
+              '</div>'
+            ) : '') +
+            '<div class="ws-qc-modal__nav-title" style="margin-top:10px;">字段</div>' +
+            presets.map((row, ri) => (
+              '<div class="ws-qc-modal__nav-item" data-nav-target="row-' + ri + '" data-nav-type="row" data-row-idx="' + ri + '">' +
+                '<span class="ws-qc-modal__nav-item__icon">·</span>' +
+                '<span class="ws-qc-modal__nav-item__label">' + escHtml(row.label) + '</span>' +
+                '<span class="ws-qc-modal__nav-item__count">' + row.options.length + '</span>' +
+              '</div>'
+            )).join('') +
+          '</div>' +
+          // 中间 chip 区域
+          '<div class="ws-qc-modal__main" id="wsQcMain">' +
+            // AI 猜你想加组
+            (aiGuess.length ? (
+              '<div class="ws-qc-modal__group is-hot" data-group="ai" data-group-name="AI 猜你想加">' +
+                '<div class="ws-qc-modal__group-title">' +
+                  '<span class="ws-qc-modal__group-title__icon">✨</span>' +
+                  'AI 猜你想加' +
+                  '<span class="ws-qc-modal__group-title__count">' + aiGuess.length + '</span>' +
+                '</div>' +
+                '<div class="ws-qc-modal__chips">' +
+                  aiGuess.map((k) => {
+                    const p = parseChipKey(k);
+                    if (!p) return '';
+                    const isOn = quickState[expert.id] && quickState[expert.id][p.label] && quickState[expert.id][p.label].indexOf(p.val) >= 0;
+                    return '<button class="ws-quick-chip is-hot' + (isOn ? ' is-active' : '') + '"' +
+                      ' type="button" data-ai-key="' + escHtml(k) + '"' +
+                      ' data-row-label="' + escHtml(p.label) + '" data-opt-val="' + escHtml(p.val) + '">' +
+                      escHtml(p.val) +
+                    '</button>';
+                  }).join('') +
+                '</div>' +
+              '</div>'
+            ) : '') +
+            // 最近用过组
+            (recent.length ? (
+              '<div class="ws-qc-modal__group" data-group="recent" data-group-name="最近用过">' +
+                '<div class="ws-qc-modal__group-title">' +
+                  '<span class="ws-qc-modal__group-title__icon">🕐</span>' +
+                  '最近用过' +
+                  '<span class="ws-qc-modal__group-title__count">' + recent.length + '</span>' +
+                '</div>' +
+                '<div class="ws-qc-modal__chips">' +
+                  recent.map((k) => {
+                    const p = parseChipKey(k);
+                    if (!p) return '';
+                    const isOn = quickState[expert.id] && quickState[expert.id][p.label] && quickState[expert.id][p.label].indexOf(p.val) >= 0;
+                    return '<button class="ws-quick-chip' + (isOn ? ' is-active' : '') + '"' +
+                      ' type="button" data-recent-key="' + escHtml(k) + '"' +
+                      ' data-row-label="' + escHtml(p.label) + '" data-opt-val="' + escHtml(p.val) + '">' +
+                      escHtml(p.val) +
+                    '</button>';
+                  }).join('') +
+                '</div>' +
+              '</div>'
+            ) : '') +
+            // 全部字段
+            presets.map((row, ri) => {
+              const initActive = (quickState[expert.id] && quickState[expert.id][row.label]) || [];
+              return (
+                '<div class="ws-qc-modal__group" data-group="row" data-row-idx="' + ri + '" data-row-label="' + escHtml(row.label) + '">' +
+                  '<div class="ws-qc-modal__group-title">' +
+                    '<span class="ws-qc-modal__group-title__icon">·</span>' +
+                    escHtml(row.label) +
+                    '<span class="ws-qc-modal__group-title__count">' + row.options.length + '</span>' +
+                  '</div>' +
+                  '<div class="ws-qc-modal__chips">' +
+                    row.options.map((opt, oi) => {
+                      const isOn = initActive.indexOf(opt) >= 0;
+                      const isHot = hotSet.has(row.label + ':' + opt);
+                      return '<button class="ws-quick-chip' + (isOn ? ' is-active' : '') + (isHot ? ' is-hot' : '') + '" type="button"' +
+                        ' data-row-idx="' + ri + '" data-opt-idx="' + oi + '"' +
+                        ' data-row-label="' + escHtml(row.label) + '" data-opt-val="' + escHtml(opt) + '"' +
+                        ' style="--qc-color:' + color + '">' +
+                        escHtml(opt) +
+                      '</button>';
+                    }).join('') +
+                  '</div>' +
+                '</div>'
+              );
+            }).join('') +
+          '</div>' +
+        '</div>' +
+        // 已选预览
+        '<div class="ws-qc-modal__selected" id="wsQcSelected"></div>' +
+        // footer
+        '<div class="ws-qc-modal__footer">' +
+          '<div class="ws-qc-modal__footer-stats" id="wsQcStats">已选 <strong>0</strong> 个条件</div>' +
+          '<button class="ws-qc-modal__btn ws-qc-modal__btn--ai-fill" id="wsQcAiFill" type="button">' + sparkSvg() + ' AI 一键填充</button>' +
+          '<button class="ws-qc-modal__btn ws-qc-modal__btn--clear" id="wsQcClear" type="button">清空</button>' +
+          '<button class="ws-qc-modal__btn ws-qc-modal__btn--confirm" id="wsQcConfirm" type="button">✓ 完成</button>' +
+        '</div>' +
+      '</div>'
+    );
+    // 注入到 .window 容器内（不是 body — 桌面端弹窗必须限制在 app 窗口内）
+    const winEl = document.querySelector('.window') || document.body;
+    winEl.appendChild(modal);
 
     const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
     if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
@@ -2483,10 +2654,52 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!quickEl || !presets) return;
 
     const trigger = document.getElementById('wsQcTrigger');
-    const popover = document.getElementById('wsQcPopover');
+    const modal = document.getElementById('wsQcModal');
     const selectedEl = document.getElementById('wsQcSelected');
     const countEl = document.getElementById('wsQcCount');
-    const hintEl = document.getElementById('wsQcHint');
+    const statsEl = document.getElementById('wsQcStats');
+    const searchInput = document.getElementById('wsQcSearch');
+    const clearBtn = document.getElementById('wsQuickClear');
+
+    // 在 dispatch 区 textarea 上方渲染已选条件条（v15）
+    function renderDispatchConditions() {
+      const dispatch = document.getElementById('wsDispatch');
+      if (!dispatch) return;
+      let bar = dispatch.querySelector('.ws-dispatch__conditions-bar');
+      const state = quickState[expert.id] || {};
+      const total = Object.values(state).reduce((s, arr) => s + arr.length, 0);
+      if (total === 0) { if (bar) bar.remove(); return; }
+      const rows = Object.entries(state).filter(([, vals]) => vals.length > 0);
+      const chipsHtml = rows.map(([label, vals]) => (
+        '<span class="ws-dc-chip">' + escHtml(label) + '：' + vals.map(escHtml).join('、') + '</span>'
+      )).join('');
+      const html = '<div class="ws-dispatch__conditions-bar">' +
+        '<div class="ws-dc-bar__chips">' + chipsHtml + '</div>' +
+        '</div>';
+      if (!bar) {
+        // 找可见的 textarea（隐藏的音频 mic textarea 也带 id，要排除）
+        const input = Array.from(dispatch.querySelectorAll('#wsDispatchInput'))
+          .find(el => el.style.display !== 'none' && el.offsetParent !== null);
+        if (input) input.insertAdjacentHTML('beforebegin', html);
+      } else { bar.outerHTML = html; }
+    }
+
+    // 打开 / 关闭 modal
+    function openModal() {
+      if (!modal) return;
+      modal.setAttribute('data-state', 'open');
+      trigger.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      // 自动 focus 搜索框
+      setTimeout(() => { if (searchInput) searchInput.focus(); }, 60);
+    }
+    function closeModal() {
+      if (!modal) return;
+      modal.setAttribute('data-state', 'closing');
+      trigger.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      setTimeout(() => { modal.setAttribute('data-state', 'closed'); }, 220);
+    }
 
     function renderSelected() {
       const lines = [];
@@ -2496,179 +2709,342 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const total = lines.reduce((s, l) => s + l.vals.length, 0);
 
+      // trigger count
       if (countEl) {
         countEl.textContent = total;
         countEl.dataset.state = total ? 'visible' : 'hidden';
       }
-      if (hintEl) hintEl.dataset.state = total ? 'hidden' : 'visible';
+      // footer stats
+      if (statsEl) {
+        statsEl.innerHTML = '已选 <strong>' + total + '</strong> 个条件';
+      }
 
+      // modal 底部已选预览
       if (!selectedEl) return;
       if (total === 0) {
-        selectedEl.innerHTML = '';
-        selectedEl.classList.remove('has-content');
+        selectedEl.innerHTML = '<div class="ws-qc-modal__selected-empty">💡 还没选条件 · 点上方 AI 猜你想加 / 字段 chip 试试</div>';
         return;
       }
-      selectedEl.classList.add('has-content');
+      // 按 popover 顺序排
+      const rowOrder = {};
+      presets.forEach((r, i) => { rowOrder[r.label] = i; });
+      lines.sort((a, b) => (rowOrder[a.label] ?? 99) - (rowOrder[b.label] ?? 99));
       selectedEl.innerHTML = lines.map((l, li) => (
-        '<span class="ws-qc-chip-removed" data-label-idx="' + li + '" data-label="' + escHtml(l.label) + '">' +
-          '<span class="ws-qc-chip-removed__label">' + escHtml(l.label) + '：' + l.vals.map(escHtml).join('、') + '</span>' +
-          '<span class="ws-qc-chip-removed__x" title="移除该字段全部">×</span>' +
+        '<span class="ws-qc-modal-chip" data-label-idx="' + li + '" data-label="' + escHtml(l.label) + '">' +
+          escHtml(l.label) + '：' + l.vals.map(escHtml).join('、') +
+          '<span class="ws-qc-modal-chip__x" title="移除该字段全部">×</span>' +
         '</span>'
       )).join('');
+      // 同步 nav-item「全选」状态
+      syncNavAllSelected();
+      // v15: 同时渲染 dispatch 区 textarea 上方的条件条
+      renderDispatchConditions();
+    }
+    // 同步 AI 猜 / 最近用过 nav-item 全选状态
+    function syncNavAllSelected() {
+      if (!modal) return;
+      const state = quickState[expert.id] || {};
+      modal.querySelectorAll('[data-nav-type]').forEach((n) => {
+        const t = n.getAttribute('data-nav-type');
+        if (t !== 'ai' && t !== 'recent') {
+          n.classList.remove('is-all-selected');
+          return;
+        }
+        const group = modal.querySelector('[data-group="' + t + '"]');
+        if (!group) return;
+        const chips = Array.from(group.querySelectorAll('.ws-quick-chip'));
+        const allOn = chips.length > 0 && chips.every((c) => {
+          const r = c.getAttribute('data-row-label');
+          const v = c.getAttribute('data-opt-val');
+          const arr = state[r];
+          return !!(arr && arr.indexOf(v) >= 0);
+        });
+        n.classList.toggle('is-all-selected', allOn);
+      });
     }
     renderSelected();
 
-    // trigger click → toggle popover
-    if (trigger && popover) {
-      const toggle = (force) => {
-        const isOpen = popover.dataset.state === 'open';
-        const next = (force === true) ? true : (force === false) ? false : !isOpen;
-        popover.dataset.state = next ? 'open' : 'closed';
-        trigger.setAttribute('aria-expanded', next ? 'true' : 'false');
-        trigger.classList.toggle('is-open', next);
-      };
+    // 通用：把一个 chip 切到 state 上 + 写历史 + 刷 UI
+    function applyChipFromKey(rowLabel, optVal, source) {
+      if (!quickState[expert.id]) quickState[expert.id] = {};
+      if (!quickState[expert.id][rowLabel]) quickState[expert.id][rowLabel] = [];
+      const stateArr = quickState[expert.id][rowLabel];
+      const k = stateArr.indexOf(optVal);
+      if (source === 'ai' || source === 'recent') {
+        if (k < 0) stateArr.push(optVal);
+      } else {
+        if (k >= 0) stateArr.splice(k, 1);
+        else stateArr.push(optVal);
+      }
+      bumpHistory(expert.id, rowLabel + ':' + optVal);
+      // 同步所有同 key 的 chip DOM（AI/最近/字段 3 处都可能有）
+      if (modal) {
+        modal.querySelectorAll('.ws-quick-chip[data-row-label="' + cssEscape(rowLabel) + '"][data-opt-val="' + cssEscape(optVal) + '"]')
+          .forEach((c) => {
+            const isOn = stateArr.indexOf(optVal) >= 0;
+            c.classList.toggle('is-active', isOn);
+          });
+      }
+      renderSelected();
+      const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+      if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+    }
+    function cssEscape(s) { return (s || '').replace(/(["\\])/g, '\\$1'); }
+
+    // trigger click → 打开 modal
+    if (trigger) {
       trigger.addEventListener('click', (e) => {
         e.stopPropagation();
-        toggle();
-      });
-      // 外部点击关闭
-      document.addEventListener('click', (e) => {
-        if (popover.dataset.state !== 'open') return;
-        if (e.target.closest('#wsQcPopover') || e.target.closest('#wsQcTrigger')) return;
-        toggle(false);
+        if (modal && modal.getAttribute('data-state') === 'open') closeModal();
+        else openModal();
       });
       // Esc 关闭
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && popover.dataset.state === 'open') toggle(false);
+        if (e.key === 'Escape' && modal && modal.getAttribute('data-state') === 'open') closeModal();
       });
     }
 
-    // popover chip click → 多选切换
-    if (popover) {
-      popover.addEventListener('click', (e) => {
+    // modal 内部 click 委托
+    if (modal) {
+      // 关闭按钮 / 背景
+      modal.addEventListener('click', (e) => {
+        if (e.target.closest('[data-modal-close]')) { closeModal(); return; }
+        if (e.target.closest('#wsQcAiFill')) { onAiFill(); return; }
+        if (e.target.closest('#wsQcAiSort')) { onAiSort(); return; }
+        if (e.target.closest('#wsQcClear')) { onClearAll(); return; }
+        if (e.target.closest('#wsQcConfirm')) { closeModal(); return; }
+        // 分类导航点击
+        const navItem = e.target.closest('[data-nav-target]');
+        if (navItem) {
+          const t = navItem.getAttribute('data-nav-target');
+          const navType = navItem.getAttribute('data-nav-type');
+          const main = modal.querySelector('.ws-qc-modal__main');
+          // AI 猜 / 最近用过：toggle 全选该组所有 chip（再点全取消）
+          if (navType === 'ai' || navType === 'recent') {
+            const group = modal.querySelector('[data-group="' + navType + '"]');
+            if (group) {
+              const chips = Array.from(group.querySelectorAll('.ws-quick-chip'));
+              if (!quickState[expert.id]) quickState[expert.id] = {};
+              const isOn = (r, v) => {
+                const arr = quickState[expert.id][r];
+                return !!(arr && arr.indexOf(v) >= 0);
+              };
+              const allOn = chips.length > 0 && chips.every((c) => isOn(c.getAttribute('data-row-label'), c.getAttribute('data-opt-val')));
+              chips.forEach((c) => {
+                const r = c.getAttribute('data-row-label');
+                const v = c.getAttribute('data-opt-val');
+                if (!r || !v) return;
+                if (allOn && isOn(r, v)) {
+                  // 全选 → 全取消：手动从 state 移除（applyChipFromKey 在 ai/recent 源只 add 不 remove）
+                  const arr = quickState[expert.id][r];
+                  if (arr) {
+                    const k = arr.indexOf(v);
+                    if (k >= 0) arr.splice(k, 1);
+                  }
+                  c.classList.remove('is-active');
+                } else if (!allOn && !isOn(r, v)) {
+                  // 未全选 → 选未选的
+                  applyChipFromKey(r, v, navType);
+                }
+              });
+              // 同步所有同 key 的 chip 状态（避免 body 字段组的同名 chip 不同步）
+              if (modal) {
+                modal.querySelectorAll('.ws-quick-chip').forEach((c2) => {
+                  const r2 = c2.getAttribute('data-row-label');
+                  const v2 = c2.getAttribute('data-opt-val');
+                  const isOn2 = isOn(r2, v2);
+                  c2.classList.toggle('is-active', isOn2);
+                });
+              }
+              renderSelected();
+              syncNavAllSelected();
+              const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+              const cb = document.getElementById('wsQuickClear');
+              if (cb) cb.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+              // active 切换
+              modal.querySelectorAll('[data-nav-target]').forEach((n) => n.classList.toggle('is-active', n === navItem));
+              // 滚到该组
+              if (main) main.scrollTo({ top: group.offsetTop - 8, behavior: 'smooth' });
+            }
+            return;
+          }
+          // 全部 / 字段：仅 active 切换 + scroll
+          modal.querySelectorAll('[data-nav-target]').forEach((n) => n.classList.toggle('is-active', n === navItem));
+          let target;
+          if (t === 'all') {
+            target = main;
+          } else if (t.startsWith('row-')) {
+            target = modal.querySelector('[data-row-idx="' + t.slice(4) + '"]');
+          }
+          if (target && main) main.scrollTo({ top: target.offsetTop - 8, behavior: 'smooth' });
+          return;
+        }
+        // chip 点击
         const chip = e.target.closest('.ws-quick-chip');
         if (!chip) return;
-        const rowIdx = parseInt(chip.getAttribute('data-row-idx'), 10);
-        const optIdx = parseInt(chip.getAttribute('data-opt-idx'), 10);
-        const row = presets[rowIdx];
-        const optVal = row.options[optIdx];
-
-        if (!quickState[expert.id]) quickState[expert.id] = {};
-        if (!quickState[expert.id][row.label]) quickState[expert.id][row.label] = [];
-        const stateArr = quickState[expert.id][row.label];
-        const k = stateArr.indexOf(optVal);
-        if (k >= 0) stateArr.splice(k, 1);
-        else stateArr.push(optVal);
-
-        chip.classList.toggle('is-active');
-        syncQuickToInput(input, expert);
-        renderSelected();
-
-        const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
-        const clearBtn = document.getElementById('wsQuickClear');
-        if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+        const rowLabel = chip.getAttribute('data-row-label');
+        const optVal = chip.getAttribute('data-opt-val');
+        const source = chip.hasAttribute('data-ai-key') ? 'ai'
+          : chip.hasAttribute('data-recent-key') ? 'recent'
+          : 'body';
+        applyChipFromKey(rowLabel, optVal, source);
       });
     }
 
-    // 已选 chip × 移除该字段全部
+    // 已选 chip × 移除（带动画）
     if (selectedEl) {
       selectedEl.addEventListener('click', (e) => {
-        const xBtn = e.target.closest('.ws-qc-chip-removed__x');
+        const xBtn = e.target.closest('.ws-qc-modal-chip__x');
         if (!xBtn) return;
-        const chipEl = xBtn.closest('.ws-qc-chip-removed');
+        const chipEl = xBtn.closest('.ws-qc-modal-chip');
         if (!chipEl) return;
         const label = chipEl.getAttribute('data-label');
         if (!label) return;
-        if (quickState[expert.id] && quickState[expert.id][label]) {
-          quickState[expert.id][label] = [];
-        }
-        if (popover) {
-          Array.from(popover.querySelectorAll('.ws-qc-popover__row')).forEach((row) => {
-            const lblEl = row.querySelector('.ws-qc-popover__label');
-            if (lblEl && lblEl.textContent === label) {
-              row.querySelectorAll('.ws-quick-chip.is-active').forEach((c) => c.classList.remove('is-active'));
-            }
-          });
-        }
-        syncQuickToInput(input, expert);
-        renderSelected();
-        const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
-        const clearBtn = document.getElementById('wsQuickClear');
-        if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+        chipEl.classList.add('is-removing');
+        setTimeout(() => {
+          if (quickState[expert.id] && quickState[expert.id][label]) {
+            quickState[expert.id][label] = [];
+          }
+          if (modal) {
+            modal.querySelectorAll('.ws-quick-chip[data-row-label="' + cssEscape(label) + '"]')
+              .forEach((c) => c.classList.remove('is-active'));
+          }
+          renderSelected();
+          const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+          if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+        }, 280);
       });
     }
 
-    // 清除按钮
-    const clearBtn = document.getElementById('wsQuickClear');
+    // 清除按钮（标题右侧的 quick-clear · 全局）
     if (clearBtn) {
-      clearBtn.onclick = () => {
-        quickState[expert.id] = {};
-        if (popover) {
-          popover.querySelectorAll('.ws-quick-chip.is-active').forEach((c) => c.classList.remove('is-active'));
-          popover.dataset.state = 'closed';
-        }
-        renderSelected();
-        if (input) input.value = stripQuickSuffix(input.value);
-        prevQuickAppend = '';
-        if (trigger) {
-          trigger.setAttribute('aria-expanded', 'false');
-          trigger.classList.remove('is-open');
-        }
-        clearBtn.setAttribute('data-state', 'hidden');
-      };
-    }
-  }
-
-  // 上一次同步写入 input 的整段 chip 文本 · 精确剥除（避免 regex 兜底失灵）
-  let prevQuickAppend = '';
-  function syncQuickToInput(input, expert) {
-    if (!input) return;
-    const v = input.value || '';
-    let userPart;
-
-    // 精确剥除（之前写入的 chip 段还在 v 末尾）。
-    // 注意：v.endsWith(prev) 和 v.endsWith(' · ' + prev) 不能直接用 || 短路，
-    // 因为后者必然也匹配前者（prev 是 v 的真后缀）。必须先判断更长模式。
-    if (prevQuickAppend && v.endsWith(' · ' + prevQuickAppend)) {
-      userPart = v.slice(0, v.length - prevQuickAppend.length - 3).trim();
-    } else if (prevQuickAppend && v.endsWith(prevQuickAppend)) {
-      userPart = v.slice(0, v.length - prevQuickAppend.length).trim();
-    } else {
-      // prev 失效（用户键盘输入 / 外部工具 fill / prev 被清空）。
-      // 用 stripQuickSuffix 剥除 v 末尾可能的 chip 段（regex 兜底）
-      userPart = stripQuickSuffix(v);
+      clearBtn.onclick = () => { onClearAll(); };
     }
 
-    const lines = [];
-    Object.keys(quickState[expert.id] || {}).forEach((label) => {
-      const vals = quickState[expert.id][label];
-      if (vals.length) lines.push(label + '：' + vals.join('、'));
-    });
+    // 搜索：实时过滤 chip 显示
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        const q = searchInput.value.trim().toLowerCase();
+        if (!modal) return;
+        modal.querySelectorAll('.ws-qc-modal__group').forEach((g) => {
+          // AI / 最近不过滤（始终显示），但 row 组按 label 过滤
+          if (g.getAttribute('data-group') === 'ai' || g.getAttribute('data-group') === 'recent') {
+            g.style.display = '';
+            return;
+          }
+          // 字段组：隐藏 val 不匹配的 chip；如果整个组都没匹配，整个组隐藏
+          let visible = 0;
+          g.querySelectorAll('.ws-quick-chip').forEach((c) => {
+            const val = (c.getAttribute('data-opt-val') || '').toLowerCase();
+            const label = (g.getAttribute('data-row-label') || '').toLowerCase();
+            const match = !q || val.indexOf(q) >= 0 || label.indexOf(q) >= 0;
+            c.style.display = match ? '' : 'none';
+            if (match) visible++;
+          });
+          g.style.display = visible > 0 ? '' : 'none';
+        });
+      });
+    }
 
-    const newAppend = lines.join(' · ');
-    prevQuickAppend = newAppend;
+    // AI 一键填充：选 4 个未选 + 高频 chip
+    function onAiFill() {
+      if (!quickState[expert.id]) quickState[expert.id] = {};
+      const history = (readHistory()[expert.id]) || {};
+      const cands = [];
+      presets.forEach((row, ri) => {
+        row.options.forEach((opt, oi) => {
+          const isOn = (quickState[expert.id][row.label] || []).indexOf(opt) >= 0;
+          if (isOn) return;
+          const key = row.label + ':' + opt;
+          const score = (history[key] || 0) * 10 - (ri * 0.3 + oi * 0.05);
+          cands.push({ row: row.label, val: opt, ri, oi, score });
+        });
+      });
+      cands.sort((a, b) => b.score - a.score);
+      // 选 4 个：先按 row 分散，每 row 最多 1 个（避免 4 个全选同一字段）
+      const TARGET = 4;
+      const perRow = {};
+      const pick = [];
+      const byRow = {};
+      cands.forEach((c) => { (byRow[c.row] = byRow[c.row] || []).push(c); });
+      const rows = Object.keys(byRow);
+      // 第一轮：每个 row 取 score 最高的 1 个
+      while (pick.length < TARGET) {
+        let best = null;
+        for (const r of rows) {
+          if ((perRow[r] || 0) >= 1) continue;
+          for (const c of byRow[r]) {
+            if (pick.indexOf(c) >= 0) continue;
+            if (!best || c.score > best.score) best = c;
+          }
+        }
+        if (!best) break;
+        pick.push(best);
+        perRow[best.row] = 1;
+      }
+      // 不足 4 个则继续补（不限 row）
+      if (pick.length < TARGET) {
+        for (const c of cands) {
+          if (pick.length >= TARGET) break;
+          if (pick.indexOf(c) >= 0) continue;
+          pick.push(c);
+        }
+      }
+      pick.forEach((p) => {
+        if (!quickState[expert.id][p.row]) quickState[expert.id][p.row] = [];
+        if (quickState[expert.id][p.row].indexOf(p.val) < 0) quickState[expert.id][p.row].push(p.val);
+        bumpHistory(expert.id, p.row + ':' + p.val);
+      });
+      if (modal) {
+        modal.querySelectorAll('.ws-quick-chip').forEach((c) => {
+          const r = c.getAttribute('data-row-label');
+          const v = c.getAttribute('data-opt-val');
+          c.style.display = '';
+          c.classList.toggle('is-active', !!(quickState[expert.id][r] && quickState[expert.id][r].indexOf(v) >= 0));
+        });
+      }
+      if (searchInput) searchInput.value = '';
+      renderSelected();
+      const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+      if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+    }
 
-    input.value = userPart + (userPart && newAppend ? ' · ' : '') + newAppend;
-    // 动态更新 placeholder 提示
-    const tip = newAppend ? '已自动追加 chip 条件，可继续手动改' : '例：' + currentExpertPlaceholder(expert);
-    input.placeholder = tip;
-  }
-  function currentExpertPlaceholder(expert) {
-    const map = {
-      brand:    '帮我为奶茶店设计一个 Logo',
-      writing:  '写一篇关于 AI Agent 的公众号文章',
-      audio:    '会议主题、参会人、转录要求',
-      video:    '60s 短视频脚本 + 画面描述',
-      data:     '本季度订单趋势 / 用户留存',
-      fengshui: '男 · 1988 年 8 月 15 日 · 北京住宅',
-      zodiac:   '白羊座 · 1990 · 关注爱情运'
-    };
-    return map[expert.id] || '请输入任务需求';
-  }
-  function stripQuickSuffix(v) {
-    if (!v) return '';
-    // 末尾「· 字段：值 · 字段：值」整段剥掉
-    return v.replace(/(\s*·\s*[^·:：]+[：:][^·]+)+$/g, '').trim();
+    // 智能排序
+    function onAiSort() {
+      const history = (readHistory()[expert.id]) || {};
+      const rowOrder = {};
+      presets.forEach((r, i) => { rowOrder[r.label] = i; });
+      const lines = [];
+      Object.keys(quickState[expert.id] || {}).forEach((label) => {
+        const vals = quickState[expert.id][label];
+        if (vals.length) lines.push({ label, vals });
+      });
+      lines.sort((a, b) => {
+        const ra = rowOrder[a.label] ?? 99;
+        const rb = rowOrder[b.label] ?? 99;
+        if (ra !== rb) return ra - rb;
+        const sa = a.vals.reduce((s, v) => s + (history[a.label + ':' + v] || 0), 0);
+        const sb = b.vals.reduce((s, v) => s + (history[b.label + ':' + v] || 0), 0);
+        return sb - sa;
+      });
+      lines.forEach((l) => {
+        l.vals.sort((x, y) => (history[l.label + ':' + y] || 0) - (history[l.label + ':' + x] || 0));
+      });
+      const next = {};
+      lines.forEach((l) => { next[l.label] = l.vals; });
+      quickState[expert.id] = next;
+      renderSelected();
+    }
+
+    // 清空全部
+    function onClearAll() {
+      quickState[expert.id] = {};
+      if (modal) {
+        modal.querySelectorAll('.ws-quick-chip.is-active').forEach((c) => c.classList.remove('is-active'));
+      }
+      renderSelected();
+      if (clearBtn) clearBtn.setAttribute('data-state', 'hidden');
+    }
   }
 
   // 9.4 在 renderCenter 末尾调用（覆盖 IIFE 内的同名调用 — 采用 setTimeout 0 保证 DOM 就绪）
@@ -2897,7 +3273,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // 重置 chip 状态（用户复用案例时清掉旧 chip）
       if (quickState[expert.id]) {
         quickState[expert.id] = {};
-        prevQuickAppend = '';
       }
     }
     closeSampleModal();
