@@ -299,8 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    const samples = expert.samples.map(s => (
-      '<div class="ws-detail__sample">' +
+    const samples = expert.samples.map((s, sIdx) => (
+      '<div class="ws-detail__sample" data-expert-id="' + expert.id + '" data-sample-idx="' + sIdx + '" role="button" tabindex="0">' +
         '<div class="ws-detail__sample-thumb" style="background:' + expert.avatar.gradient + ';">' + s.icon + '</div>' +
         '<span class="ws-detail__sample-name">' + s.name + '</span>' +
         '<span class="ws-detail__sample-meta">' + s.meta + '</span>' +
@@ -342,7 +342,9 @@ document.addEventListener('DOMContentLoaded', () => {
             '<span class="ws-dispatch__head-icon">→</span>' +
             '<span>立即派单</span>' +
           '</div>' +
+          '<button class="ws-dispatch__quick-clear" id="wsQuickClear" type="button" data-state="hidden">清除条件</button>' +
         '</div>' +
+        '<div class="ws-dispatch__quick" id="wsDispatchQuick"></div>' +
         // 录音专家：默认 mic 录音模式
         (expert.id === 'audio'
           ? '<div class="ws-dispatch__mic" id="wsDispatchMic">' +
@@ -2338,4 +2340,576 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) { document.title = 'ERR:' + e.message; }
     }, 100);
   }
+
+  /* ============================================================
+   * 9. 快捷条件 chip · 7 专家（除 ceo / sales 外）
+   * ============================================================ */
+  function escHtml(s) {
+    return (s || '').replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // 9.1 7 专家的 chip 数据 · 每行：{ label, options: [...], multi: true }
+  // 选项值用于追加到 prompt 「· label：option」
+  const QUICK_PRESETS = {
+    brand: [
+      { label: '风格',   options: ['极简', '复古', '商务', '潮流', '国潮', '未来感'] },
+      { label: '主色',   options: ['蓝', '红', '绿', '金', '黑', '白'] },
+      { label: '比例',   options: ['横屏', '竖屏', '方形'] },
+      { label: '清晰度', options: ['高清', '标清'] },
+      { label: '行业',   options: ['餐饮', '科技', '教育', '美妆', '金融'] }
+    ],
+    writing: [
+      { label: '语气', options: ['专业', '幽默', '共情', '吐槽', '学术'] },
+      { label: '文体', options: ['公众号', '小红书', '邮件', '抖音', '知乎'] },
+      { label: '字数', options: ['500', '800', '1500', '3000'] },
+      { label: '受众', options: ['老板', '职场人', '宝妈', '学生', '技术人'] }
+    ],
+    audio: [
+      { label: '输出',   options: ['纪要', '待办', '转录', '原文'] },
+      { label: '详略',   options: ['精简', '详尽'] },
+      { label: '关键句', options: ['是', '否'] },
+      { label: '发言人', options: ['区分', '不区分'] }
+    ],
+    video: [
+      { label: '时长', options: ['15s', '30s', '60s', '3min'] },
+      { label: '风格', options: ['真人', '二次元', '3D', '实拍'] },
+      { label: '比例', options: ['横屏', '竖屏', '方屏'] },
+      { label: '字幕', options: ['中文', '中英', '无'] },
+      { label: 'BGM', options: ['有', '无'] }
+    ],
+    data: [
+      { label: '图表',   options: ['折线', '柱状', '饼图', '漏斗', '热力图'] },
+      { label: '时间',   options: ['7天', '30天', '季度', '年', '自定义'] },
+      { label: '数据源', options: ['订单', '用户', '财务', '流量'] },
+      { label: '维度',   options: ['趋势', '对比', '占比', '异常'] }
+    ],
+    fengshui: [
+      { label: '流派', options: ['玄空', '八宅', '飞星', '命理'] },
+      { label: '场景', options: ['住宅', '商铺', '办公室', '墓地'] },
+      { label: '深度', options: ['简', '详'] },
+      { label: '化解', options: ['是', '否'] }
+    ],
+    zodiac: [
+      { label: '流派', options: ['古典', '现代', '心理'] },
+      { label: '聚焦', options: ['爱情', '事业', '财运', '学业', '健康'] },
+      { label: '深度', options: ['简', '详'] },
+      { label: '合盘', options: ['是', '否'] }
+    ]
+  };
+
+  // 9.2 7 专家主色 · 沿用 avatar gradient 第一色 + CSS 变量同步
+  const EXPERT_QUICK_COLOR = {
+    brand:    '#F8718B',  // brand 珊瑚红
+    writing:  '#B695FF',  // writing 紫
+    audio:    '#FF6B6B',  // audio 录音红
+    video:    '#FFA94D',  // video 橙
+    data:     '#5B8DEF',  // data 蓝
+    fengshui: '#C9A063',  // fengshui 暖金
+    zodiac:   '#C77DFF'   // zodiac 紫罗兰
+  };
+
+  // 9.3 chip 当前选择状态（按 expert.id 隔离）
+  const quickState = {};   // { brand: { '风格': ['极简'] }, ... }
+
+  function renderQuickPresets(expert) {
+    const quickEl = document.getElementById('wsDispatchQuick');
+    const clearBtn = document.getElementById('wsQuickClear');
+    if (!quickEl) return;
+
+    const presets = QUICK_PRESETS[expert.id];
+    if (!presets) {
+      // ceo / sales 不出 popover
+      quickEl.setAttribute('data-state', 'hidden');
+      quickEl.innerHTML = '';
+      if (clearBtn) clearBtn.setAttribute('data-state', 'hidden');
+      return;
+    }
+    quickEl.setAttribute('data-state', 'active');
+    const color = EXPERT_QUICK_COLOR[expert.id] || 'var(--text-primary)';
+    quickEl.style.setProperty('--qc-color', color);
+
+    // 1. 已选 chip 区（input 上方）
+    // 2. 单 trigger（占 1 行）
+    // 3. popover（absolute 定位，含所有字段所有 chip）
+    quickEl.innerHTML = (
+      // 1) 已选 chip 区
+      '<div class="ws-qc-selected" id="wsQcSelected"></div>' +
+      // 2) trigger
+      '<div class="ws-qc-trigger-wrap">' +
+        '<button class="ws-qc-trigger-single" id="wsQcTrigger" type="button" aria-expanded="false">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M3 6h18M7 12h10M10 18h4"/>' +
+          '</svg>' +
+          '<span class="ws-qc-trigger-single__label">快捷条件</span>' +
+          '<span class="ws-qc-trigger-single__count" id="wsQcCount" data-state="hidden">0</span>' +
+          '<span class="ws-qc-trigger-single__hint" id="wsQcHint" data-state="visible">点选风格 / 主色 / 比例...</span>' +
+          '<span class="ws-qc-trigger-single__caret">▾</span>' +
+        '</button>' +
+      '</div>' +
+      // 3) popover（绝对定位浮层，含所有字段所有 chip）
+      '<div class="ws-qc-popover" id="wsQcPopover" data-state="closed">' +
+        presets.map((row, ri) => {
+          const initActive = (quickState[expert.id] && quickState[expert.id][row.label]) || [];
+          return (
+            '<div class="ws-qc-popover__row" data-row-idx="' + ri + '">' +
+              '<span class="ws-qc-popover__label">' + escHtml(row.label) + '</span>' +
+              '<div class="ws-qc-popover__chips">' +
+                row.options.map((opt, oi) => (
+                  '<button class="ws-quick-chip' + (initActive.indexOf(opt) >= 0 ? ' is-active' : '') + '" type="button"' +
+                    ' data-row-idx="' + ri + '" data-opt-idx="' + oi + '"' +
+                    ' style="--qc-color:' + color + '">' +
+                    escHtml(opt) +
+                  '</button>'
+                )).join('') +
+              '</div>' +
+            '</div>'
+          );
+        }).join('') +
+      '</div>'
+    );
+
+    const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+    if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+
+    bindQuickPresets(expert, color);
+  }
+
+  function bindQuickPresets(expert, color) {
+    const quickEl = document.getElementById('wsDispatchQuick');
+    const input = document.getElementById('wsDispatchInput');
+    const presets = QUICK_PRESETS[expert.id];
+    if (!quickEl || !presets) return;
+
+    const trigger = document.getElementById('wsQcTrigger');
+    const popover = document.getElementById('wsQcPopover');
+    const selectedEl = document.getElementById('wsQcSelected');
+    const countEl = document.getElementById('wsQcCount');
+    const hintEl = document.getElementById('wsQcHint');
+
+    function renderSelected() {
+      const lines = [];
+      Object.keys(quickState[expert.id] || {}).forEach((label) => {
+        const vals = quickState[expert.id][label];
+        if (vals.length) lines.push({ label, vals });
+      });
+      const total = lines.reduce((s, l) => s + l.vals.length, 0);
+
+      if (countEl) {
+        countEl.textContent = total;
+        countEl.dataset.state = total ? 'visible' : 'hidden';
+      }
+      if (hintEl) hintEl.dataset.state = total ? 'hidden' : 'visible';
+
+      if (!selectedEl) return;
+      if (total === 0) {
+        selectedEl.innerHTML = '';
+        selectedEl.classList.remove('has-content');
+        return;
+      }
+      selectedEl.classList.add('has-content');
+      selectedEl.innerHTML = lines.map((l, li) => (
+        '<span class="ws-qc-chip-removed" data-label-idx="' + li + '" data-label="' + escHtml(l.label) + '">' +
+          '<span class="ws-qc-chip-removed__label">' + escHtml(l.label) + '：' + l.vals.map(escHtml).join('、') + '</span>' +
+          '<span class="ws-qc-chip-removed__x" title="移除该字段全部">×</span>' +
+        '</span>'
+      )).join('');
+    }
+    renderSelected();
+
+    // trigger click → toggle popover
+    if (trigger && popover) {
+      const toggle = (force) => {
+        const isOpen = popover.dataset.state === 'open';
+        const next = (force === true) ? true : (force === false) ? false : !isOpen;
+        popover.dataset.state = next ? 'open' : 'closed';
+        trigger.setAttribute('aria-expanded', next ? 'true' : 'false');
+        trigger.classList.toggle('is-open', next);
+      };
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggle();
+      });
+      // 外部点击关闭
+      document.addEventListener('click', (e) => {
+        if (popover.dataset.state !== 'open') return;
+        if (e.target.closest('#wsQcPopover') || e.target.closest('#wsQcTrigger')) return;
+        toggle(false);
+      });
+      // Esc 关闭
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && popover.dataset.state === 'open') toggle(false);
+      });
+    }
+
+    // popover chip click → 多选切换
+    if (popover) {
+      popover.addEventListener('click', (e) => {
+        const chip = e.target.closest('.ws-quick-chip');
+        if (!chip) return;
+        const rowIdx = parseInt(chip.getAttribute('data-row-idx'), 10);
+        const optIdx = parseInt(chip.getAttribute('data-opt-idx'), 10);
+        const row = presets[rowIdx];
+        const optVal = row.options[optIdx];
+
+        if (!quickState[expert.id]) quickState[expert.id] = {};
+        if (!quickState[expert.id][row.label]) quickState[expert.id][row.label] = [];
+        const stateArr = quickState[expert.id][row.label];
+        const k = stateArr.indexOf(optVal);
+        if (k >= 0) stateArr.splice(k, 1);
+        else stateArr.push(optVal);
+
+        chip.classList.toggle('is-active');
+        syncQuickToInput(input, expert);
+        renderSelected();
+
+        const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+        const clearBtn = document.getElementById('wsQuickClear');
+        if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+      });
+    }
+
+    // 已选 chip × 移除该字段全部
+    if (selectedEl) {
+      selectedEl.addEventListener('click', (e) => {
+        const xBtn = e.target.closest('.ws-qc-chip-removed__x');
+        if (!xBtn) return;
+        const chipEl = xBtn.closest('.ws-qc-chip-removed');
+        if (!chipEl) return;
+        const label = chipEl.getAttribute('data-label');
+        if (!label) return;
+        if (quickState[expert.id] && quickState[expert.id][label]) {
+          quickState[expert.id][label] = [];
+        }
+        if (popover) {
+          Array.from(popover.querySelectorAll('.ws-qc-popover__row')).forEach((row) => {
+            const lblEl = row.querySelector('.ws-qc-popover__label');
+            if (lblEl && lblEl.textContent === label) {
+              row.querySelectorAll('.ws-quick-chip.is-active').forEach((c) => c.classList.remove('is-active'));
+            }
+          });
+        }
+        syncQuickToInput(input, expert);
+        renderSelected();
+        const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+        const clearBtn = document.getElementById('wsQuickClear');
+        if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+      });
+    }
+
+    // 清除按钮
+    const clearBtn = document.getElementById('wsQuickClear');
+    if (clearBtn) {
+      clearBtn.onclick = () => {
+        quickState[expert.id] = {};
+        if (popover) {
+          popover.querySelectorAll('.ws-quick-chip.is-active').forEach((c) => c.classList.remove('is-active'));
+          popover.dataset.state = 'closed';
+        }
+        renderSelected();
+        if (input) input.value = stripQuickSuffix(input.value);
+        prevQuickAppend = '';
+        if (trigger) {
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.classList.remove('is-open');
+        }
+        clearBtn.setAttribute('data-state', 'hidden');
+      };
+    }
+  }
+
+  // 上一次同步写入 input 的整段 chip 文本 · 精确剥除（避免 regex 兜底失灵）
+  let prevQuickAppend = '';
+  function syncQuickToInput(input, expert) {
+    if (!input) return;
+    const v = input.value || '';
+    let userPart;
+
+    // 精确剥除（之前写入的 chip 段还在 v 末尾）。
+    // 注意：v.endsWith(prev) 和 v.endsWith(' · ' + prev) 不能直接用 || 短路，
+    // 因为后者必然也匹配前者（prev 是 v 的真后缀）。必须先判断更长模式。
+    if (prevQuickAppend && v.endsWith(' · ' + prevQuickAppend)) {
+      userPart = v.slice(0, v.length - prevQuickAppend.length - 3).trim();
+    } else if (prevQuickAppend && v.endsWith(prevQuickAppend)) {
+      userPart = v.slice(0, v.length - prevQuickAppend.length).trim();
+    } else {
+      // prev 失效（用户键盘输入 / 外部工具 fill / prev 被清空）。
+      // 用 stripQuickSuffix 剥除 v 末尾可能的 chip 段（regex 兜底）
+      userPart = stripQuickSuffix(v);
+    }
+
+    const lines = [];
+    Object.keys(quickState[expert.id] || {}).forEach((label) => {
+      const vals = quickState[expert.id][label];
+      if (vals.length) lines.push(label + '：' + vals.join('、'));
+    });
+
+    const newAppend = lines.join(' · ');
+    prevQuickAppend = newAppend;
+
+    input.value = userPart + (userPart && newAppend ? ' · ' : '') + newAppend;
+    // 动态更新 placeholder 提示
+    const tip = newAppend ? '已自动追加 chip 条件，可继续手动改' : '例：' + currentExpertPlaceholder(expert);
+    input.placeholder = tip;
+  }
+  function currentExpertPlaceholder(expert) {
+    const map = {
+      brand:    '帮我为奶茶店设计一个 Logo',
+      writing:  '写一篇关于 AI Agent 的公众号文章',
+      audio:    '会议主题、参会人、转录要求',
+      video:    '60s 短视频脚本 + 画面描述',
+      data:     '本季度订单趋势 / 用户留存',
+      fengshui: '男 · 1988 年 8 月 15 日 · 北京住宅',
+      zodiac:   '白羊座 · 1990 · 关注爱情运'
+    };
+    return map[expert.id] || '请输入任务需求';
+  }
+  function stripQuickSuffix(v) {
+    if (!v) return '';
+    // 末尾「· 字段：值 · 字段：值」整段剥掉
+    return v.replace(/(\s*·\s*[^·:：]+[：:][^·]+)+$/g, '').trim();
+  }
+
+  // 9.4 在 renderCenter 末尾调用（覆盖 IIFE 内的同名调用 — 采用 setTimeout 0 保证 DOM 就绪）
+  // 由于 renderCenter 内部 self-call 太复杂，我们在外面劫持：监听 wsDispatch 出现后追加。
+  // 实际更简单：renderCenter 调用后用 MutationObserver 监听 wsCenter 子节点变化触发
+  function hookRenderCenterForQuick() {
+    const center = document.getElementById('wsCenter');
+    if (!center) return;
+    // 立即渲染一次（IIFE 末尾调用时 wsCenter 里可能已有 wsDispatch）
+    queueMicrotask(() => {
+      const initialDispatch = document.getElementById('wsDispatch');
+      if (initialDispatch) {
+        const expert = EXPERTS.find((e) => e.id === currentExpertId) || EXPERTS[0];
+        renderQuickPresets(expert);
+      }
+    });
+    // MutationObserver 兜底后续切换
+    // 注意：innerHTML 创建的 div 在 MO callback 时 node.id 尚未同步，
+    // 必须用 querySelector 兜底查 #wsDispatch
+    const mo = new MutationObserver((muts) => {
+      for (const m of muts) {
+        for (const node of m.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          // 兜底：用 querySelector 找 wsDispatch（兼容 MO 时序问题）
+          const dispatch = node.id === 'wsDispatch' ? node
+                          : (node.querySelector ? node.querySelector('#wsDispatch') : null);
+          if (dispatch) {
+            const expert = EXPERTS.find((e) => e.id === currentExpertId) || EXPERTS[0];
+            renderQuickPresets(expert);
+            return;
+          }
+        }
+      }
+    });
+    mo.observe(center, { childList: true, subtree: true });
+  }
+  hookRenderCenterForQuick();
+
+  /* ============================================================
+   * 10. 案例详情 modal · 9 专家通用 · 点最近案例卡片弹出
+   * ============================================================ */
+
+  // 10.1 mock 案例详情生成（基于 expert.id + sample 关键词推导）
+  function buildSampleDetail(expert, sample) {
+    const gradient = expert.avatar.gradient;
+    const icon = sample.icon;
+    const title = sample.name;
+    const meta = sample.meta;
+
+    // 关键词 → 描述 / stats / tags
+    const kw = title;
+    let desc = '';
+    let tags = [];
+    let stats = [];
+    if (kw.includes('Logo') || kw.includes('logo')) {
+      desc = `AI 生成的 "${title}" 方案。基于品牌基因、客户行业、色彩心理学三维度匹配，30 秒出 4-8 个候选。客户采纳前会经过内部字体识别、行业禁忌词过滤、版权风险检测三道关。`;
+      tags = ['餐饮', '简约', '年轻化', '高识别度'];
+      stats = [
+        { num: '320', label: '生成方案' },
+        { num: '78%', label: '一次采纳率', gold: true },
+        { num: '4.2', label: '客户评分' }
+      ];
+    } else if (kw.includes('VI')) {
+      desc = `完整品牌视觉识别系统，包含 Logo 应用规范、配色体系、字体规范、辅助图形、办公/物料/广告三类应用模板。导出后可直接落地到 VI 手册。`;
+      tags = ['品牌系统', '应用模板', '全套'];
+      stats = [
+        { num: '156', label: '整套交付' },
+        { num: '98%', label: '规范达标', gold: true },
+        { num: '32', label: '应用模块' }
+      ];
+    } else if (kw.includes('海报')) {
+      desc = `营销海报智能设计，自动选品类模板、调节构图节奏、配色匹配品牌色系、文案 A/B 版同时输出。适配公众号、朋友圈、电梯、地铁等多场景。`;
+      tags = ['营销', '多场景', 'A/B 文案'];
+      stats = [
+        { num: '480', label: '生成海报' },
+        { num: '71%', label: '采纳率', gold: true },
+        { num: '6', label: '场景适配' }
+      ];
+    } else if (kw.includes('公众号') || kw.includes('文章') || kw.includes('小红书')) {
+      desc = `AI 撰写的 "${title}" 模板。已结合品牌语气、目标受众画像、SEO 关键词库自动优化。可一键发布到公众号 / 小红书 / 知乎，全平台分发。`;
+      tags = ['爆款', 'SEO 优化', '全平台分发'];
+      stats = [
+        { num: '1.2k', label: '生成文章' },
+        { num: '89 篇', label: '10w+ 爆款', gold: true },
+        { num: '3.2 万', label: '平均阅读' }
+      ];
+    } else if (kw.includes('会议') || kw.includes('纪要') || kw.includes('录音')) {
+      desc = `会议结束自动生成结构化纪要：议题 / 决策 / 待办 / 风险四象限拆分；发言人区分；关键句高亮；可导出 Markdown / Word / PDF。`;
+      tags = ['结构化', '发言人', '可导出'];
+      stats = [
+        { num: '890 场', label: '处理会议' },
+        { num: '4.9 分', label: '满意度', gold: true },
+        { num: '12', label: '支持语种' }
+      ];
+    } else if (kw.includes('视频') || kw.includes('短视频') || kw.includes('成片')) {
+      desc = `短视频一键生成。脚本 AI 撰写 → 配音（真人 / 数字人）→ 素材匹配 → 字幕 → BGM → 渲染导出，3 分钟出 60s 成片，适配抖音 / 快手 / 视频号。`;
+      tags = ['真人配音', '多平台', '一键发布'];
+      stats = [
+        { num: '720 条', label: '生成视频' },
+        { num: '68%', label: '完播率', gold: true },
+        { num: '4 平台', label: '一键分发' }
+      ];
+    } else if (kw.includes('趋势') || kw.includes('对比') || kw.includes('报告') || kw.includes('饼') || kw.includes('漏斗')) {
+      desc = `AI 数据分析报告。从 12 个维度对最近数据做趋势 / 对比 / 异常 / 占比四象限解读，自动输出结论 + 行动建议 + 后续监控项。`;
+      tags = ['多维度', '自动解读', '可下钻'];
+      stats = [
+        { num: '180 份', label: '生成报告' },
+        { num: '94%', label: '结论准确', gold: true },
+        { num: '12', label: '分析维度' }
+      ];
+    } else if (kw.includes('八字') || kw.includes('排盘') || kw.includes('命理')) {
+      desc = `玄空飞星派八字排盘，基于公历生辰 + 真太阳时 + 节气交接精确计算。四柱 + 大运 + 流年 + 神煞，紫白九星定位吉凶方位。`;
+      tags = ['玄空飞星', '真太阳时', '紫白九星'];
+      stats = [
+        { num: '2.3k', label: '排盘案例' },
+        { num: '4.8 分', label: '客户评分', gold: true },
+        { num: '12', label: '流派切换' }
+      ];
+    } else if (kw.includes('星座') || kw.includes('配对') || kw.includes('每日') || kw.includes('解读')) {
+      desc = `AI 星座解读。结合古典占星 + 心理占星双体系，分析行星过境 + 相位 + 宫位，给出爱情 / 事业 / 财运三维解读。`;
+      tags = ['双体系', '多维度', '合盘'];
+      stats = [
+        { num: '12.8k', label: '解读量' },
+        { num: '92%', label: '满意度', gold: true },
+        { num: '24 节气', label: '自动更新' }
+      ];
+    } else {
+      desc = `${expert.name} 「${title}」参考案例。基于 UMmakex 历史最佳实践 + 行业头部方法论生成，${meta}。可一键复用为新需求模板。`;
+      tags = ['高采纳', '可复用', '行业头部'];
+      stats = [
+        { num: '1k+', label: '累计采用' },
+        { num: '85%', label: '采纳率', gold: true },
+        { num: '4.6', label: '客户评分' }
+      ];
+    }
+
+    return { icon, title, meta, gradient, desc, tags, stats };
+  }
+
+  let currentSampleDetail = null;
+
+  function openSampleModal(expert, sample, sIdx) {
+    const modalEl = document.getElementById('wsSampleModal');
+    if (!modalEl) return;
+    const detail = buildSampleDetail(expert, sample);
+    currentSampleDetail = { expert, sample, sIdx, ...detail };
+
+    // 填充 head
+    const iconEl = document.getElementById('wsSampleIcon');
+    iconEl.textContent = detail.icon;
+    iconEl.style.background = detail.gradient;
+    document.getElementById('wsSampleTitle').textContent = detail.title;
+    document.getElementById('wsSampleSub').textContent = expert.name + ' · ' + detail.meta;
+
+    // 填充 body：预览 + 描述 + stats + tags
+    const bodyEl = document.getElementById('wsSampleBody');
+    bodyEl.innerHTML = (
+      // 预览大图
+      '<div class="ws-sample-modal__preview" style="background:' + detail.gradient + ';">' +
+        '<span class="ws-sample-modal__preview-badge">' + escHtml(expert.name) + '</span>' +
+        '<span class="ws-sample-modal__preview-label">' + escHtml(detail.title) + '</span>' +
+        '<div class="ws-sample-modal__preview-overlay"></div>' +
+      '</div>' +
+      // 描述
+      '<div class="ws-sample-modal__desc">' + escHtml(detail.desc) + '</div>' +
+      // stats 3 列
+      '<div class="ws-sample-modal__stats">' +
+        detail.stats.map((s) => (
+          '<div class="ws-sample-modal__stat">' +
+            '<div class="ws-sample-modal__stat-num' + (s.gold ? ' ws-sample-modal__stat-num--gold' : '') + '">' + escHtml(s.num) + '</div>' +
+            '<div class="ws-sample-modal__stat-label">' + escHtml(s.label) + '</div>' +
+          '</div>'
+        )).join('') +
+      '</div>' +
+      // tags
+      '<div class="ws-sample-modal__tags">' +
+        detail.tags.map((t) => '<span class="ws-sample-modal__tag">' + escHtml(t) + '</span>').join('') +
+      '</div>'
+    );
+
+    modalEl.dataset.state = 'open';
+  }
+
+  function closeSampleModal() {
+    const modalEl = document.getElementById('wsSampleModal');
+    if (modalEl) modalEl.dataset.state = 'closed';
+    currentSampleDetail = null;
+  }
+
+  // 10.2 全局委托：点击最近案例卡片
+  document.addEventListener('click', (e) => {
+    const sampleEl = e.target.closest('.ws-detail__sample[data-expert-id]');
+    if (!sampleEl) return;
+    const expertId = sampleEl.getAttribute('data-expert-id');
+    const sIdx = parseInt(sampleEl.getAttribute('data-sample-idx'), 10);
+    const expert = EXPERTS.find((x) => x.id === expertId);
+    if (!expert || isNaN(sIdx) || !expert.samples[sIdx]) return;
+    openSampleModal(expert, expert.samples[sIdx], sIdx);
+  });
+
+  // 10.3 关闭按钮 / 点 backdrop
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-sample-close]')) {
+      closeSampleModal();
+    }
+  });
+
+  // 10.4 Esc 关闭
+  document.addEventListener('keydown', (e) => {
+    const modalEl = document.getElementById('wsSampleModal');
+    if (e.key === 'Escape' && modalEl && modalEl.dataset.state === 'open') {
+      closeSampleModal();
+    }
+  });
+
+  // 10.5「用这个案例发需求」按钮：把描述填进 textarea + 关 modal + 切到 dispatch tab
+  function useSampleAsRequirement() {
+    if (!currentSampleDetail) return;
+    const { expert, desc, title } = currentSampleDetail;
+    const input = document.getElementById('wsDispatchInput');
+    if (input) {
+      // 简化 prompt：直接用 desc 关键信息
+      const promptText = `参考「${title}」案例风格：${desc.slice(0, 80)}`;
+      input.value = promptText;
+      input.placeholder = '已根据案例自动填充，可手动调整';
+      // 重置 chip 状态（用户复用案例时清掉旧 chip）
+      if (quickState[expert.id]) {
+        quickState[expert.id] = {};
+        prevQuickAppend = '';
+      }
+    }
+    closeSampleModal();
+    // 滚动 dispatch 区到 textarea
+    const dispatchEl = document.getElementById('wsDispatch');
+    if (dispatchEl) dispatchEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+  // 绑定按钮（用事件委托，单一监听避免重复绑定）
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#wsSampleUseIt')) {
+      e.preventDefault();
+      useSampleAsRequirement();
+    }
+  });
 });

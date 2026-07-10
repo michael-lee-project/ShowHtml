@@ -935,3 +935,68 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ============================================================
+ * 好友背景画像接入 · AI 销冠引用 persona
+ * ============================================================ */
+.chat__persona-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 10px;
+  padding: 2px 10px;
+  font-size: 10px;
+  font-weight: 500;
+  background: var(--bg-tag-purple);
+  color: var(--avatar-purple);
+  border-radius: 999px;
+  vertical-align: middle;
+  line-height: 1.6;
+  animation: personaPillSlide 360ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.chat__persona-pill[data-state="hidden"] { display: none; }
+.chat__persona-dot {
+  width: 5px; height: 5px;
+  background: var(--avatar-purple);
+  border-radius: 50%;
+  animation: personaPulse 2.2s ease-in-out infinite;
+}
+@keyframes personaPillSlide {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 半自动：AI 建议回复下的画像参考 */
+.ai-reply__persona {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 11px;
+  margin-top: 8px;
+  background: rgba(142, 91, 255, 0.06);
+  border: 1px solid rgba(142, 91, 255, 0.18);
+  border-radius: 8px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  animation: personaFadeUp 360ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.ai-reply__persona[data-state="hidden"] { display: none; }
+.ai-reply__persona-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.ai-reply__persona-label {
+  font-weight: 600;
+  color: var(--avatar-purple);
+  flex-shrink: 0;
+}
+.ai-reply__persona-text {
+  color: var(--text-primary);
+  flex: 1;
+  word-break: break-word;
+}
+@keyframes personaFadeUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

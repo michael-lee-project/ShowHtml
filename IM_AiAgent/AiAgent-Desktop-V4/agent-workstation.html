@@ -255,8 +255,6 @@
             <div class="ws-sales-modal__expert-meta">
               <span class="ws-sales-modal__pulse"></span>
               <span id="wsSalesStatus">全速运转 · 已接管 <strong id="wsSalesCount">12</strong> 位好友</span>
-            </div>
-          </div>
         </div>
         <button class="ws-sales-modal__close" data-modal-close type="button">×</button>
       </header>
@@ -293,6 +291,35 @@
         <button class="ws-sales-modal__btn" id="wsSalesPause" type="button">⏸ 暂停接管</button>
         <button class="ws-sales-modal__btn ws-sales-modal__btn--ghost" id="wsSalesOpenMessages" type="button">📬 打开消息页</button>
         <button class="ws-sales-modal__btn ws-sales-modal__btn--primary" data-modal-close type="button">完成</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ========== 案例详情 modal · 9 专家通用 ========== -->
+  <div class="ws-sample-modal" id="wsSampleModal" data-state="closed">
+    <div class="ws-sample-modal__backdrop" data-sample-close></div>
+    <div class="ws-sample-modal__card" role="dialog" aria-labelledby="wsSampleTitle">
+      <header class="ws-sample-modal__head">
+        <div class="ws-sample-modal__head-left">
+          <div class="ws-sample-modal__icon" id="wsSampleIcon">★</div>
+          <div class="ws-sample-modal__head-info">
+            <div class="ws-sample-modal__head-title" id="wsSampleTitle">案例标题</div>
+            <div class="ws-sample-modal__head-sub" id="wsSampleSub">专家名 · 案例类型</div>
+          </div>
+        </div>
+        <button class="ws-sample-modal__close" id="wsSampleClose" data-sample-close type="button" title="关闭">×</button>
+      </header>
+      <div class="ws-sample-modal__body" id="wsSampleBody">
+        <!-- JS 动态注入预览 + 描述 + stats + tags -->
+      </div>
+      <footer class="ws-sample-modal__foot">
+        <button class="ws-sample-modal__btn" data-sample-close type="button">关闭</button>
+        <button class="ws-sample-modal__btn ws-sample-modal__btn--primary" id="wsSampleUseIt" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <path d="M5 13l4 4L19 7"/>
+          </svg>
+          用这个案例发需求
+        </button>
       </footer>
     </div>
   </div>

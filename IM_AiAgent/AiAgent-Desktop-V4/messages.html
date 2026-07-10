@@ -356,7 +356,13 @@
         <!-- 聊天窗口 -->
         <section class="chat">
           <div class="chat__header">
-            <div class="chat__title">UMC专员</div>
+            <div class="chat__title">
+              UMC专员
+              <span class="chat__persona-pill" id="chatPersonaPill" data-state="hidden">
+                <span class="chat__persona-dot"></span>
+                <span class="chat__persona-label">画像可用</span>
+              </span>
+            </div>
 
             <!-- AI 接管 toggle -->
             <div class="ai-control">
@@ -502,6 +508,11 @@
                     <span class="ai-reply__tag">🤖 AI 建议</span>
                     小明兄太巧了！正好赶上我们 618 活动，8000 套餐打 <strong>9 折 7200</strong>，再送您一份价值 800 的精品礼盒，今天下单还能锁定名额 👀
                   </div>
+                  <div class="ai-reply__persona" id="replyPersona" data-state="hidden">
+                    <span class="ai-reply__persona-icon">👤</span>
+                    <span class="ai-reply__persona-label">参考画像：</span>
+                    <span class="ai-reply__persona-text" id="replyPersonaText">—</span>
+                  </div>
                   <div class="ai-reply__quote">
                     <span class="ai-reply__quote-label">策略说明</span>
                     用 9 折 + 礼品升级回应他的顾虑，"锁定名额"制造紧迫感，预计提升成交 25%
@@ -530,6 +541,14 @@
 
                 <!-- 实时活动日志 -->
                 <div class="ai-flow">
+                  <div class="ai-flow__step is-done" id="flowPersonaStep" data-state="hidden">
+                    <span class="ai-flow__time">14:01</span>
+                    <span class="ai-flow__icon">👤</span>
+                    <div class="ai-flow__main">
+                      <div class="ai-flow__title">已加载好友「小明」背景画像</div>
+                      <div class="ai-flow__sub" id="flowPersonaSub">—</div>
+                    </div>
+                  </div>
                   <div class="ai-flow__step is-done">
                     <span class="ai-flow__time">14:02</span>
                     <span class="ai-flow__icon">📊</span>
@@ -754,6 +773,92 @@
             // 平滑滚动
             sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }, 900);
+        });
+      }
+    })();
+
+    // ===== 背景画像接入（AI 销冠引用 persona） =====
+    (function () {
+      'use strict';
+
+      // 当前对话好友 ID（UMC专员对应 Edi卷毛超强 · ID 30817253）
+      const CURRENT_FRIEND_ID = '30817253';
+      const CURRENT_FRIEND_NAME = '小明';
+
+      // Mock persona · 本地没存画像时用这套 demo 数据
+      const MOCK_PERSONA = {
+        friendName: CURRENT_FRIEND_NAME,
+        personality: { traits: ['务实', '重效率'], mood: '温和', communication: '数据导向' },
+        family: { ageRange: '31-40', marital: '已婚', children: '1个', role: '爸爸', note: '配偶也很关注性价比' },
+        finance: { level: '中产', jobs: ['企业高管'], interests: ['理财', '房产'], note: '' },
+        salesNotes: '上周问过 8000 套餐 · 偏好下午联系 · 老婆比他更决策'
+      };
+
+      function loadPersona(friendId) {
+        try {
+          const raw = localStorage.getItem('umakex_persona_' + friendId);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      }
+      function summarize(p) {
+        if (!p) return '';
+        const bits = [];
+        if (p.personality && p.personality.traits && p.personality.traits.length) bits.push(p.personality.traits.join('、'));
+        if (p.personality && p.personality.mood) bits.push(p.personality.mood);
+        if (p.personality && p.personality.communication) bits.push(p.personality.communication + '型');
+        if (p.family) {
+          if (p.family.ageRange) bits.push(p.family.ageRange);
+          if (p.family.marital) bits.push(p.family.marital);
+          if (p.family.children && p.family.children !== '无') bits.push(p.family.children + '子女');
+          if (p.family.role) bits.push(p.family.role);
+        }
+        if (p.finance) {
+          if (p.finance.level) bits.push(p.finance.level);
+          if (p.finance.jobs && p.finance.jobs.length) bits.push(p.finance.jobs.join('/'));
+          if (p.finance.interests && p.finance.interests.length) bits.push('关注' + p.finance.interests.join('/'));
+        }
+        return bits.join(' · ');
+      }
+
+      // 元素
+      const pill      = document.getElementById('chatPersonaPill');
+      const personaEl = document.getElementById('replyPersona');
+      const personaTx = document.getElementById('replyPersonaText');
+      const flowStep  = document.getElementById('flowPersonaStep');
+      const flowSub   = document.getElementById('flowPersonaSub');
+
+      // 1) 顶部 pill：进页面就读一次
+      const real = loadPersona(CURRENT_FRIEND_ID);
+      const p = real || MOCK_PERSONA;
+      const summary = summarize(p);
+      if (pill && summary) {
+        pill.setAttribute('data-state', 'active');
+        pill.querySelector('.chat__persona-label').textContent =
+          (real ? '画像已加载' : '画像 demo') + ' · ' + (p.personality.traits && p.personality.traits.length ? p.personality.traits[0] : '已建模');
+      }
+      if (personaEl && personaTx && summary) {
+        personaEl.setAttribute('data-state', 'active');
+        personaTx.textContent = summary + (p.salesNotes ? ' · ' + p.salesNotes : '');
+      }
+      if (flowStep && flowSub && summary) {
+        flowStep.setAttribute('data-state', 'active');
+        flowSub.textContent = summary;
+      }
+
+      // 2) 模式切换时同步显示
+      function onMode(mode) {
+        if (mode === 'semi') {
+          if (personaEl) personaEl.setAttribute('data-state', 'active');
+        } else if (mode === 'full') {
+          if (flowStep) flowStep.setAttribute('data-state', 'active');
+        }
+      }
+      const toggle = document.getElementById('aiToggle');
+      if (toggle) {
+        toggle.addEventListener('click', (e) => {
+          const btn = e.target.closest('.ai-control__opt');
+          if (!btn) return;
+          onMode(btn.dataset.mode);
         });
       }
     })();
