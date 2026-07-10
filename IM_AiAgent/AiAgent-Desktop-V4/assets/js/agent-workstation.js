@@ -342,9 +342,11 @@ document.addEventListener('DOMContentLoaded', () => {
             '<span class="ws-dispatch__head-icon">→</span>' +
             '<span>立即派单</span>' +
           '</div>' +
-          '<button class="ws-dispatch__quick-clear" id="wsQuickClear" type="button" data-state="hidden">清除条件</button>' +
+          '<div class="ws-dispatch__head-actions">' +
+            '<div class="ws-dispatch__quick" id="wsDispatchQuick"></div>' +
+            '<button class="ws-dispatch__quick-clear" id="wsQuickClear" type="button" data-state="hidden">清除条件</button>' +
+          '</div>' +
         '</div>' +
-        '<div class="ws-dispatch__quick" id="wsDispatchQuick"></div>' +
         // 录音专家：默认 mic 录音模式
         (expert.id === 'audio'
           ? '<div class="ws-dispatch__mic" id="wsDispatchMic">' +

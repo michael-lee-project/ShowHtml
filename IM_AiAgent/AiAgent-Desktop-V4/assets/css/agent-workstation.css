@@ -591,6 +591,12 @@
   align-items: center;
   justify-content: space-between;
 }
+.ws-dispatch__head-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* trigger 在清除条件左边：无清除条件时 trigger 靠右 */
+}
 .ws-dispatch__head-title {
   font-size: 13px;
   font-weight: 800;
@@ -3197,8 +3203,7 @@
  * ============================================================ */
 .ws-dispatch__quick {
   position: relative;
-  margin: 10px 0 6px;
-  padding: 0;
+  /* margin 由 head-actions gap 控制，不再需要 */
 }
 .ws-dispatch__quick[data-state="hidden"] { display: none; }
 
@@ -4318,7 +4323,6 @@
   border-radius: 999px;
   cursor: pointer;
   font-family: inherit;
-  margin-left: auto;
   transition: all 160ms ease;
 }
 .ws-dispatch__quick-clear:hover {
