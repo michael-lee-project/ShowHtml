@@ -789,8 +789,11 @@
       const MOCK_PERSONA = {
         friendName: CURRENT_FRIEND_NAME,
         personality: { traits: ['务实', '重效率'], mood: '温和', communication: '数据导向' },
-        family: { ageRange: '31-40', marital: '已婚', children: '1个', role: '爸爸', note: '配偶也很关注性价比' },
+        family: { ageRange: '31-40', marital: '已婚', children: '1个', gender: '男', note: '配偶也很关注性价比' },
         finance: { level: '中产', jobs: ['企业高管'], interests: ['理财', '房产'], note: '' },
+        industry: '科技',
+        decisionRole: '决策者',
+        painPoints: ['价格敏感', '时间紧迫'],
         salesNotes: '上周问过 8000 套餐 · 偏好下午联系 · 老婆比他更决策'
       };
 
@@ -800,6 +803,29 @@
           return raw ? JSON.parse(raw) : null;
         } catch (e) { return null; }
       }
+
+      // 家庭角色推断（与 contacts.js 同步逻辑 — 婚姻+子女+性别 → 爸爸/妈妈/配偶/单身/保密）
+      function inferFamilyRole(family) {
+        if (!family) return '';
+        const { marital, children, gender } = family;
+        if (!marital && !children) return '';
+        if (children && children !== '无' && children !== '保密') {
+          if (gender === '男') return '爸爸';
+          if (gender === '女') return '妈妈';
+          return '爸爸/妈妈';
+        }
+        if (marital === '离异' && (children === '保密' || (children && children !== '无'))) {
+          if (gender === '男') return '爸爸';
+          if (gender === '女') return '妈妈';
+          return '爸爸/妈妈';
+        }
+        if (marital === '已婚' && (children === '无' || !children)) return '配偶';
+        if (marital === '未婚') return '单身';
+        if (marital === '离异') return '单身';
+        if (marital === '保密') return '保密';
+        return '';
+      }
+
       function summarize(p) {
         if (!p) return '';
         const bits = [];
@@ -810,13 +836,18 @@
           if (p.family.ageRange) bits.push(p.family.ageRange);
           if (p.family.marital) bits.push(p.family.marital);
           if (p.family.children && p.family.children !== '无') bits.push(p.family.children + '子女');
-          if (p.family.role) bits.push(p.family.role);
+          // 家庭角色 = 实时推断（family 不再存储 role 字段）
+          const inferredRole = inferFamilyRole(p.family);
+          if (inferredRole) bits.push(inferredRole);
         }
         if (p.finance) {
           if (p.finance.level) bits.push(p.finance.level);
           if (p.finance.jobs && p.finance.jobs.length) bits.push(p.finance.jobs.join('/'));
           if (p.finance.interests && p.finance.interests.length) bits.push('关注' + p.finance.interests.join('/'));
         }
+        if (p.industry) bits.push(p.industry + '业');
+        if (p.decisionRole) bits.push(p.decisionRole);
+        if (p.painPoints && p.painPoints.length) bits.push('痛点:' + p.painPoints.join('、'));
         return bits.join(' · ');
       }
 
