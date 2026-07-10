@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '<div class="ws-dispatch__head">' +
           '<div class="ws-dispatch__head-title">' +
             '<span class="ws-dispatch__head-icon">→</span>' +
-            '<span>立即派单</span>' +
+            '<span>立即发需求</span>' +
           '</div>' +
           '<div class="ws-dispatch__head-actions">' +
             '<div class="ws-dispatch__quick" id="wsDispatchQuick"></div>' +
@@ -2344,7 +2344,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ============================================================
-   * 9. 快捷条件 chip · 7 专家（除 ceo / sales 外）
+     * 9. AI提示词 chip · 7 专家（除 ceo / sales 外）
    * ============================================================ */
   function escHtml(s) {
     return (s || '').replace(/[&<>"']/g, (c) => ({
@@ -2356,6 +2356,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 选项值用于追加到 prompt 「· label：option」
   const QUICK_PRESETS = {
     brand: [
+      { label: '类型',   options: ['Logo', '海报', '商品详情页', 'WEB首页', 'VI手册', '包装'] },
       { label: '风格',   options: ['极简', '复古', '商务', '潮流', '国潮', '未来感'] },
       { label: '主色',   options: ['蓝', '红', '绿', '金', '黑', '白'] },
       { label: '比例',   options: ['横屏', '竖屏', '方形'] },
@@ -2363,9 +2364,10 @@ document.addEventListener('DOMContentLoaded', () => {
       { label: '行业',   options: ['餐饮', '科技', '教育', '美妆', '金融'] }
     ],
     writing: [
+      { label: '体裁', options: ['长文', '短文案', '标题', '种草文', '测评'] },
       { label: '语气', options: ['专业', '幽默', '共情', '吐槽', '学术'] },
       { label: '文体', options: ['公众号', '小红书', '邮件', '抖音', '知乎'] },
-      { label: '字数', options: ['500', '800', '1500', '3000'] },
+      { label: '字数', options: ['300', '500', '800', '1500', '3000', '不限'] },
       { label: '受众', options: ['老板', '职场人', '宝妈', '学生', '技术人'] }
     ],
     audio: [
@@ -2375,11 +2377,12 @@ document.addEventListener('DOMContentLoaded', () => {
       { label: '发言人', options: ['区分', '不区分'] }
     ],
     video: [
+      { label: '场景', options: ['种草视频', '知识科普', '剧情短片', '教程演示'] },
       { label: '时长', options: ['15s', '30s', '60s', '3min'] },
       { label: '风格', options: ['真人', '二次元', '3D', '实拍'] },
-      { label: '比例', options: ['横屏', '竖屏', '方屏'] },
+      { label: '比例', options: ['横屏(16:9)', '竖屏(9:16)', '方屏(1:1)', '不限'] },
       { label: '字幕', options: ['中文', '中英', '无'] },
-      { label: 'BGM', options: ['有', '无'] }
+      { label: '配音', options: ['AI配音', '原声', '无声'] }
     ],
     data: [
       { label: '图表',   options: ['折线', '柱状', '饼图', '漏斗', '热力图'] },
@@ -2391,9 +2394,11 @@ document.addEventListener('DOMContentLoaded', () => {
       { label: '流派', options: ['玄空', '八宅', '飞星', '命理'] },
       { label: '场景', options: ['住宅', '商铺', '办公室', '墓地'] },
       { label: '深度', options: ['简', '详'] },
-      { label: '化解', options: ['是', '否'] }
+      { label: '化解', options: ['是', '否'] },
+      { label: '方位图', options: ['需要', '不需要'] }
     ],
     zodiac: [
+      { label: '星座', options: ['白羊', '金牛', '双子', '巨蟹', '狮子', '处女', '天秤', '天蝎', '射手', '摩羯', '水瓶', '双鱼'] },
       { label: '流派', options: ['古典', '现代', '心理'] },
       { label: '聚焦', options: ['爱情', '事业', '财运', '学业', '健康'] },
       { label: '深度', options: ['简', '详'] },
@@ -2482,7 +2487,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '<button class="ws-qc-trigger-single" id="wsQcTrigger" type="button" aria-expanded="false">' +
           '<span class="ws-qc-trigger-single__spark">' + sparkSvg() + '</span>' +
           '<span class="ws-qc-trigger-single__text">' +
-            '<span class="ws-qc-trigger-single__label">快捷条件</span>' +
+            '<span class="ws-qc-trigger-single__label">AI提示词</span>' +
             '<span class="ws-qc-trigger-single__count" id="wsQcCount" data-state="hidden">0</span>' +
           '</span>' +
           '<span class="ws-qc-trigger-single__caret">▾</span>' +
@@ -2507,126 +2512,32 @@ document.addEventListener('DOMContentLoaded', () => {
         '<div class="ws-qc-modal__head">' +
           '<div class="ws-qc-modal__head-spark">' + sparkSvg() + '</div>' +
           '<div class="ws-qc-modal__head-text">' +
-            '<div class="ws-qc-modal__head-title">快捷条件 <span class="ws-qc-modal__head-title__expert">' + escHtml(expertName) + ' 专家</span></div>' +
-            '<div class="ws-qc-modal__head-sub">点选 AI 推荐的 3-5 个条件，或自己挑</div>' +
+            '<div class="ws-qc-modal__head-title">AI提示词 <span class="ws-qc-modal__head-title__expert">' + escHtml(expertName) + ' 专家</span></div>' +
+            '<div class="ws-qc-modal__head-sub">点选 3-5 个条件，让 AI 更懂你要什么</div>' +
           '</div>' +
           '<button class="ws-qc-modal__head-close" data-modal-close type="button" title="关闭">×</button>' +
         '</div>' +
-        // 工具栏
-        '<div class="ws-qc-modal__toolbar">' +
-          '<div class="ws-qc-modal__search">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-              '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>' +
-            '</svg>' +
-            '<input type="text" id="wsQcSearch" placeholder="搜索 风格 / 主色 / 行业 ..." />' +
-          '</div>' +
-          '<button class="ws-qc-modal__ai-sort" id="wsQcAiSort" type="button" title="按 AI 智能匹配度重排已选">' + sparkSvg() + ' 智能排序</button>' +
-        '</div>' +
-        // 主体
-        '<div class="ws-qc-modal__body">' +
-          // 左 200 分类导航
-          '<div class="ws-qc-modal__nav" id="wsQcNav">' +
-            '<div class="ws-qc-modal__nav-title">分类</div>' +
-            '<div class="ws-qc-modal__nav-item is-active" data-nav-target="all" data-nav-type="all">' +
-              '<span class="ws-qc-modal__nav-item__icon">📂</span>' +
-              '<span class="ws-qc-modal__nav-item__label">全部条件</span>' +
-              '<span class="ws-qc-modal__nav-item__count">' + presets.reduce((s, r) => s + r.options.length, 0) + '</span>' +
-            '</div>' +
-            (aiGuess.length ? (
-              '<div class="ws-qc-modal__nav-item is-hot" data-nav-target="ai" data-nav-type="ai">' +
-                '<span class="ws-qc-modal__nav-item__icon">✨</span>' +
-                '<span class="ws-qc-modal__nav-item__label">AI 猜你想加</span>' +
-                '<span class="ws-qc-modal__nav-item__count">' + aiGuess.length + '</span>' +
-              '</div>'
-            ) : '') +
-            (recent.length ? (
-              '<div class="ws-qc-modal__nav-item" data-nav-target="recent" data-nav-type="recent">' +
-                '<span class="ws-qc-modal__nav-item__icon">🕐</span>' +
-                '<span class="ws-qc-modal__nav-item__label">最近用过</span>' +
-                '<span class="ws-qc-modal__nav-item__count">' + recent.length + '</span>' +
-              '</div>'
-            ) : '') +
-            '<div class="ws-qc-modal__nav-title" style="margin-top:10px;">字段</div>' +
-            presets.map((row, ri) => (
-              '<div class="ws-qc-modal__nav-item" data-nav-target="row-' + ri + '" data-nav-type="row" data-row-idx="' + ri + '">' +
-                '<span class="ws-qc-modal__nav-item__icon">·</span>' +
-                '<span class="ws-qc-modal__nav-item__label">' + escHtml(row.label) + '</span>' +
-                '<span class="ws-qc-modal__nav-item__count">' + row.options.length + '</span>' +
-              '</div>'
-            )).join('') +
-          '</div>' +
-          // 中间 chip 区域
-          '<div class="ws-qc-modal__main" id="wsQcMain">' +
-            // AI 猜你想加组
-            (aiGuess.length ? (
-              '<div class="ws-qc-modal__group is-hot" data-group="ai" data-group-name="AI 猜你想加">' +
-                '<div class="ws-qc-modal__group-title">' +
-                  '<span class="ws-qc-modal__group-title__icon">✨</span>' +
-                  'AI 猜你想加' +
-                  '<span class="ws-qc-modal__group-title__count">' + aiGuess.length + '</span>' +
-                '</div>' +
-                '<div class="ws-qc-modal__chips">' +
-                  aiGuess.map((k) => {
-                    const p = parseChipKey(k);
-                    if (!p) return '';
-                    const isOn = quickState[expert.id] && quickState[expert.id][p.label] && quickState[expert.id][p.label].indexOf(p.val) >= 0;
-                    return '<button class="ws-quick-chip is-hot' + (isOn ? ' is-active' : '') + '"' +
-                      ' type="button" data-ai-key="' + escHtml(k) + '"' +
-                      ' data-row-label="' + escHtml(p.label) + '" data-opt-val="' + escHtml(p.val) + '">' +
-                      escHtml(p.val) +
+        // 主体：方案 B — 表格形式（每行一个分类，横向铺 chip）
+        '<div class="ws-qc-modal__body" id="wsQcBody">' +
+          presets.map((row, ri) => {
+            const initActive = (quickState[expert.id] && quickState[expert.id][row.label]) || [];
+            return (
+              '<div class="ws-qc-row" data-row-label="' + escHtml(row.label) + '">' +
+                '<div class="ws-qc-row__label">' + escHtml(row.label) + '</div>' +
+                '<div class="ws-qc-row__chips">' +
+                  row.options.map((opt, oi) => {
+                    const isOn = initActive.indexOf(opt) >= 0;
+                    return '<button class="ws-quick-chip' + (isOn ? ' is-active' : '') + '" type="button"' +
+                      ' data-row-idx="' + ri + '" data-opt-idx="' + oi + '"' +
+                      ' data-row-label="' + escHtml(row.label) + '" data-opt-val="' + escHtml(opt) + '"' +
+                      ' style="--qc-color:' + color + '">' +
+                      escHtml(opt) +
                     '</button>';
                   }).join('') +
                 '</div>' +
               '</div>'
-            ) : '') +
-            // 最近用过组
-            (recent.length ? (
-              '<div class="ws-qc-modal__group" data-group="recent" data-group-name="最近用过">' +
-                '<div class="ws-qc-modal__group-title">' +
-                  '<span class="ws-qc-modal__group-title__icon">🕐</span>' +
-                  '最近用过' +
-                  '<span class="ws-qc-modal__group-title__count">' + recent.length + '</span>' +
-                '</div>' +
-                '<div class="ws-qc-modal__chips">' +
-                  recent.map((k) => {
-                    const p = parseChipKey(k);
-                    if (!p) return '';
-                    const isOn = quickState[expert.id] && quickState[expert.id][p.label] && quickState[expert.id][p.label].indexOf(p.val) >= 0;
-                    return '<button class="ws-quick-chip' + (isOn ? ' is-active' : '') + '"' +
-                      ' type="button" data-recent-key="' + escHtml(k) + '"' +
-                      ' data-row-label="' + escHtml(p.label) + '" data-opt-val="' + escHtml(p.val) + '">' +
-                      escHtml(p.val) +
-                    '</button>';
-                  }).join('') +
-                '</div>' +
-              '</div>'
-            ) : '') +
-            // 全部字段
-            presets.map((row, ri) => {
-              const initActive = (quickState[expert.id] && quickState[expert.id][row.label]) || [];
-              return (
-                '<div class="ws-qc-modal__group" data-group="row" data-row-idx="' + ri + '" data-row-label="' + escHtml(row.label) + '">' +
-                  '<div class="ws-qc-modal__group-title">' +
-                    '<span class="ws-qc-modal__group-title__icon">·</span>' +
-                    escHtml(row.label) +
-                    '<span class="ws-qc-modal__group-title__count">' + row.options.length + '</span>' +
-                  '</div>' +
-                  '<div class="ws-qc-modal__chips">' +
-                    row.options.map((opt, oi) => {
-                      const isOn = initActive.indexOf(opt) >= 0;
-                      const isHot = hotSet.has(row.label + ':' + opt);
-                      return '<button class="ws-quick-chip' + (isOn ? ' is-active' : '') + (isHot ? ' is-hot' : '') + '" type="button"' +
-                        ' data-row-idx="' + ri + '" data-opt-idx="' + oi + '"' +
-                        ' data-row-label="' + escHtml(row.label) + '" data-opt-val="' + escHtml(opt) + '"' +
-                        ' style="--qc-color:' + color + '">' +
-                        escHtml(opt) +
-                      '</button>';
-                    }).join('') +
-                  '</div>' +
-                '</div>'
-              );
-            }).join('') +
-          '</div>' +
+            );
+          }).join('') +
         '</div>' +
         // 已选预览
         '<div class="ws-qc-modal__selected" id="wsQcSelected"></div>' +
@@ -2660,7 +2571,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedEl = document.getElementById('wsQcSelected');
     const countEl = document.getElementById('wsQcCount');
     const statsEl = document.getElementById('wsQcStats');
-    const searchInput = document.getElementById('wsQcSearch');
     const clearBtn = document.getElementById('wsQuickClear');
 
     // 在 dispatch 区 textarea 上方渲染已选条件条（v15）
@@ -2693,7 +2603,7 @@ document.addEventListener('DOMContentLoaded', () => {
       trigger.classList.add('is-open');
       trigger.setAttribute('aria-expanded', 'true');
       // 自动 focus 搜索框
-      setTimeout(() => { if (searchInput) searchInput.focus(); }, 60);
+      setTimeout(() => { }, 60);
     }
     function closeModal() {
       if (!modal) return;
@@ -2737,32 +2647,8 @@ document.addEventListener('DOMContentLoaded', () => {
           '<span class="ws-qc-modal-chip__x" title="移除该字段全部">×</span>' +
         '</span>'
       )).join('');
-      // 同步 nav-item「全选」状态
-      syncNavAllSelected();
       // v15: 同时渲染 dispatch 区 textarea 上方的条件条
       renderDispatchConditions();
-    }
-    // 同步 AI 猜 / 最近用过 nav-item 全选状态
-    function syncNavAllSelected() {
-      if (!modal) return;
-      const state = quickState[expert.id] || {};
-      modal.querySelectorAll('[data-nav-type]').forEach((n) => {
-        const t = n.getAttribute('data-nav-type');
-        if (t !== 'ai' && t !== 'recent') {
-          n.classList.remove('is-all-selected');
-          return;
-        }
-        const group = modal.querySelector('[data-group="' + t + '"]');
-        if (!group) return;
-        const chips = Array.from(group.querySelectorAll('.ws-quick-chip'));
-        const allOn = chips.length > 0 && chips.every((c) => {
-          const r = c.getAttribute('data-row-label');
-          const v = c.getAttribute('data-opt-val');
-          const arr = state[r];
-          return !!(arr && arr.indexOf(v) >= 0);
-        });
-        n.classList.toggle('is-all-selected', allOn);
-      });
     }
     renderSelected();
 
@@ -2812,75 +2698,8 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.addEventListener('click', (e) => {
         if (e.target.closest('[data-modal-close]')) { closeModal(); return; }
         if (e.target.closest('#wsQcAiFill')) { onAiFill(); return; }
-        if (e.target.closest('#wsQcAiSort')) { onAiSort(); return; }
         if (e.target.closest('#wsQcClear')) { onClearAll(); return; }
         if (e.target.closest('#wsQcConfirm')) { closeModal(); return; }
-        // 分类导航点击
-        const navItem = e.target.closest('[data-nav-target]');
-        if (navItem) {
-          const t = navItem.getAttribute('data-nav-target');
-          const navType = navItem.getAttribute('data-nav-type');
-          const main = modal.querySelector('.ws-qc-modal__main');
-          // AI 猜 / 最近用过：toggle 全选该组所有 chip（再点全取消）
-          if (navType === 'ai' || navType === 'recent') {
-            const group = modal.querySelector('[data-group="' + navType + '"]');
-            if (group) {
-              const chips = Array.from(group.querySelectorAll('.ws-quick-chip'));
-              if (!quickState[expert.id]) quickState[expert.id] = {};
-              const isOn = (r, v) => {
-                const arr = quickState[expert.id][r];
-                return !!(arr && arr.indexOf(v) >= 0);
-              };
-              const allOn = chips.length > 0 && chips.every((c) => isOn(c.getAttribute('data-row-label'), c.getAttribute('data-opt-val')));
-              chips.forEach((c) => {
-                const r = c.getAttribute('data-row-label');
-                const v = c.getAttribute('data-opt-val');
-                if (!r || !v) return;
-                if (allOn && isOn(r, v)) {
-                  // 全选 → 全取消：手动从 state 移除（applyChipFromKey 在 ai/recent 源只 add 不 remove）
-                  const arr = quickState[expert.id][r];
-                  if (arr) {
-                    const k = arr.indexOf(v);
-                    if (k >= 0) arr.splice(k, 1);
-                  }
-                  c.classList.remove('is-active');
-                } else if (!allOn && !isOn(r, v)) {
-                  // 未全选 → 选未选的
-                  applyChipFromKey(r, v, navType);
-                }
-              });
-              // 同步所有同 key 的 chip 状态（避免 body 字段组的同名 chip 不同步）
-              if (modal) {
-                modal.querySelectorAll('.ws-quick-chip').forEach((c2) => {
-                  const r2 = c2.getAttribute('data-row-label');
-                  const v2 = c2.getAttribute('data-opt-val');
-                  const isOn2 = isOn(r2, v2);
-                  c2.classList.toggle('is-active', isOn2);
-                });
-              }
-              renderSelected();
-              syncNavAllSelected();
-              const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
-              const cb = document.getElementById('wsQuickClear');
-              if (cb) cb.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
-              // active 切换
-              modal.querySelectorAll('[data-nav-target]').forEach((n) => n.classList.toggle('is-active', n === navItem));
-              // 滚到该组
-              if (main) main.scrollTo({ top: group.offsetTop - 8, behavior: 'smooth' });
-            }
-            return;
-          }
-          // 全部 / 字段：仅 active 切换 + scroll
-          modal.querySelectorAll('[data-nav-target]').forEach((n) => n.classList.toggle('is-active', n === navItem));
-          let target;
-          if (t === 'all') {
-            target = main;
-          } else if (t.startsWith('row-')) {
-            target = modal.querySelector('[data-row-idx="' + t.slice(4) + '"]');
-          }
-          if (target && main) main.scrollTo({ top: target.offsetTop - 8, behavior: 'smooth' });
-          return;
-        }
         // chip 点击
         const chip = e.target.closest('.ws-quick-chip');
         if (!chip) return;
@@ -2921,31 +2740,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 清除按钮（标题右侧的 quick-clear · 全局）
     if (clearBtn) {
       clearBtn.onclick = () => { onClearAll(); };
-    }
-
-    // 搜索：实时过滤 chip 显示
-    if (searchInput) {
-      searchInput.addEventListener('input', () => {
-        const q = searchInput.value.trim().toLowerCase();
-        if (!modal) return;
-        modal.querySelectorAll('.ws-qc-modal__group').forEach((g) => {
-          // AI / 最近不过滤（始终显示），但 row 组按 label 过滤
-          if (g.getAttribute('data-group') === 'ai' || g.getAttribute('data-group') === 'recent') {
-            g.style.display = '';
-            return;
-          }
-          // 字段组：隐藏 val 不匹配的 chip；如果整个组都没匹配，整个组隐藏
-          let visible = 0;
-          g.querySelectorAll('.ws-quick-chip').forEach((c) => {
-            const val = (c.getAttribute('data-opt-val') || '').toLowerCase();
-            const label = (g.getAttribute('data-row-label') || '').toLowerCase();
-            const match = !q || val.indexOf(q) >= 0 || label.indexOf(q) >= 0;
-            c.style.display = match ? '' : 'none';
-            if (match) visible++;
-          });
-          g.style.display = visible > 0 ? '' : 'none';
-        });
-      });
     }
 
     // AI 一键填充：选 4 个未选 + 高频 chip
@@ -3005,37 +2799,9 @@ document.addEventListener('DOMContentLoaded', () => {
           c.classList.toggle('is-active', !!(quickState[expert.id][r] && quickState[expert.id][r].indexOf(v) >= 0));
         });
       }
-      if (searchInput) searchInput.value = '';
       renderSelected();
       const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
       if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
-    }
-
-    // 智能排序
-    function onAiSort() {
-      const history = (readHistory()[expert.id]) || {};
-      const rowOrder = {};
-      presets.forEach((r, i) => { rowOrder[r.label] = i; });
-      const lines = [];
-      Object.keys(quickState[expert.id] || {}).forEach((label) => {
-        const vals = quickState[expert.id][label];
-        if (vals.length) lines.push({ label, vals });
-      });
-      lines.sort((a, b) => {
-        const ra = rowOrder[a.label] ?? 99;
-        const rb = rowOrder[b.label] ?? 99;
-        if (ra !== rb) return ra - rb;
-        const sa = a.vals.reduce((s, v) => s + (history[a.label + ':' + v] || 0), 0);
-        const sb = b.vals.reduce((s, v) => s + (history[b.label + ':' + v] || 0), 0);
-        return sb - sa;
-      });
-      lines.forEach((l) => {
-        l.vals.sort((x, y) => (history[l.label + ':' + y] || 0) - (history[l.label + ':' + x] || 0));
-      });
-      const next = {};
-      lines.forEach((l) => { next[l.label] = l.vals; });
-      quickState[expert.id] = next;
-      renderSelected();
     }
 
     // 清空全部
