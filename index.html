@@ -2,392 +2,224 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prototypes · Michael 2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prototypes — Michael</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --ink:#0a0a0a;--ink-2:#3d3a36;--ink-3:#7a736a;
-  --paper:#f6f3ed;--paper-2:#ede9e1;--paper-3:#e4dfd5;
-  --line:rgba(10,10,10,.08);--line-strong:rgba(10,10,10,.18);
-  --red:#dc2626;
-  --bezier:cubic-bezier(0.32,0.72,0,1);
-  --font-mono:'DM Mono',ui-monospace,monospace;
-  --font-serif:'Noto Serif SC','Songti SC',serif;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',sans-serif;font-size:14px;line-height:1.5}
-::selection{background:var(--ink);color:var(--paper)}
+:root {
+  /* Warm-white paper */
+  --bg:      #FBFAF6;
+  --bg-1:    #FFFFFF;
+  --bg-2:    #F4F2EC;
+  --bg-hover:#F0EDE5;
 
-/* ===== Film Grain Overlay (fixed, never on scrolling container) ===== */
-.grain{
-  position:fixed;inset:0;z-index:200;pointer-events:none;
-  opacity:.035;mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-}
+  /* Ink */
+  --ink:   #0F1010;
+  --ink-2: #3A3D3C;
+  --ink-3: #6E7270;
+  --ink-4: #A2A5A0;
 
-/* ===== Layout ===== */
-.app{display:grid;grid-template-columns:240px 1fr;height:100vh;overflow:hidden}
+  /* Lines */
+  --border:        #E4E1D8;
+  --border-soft:   #ECE9E0;
+  --border-strong: #D3CFC1;
 
-/* ===== Left Rail ===== */
-.rail{display:flex;flex-direction:column;border-right:1px solid var(--line);background:linear-gradient(180deg,#efeae0 0%,#e8e2d6 100%);padding:32px 24px 28px;overflow-y:auto}
-.brand{display:flex;align-items:center;gap:10px;margin-bottom:48px}
-.brand-mark{width:32px;height:32px;border-radius:8px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font:700 14px/1 var(--font-mono);letter-spacing:-.5px}
-.brand-mark span{color:var(--red)}
-.brand-text{font:600 11px/1 var(--font-mono);letter-spacing:2.5px;text-transform:uppercase}
-.brand-sub{font:var(--font-mono);font-size:8px;letter-spacing:2px;color:var(--ink-3);text-transform:uppercase;margin-top:3px}
-.rail-section{margin-bottom:36px}
-.rail-eyebrow{font:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.rail-eyebrow::after{content:'';flex:1;height:1px;background:var(--line-strong)}
-.chips{display:flex;flex-direction:column;gap:6px}
-.chip{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;border:1px solid transparent;font:500 12px/1 'Inter',sans-serif;color:var(--ink-2);background:transparent;cursor:pointer;text-align:left;transition:all .3s var(--bezier)}
-.chip:hover{background:rgba(255,255,255,.5);border-color:var(--line)}
-.chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.chip-count{font:var(--font-mono);font-size:10px;opacity:.5}
-.chip.active .chip-count{color:var(--paper-2);opacity:.7}
-.chip-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:8px;background:var(--chip-accent,var(--ink-3))}
-.rail-footer{margin-top:auto;padding-top:24px;border-top:1px solid var(--line)}
-.rail-stat{display:flex;flex-direction:column;gap:2px;margin-bottom:18px}
-.rail-stat-num{font:900 36px/.95 var(--font-serif);letter-spacing:-1.5px;color:var(--ink)}
-.rail-stat-num span{color:var(--red)}
-.rail-stat-label{font:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3)}
-.rail-foot-text{font:var(--font-mono);font-size:9px;color:var(--ink-3);letter-spacing:.4px;line-height:1.7}
-.rail-foot-text strong{color:var(--ink-2);font-weight:600}
-.live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#16a34a;margin-right:6px;animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(22,163,74,.55)}70%{box-shadow:0 0 0 8px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+  /* Accents */
+  --red:      #D4322A;
+  --red-hover:#B72821;
+  --red-soft: rgba(212,50,42,.08);
+  --red-glow: rgba(212,50,42,.16);
 
-/* ===== Main ===== */
-.main{display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--paper)}
+  --green:      #0E7C4A;
+  --green-hover:#0A6339;
+  --green-soft: rgba(14,124,74,.08);
+  --green-glow: rgba(14,124,74,.14);
 
-/* ===== Compact Hero ===== */
-.hero{
-  flex-shrink:0;
-  padding:32px 48px;
-  position:relative;overflow:hidden;
-  border-bottom:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;gap:32px;
-}
-.hero::before{
-  content:'';position:absolute;top:-60px;left:25%;width:520px;height:240px;
-  background:radial-gradient(ellipse,rgba(220,38,38,.08),transparent 70%);
-  pointer-events:none;
-}
-.hero::after{
-  content:'';position:absolute;top:50%;right:15%;width:380px;height:180px;
-  background:radial-gradient(ellipse,rgba(99,102,241,.05),transparent 70%);
-  transform:translateY(-50%);pointer-events:none;
-}
-.hero-left{display:flex;align-items:center;gap:24px;min-width:0;flex:1}
-.hero-eyebrow{
-  font:var(--font-mono);font-size:9px;font-weight:600;
-  letter-spacing:2.5px;text-transform:uppercase;
-  color:var(--ink-3);display:flex;align-items:center;gap:8px;
-  padding:5px 12px;border:1px solid var(--line-strong);border-radius:99px;
-  background:rgba(255,255,255,.5);flex-shrink:0;
-}
-.hero-eyebrow .pulse{width:5px;height:5px;border-radius:50%;background:#16a34a;animation:pulse 2s infinite}
-.hero-title{
-  font-family:var(--font-serif);font-weight:900;
-  font-size:clamp(1.4rem,2.2vw,1.9rem);
-  letter-spacing:-1px;line-height:1;
-  color:var(--ink);margin:0;
-  white-space:nowrap;
-}
-.hero-title .accent{font-style:italic;color:var(--red)}
-.hero-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.btn{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:11px 20px;border-radius:99px;
-  font:600 11px/1 var(--font-mono);letter-spacing:1.5px;text-transform:uppercase;
-  border:0;cursor:pointer;text-decoration:none;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 1px 2px rgba(10,10,10,.06);
-  transition:all .5s var(--bezier);
-}
-.btn-primary{background:var(--ink);color:var(--paper)}
-.btn-primary:hover{
-  background:var(--red);transform:translateY(-2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 12px 28px -8px rgba(220,38,38,.45);
-}
-.btn-primary:active{transform:translateY(0) scale(.97);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 4px rgba(10,10,10,.1)}
-.btn .arrow{font-size:13px;transition:transform .5s var(--bezier)}
-.btn:hover .arrow{transform:translate(3px,-3px)}
+  --accent: var(--red);
+  --accent-hover: var(--red-hover);
 
-/* ===== Grid ===== */
-.grid-wrap{
-  flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:16px 48px 28px;scrollbar-gutter:stable;
-  position:relative;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;
 }
-.grid-wrap::-webkit-scrollbar{width:12px}
-.grid-wrap::-webkit-scrollbar-track{background:rgba(10,10,10,.04);border-radius:6px}
-.grid-wrap::-webkit-scrollbar-thumb{background:rgba(10,10,10,.3);border-radius:6px;border:2px solid transparent;background-clip:padding-box}
-.grid-wrap::-webkit-scrollbar-thumb:hover{background:rgba(10,10,10,.5);background-clip:padding-box}
-/* Scroll fade indicator at bottom */
-.grid-wrap::after{
-  content:'';position:sticky;bottom:0;left:0;right:0;
-  height:48px;margin-top:-48px;pointer-events:none;
-  background:linear-gradient(to bottom,transparent,var(--paper) 80%);
-  display:block;
-}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;letter-spacing:-.006em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"cv02","cv03","cv04","cv11","ss01","ss02"}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--red);color:#fff}
 
-.grid-meta{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
-.grid-meta-eyebrow{font:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--ink-3)}
-.grid-meta-title{font:900 22px/.95 var(--font-serif);letter-spacing:-1px;color:var(--ink)}
-.grid-meta-title span{color:var(--red);font-style:italic}
-.grid-meta-right{display:flex;gap:18px;font:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:1px;text-transform:uppercase}
-.grid-meta-right b{color:var(--ink);font-weight:700;font-size:14px;display:block;letter-spacing:-.3px}
+/* Twin colored glows top-corners */
+.glow-r{position:fixed;top:-260px;left:-140px;width:900px;height:520px;background:radial-gradient(ellipse at center,var(--red-glow) 0%,transparent 65%);pointer-events:none;z-index:0;filter:blur(30px)}
+.glow-g{position:fixed;top:-220px;right:-140px;width:900px;height:520px;background:radial-gradient(ellipse at center,var(--green-glow) 0%,transparent 65%);pointer-events:none;z-index:0;filter:blur(30px)}
 
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:dense;grid-auto-rows:280px;gap:14px}
-.card{grid-column:span 1;grid-row:span 1}
+.topbar{position:sticky;top:0;background:rgba(251,250,246,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--border-soft);z-index:50}
+.topbar-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:12px 24px;height:52px}
+.brand{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em}
+.brand-mark{width:22px;height:22px;border-radius:6px;background:var(--red);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.brand-crumb{color:var(--ink-3);font-weight:400}
+.brand-crumb::before{content:'/';margin:0 8px;color:var(--ink-4)}
+.cmd{display:inline-flex;align-items:center;gap:10px;padding:6px 10px 6px 12px;background:var(--bg-1);border:1px solid var(--border);border-radius:8px;color:var(--ink-3);font-size:13px;min-width:320px;cursor:text;transition:border-color .12s ease}
+.cmd:hover{border-color:var(--border-strong)}
+.cmd-icon{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.cmd-text{flex:1;letter-spacing:-.005em}
+kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:var(--bg-1);border:1px solid var(--border);border-radius:4px;color:var(--ink-3);font-family:var(--sans);font-size:11px;font-weight:500;line-height:1;box-shadow:0 1px 0 var(--border)}
+.cmd kbd+kbd{margin-left:2px}
+.topbar-right{display:inline-flex;align-items:center;justify-content:flex-end;gap:10px;color:var(--ink-3);font-size:12.5px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(14,124,74,.4);animation:pulse-status 2.4s ease-in-out infinite}
+@keyframes pulse-status{0%,100%{opacity:1}50%{opacity:.45}}
+.topbar-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--red) 0%,#F26B3C 100%);color:#fff;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
 
-/* ===== Cards (v7 unified editorial + product-specific SVG) ===== */
-.card{
-  position:relative;background:#fff;border:1px solid var(--line);
-  border-radius:14px;cursor:pointer;overflow:hidden;
-  display:flex;flex-direction:column;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(10,10,10,.04);
-  animation:cardIn .9s var(--bezier) both;
-  transition:transform .6s var(--bezier),box-shadow .6s var(--bezier),border-color .6s var(--bezier);
-}
-.card:hover{
-  transform:translateY(-6px);
-  border-color:var(--line-strong);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 24px 48px -20px rgba(10,10,10,.22),0 8px 16px -10px rgba(10,10,10,.1);
-}
-.card:active{transform:translateY(-3px) scale(.998);transition:transform .12s var(--bezier)}
-.card::after{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:var(--accent);transform:scaleY(0);transform-origin:top;
-  transition:transform .6s var(--bezier);
-}
-.card:hover::after{transform:scaleY(1)}
+.page{max-width:1240px;margin:0 auto;padding:48px 24px 96px;position:relative;z-index:1}
 
-/* Visual area: product-specific SVG */
-.card-visual{
-  flex-shrink:0;height:96px;
-  position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-  padding:12px;
-}
-.card-visual svg{width:100%;height:100%;color:var(--accent)}
-.card-visual-bg{
-  position:absolute;inset:0;
-  background:linear-gradient(135deg,var(--accent-soft,var(--paper-2)),var(--paper));
-  opacity:.55;z-index:0;
-}
-.card-visual svg{position:relative;z-index:1}
+.hero{display:grid;grid-template-columns:1fr auto;align-items:end;gap:32px;padding-bottom:40px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px}
+.hero-eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px var(--red-soft)}
+.hero-title{margin:0 0 12px;font-size:48px;font-weight:600;line-height:1.05;letter-spacing:-.028em;color:var(--ink)}
+.hero-title .muted{color:var(--ink-3);font-weight:400}
+.hero-title .em{color:var(--red)}
+.hero-desc{margin:0;color:var(--ink-2);font-size:15px;max-width:56ch;line-height:1.55}
+.hero-actions{display:inline-flex;gap:8px;padding-bottom:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;font-size:13.5px;font-weight:500;letter-spacing:-.005em;cursor:pointer;transition:all .12s ease;border:1px solid transparent;font-family:var(--sans);line-height:1;white-space:nowrap}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover{background:var(--red-hover)}
+.btn-primary kbd{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.22);color:#fff;box-shadow:none}
+.btn-secondary{background:var(--bg-1);color:var(--ink);border-color:var(--border)}
+.btn-secondary:hover{background:var(--bg-hover);border-color:var(--border-strong)}
 
-/* Card body */
-.card-body{padding:12px 16px 12px;display:flex;flex-direction:column;gap:6px;flex:1;min-height:0;position:relative;overflow:hidden}
+.stats{display:flex;gap:40px;padding:20px 0;margin-bottom:32px;border-bottom:1px solid var(--border)}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stat-num{font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.stat-num .accent{color:var(--red)}
+.stat-num .accent-g{color:var(--green)}
+.stat-label{font-size:11.5px;color:var(--ink-3);letter-spacing:.01em}
 
-/* Header row */
-.card-head{display:flex;align-items:center;justify-content:space-between}
-.card-num{font:var(--font-mono);font-size:10px;font-weight:600;color:var(--ink-3);letter-spacing:1.5px}
-.card-cat{font:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
-.card-title{
-  font-family:var(--font-serif);font-weight:900;
-  font-size:18px;line-height:1.15;letter-spacing:-.3px;
-  color:var(--ink);margin:0;
+.toolbar{display:flex;align-items:center;gap:8px;padding:12px 0;flex-wrap:wrap}
+.toolbar-left{display:flex;align-items:center;gap:4px;flex:1;min-width:0;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--ink-2);font-family:var(--sans);font-size:13px;font-weight:450;cursor:pointer;transition:all .1s ease;letter-spacing:-.005em}
+.chip:hover{background:var(--bg-2);color:var(--ink)}
+.chip.active{background:var(--bg-1);border-color:var(--border);color:var(--ink);box-shadow:0 1px 0 rgba(15,16,16,.03)}
+.chip-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.chip .ct{font-family:var(--mono);font-size:11px;color:var(--ink-4)}
+.chip kbd{font-size:10.5px;height:16px;min-width:16px}
+.toolbar-right{display:inline-flex;align-items:center;gap:8px;color:var(--ink-3);font-size:12px}
+.toolbar-right .hint{display:inline-flex;align-items:center;gap:4px}
+
+.list-head{display:grid;grid-template-columns:20px 72px 1fr 120px 200px 60px 52px;gap:16px;align-items:center;padding:8px 14px;font-family:var(--sans);font-size:11px;color:var(--ink-4);font-weight:500;letter-spacing:.02em;text-transform:uppercase;border:1px solid var(--border);background:var(--bg-2);border-radius:8px 8px 0 0}
+.list{display:flex;flex-direction:column;border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 8px 8px;overflow:hidden;background:var(--bg-1)}
+.row{display:grid;grid-template-columns:20px 72px 1fr 120px 200px 60px 52px;gap:16px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border-soft);transition:background .1s ease;position:relative;min-height:44px}
+.row:last-child{border-bottom:none}
+.row::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:2px;background:var(--cat);opacity:0;transition:opacity .12s ease;border-radius:0 2px 2px 0}
+.row:hover{background:var(--bg-hover)}
+.row:hover::before{opacity:.9}
+.row:hover .row-title-text{color:var(--cat)}
+.row:hover .row-thumb{border-color:var(--cat);background:#fff}
+.row-priority{width:10px;height:10px;border-radius:3px;background:transparent;border:1.5px solid var(--cat);position:relative;justify-self:center}
+.row-priority::after{content:'';position:absolute;inset:1px;background:var(--cat);border-radius:1.5px;opacity:.55}
+.row-id{font-family:var(--mono);font-size:11.5px;color:var(--ink-4);font-variant-numeric:tabular-nums}
+.row-title{display:flex;flex-direction:column;gap:2px;min-width:0}
+.row-title-text{font-size:13.5px;font-weight:500;color:var(--ink);letter-spacing:-.008em;line-height:1.35;transition:color .1s ease;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-desc{font-size:12px;color:var(--ink-3);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-thumb{width:108px;height:40px;background:var(--bg-2);border:1px solid var(--border);border-radius:4px;padding:4px;transition:background .12s ease,border-color .12s ease;color:var(--ink-3);overflow:hidden}
+.row-thumb svg{width:100%;height:100%;display:block}
+.thumb-inner{display:block;width:100%;height:100%}
+.row-labels{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);min-width:0}
+.label{display:inline-flex;align-items:center;gap:5px;padding:2px 7px;background:var(--bg-2);border:1px solid var(--border);border-radius:999px;font-size:11.5px;color:var(--ink-2);white-space:nowrap;letter-spacing:-.003em}
+.label-dot{width:5px;height:5px;border-radius:50%}
+.label-sub{font-family:var(--mono);font-size:10.5px;color:var(--ink-4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row-ver{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-align:right}
+.row-date{font-family:var(--mono);font-size:11.5px;color:var(--ink-4);text-align:right}
+
+@media (max-width:1080px){
+  .list-head,.row{grid-template-columns:20px 64px 1fr 180px 60px}
+  .row-thumb,.col-thumb{display:none}
+  .row-ver,.col-ver{display:none}
 }
-.card-desc{
-  font:11px/1.45 'Inter','PingFang SC',sans-serif;
-  color:var(--ink-2);margin:0;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+@media (max-width:720px){
+  .list-head{display:none}
+  .row{grid-template-columns:12px 1fr auto;gap:12px;padding:12px}
+  .row-id{display:none}
+  .row-labels{flex-direction:column;align-items:flex-end;gap:3px}
+  .label-sub{display:none}
+  .row-date{display:none}
+  .hero{grid-template-columns:1fr}
+  .hero-title{font-size:34px}
+  .stats{gap:24px;flex-wrap:wrap}
+  .topbar-inner{grid-template-columns:1fr auto}
+  .cmd{display:none}
 }
 
-/* Bottom row */
-.card-foot{
-  margin-top:auto;padding-top:10px;
-  border-top:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;gap:6px;
-}
-.card-ver{
-  font:var(--font-mono);font-size:9px;color:var(--ink-3);letter-spacing:.4px;text-transform:uppercase;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1;flex-shrink:1;
-  max-width:45%;
-}
-.card-go{
-  font:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;
-  color:#fff;background:var(--ink);border:0;padding:7px 12px 7px 14px;border-radius:99px;cursor:pointer;
-  display:inline-flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 1px 2px rgba(10,10,10,.08);
-  transition:all .5s var(--bezier);
-}
-.card-go .arrow{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;
-  font-size:10px;flex-shrink:0;font-weight:700;
-  transition:transform .5s var(--bezier),background .5s var(--bezier);
-}
-.card:hover .card-go{background:var(--accent);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 12px -4px rgba(220,38,38,.4)}
-.card:hover .card-go .arrow{background:rgba(255,255,255,.35);transform:translate(3px,-3px) scale(1.1)}
-.card:active .card-go{transform:scale(.96)}
-.card:active .card-go .arrow{transform:translate(2px,-2px) scale(1)}
-
-/* Featured (V4) spans 2x2 */
-.card.card-featured{grid-column:span 2;grid-row:span 2}
-.card-featured .card-visual{height:280px;padding:24px}
-.card-featured .card-title{font-size:32px;letter-spacing:-1px}
-.card-featured .card-desc{font-size:13px;line-height:1.55;-webkit-line-clamp:3;max-width:480px}
-.card-featured .card-body{padding:22px 26px 22px;gap:10px}
-.card-featured .card-num{font-size:11px}
-.card-featured .card-go{font-size:12px;padding:8px 16px 8px 18px}
-.card-featured .card-go .arrow{width:22px;height:22px;font-size:11px}
-
-/* Card stats (only on featured) */
-.card-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
-  padding:12px 0;border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  margin-top:2px;
-}
-.card-stats .stat{display:flex;flex-direction:column;gap:3px}
-.card-stats .stat b{font-family:var(--font-serif);font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-1px;line-height:1}
-.card-stats .stat span{font:var(--font-mono);font-size:8px;font-weight:600;color:var(--ink-3);letter-spacing:1.2px;text-transform:uppercase}
-
-/* ===== Category Accent Colors ===== */
-.card[data-cat="ai"]{--accent:#6366f1;--accent-soft:#eef2ff}
-.card[data-cat="admin"]{--accent:#3b82f6;--accent-soft:#eaf2ff}
-.card[data-cat="merchant"]{--accent:#f59e0b;--accent-soft:#fef3c7}
-.card[data-cat="charity"]{--accent:#dc2626;--accent-soft:#fde2de}
-.card[data-cat="game"]{--accent:#16a34a;--accent-soft:#dcfce7}
-.card[data-cat="ecom"]{--accent:#a855f7;--accent-soft:#ede9fe}
-.card[data-cat="defi"]{--accent:#0ea5e9;--accent-soft:#dff4ff}
-
-.chip[data-cat="all"]{--chip-accent:var(--ink)}
-.chip[data-cat="ai"]{--chip-accent:#6366f1}
-.chip[data-cat="admin"]{--chip-accent:#3b82f6}
-.chip[data-cat="merchant"]{--chip-accent:#f59e0b}
-.chip[data-cat="charity"]{--chip-accent:#dc2626}
-.chip[data-cat="game"]{--chip-accent:#16a34a}
-.chip[data-cat="ecom"]{--chip-accent:#a855f7}
-.chip[data-cat="defi"]{--chip-accent:#0ea5e9}
-
-/* ===== Entry Animations ===== */
-@keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.card:nth-child(1){animation-delay:0ms}
-.card:nth-child(2){animation-delay:50ms}
-.card:nth-child(3){animation-delay:100ms}
-.card:nth-child(4){animation-delay:150ms}
-.card:nth-child(5){animation-delay:200ms}
-.card:nth-child(6){animation-delay:250ms}
-.card:nth-child(7){animation-delay:300ms}
-.card:nth-child(8){animation-delay:350ms}
-.card:nth-child(9){animation-delay:400ms}
-.card:nth-child(10){animation-delay:450ms}
-
-/* ===== Responsive ===== */
-@media(max-width:1180px){
-  .app{grid-template-columns:200px 1fr}
-  .hero{padding:24px 32px}
-  .grid-wrap{padding:16px 32px 32px}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:760px){
-  .app{grid-template-columns:1fr}
-  .rail{display:none}
-  .hero{padding:20px 20px;flex-direction:column;align-items:flex-start;gap:14px}
-  .hero-title{white-space:normal}
-  .grid-wrap{padding:16px 20px 28px}
-  .grid{grid-template-columns:1fr;grid-auto-rows:auto}
-  .card-featured{grid-column:span 1;grid-row:span 1}
-  .card-featured .card-visual{height:160px}
-  .card-featured .card-title{font-size:24px}
-}
+.footer{margin-top:48px;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--ink-4);font-size:12px;font-family:var(--mono);flex-wrap:wrap}
+.footer a{color:var(--ink-3)}
+.footer a:hover{color:var(--ink)}
+.footer .fam-tag{display:inline-flex;align-items:center;gap:5px;padding:1px 6px;border-radius:4px;border:1px solid var(--border);background:var(--bg-1);color:var(--ink-3)}
+.footer .fam-dot{width:5px;height:5px;border-radius:50%}
 </style>
 </head>
 <body>
+<div class="glow-r"></div>
+<div class="glow-g"></div>
 
-<div class="grain"></div>
-
-<div class="app">
-
-  <!-- LEFT RAIL -->
-  <aside class="rail">
+<header class="topbar">
+  <div class="topbar-inner">
     <div class="brand">
-      <div class="brand-mark">M<span>.</span></div>
-      <div>
-        <div class="brand-text">MICHAEL</div>
-        <div class="brand-sub">Prototypes · 2026</div>
-      </div>
+      <span class="brand-mark">M</span>
+      <span>Michael</span>
+      <span class="brand-crumb">Prototypes</span>
     </div>
-
-    <div class="rail-section">
-      <div class="rail-eyebrow">Filter</div>
-      <nav class="chips">
-        <button class="chip active" data-cat="all">全部<span class="chip-count">11</span></button>
-        <button class="chip" data-cat="ai"><span class="chip-dot"></span>AI<span class="chip-count">03</span></button>
-        <button class="chip" data-cat="admin"><span class="chip-dot"></span>后台<span class="chip-count">02</span></button>
-        <button class="chip" data-cat="merchant"><span class="chip-dot"></span>商家<span class="chip-count">01</span></button>
-        <button class="chip" data-cat="charity"><span class="chip-dot"></span>公益<span class="chip-count">02</span></button>
-        <button class="chip" data-cat="game"><span class="chip-dot"></span>游戏<span class="chip-count">02</span></button>
-        <button class="chip" data-cat="ecom"><span class="chip-dot"></span>电商<span class="chip-count">01</span></button>
-        <button class="chip" data-cat="defi"><span class="chip-dot"></span>DeFi<span class="chip-count">01</span></button>
-      </nav>
+    <div class="cmd">
+      <svg class="cmd-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><line x1="14" y1="14" x2="11" y2="11" stroke-linecap="round"/></svg>
+      <span class="cmd-text">Search prototypes…</span>
+      <kbd>⌘</kbd><kbd>K</kbd>
     </div>
-
-    <div class="rail-section">
-      <div class="rail-eyebrow">Stack</div>
-      <div class="rail-foot-text">
-        <strong>AI · 后台 · 公益</strong><br>
-        游戏 · 电商 · DeFi<br>
-        共 6 个方向
-      </div>
+    <div class="topbar-right">
+      <span class="status-dot"></span>
+      <span>Synced · 2026.07</span>
+      <span class="topbar-avatar">M</span>
     </div>
+  </div>
+</header>
 
-    <div class="rail-footer">
-      <div class="rail-stat">
-        <div class="rail-stat-num">11<span>.</span></div>
-        <div class="rail-stat-label">PROTOTYPES · 2026</div>
-      </div>
-      <div class="rail-foot-text">
-        <span class="live-dot"></span>实验室在线<br>
-        <strong>Michael</strong><br>
-        原型实验室 · 2026
-      </div>
+<div class="page">
+
+  <section class="hero">
+    <div>
+      <div class="hero-eyebrow"><span class="dot"></span>PROTOTYPE ARCHIVE · 2026</div>
+      <h1 class="hero-title">Prototypes<span class="em">.</span><br><span class="muted">Eleven experiments across six directions.</span></h1>
+      <p class="hero-desc">产品经理与原型设计师的年度档案 · 从 AI 智能体到 DeFi 金融平台 · 完整可交互原型合集。</p>
     </div>
-  </aside>
+    <div class="hero-actions">
+      <a class="btn btn-secondary" href="#list-head">Browse all <kbd>L</kbd></a>
+      <a class="btn btn-primary" href="opulatrix_game/website/index.html" target="_blank">Open latest → <kbd>⏎</kbd></a>
+    </div>
+  </section>
 
-  <!-- MAIN -->
-  <main class="main">
+  <div class="stats">
+    <div class="stat"><span class="stat-num">11</span><span class="stat-label">Prototypes</span></div>
+    <div class="stat"><span class="stat-num"><span class="accent">4</span> · <span class="accent-g">3</span></span><span class="stat-label">Frontier · Back-office</span></div>
+    <div class="stat"><span class="stat-num">2026.01 → 2026.07</span><span class="stat-label">Active period</span></div>
+    <div class="stat"><span class="stat-num">游戏商户平台原型 V1.0</span><span class="stat-label">Latest · 2026.07</span></div>
+  </div>
 
-    <!-- COMPACT HERO -->
-    <header class="hero">
-      <div class="hero-left">
-        <div class="hero-eyebrow"><span class="pulse"></span>PROTOTYPES · 2026</div>
-        <h1 class="hero-title">10 个原型实验室 · 一份<span class="accent">产品的呼吸</span></h1>
-      </div>
-      <div class="hero-right">
-        <button class="btn btn-primary" onclick="openLatest()">
-          打开最新 <span class="arrow">↗</span>
-        </button>
-      </div>
-    </header>
+  <div class="toolbar">
+    <div class="toolbar-left"><button class="chip active" data-cat="all"><span class="chip-dot" style="background:#111"></span>All<span class="ct">11</span><kbd>1</kbd></button><button class="chip" data-cat="ai"><span class="chip-dot" style="background:#D4322A"></span>AI<span class="ct">3</span><kbd>2</kbd></button><button class="chip" data-cat="ecom"><span class="chip-dot" style="background:#D4322A"></span>电商<span class="ct">1</span><kbd>3</kbd></button><button class="chip" data-cat="defi"><span class="chip-dot" style="background:#D4322A"></span>DeFi<span class="ct">1</span><kbd>4</kbd></button><button class="chip" data-cat="game"><span class="chip-dot" style="background:#D4322A"></span>游戏<span class="ct">2</span><kbd>5</kbd></button><button class="chip" data-cat="charity"><span class="chip-dot" style="background:#0E7C4A"></span>公益<span class="ct">2</span><kbd>6</kbd></button><button class="chip" data-cat="admin"><span class="chip-dot" style="background:#0E7C4A"></span>后台<span class="ct">1</span><kbd>7</kbd></button><button class="chip" data-cat="merchant"><span class="chip-dot" style="background:#0E7C4A"></span>商家<span class="ct">1</span><kbd>8</kbd></button></div>
+    <div class="toolbar-right">
+      <span class="hint">Navigate <kbd>↑</kbd><kbd>↓</kbd></span>
+      <span class="hint">Open <kbd>⏎</kbd></span>
+    </div>
+  </div>
 
-    <!-- BENTO GRID -->
-    <section class="grid-wrap">
-      <div class="grid-meta">
-        <div>
-          <div class="grid-meta-eyebrow">SHOWCASE · 2026</div>
-          <div class="grid-meta-title">原型<span>展台</span></div>
-        </div>
-        <div class="grid-meta-right">
-          <div><b id="visibleCount">10</b>VISIBLE</div>
-          <div><b>06</b>CATEGORIES</div>
-          <div><b>10</b>TOTAL</div>
-        </div>
-      </div>
-
-      <div class="grid" id="grid">
-
-        <!-- Card 1: V4 AI Featured (2x2) - Code/Terminal interface -->
-        <article class="card card-featured" data-cat="ai" data-href="IM_AiAgent/AiAgent-Desktop-V4/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+  <div class="list-head" id="list-head">
+    <span></span>
+    <span>ID</span>
+    <span>Title</span>
+    <span class="col-thumb">Preview</span>
+    <span>Category</span>
+    <span class="col-ver">Version</span>
+    <span>Date</span>
+  </div>
+  <div class="list" id="list"><a class="row" href="IM_AiAgent/AiAgent-Desktop-V4/index.html" target="_blank" data-cat="ai" data-fam="r" style="--cat:#D4322A"><span class="row-priority" title="AI"></span><span class="row-id">PRT-01</span><span class="row-title"><span class="row-title-text">IM Ai Agent</span><span class="row-desc">桌面端多智能体工作台,支持多会话协作、工具调用、任务规划与自动化工作流。面向产品经理与运营的效率工具。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Terminal window -->
               <rect x="10" y="10" width="220" height="80" rx="6" fill="rgba(255,255,255,.5)"/>
               <circle cx="22" cy="22" r="2.5" fill="currentColor"/>
@@ -408,32 +240,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
               <line x1="214" y1="55" x2="222" y2="48" opacity=".5"/>
               <line x1="186" y1="75" x2="178" y2="82" opacity=".5"/>
               <line x1="214" y1="75" x2="222" y2="82" opacity=".5"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 01 / 2026.06</span>
-              <span class="card-cat">AI · DESKTOP · LATEST</span>
-            </div>
-            <h3 class="card-title">IM AiAgent</h3>
-            <p class="card-desc">桌面端多智能体工作台,支持多会话协作、工具调用、任务规划与自动化工作流。面向产品经理与运营的效率工具。</p>
-            <div class="card-stats">
-              <div class="stat"><b>8</b><span>AGENTS</span></div>
-              <div class="stat"><b>24</b><span>TOOLS</span></div>
-              <div class="stat"><b>3.2k</b><span>SESSIONS / DAY</span></div>
-            </div>
-            <div class="card-foot">
-              <span class="card-ver">2026.06 · V4.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 2: V3 AI Desktop - Terminal/Code -->
-        <article class="card" data-cat="ai" data-href="IM_AiAgent/AiAgent-Desktop/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#D4322A"></span>AI</span><span class="label-sub">AI · DESKTOP · LATEST</span></span><span class="row-ver">V4.0</span><span class="row-date">2026.06</span></a><a class="row" href="IM_AiAgent/AiAgent-Desktop/index.html" target="_blank" data-cat="ai" data-fam="r" style="--cat:#D4322A"><span class="row-priority" title="AI"></span><span class="row-id">PRT-02</span><span class="row-title"><span class="row-title-text">IM Ai Agent</span><span class="row-desc">桌面端 AI 智能助手 · 多轮对话与业务自动化。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <rect x="10" y="14" width="220" height="72" rx="5" fill="rgba(255,255,255,.5)"/>
               <circle cx="22" cy="26" r="2" fill="currentColor"/>
               <circle cx="30" cy="26" r="2" fill="currentColor" opacity=".5"/>
@@ -443,27 +250,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
               <rect x="20" y="38" width="60" height="8" rx="4" opacity=".5"/>
               <rect x="80" y="52" width="80" height="8" rx="4" fill="currentColor" opacity=".7"/>
               <rect x="20" y="66" width="100" height="8" rx="4" opacity=".5"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 02 / 2026.04</span>
-              <span class="card-cat">AI · DESKTOP</span>
-            </div>
-            <h3 class="card-title">IM AiAgent</h3>
-            <p class="card-desc">桌面端 AI 智能助手 · 多轮对话与业务自动化。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.04 · V3.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 3: V1 AI Mobile - Phone with chat -->
-        <article class="card" data-cat="ai" data-href="IM_AiAgent/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#D4322A"></span>AI</span><span class="label-sub">AI · DESKTOP</span></span><span class="row-ver">V3.0</span><span class="row-date">2026.04</span></a><a class="row" href="IM_AiAgent/index.html" target="_blank" data-cat="ai" data-fam="r" style="--cat:#D4322A"><span class="row-priority" title="AI"></span><span class="row-id">PRT-03</span><span class="row-title"><span class="row-title-text">IM Ai Agent</span><span class="row-desc">移动端即时通讯 + AI 智能体原型。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Phone -->
               <rect x="100" y="10" width="40" height="80" rx="6" fill="rgba(255,255,255,.5)"/>
               <rect x="103" y="14" width="34" height="68" rx="3" fill="currentColor" fill-opacity=".08"/>
@@ -484,27 +271,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
               <g transform="translate(180,75)" fill="currentColor" opacity=".4">
                 <path d="M0 -4 L1 -1 L4 0 L1 1 L0 4 L-1 1 L-4 0 L-1 -1 Z"/>
               </g>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 03 / 2026.01</span>
-              <span class="card-cat">AI · MOBILE</span>
-            </div>
-            <h3 class="card-title">IM AiAgent</h3>
-            <p class="card-desc">移动端即时通讯 + AI 智能体原型。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.01 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 4: Charity H5 v1 - Phone with donation form + heart -->
-        <article class="card" data-cat="charity" data-href="charity-V2/m/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#D4322A"></span>AI</span><span class="label-sub">AI · MOBILE</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.01</span></a><a class="row" href="charity-V2/m/index.html" target="_blank" data-cat="charity" data-fam="g" style="--cat:#0E7C4A"><span class="row-priority" title="公益"></span><span class="row-id">PRT-04</span><span class="row-title"><span class="row-title-text">慈商联营·帮扶广场</span><span class="row-desc">公益慈善帮扶平台 · 移动端 H5,连接捐赠人与受助者。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Heart center -->
               <path d="M120 70 C 120 70, 95 55, 95 42 C 95 36, 100 32, 105 32 C 110 32, 113 35, 120 42 C 127 35, 130 32, 135 32 C 140 32, 145 36, 145 42 C 145 55, 120 70, 120 70 Z" fill="currentColor" fill-opacity=".2"/>
               <path d="M120 70 C 120 70, 95 55, 95 42 C 95 36, 100 32, 105 32 C 110 32, 113 35, 120 42 C 127 35, 130 32, 135 32 C 140 32, 145 36, 145 42 C 145 55, 120 70, 120 70 Z" fill="currentColor"/>
@@ -521,27 +288,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
               <rect x="166" y="56" width="48" height="3" rx="1" fill="currentColor" opacity=".3"/>
               <rect x="166" y="62" width="40" height="3" rx="1" fill="currentColor" opacity=".3"/>
               <rect x="166" y="68" width="36" height="3" rx="1" fill="currentColor" opacity=".3"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 04 / 2026.05</span>
-              <span class="card-cat">CHARITY · H5</span>
-            </div>
-            <h3 class="card-title">慈商联营·帮扶广场</h3>
-            <p class="card-desc">公益慈善帮扶平台 · 移动端 H5,连接捐赠人与受助者。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.05 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 5: Charity H5 v2 - Campaign progress -->
-        <article class="card" data-cat="charity" data-href="charity-V2/m/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#0E7C4A"></span>公益</span><span class="label-sub">CHARITY · H5</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.05</span></a><a class="row" href="charity-V2/m/index.html" target="_blank" data-cat="charity" data-fam="g" style="--cat:#0E7C4A"><span class="row-priority" title="公益"></span><span class="row-id">PRT-05</span><span class="row-title"><span class="row-title-text">慈商联营·帮扶广场</span><span class="row-desc">H5 第二版 · 优化求助流程与捐赠体验。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Hero card -->
               <rect x="30" y="20" width="180" height="36" rx="4" fill="rgba(255,255,255,.5)"/>
               <rect x="38" y="28" width="60" height="20" rx="2" fill="currentColor" opacity=".25"/>
@@ -556,27 +303,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
               <!-- Tag right -->
               <circle cx="220" cy="14" r="6" fill="currentColor" fill-opacity=".3"/>
               <circle cx="220" cy="14" r="3" fill="currentColor"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 05 / 2026.06</span>
-              <span class="card-cat">CHARITY · H5 · V2</span>
-            </div>
-            <h3 class="card-title">慈商联营·帮扶广场</h3>
-            <p class="card-desc">H5 第二版 · 优化求助流程与捐赠体验。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.06 · V2.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 6: Admin Dashboard -->
-        <article class="card" data-cat="admin" data-href="leguanle_admin.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#0E7C4A"></span>公益</span><span class="label-sub">CHARITY · H5 · V2</span></span><span class="row-ver">V2.0</span><span class="row-date">2026.06</span></a><a class="row" href="leguanle_admin.html" target="_blank" data-cat="admin" data-fam="g" style="--cat:#0E7C4A"><span class="row-priority" title="后台"></span><span class="row-id">PRT-06</span><span class="row-title"><span class="row-title-text">乐签乐·运营后台</span><span class="row-desc">活动运营人员后台 · 数据看板 + 运营配置。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Sidebar -->
               <rect x="10" y="14" width="40" height="72" rx="3" fill="rgba(255,255,255,.5)"/>
               <rect x="14" y="20" width="32" height="4" rx="1" fill="currentColor" opacity=".6"/>
@@ -609,27 +336,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
               <line x1="60" y1="78" x2="80" y2="78" stroke="currentColor" opacity=".3"/>
               <line x1="90" y1="78" x2="130" y2="78" stroke="currentColor" opacity=".3"/>
               <line x1="140" y1="78" x2="200" y2="78" stroke="currentColor" opacity=".3"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 06 / 2026.05</span>
-              <span class="card-cat">ADMIN · WEB</span>
-            </div>
-            <h3 class="card-title">乐签乐·运营后台</h3>
-            <p class="card-desc">活动运营人员后台 · 数据看板 + 运营配置。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.05 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 7: Merchant Portal -->
-        <article class="card" data-cat="merchant" data-href="leguanle_merchant.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#0E7C4A"></span>后台</span><span class="label-sub">ADMIN · WEB</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.05</span></a><a class="row" href="leguanle_merchant.html" target="_blank" data-cat="merchant" data-fam="g" style="--cat:#0E7C4A"><span class="row-priority" title="商家"></span><span class="row-id">PRT-07</span><span class="row-title"><span class="row-title-text">乐签乐·商家管理</span><span class="row-desc">商户入驻与店铺管理后台。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Store inventory -->
               <rect x="14" y="14" width="212" height="72" rx="4" fill="rgba(255,255,255,.5)"/>
               <line x1="14" y1="26" x2="226" y2="26" opacity=".4"/>
@@ -662,27 +369,7 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
               <line x1="70" y1="78" x2="100" y2="78" stroke="currentColor" opacity=".5"/>
               <line x1="130" y1="78" x2="160" y2="78" stroke="currentColor" opacity=".5"/>
               <rect x="190" y="74" width="20" height="8" rx="2" fill="currentColor" opacity=".7"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 07 / 2026.05</span>
-              <span class="card-cat">MERCHANT · WEB</span>
-            </div>
-            <h3 class="card-title">乐签乐·商家管理</h3>
-            <p class="card-desc">商户入驻与店铺管理后台。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.05 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 8: Game 数字乾坤 - Lottery grid -->
-        <article class="card" data-cat="game" data-href="shuziqiankun.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#0E7C4A"></span>商家</span><span class="label-sub">MERCHANT · WEB</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.05</span></a><a class="row" href="shuziqiankun.html" target="_blank" data-cat="game" data-fam="r" style="--cat:#D4322A"><span class="row-priority" title="游戏"></span><span class="row-id">PRT-08</span><span class="row-title"><span class="row-title-text">数字乾坤</span><span class="row-desc">数字彩票游戏平台 · Web 端体验。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Lottery grid 5x3 -->
               <g>
                 <rect x="22" y="16" width="32" height="20" rx="3" fill="rgba(255,255,255,.5)"/>
@@ -718,27 +405,62 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
                 <rect x="166" y="64" width="32" height="20" rx="3" fill="currentColor"/>
                 <text x="182" y="78" text-anchor="middle" fill="#fff" font-size="9" font-family="DM Mono,monospace" font-weight="700">36</text>
               </g>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 08 / 2026.04</span>
-              <span class="card-cat">GAME · WEB</span>
-            </div>
-            <h3 class="card-title">数字乾坤</h3>
-            <p class="card-desc">数字彩票游戏平台 · Web 端体验。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.04 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#D4322A"></span>游戏</span><span class="label-sub">GAME · WEB</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.04</span></a><a class="row" href="funnel-cabin-67528323/index.html" target="_blank" data-cat="ecom" data-fam="r" style="--cat:#D4322A"><span class="row-priority" title="电商"></span><span class="row-id">PRT-09</span><span class="row-title"><span class="row-title-text">乐签乐·前端商城</span><span class="row-desc">电商前端 · 商品展示与交易流程。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+              <!-- Product grid 3x2 -->
+              <rect x="22" y="18" width="60" height="36" rx="3" fill="rgba(255,255,255,.5)"/>
+              <rect x="32" y="26" width="40" height="20" rx="2" fill="currentColor" opacity=".25"/>
+              <line x1="28" y1="48" x2="48" y2="48" stroke="currentColor" opacity=".6"/>
+              <line x1="28" y1="52" x2="40" y2="52" stroke="currentColor" opacity=".3"/>
 
-        <!-- Card 11: Game Merchant Platform - Shop dashboard with priced game items -->
-        <article class="card" data-cat="game" data-href="opulatrix_game/website/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+              <rect x="88" y="18" width="60" height="36" rx="3" fill="currentColor"/>
+              <rect x="98" y="26" width="40" height="20" rx="2" fill="#fff" fill-opacity=".3"/>
+              <line x1="94" y1="48" x2="118" y2="48" stroke="#fff" opacity=".9"/>
+              <line x1="94" y1="52" x2="108" y2="52" stroke="#fff" opacity=".6"/>
+              <text x="142" y="50" text-anchor="end" fill="#fff" font-size="9" font-family="DM Mono,monospace" font-weight="700">¥</text>
+
+              <rect x="154" y="18" width="60" height="36" rx="3" fill="rgba(255,255,255,.5)"/>
+              <rect x="164" y="26" width="40" height="20" rx="2" fill="currentColor" opacity=".25"/>
+              <line x1="160" y1="48" x2="180" y2="48" stroke="currentColor" opacity=".6"/>
+              <line x1="160" y1="52" x2="172" y2="52" stroke="currentColor" opacity=".3"/>
+
+              <rect x="22" y="60" width="60" height="26" rx="3" fill="rgba(255,255,255,.5)"/>
+              <rect x="32" y="66" width="40" height="14" rx="2" fill="currentColor" opacity=".25"/>
+              <line x1="28" y1="84" x2="48" y2="84" stroke="currentColor" opacity=".4"/>
+
+              <rect x="88" y="60" width="60" height="26" rx="3" fill="rgba(255,255,255,.5)"/>
+              <rect x="98" y="66" width="40" height="14" rx="2" fill="currentColor" opacity=".25"/>
+              <line x1="94" y1="84" x2="114" y2="84" stroke="currentColor" opacity=".4"/>
+
+              <rect x="154" y="60" width="60" height="26" rx="3" fill="rgba(255,255,255,.5)"/>
+              <rect x="164" y="66" width="40" height="14" rx="2" fill="currentColor" opacity=".25"/>
+              <line x1="160" y1="84" x2="180" y2="84" stroke="currentColor" opacity=".4"/>
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#D4322A"></span>电商</span><span class="label-sub">ECOM · WEB</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.03</span></a><a class="row" href="OpulRich/index.html" target="_blank" data-cat="defi" data-fam="r" style="--cat:#D4322A"><span class="row-priority" title="DeFi"></span><span class="row-id">PRT-10</span><span class="row-title"><span class="row-title-text">OpulRich</span><span class="row-desc">企业级 DeFi 金融服务平台。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
+              <!-- Wallet card -->
+              <rect x="22" y="22" width="100" height="56" rx="5" fill="currentColor" fill-opacity=".15" stroke="currentColor"/>
+              <line x1="32" y1="34" x2="62" y2="34" stroke="currentColor" opacity=".5"/>
+              <line x1="32" y1="40" x2="80" y2="40" stroke="currentColor" opacity=".3"/>
+              <text x="32" y="56" fill="currentColor" font-size="11" font-family="DM Mono,monospace" font-weight="700">$2,847</text>
+              <text x="32" y="68" fill="currentColor" font-size="6" font-family="DM Mono,monospace" opacity=".5">+24.8%</text>
+              <!-- Mini chart -->
+              <rect x="130" y="22" width="90" height="56" rx="5" fill="rgba(255,255,255,.5)"/>
+              <text x="138" y="34" fill="currentColor" font-size="6" font-family="DM Mono,monospace" font-weight="600">APY</text>
+              <text x="216" y="34" text-anchor="end" fill="currentColor" font-size="7" font-family="DM Mono,monospace" font-weight="700">12.4%</text>
+              <!-- Bar chart -->
+              <g>
+                <rect x="138" y="74" width="6" height="0" fill="currentColor" opacity=".4"/>
+                <rect x="146" y="68" width="6" height="6" fill="currentColor" opacity=".4"/>
+                <rect x="154" y="62" width="6" height="12" fill="currentColor" opacity=".5"/>
+                <rect x="162" y="58" width="6" height="16" fill="currentColor" opacity=".6"/>
+                <rect x="170" y="52" width="6" height="22" fill="currentColor" opacity=".7"/>
+                <rect x="178" y="48" width="6" height="26" fill="currentColor" opacity=".8"/>
+                <rect x="186" y="44" width="6" height="30" fill="currentColor" opacity=".9"/>
+                <rect x="194" y="40" width="6" height="34" fill="currentColor"/>
+                <rect x="202" y="36" width="6" height="38" fill="currentColor"/>
+                <rect x="210" y="34" width="6" height="40" fill="currentColor"/>
+              </g>
+              <!-- Up arrow -->
+              <path d="M50 50 L55 42 L60 50" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#D4322A"></span>DeFi</span><span class="label-sub">DEFI · WEB</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.05</span></a><a class="row" href="opulatrix_game/website/index.html" target="_blank" data-cat="game" data-fam="r" style="--cat:#D4322A"><span class="row-priority" title="游戏"></span><span class="row-id">PRT-11</span><span class="row-title"><span class="row-title-text">游戏商户平台原型 V1.0</span><span class="row-desc">面向游戏发行的商户后台 · 商品上架、库存管理、订单与对账,支持多 SKU 与价格策略。</span></span><span class="row-thumb"><span class="thumb-inner"><svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
               <!-- Sidebar nav -->
               <rect x="18" y="18" width="40" height="64" rx="3" fill="rgba(255,255,255,.5)"/>
               <rect x="24" y="26" width="28" height="6" rx="2" fill="currentColor"/>
@@ -771,155 +493,42 @@ body{background:var(--paper);color:var(--ink);font-family:'Inter','PingFang SC',
                 <rect x="180" y="60" width="34" height="18" rx="2" fill="rgba(255,255,255,.5)"/>
                 <text x="197" y="72" text-anchor="middle" fill="currentColor" font-size="8" font-family="DM Mono,monospace" font-weight="700">¥149</text>
               </g>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 11 / 2026.07</span>
-              <span class="card-cat">GAME · MERCHANT</span>
-            </div>
-            <h3 class="card-title">游戏商户平台原型 V1.0</h3>
-            <p class="card-desc">面向游戏发行的商户后台 · 商品上架、库存管理、订单与对账,支持多 SKU 与价格策略。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.07 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
+            </svg></span></span><span class="row-labels"><span class="label"><span class="label-dot" style="background:#D4322A"></span>游戏</span><span class="label-sub">GAME · MERCHANT</span></span><span class="row-ver">V1.0</span><span class="row-date">2026.07</span></a></div>
 
-        <!-- Card 9: E-commerce - Product grid + cart -->
-        <article class="card" data-cat="ecom" data-href="funnel-cabin-67528323/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
-              <!-- Product grid 3x2 -->
-              <rect x="22" y="18" width="60" height="36" rx="3" fill="rgba(255,255,255,.5)"/>
-              <rect x="32" y="26" width="40" height="20" rx="2" fill="currentColor" opacity=".25"/>
-              <line x1="28" y1="48" x2="48" y2="48" stroke="currentColor" opacity=".6"/>
-              <line x1="28" y1="52" x2="40" y2="52" stroke="currentColor" opacity=".3"/>
+  <div class="footer">
+    <div>michael/workspace/prototypes/index · v5 · warm-paper</div>
+    <div>
+      <span class="fam-tag"><span class="fam-dot" style="background:var(--red)"></span>Frontier</span>
+      <span class="fam-tag"><span class="fam-dot" style="background:var(--green)"></span>Back-office</span>
+    </div>
+  </div>
 
-              <rect x="88" y="18" width="60" height="36" rx="3" fill="currentColor"/>
-              <rect x="98" y="26" width="40" height="20" rx="2" fill="#fff" fill-opacity=".3"/>
-              <line x1="94" y1="48" x2="118" y2="48" stroke="#fff" opacity=".9"/>
-              <line x1="94" y1="52" x2="108" y2="52" stroke="#fff" opacity=".6"/>
-              <text x="142" y="50" text-anchor="end" fill="#fff" font-size="9" font-family="DM Mono,monospace" font-weight="700">¥</text>
-
-              <rect x="154" y="18" width="60" height="36" rx="3" fill="rgba(255,255,255,.5)"/>
-              <rect x="164" y="26" width="40" height="20" rx="2" fill="currentColor" opacity=".25"/>
-              <line x1="160" y1="48" x2="180" y2="48" stroke="currentColor" opacity=".6"/>
-              <line x1="160" y1="52" x2="172" y2="52" stroke="currentColor" opacity=".3"/>
-
-              <rect x="22" y="60" width="60" height="26" rx="3" fill="rgba(255,255,255,.5)"/>
-              <rect x="32" y="66" width="40" height="14" rx="2" fill="currentColor" opacity=".25"/>
-              <line x1="28" y1="84" x2="48" y2="84" stroke="currentColor" opacity=".4"/>
-
-              <rect x="88" y="60" width="60" height="26" rx="3" fill="rgba(255,255,255,.5)"/>
-              <rect x="98" y="66" width="40" height="14" rx="2" fill="currentColor" opacity=".25"/>
-              <line x1="94" y1="84" x2="114" y2="84" stroke="currentColor" opacity=".4"/>
-
-              <rect x="154" y="60" width="60" height="26" rx="3" fill="rgba(255,255,255,.5)"/>
-              <rect x="164" y="66" width="40" height="14" rx="2" fill="currentColor" opacity=".25"/>
-              <line x1="160" y1="84" x2="180" y2="84" stroke="currentColor" opacity=".4"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 09 / 2026.03</span>
-              <span class="card-cat">ECOM · WEB</span>
-            </div>
-            <h3 class="card-title">乐签乐·前端商城</h3>
-            <p class="card-desc">电商前端 · 商品展示与交易流程。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.03 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 10: DeFi OpulRich - Crypto chart + wallet -->
-        <article class="card" data-cat="defi" data-href="OpulRich/index.html">
-          <div class="card-visual">
-            <div class="card-visual-bg"></div>
-            <svg viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">
-              <!-- Wallet card -->
-              <rect x="22" y="22" width="100" height="56" rx="5" fill="currentColor" fill-opacity=".15" stroke="currentColor"/>
-              <line x1="32" y1="34" x2="62" y2="34" stroke="currentColor" opacity=".5"/>
-              <line x1="32" y1="40" x2="80" y2="40" stroke="currentColor" opacity=".3"/>
-              <text x="32" y="56" fill="currentColor" font-size="11" font-family="DM Mono,monospace" font-weight="700">$2,847</text>
-              <text x="32" y="68" fill="currentColor" font-size="6" font-family="DM Mono,monospace" opacity=".5">+24.8%</text>
-              <!-- Mini chart -->
-              <rect x="130" y="22" width="90" height="56" rx="5" fill="rgba(255,255,255,.5)"/>
-              <text x="138" y="34" fill="currentColor" font-size="6" font-family="DM Mono,monospace" font-weight="600">APY</text>
-              <text x="216" y="34" text-anchor="end" fill="currentColor" font-size="7" font-family="DM Mono,monospace" font-weight="700">12.4%</text>
-              <!-- Bar chart -->
-              <g>
-                <rect x="138" y="74" width="6" height="0" fill="currentColor" opacity=".4"/>
-                <rect x="146" y="68" width="6" height="6" fill="currentColor" opacity=".4"/>
-                <rect x="154" y="62" width="6" height="12" fill="currentColor" opacity=".5"/>
-                <rect x="162" y="58" width="6" height="16" fill="currentColor" opacity=".6"/>
-                <rect x="170" y="52" width="6" height="22" fill="currentColor" opacity=".7"/>
-                <rect x="178" y="48" width="6" height="26" fill="currentColor" opacity=".8"/>
-                <rect x="186" y="44" width="6" height="30" fill="currentColor" opacity=".9"/>
-                <rect x="194" y="40" width="6" height="34" fill="currentColor"/>
-                <rect x="202" y="36" width="6" height="38" fill="currentColor"/>
-                <rect x="210" y="34" width="6" height="40" fill="currentColor"/>
-              </g>
-              <!-- Up arrow -->
-              <path d="M50 50 L55 42 L60 50" stroke="currentColor" stroke-width="1.5" fill="none"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <div class="card-head">
-              <span class="card-num">№ 10 / 2026.05</span>
-              <span class="card-cat">DEFI · WEB</span>
-            </div>
-            <h3 class="card-title">OpulRich</h3>
-            <p class="card-desc">企业级 DeFi 金融服务平台。</p>
-            <div class="card-foot">
-              <span class="card-ver">2026.05 · V1.0</span>
-              <button class="card-go" onclick="openProto(this.closest('.card').dataset.href)">进入 <span class="arrow">↗</span></button>
-            </div>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-  </main>
 </div>
 
 <script>
-function openProto(url){window.open(url,'_blank')}
-function openLatest(){
-  const first=document.querySelector('.card');
-  if(first&&first.dataset.href)openProto(first.dataset.href);
-}
-
-const grid=document.getElementById('grid');
-const chips=document.querySelectorAll('.chip');
-const visibleCount=document.getElementById('visibleCount');
-chips.forEach(c=>c.addEventListener('click',()=>{
-  chips.forEach(x=>x.classList.remove('active'));
-  c.classList.add('active');
-  const cat=c.dataset.cat;
-  let n=0;
-  grid.querySelectorAll('.card').forEach(card=>{
-    const show=cat==='all'||card.dataset.cat===cat;
-    card.style.display=show?'':'none';
-    if(show)n++;
+  const chips = document.querySelectorAll('.chip');
+  const rows = document.querySelectorAll('.row');
+  function applyFilter(cat) {
+    chips.forEach(x => x.classList.toggle('active', x.dataset.cat === cat));
+    rows.forEach(r => {
+      r.style.display = (cat === 'all' || r.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+  chips.forEach(c => c.addEventListener('click', () => applyFilter(c.dataset.cat)));
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (/^[1-8]$/.test(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      const arr = Array.from(chips);
+      const idx = parseInt(e.key, 10) - 1;
+      if (arr[idx]) { applyFilter(arr[idx].dataset.cat); e.preventDefault(); }
+    }
+    if (e.key === 'Enter' && !e.metaKey && !e.ctrlKey) {
+      window.open("opulatrix_game/website/index.html", '_blank');
+    }
+    if (e.key.toLowerCase() === 'l' && !e.metaKey && !e.ctrlKey) {
+      document.querySelector('#list-head').scrollIntoView({behavior:'smooth', block:'start'});
+    }
   });
-  if(visibleCount)visibleCount.textContent=n;
-}));
-
-grid.addEventListener('click',e=>{
-  // 按钮的 onclick 自己处理跳转，card 区域才走这里
-  if(e.target.closest('button'))return;
-  const card=e.target.closest('.card');
-  if(!card)return;
-  const url=card.dataset.href;
-  if(url)openProto(url);
-});
 </script>
-
 </body>
 </html>
