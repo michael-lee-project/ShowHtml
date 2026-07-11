@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
       completed: 856,
       desc: '30 秒出 4 个 Logo 方案 · VI 系统自动生成 · 海报 / 包装 / 字体设计',
       samples: [
-        { icon: '🎨', name: 'Logo 设计', meta: '生成 320 · 采纳 78%' },
-        { icon: '📐', name: 'VI 系统', meta: '完整 156 套' },
-        { icon: '🖼️', name: '海报设计', meta: '生成 480 · 采纳 71%' }
+        { icon: '🎨', name: 'Logo 设计', meta: '生成 320 · 采纳 78%', cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735927_7be30112.png' },
+        { icon: '📐', name: 'VI 系统', meta: '完整 156 套', cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735928_16cd96b1.png' },
+        { icon: '🖼️', name: '海报设计', meta: '生成 480 · 采纳 71%', cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735929_b6a381a0.png' }
       ]
     },
     {
@@ -109,9 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
       completed: 423,
       desc: '60 秒短视频自动剪辑 · 数字人主播 · 一键多平台分发',
       samples: [
-        { icon: '🎬', name: '短视频', meta: '生成 1.2k · 爆款 156 条' },
-        { icon: '👤', name: '数字人主播', meta: '12 形象 · 6 种语言' },
-        { icon: '📺', name: '宣传片', meta: '企业宣传 80 部' }
+        { icon: '🎬', name: '短视频', meta: '生成 1.2k · 爆款 156 条', cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735954_b99df7f7.png' },
+        { icon: '👤', name: '数字人主播', meta: '12 形象 · 6 种语言', cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735961_01ee2e9b.png' },
+        { icon: '📺', name: '宣传片', meta: '企业宣传 80 部', cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735972_543a1342.png' }
       ]
     },
     {
@@ -301,7 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const samples = expert.samples.map((s, sIdx) => (
       '<div class="ws-detail__sample" data-expert-id="' + expert.id + '" data-sample-idx="' + sIdx + '" role="button" tabindex="0">' +
-        '<div class="ws-detail__sample-thumb" style="background:' + expert.avatar.gradient + ';">' + s.icon + '</div>' +
+        (s.cover
+          ? '<div class="ws-detail__sample-thumb ws-detail__sample-thumb--img"><img src="' + s.cover + '" alt="' + escHtml(s.name) + '" /><span class="ws-detail__sample-thumb-icon">' + s.icon + '</span></div>'
+          : '<div class="ws-detail__sample-thumb" style="background:' + expert.avatar.gradient + ';">' + s.icon + '</div>') +
         '<span class="ws-detail__sample-name">' + s.name + '</span>' +
         '<span class="ws-detail__sample-meta">' + s.meta + '</span>' +
       '</div>'
@@ -343,8 +345,18 @@ document.addEventListener('DOMContentLoaded', () => {
             '<span>立即发需求</span>' +
           '</div>' +
           '<div class="ws-dispatch__head-actions">' +
-            '<div class="ws-dispatch__quick" id="wsDispatchQuick"></div>' +
-            '<button class="ws-dispatch__quick-clear" id="wsQuickClear" type="button" data-state="hidden">清除条件</button>' +
+            '<div class="ws-dispatch__tabs" id="wsDispatchTabs">' +
+              '<button class="ws-dispatch-tab is-active" data-tab="preset" type="button">' +
+                '<span class="ws-dispatch-tab__spark">' + sparkSvg() + '</span>' +
+                '智能提词' +
+              '</button>' +
+              '<button class="ws-dispatch-tab" data-tab="manual" type="button">' +
+                '<span class="ws-dispatch-tab__icon">✏️</span>' +
+                '自己写' +
+              '</button>' +
+            '</div>' +
+            '<div class="ws-dispatch__quick" id="wsDispatchQuick" data-tab="preset"></div>' +
+            '<button class="ws-dispatch__quick-clear" id="wsQuickClear" type="button" data-state="hidden" data-tab="preset">清除条件</button>' +
           '</div>' +
         '</div>' +
         // 录音专家：默认 mic 录音模式
@@ -363,9 +375,14 @@ document.addEventListener('DOMContentLoaded', () => {
               '<button class="ws-dispatch__mic-toggle" id="wsMicToggle" type="button">切换文本输入</button>' +
             '</div>' +
             '<textarea class="ws-dispatch__input" id="wsDispatchInput" placeholder="或输入会议主题、参会人、转录要求..." maxlength="200" style="display:none;"></textarea>'
-          : '<textarea class="ws-dispatch__input" id="wsDispatchInput" placeholder="例：帮我写一篇关于 AI Agent 协同办公的公众号文章，要求轻松幽默，800 字以内..." maxlength="200"></textarea>'
+          : '<textarea class="ws-dispatch__input" id="wsDispatchInput" placeholder="' + (expert.id === 'ceo' ? '例：帮我拆解「Q4 营销全案」并调度写作 + 视频 + 设计 3 个专家协同完成' : expert.id === 'sales' ? '例：把「母婴客户」分配给最合适的销冠专家接管' : '例：帮我写一篇关于 AI Agent 协同办公的公众号文章，要求轻松幽默，800 字以内...') + '" maxlength="200"></textarea>'
         ) +
-        '<button class="ws-dispatch__submit" id="wsDispatchSubmit" type="button">发需求给 ' + expert.name + '</button>' +
+        '<textarea class="ws-dispatch__input ws-dispatch__manual-textarea" id="wsDispatchInputManual" placeholder="写下你的具体要求..." maxlength="500" style="display:none;"></textarea>' +
+        // 智能提词 tab 内联表格（v20）
+        '<div class="ws-dispatch__preset-pane" id="wsDispatchPresetPane" data-tab="preset"></div>' +
+        // v22: 5 专家各加适配 3 字段（image+link+theme，label/icon 按 expert 调整）
+        renderExtrasHTML(expert.id) +
+        '<button class="ws-dispatch__submit" id="wsDispatchSubmit" type="button">✨ AI 生成</button>' +
       '</div>' +
       '</div>' +  // 关闭 ws-tabpanel[dispatch]
       buildDataPanel()
@@ -429,6 +446,217 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    // 绑定派单 tabs（v19：智能提词 / 自己写）
+    const tabsEl = document.getElementById('wsDispatchTabs');
+    if (tabsEl) {
+      tabsEl.querySelectorAll('.ws-dispatch-tab').forEach((tabBtn) => {
+        tabBtn.addEventListener('click', () => {
+          const tab = tabBtn.getAttribute('data-tab');
+          // tab active 切换
+          tabsEl.querySelectorAll('.ws-dispatch-tab').forEach((b) => b.classList.toggle('is-active', b === tabBtn));
+          // 控制 head-actions 元素显示
+          const quick = document.getElementById('wsDispatchQuick');
+          const clearBtn = document.getElementById('wsQuickClear');
+          if (quick) quick.style.display = (tab === 'preset') ? '' : 'none';
+          if (clearBtn) clearBtn.style.display = (tab === 'preset') ? '' : 'none';
+          // 控制 textarea：preset 时隐藏原 textarea + 显示 manual textarea（用同一个）
+          const taOrig = document.getElementById('wsDispatchInput');
+          const taManual = document.getElementById('wsDispatchInputManual');
+          const presetPane = document.getElementById('wsDispatchPresetPane');
+          if (tab === 'preset') {
+            // 智能提词：原 textarea 隐藏（不显示，让条件自动生成需求）
+            if (taOrig && expert.id !== 'audio') taOrig.style.display = 'none';
+            if (taManual) taManual.style.display = 'none';
+            if (presetPane) presetPane.style.display = '';
+          } else {
+            // 自己写：manual textarea 显示，原 textarea 隐藏
+            if (taOrig) taOrig.style.display = 'none';
+            if (taManual) taManual.style.display = '';
+            if (presetPane) presetPane.style.display = 'none';
+            setTimeout(() => {
+              if (taManual && taManual.style.display !== 'none') taManual.focus();
+            }, 50);
+          }
+        });
+      });
+    }
+
+    // 默认 preset tab 时把原 textarea 隐藏（除非 audio 模式用 mic）
+    if (expert.id !== 'audio') {
+      const taOrig = document.getElementById('wsDispatchInput');
+      if (taOrig) taOrig.style.display = 'none';
+    }
+    // audio / CEO / 销冠 模式：preset pane + tabs + manual textarea 都隐藏（恢复老的 textarea 派单区）
+    if (['audio', 'ceo', 'sales'].indexOf(expert.id) >= 0) {
+      const presetPane = document.getElementById('wsDispatchPresetPane');
+      if (presetPane) presetPane.style.display = 'none';
+      const tabsEl = document.getElementById('wsDispatchTabs');
+      if (tabsEl) tabsEl.style.display = 'none';
+      const taManual = document.getElementById('wsDispatchInputManual');
+      if (taManual) taManual.style.display = 'none';
+      // CEO / 销冠：恢复原 textarea 显示（audio 由原 dispatch 渲染负责）
+      if (expert.id === 'ceo' || expert.id === 'sales') {
+        const taOrig = document.getElementById('wsDispatchInput');
+        if (taOrig) taOrig.style.display = '';
+      }
+      // audio 专家：显示 mic + 隐藏原 textarea（mic 切文本输入会自己处理）
+      if (expert.id === 'audio') {
+        const taOrigAudio = document.getElementById('wsDispatchInput');
+        if (taOrigAudio) taOrigAudio.style.display = 'none';
+      }
+    }
+
+    // v22: 参考图片 / 参考链接 / 生成主题 — 6 专家共用（brand + 5 个领域）
+    if (['brand', 'writing', 'video', 'data', 'fengshui', 'zodiac'].indexOf(expert.id) >= 0) {
+      const extras = { images: [], links: [], theme: '' };
+      // 图片上传
+      const imageAddBtn = document.getElementById('wsImageAdd');
+      const imageInput = document.getElementById('wsImageInput');
+      const imageGrid = document.getElementById('wsImageGrid');
+      if (imageAddBtn && imageInput && imageGrid) {
+        imageAddBtn.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', () => {
+          Array.from(imageInput.files || []).forEach((file) => {
+            if (extras.images.length >= 4) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              extras.images.push({ name: file.name, data: e.target.result });
+              renderImageGrid();
+            };
+            reader.readAsDataURL(file);
+          });
+          imageInput.value = '';
+        });
+        function renderImageGrid() {
+          imageGrid.innerHTML = extras.images.map((img, i) => (
+            '<div class="ws-dispatch__image-thumb">' +
+              '<img src="' + img.data + '" alt="' + escHtml(img.name) + '" />' +
+              '<button type="button" class="ws-dispatch__image-remove" data-idx="' + i + '">×</button>' +
+            '</div>'
+          )).join('');
+        }
+        imageGrid.addEventListener('click', (e) => {
+          const btn = e.target.closest('.ws-dispatch__image-remove');
+          if (!btn) return;
+          const idx = parseInt(btn.getAttribute('data-idx'), 10);
+          extras.images.splice(idx, 1);
+          renderImageGrid();
+        });
+      }
+      // 链接添加
+      const linkInput = document.getElementById('wsLinkInput');
+      const linkAddBtn = document.getElementById('wsLinkAdd');
+      const linkChips = document.getElementById('wsLinkChips');
+      function renderLinkChips() {
+        if (!linkChips) return;
+        linkChips.innerHTML = extras.links.map((url, i) => (
+          '<span class="ws-dispatch__link-chip">' +
+            escHtml(url) +
+            '<button type="button" class="ws-dispatch__link-remove" data-idx="' + i + '">×</button>' +
+          '</span>'
+        )).join('');
+      }
+      function tryAddLink() {
+        if (!linkInput) return;
+        const url = linkInput.value.trim();
+        if (!url) return;
+        if (extras.links.length >= 5) return;
+        if (extras.links.indexOf(url) >= 0) { linkInput.value = ''; return; }
+        extras.links.push(url);
+        linkInput.value = '';
+        renderLinkChips();
+      }
+      if (linkAddBtn) linkAddBtn.addEventListener('click', tryAddLink);
+      if (linkInput) {
+        linkInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); tryAddLink(); } });
+      }
+      if (linkChips) {
+        linkChips.addEventListener('click', (e) => {
+          const btn = e.target.closest('.ws-dispatch__link-remove');
+          if (!btn) return;
+          const idx = parseInt(btn.getAttribute('data-idx'), 10);
+          extras.links.splice(idx, 1);
+          renderLinkChips();
+        });
+      }
+      // 生成主题
+      const themeInput = document.getElementById('wsThemeInput');
+      if (themeInput) themeInput.addEventListener('input', () => { extras.theme = themeInput.value; });
+    }
+    // 图片上传
+    const imageAddBtn = document.getElementById('wsImageAdd');
+    const imageInput = document.getElementById('wsImageInput');
+    const imageGrid = document.getElementById('wsImageGrid');
+    if (imageAddBtn && imageInput && imageGrid) {
+      imageAddBtn.addEventListener('click', () => imageInput.click());
+      imageInput.addEventListener('change', () => {
+        Array.from(imageInput.files || []).forEach((file) => {
+          if (extras.images.length >= 4) return;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            extras.images.push({ name: file.name, data: e.target.result });
+            renderImageGrid();
+          };
+          reader.readAsDataURL(file);
+        });
+        imageInput.value = '';
+      });
+      function renderImageGrid() {
+        imageGrid.innerHTML = extras.images.map((img, i) => (
+          '<div class="ws-dispatch__image-thumb">' +
+            '<img src="' + img.data + '" alt="' + escHtml(img.name) + '" />' +
+            '<button type="button" class="ws-dispatch__image-remove" data-idx="' + i + '">×</button>' +
+          '</div>'
+        )).join('');
+      }
+      imageGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.ws-dispatch__image-remove');
+        if (!btn) return;
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        extras.images.splice(idx, 1);
+        renderImageGrid();
+      });
+    }
+    // 链接添加
+    const linkInput = document.getElementById('wsLinkInput');
+    const linkAddBtn = document.getElementById('wsLinkAdd');
+    const linkChips = document.getElementById('wsLinkChips');
+    function renderLinkChips() {
+      if (!linkChips) return;
+      linkChips.innerHTML = extras.links.map((url, i) => (
+        '<span class="ws-dispatch__link-chip">' +
+          escHtml(url) +
+          '<button type="button" class="ws-dispatch__link-remove" data-idx="' + i + '">×</button>' +
+        '</span>'
+      )).join('');
+    }
+    function tryAddLink() {
+      if (!linkInput) return;
+      const url = linkInput.value.trim();
+      if (!url) return;
+      if (extras.links.length >= 5) return;
+      if (extras.links.indexOf(url) >= 0) { linkInput.value = ''; return; }
+      extras.links.push(url);
+      linkInput.value = '';
+      renderLinkChips();
+    }
+    if (linkAddBtn) linkAddBtn.addEventListener('click', tryAddLink);
+    if (linkInput) {
+      linkInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); tryAddLink(); } });
+    }
+    if (linkChips) {
+      linkChips.addEventListener('click', (e) => {
+        const btn = e.target.closest('.ws-dispatch__link-remove');
+        if (!btn) return;
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        extras.links.splice(idx, 1);
+        renderLinkChips();
+      });
+    }
+    // 生成主题
+    const themeInput = document.getElementById('wsThemeInput');
+    if (themeInput) themeInput.addEventListener('input', () => { extras.theme = themeInput.value; });
+
     // 绑定派单提交
     document.getElementById('wsDispatchSubmit').addEventListener('click', () => {
       let req = '';
@@ -454,15 +682,32 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
       } else {
-        const input = document.getElementById('wsDispatchInput');
+        const tabsEl = document.getElementById('wsDispatchTabs');
+        const isManual = tabsEl && tabsEl.querySelector('.ws-dispatch-tab[data-tab="manual"]').classList.contains('is-active');
+        // 手动模式：读 manual textarea；智能提词模式：读原 textarea（兼容旧）
+        const input = isManual
+          ? document.getElementById('wsDispatchInputManual')
+          : document.getElementById('wsDispatchInput');
         req = input ? input.value.trim() : '';
+        // 智能提词模式：textarea 可能是空的，但选中的条件可以自动拼成需求
+        if (!req && !isManual) {
+          const condBar = document.querySelector('.ws-dispatch__conditions-bar .ws-dc-bar__chips');
+          if (condBar) {
+            const condChips = Array.from(condBar.querySelectorAll('.ws-dc-chip')).map((c) => c.innerText.trim());
+            if (condChips.length) {
+              req = '请帮我按以下条件处理：' + condChips.join('；');
+            }
+          }
+        }
         if (!req) {
+          // 报错提示（2s 自动消失）
           if (input) {
             input.style.borderColor = '#E54B4B';
-            input.placeholder = '⚠ 请输入任务需求';
+            const origPH = input.placeholder;
+            input.placeholder = isManual ? '⚠ 请输入任务需求' : '⚠ 请选条件或输入任务';
             setTimeout(() => {
               input.style.borderColor = '';
-              input.placeholder = '例：帮我写一篇关于 AI Agent 协同办公的公众号文章...';
+              input.placeholder = origPH;
             }, 2000);
           }
           return;
@@ -684,6 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultSummary: task.resultSummary
           });
           while (resultHistory.length > HISTORY_MAX) resultHistory.pop();
+          renderHistory();   // v29: 补上 history 渲染调用
         }
       });
     } else {
@@ -747,10 +993,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 按专家类型定制 result 标题 + actions
     const resultMeta = {
       sales:    { title: '✓ 客户对话已接管',  primary: '查看对话',  secondary: ['调整话术', '导出话术'] },
-      brand:    { title: '✓ Logo 方案已生成', primary: '查看大图',  secondary: ['下载源文件', '导出 VI'] },
+      brand:    { title: '✓ Logo 方案已生成', primary: '查看大图',  secondary: ['下载源文件', '导出 VI'],
+                  cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735927_7be30112.png' },
       writing:  { title: '✓ 公众号文章已生成', primary: '查看全文',  secondary: ['复制正文', '一键发布'] },
       audio:    { title: '✓ 会议纪要已生成',  primary: '查看纪要',  secondary: ['下载录音', '导出 Markdown'] },
-      video:    { title: '✓ 60s 短视频已生成', primary: '播放视频',  secondary: ['下载成片', '多平台发布'] },
+      video:    { title: '✓ 60s 短视频已生成', primary: '播放视频',  secondary: ['下载成片', '多平台发布'],
+                  cover: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735954_b99df7f7.png' },
       data:     { title: '✓ 数据分析已完成',  primary: '查看报告',  secondary: ['导出 PDF', '复制摘要'] },
       fengshui: { title: '✓ 八字排盘已生成',  primary: '查看排盘',  secondary: ['复制八字', '分享解析'] },
       zodiac:   { title: '✓ 星座运势已生成',  primary: '查看运势',  secondary: ['分享给朋友', '收藏'] }
@@ -785,6 +1033,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 '<span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + expert.name + '</span>' +
                 '<span class="ws-chat-msg__time">' + new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'}) + ' · ⚡ ' + (task.timeMs / 1000).toFixed(1) + 's · ' + task.cost + ' 算力</span>' +
               '</div>' +
+              (meta.cover
+                ? '<div class="ws-chat-msg__cover"><img src="' + meta.cover + '" alt="AI 生成结果" /></div>'
+                : '') +
               '<div class="ws-chat-msg__content">' + results + '</div>' +
               '<div class="ws-chat-msg__actions">' +
                 '<button class="ws-result__action" data-action="rerun">↻ 重新生成</button>' +
@@ -1773,6 +2024,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!center) return;
     // 用现有的 chat-stream 结构 + 历史回放头标 + 关闭按钮 + 返回按钮
     const results = generateResult(expert, task);
+    // v29: 历史回放用 v28 同样的 cover（按 expert 类型复用 resultMeta）
+    const replayMeta = (typeof resultMeta !== 'undefined' ? resultMeta : {})[expert.id] || {};
+    const replayCover = replayMeta.cover || (
+      expert.id === 'brand' ? 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735927_7be30112.png' :
+      expert.id === 'video' ? 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735954_b99df7f7.png' :
+      null
+    );
     const isCeo = task.isCeo || expert.id === 'ceo';
     const headerTitle = isCeo
       ? '↺ 历史回放 · ' + expert.name + ' 调度任务'
@@ -1804,23 +2062,34 @@ document.addEventListener('DOMContentLoaded', () => {
             '</div>' +
             '<div class="ws-chat-msg__avatar ws-chat-msg__avatar--user">你</div>' +
           '</div>' +
-          '<div class="ws-chat-msg ws-chat-msg--ai">' +
-            '<div class="ws-chat-msg__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div>' +
-            '<div class="ws-chat-msg__bubble">' +
-              '<div class="ws-chat-msg__meta">' +
-                '<span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + expert.name + '</span>' +
-                '<span class="ws-chat-msg__time">' + tsText + ' · ⚡ ' + (task.timeMs / 1000).toFixed(1) + 's · ' + task.cost + ' 算力</span>' +
-              '</div>' +
-              '<div class="ws-chat-msg__content">' + results + '</div>' +
-              '<div class="ws-chat-msg__actions">' +
-                '<button class="ws-result__action" data-action="rerun">↻ 重新生成</button>' +
-                '<button class="ws-result__action" data-action="copy" id="wsReplayCopy">复制结果</button>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-        '<button class="ws-dispatch__submit" id="wsReplayBack" type="button" style="background: linear-gradient(135deg, #8B8B9E, #6E6E84); box-shadow: none;">← 返回发新需求</button>' +
-      '</div>'
+           '<div class="ws-chat-msg ws-chat-msg--ai">' +
+             '<div class="ws-chat-msg__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div>' +
+             '<div class="ws-chat-msg__bubble">' +
+               '<div class="ws-chat-msg__meta">' +
+                 '<span class="ws-chat-msg__tag ws-chat-msg__tag--ai">' + expert.name + '</span>' +
+                 '<span class="ws-chat-msg__time">' + tsText + ' · ⚡ ' + (task.timeMs / 1000).toFixed(1) + 's · ' + task.cost + ' 算力</span>' +
+               '</div>' +
+               (replayCover
+                 ? '<div class="ws-chat-msg__cover"><img src="' + replayCover + '" alt="历史结果" /></div>'
+                 : '') +
+               '<div class="ws-chat-msg__content">' + results + '</div>' +
+               '<div class="ws-chat-msg__actions">' +
+                 '<button class="ws-result__action" data-action="rerun">↻ 重新生成</button>' +
+                 '<button class="ws-result__action" data-action="copy" id="wsReplayCopy">复制结果</button>' +
+               '</div>' +
+             '</div>' +
+           '</div>' +
+         '</div>' +
+         // v30: 历史回放里加 chat input 框（继续追问）
+         '<div class="ws-chat-input">' +
+           '<div class="ws-chat-input__avatar" style="background:' + expert.avatar.gradient + ';">' + expert.avatar.emoji + '</div>' +
+           '<textarea class="ws-chat-input__field" id="wsReplayChatInput" placeholder="继续追问 · 补充需求、让 ' + expert.name + ' 调整..." maxlength="500"></textarea>' +
+           '<button class="ws-chat-input__send" id="wsReplayChatSend" type="button">' +
+             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+           '</button>' +
+         '</div>' +
+         '<button class="ws-dispatch__submit" id="wsReplayBack" type="button" style="background: linear-gradient(135deg, #8B8B9E, #6E6E84); box-shadow: none;">← 返回发新需求</button>' +
+       '</div>'
     );
     // 行动画入场
     if (HAS_GSAP) {
@@ -1835,6 +2104,26 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCenter();
       setTimeout(() => submitTask(expert, task.requirement), 200);
     });
+    // v30: 历史回放 chat input — 继续追问
+    const wsReplayChatInput = document.getElementById('wsReplayChatInput');
+    const wsReplayChatSend = document.getElementById('wsReplayChatSend');
+    if (wsReplayChatInput && wsReplayChatSend) {
+      const sendReplayFollowup = () => {
+        const text = wsReplayChatInput.value.trim();
+        if (!text) return;
+        // 沿用 task 的 requirement + 新追问（保持上下文）
+        const followupReq = task.requirement + '\n\n[追问] ' + text;
+        renderCenter();
+        setTimeout(() => submitTask(expert, followupReq), 200);
+      };
+      wsReplayChatSend.addEventListener('click', sendReplayFollowup);
+      wsReplayChatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendReplayFollowup();
+        }
+      });
+    }
     // 复制
     const copyBtn = document.getElementById('wsReplayCopy');
     if (copyBtn) {
@@ -2356,12 +2645,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // 选项值用于追加到 prompt 「· label：option」
   const QUICK_PRESETS = {
     brand: [
-      { label: '类型',   options: ['Logo', '海报', '商品详情页', 'WEB首页', 'VI手册', '包装'] },
-      { label: '风格',   options: ['极简', '复古', '商务', '潮流', '国潮', '未来感'] },
-      { label: '主色',   options: ['蓝', '红', '绿', '金', '黑', '白'] },
-      { label: '比例',   options: ['横屏', '竖屏', '方形'] },
-      { label: '清晰度', options: ['高清', '标清'] },
-      { label: '行业',   options: ['餐饮', '科技', '教育', '美妆', '金融'] }
+      { label: '类型',   singleSelect: true, options: ['Logo', '海报', '商品详情页', 'WEB首页', 'VI手册', '包装'] },
+      { label: '风格',   singleSelect: true, imageRow: true, options: [
+        { val: '极简',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735773_5807cf52.png' },
+        { val: '复古',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735773_4256f9ed.png' },
+        { val: '商务',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735774_a7d0a572.png' },
+        { val: '潮流',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735808_5d23b72e.png' },
+        { val: '国潮',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735807_1a5ba277.png' },
+        { val: '未来感', thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735806_494ee2b2.png' },
+        { val: '卡通',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736381_b544b75e.png' },
+        { val: '国风',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736378_1e94cb5d.png' },
+        { val: '极光',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736375_416561fc.png' },
+        { val: '赛博朋克', thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736412_a3f4a9c4.png' },
+        { val: '孟菲斯', thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736413_4c4a4cb8.png' },
+        { val: '像素',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736416_3b5c9c86.png' }
+      ] },
+      { label: '比例',   singleSelect: true, options: ['横屏(16:9)', '竖屏(9:16)', '方屏(1:1)', '不限'] }
     ],
     writing: [
       { label: '体裁', options: ['长文', '短文案', '标题', '种草文', '测评'] },
@@ -2377,12 +2676,25 @@ document.addEventListener('DOMContentLoaded', () => {
       { label: '发言人', options: ['区分', '不区分'] }
     ],
     video: [
-      { label: '场景', options: ['种草视频', '知识科普', '剧情短片', '教程演示'] },
-      { label: '时长', options: ['15s', '30s', '60s', '3min'] },
-      { label: '风格', options: ['真人', '二次元', '3D', '实拍'] },
-      { label: '比例', options: ['横屏(16:9)', '竖屏(9:16)', '方屏(1:1)', '不限'] },
-      { label: '字幕', options: ['中文', '中英', '无'] },
-      { label: '配音', options: ['AI配音', '原声', '无声'] }
+      { label: '场景', singleSelect: true, options: ['种草视频', '知识科普', '剧情短片', '教程演示'] },
+      { label: '时长', singleSelect: true, options: ['15s', '30s', '60s', '3min'] },
+      { label: '风格',   singleSelect: true, imageRow: true, options: [
+        { val: '真人',     thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735854_28f078ef.png' },
+        { val: '二次元',   thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735855_89ac1605.png' },
+        { val: '3D',      thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735854_58333813.png' },
+        { val: '实拍',     thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735884_08e5c04c.png' },
+        { val: '都市夜景', thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736482_9ad63bd5.png' },
+        { val: '森林',     thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736455_ac9f35bc.png' },
+        { val: '太空',     thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736459_25ca2ad0.png' },
+        { val: '海底',     thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736490_986024d7.png' },
+        { val: '古风',     thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736489_86f9dd25.png' },
+        { val: '像素动画', thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736525_a41dcb72.png' },
+        { val: '极简动画', thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736521_09cc9830.png' },
+        { val: '黑白',     thumb: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783736524_9c61693a.png' }
+      ] },
+      { label: '比例', singleSelect: true, options: ['横屏(16:9)', '竖屏(9:16)', '方屏(1:1)', '不限'] },
+      { label: '字幕', singleSelect: true, options: ['中文', '中英', '无'] },
+      { label: '配音', singleSelect: true, options: ['AI配音', '原声', '无声'] }
     ],
     data: [
       { label: '图表',   options: ['折线', '柱状', '饼图', '漏斗', '热力图'] },
@@ -2480,20 +2792,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const recent = getRecentChips(expert.id, 6);
     const hotSet = new Set(aiGuess);
 
-    // 1. trigger（简化版 · spark 24×24 · 36px 高）
-    // 2. modal（body 注入到 body 末）
-    quickEl.innerHTML = (
-      '<div class="ws-qc-trigger-wrap">' +
-        '<button class="ws-qc-trigger-single" id="wsQcTrigger" type="button" aria-expanded="false">' +
-          '<span class="ws-qc-trigger-single__spark">' + sparkSvg() + '</span>' +
-          '<span class="ws-qc-trigger-single__text">' +
-            '<span class="ws-qc-trigger-single__label">AI提示词</span>' +
-            '<span class="ws-qc-trigger-single__count" id="wsQcCount" data-state="hidden">0</span>' +
-          '</span>' +
-          '<span class="ws-qc-trigger-single__caret">▾</span>' +
-        '</button>' +
-      '</div>'
-    );
+    // 1. trigger（v21: 右上角 AI提示词 按钮移除，只保留空容器 + modal 兼容）
+    quickEl.innerHTML = '';
 
     // modal HTML（注入到 .window 容器内 — 桌面端弹窗必须限制在 app 窗口内）
     // 移除旧的
@@ -2521,6 +2821,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '<div class="ws-qc-modal__body" id="wsQcBody">' +
           presets.map((row, ri) => {
             const initActive = (quickState[expert.id] && quickState[expert.id][row.label]) || [];
+            // v23: imageRow 跳过（modal 模式不显示图片网格）
+            if (row.imageRow) return '';
             return (
               '<div class="ws-qc-row" data-row-label="' + escHtml(row.label) + '">' +
                 '<div class="ws-qc-row__label">' + escHtml(row.label) + '</div>' +
@@ -2558,6 +2860,116 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
 
     bindQuickPresets(expert, color);
+    // v20: 内联表格到 dispatch 区域
+    renderPresetInlinePane(expert, color);
+  }
+
+  // v20: 智能提词 tab 内联表格
+  // v22: 5 专家 + brand 各加 3 字段（image/link/theme）
+  function renderExtrasHTML(expertId) {
+    const presets = {
+      brand:    { image: { label: '🖼️ 参考图片', placeholder: '上传 Logo / 海报参考' },
+                  link:   { label: '🔗 参考链接', placeholder: 'https://example.com/style-ref' },
+                  theme:  { label: '💡 设计主题', placeholder: '一句话描述设计主题（可选）' } },
+      writing:  { image: { label: '📚 参考文章', placeholder: '上传参考文章截图或链接' },
+                  link:   { label: '🔗 素材链接', placeholder: 'https://example.com/article' },
+                  theme:  { label: '💡 文章主题', placeholder: '一句话描述文章主题（可选）' } },
+      video:    { image: { label: '🖼️ 参考封面', placeholder: '上传参考封面或截图' },
+                  link:   { label: '🎬 视频参考', placeholder: 'https://example.com/sample-video' },
+                  theme:  { label: '💡 视频主题', placeholder: '一句话描述视频主题（可选）' } },
+      data:     { image: { label: '📊 数据源', placeholder: '上传 Excel 截图 / 数据截图' },
+                  link:   { label: '🔗 报告参考', placeholder: 'https://example.com/report' },
+                  theme:  { label: '💡 分析目标', placeholder: '一句话描述分析目标（可选）' } },
+      fengshui: { image: { label: '🖼️ 户型图', placeholder: '上传住宅 / 办公空间图' },
+                  link:   { label: '🔗 参考资料', placeholder: 'https://example.com/fengshui-ref' },
+                  theme:  { label: '💡 关注问题', placeholder: '一句话描述想了解的问题（可选）' } },
+      zodiac:   { image: { label: '🎂 出生信息', placeholder: '上传星盘截图（可选）' },
+                  link:   { label: '🔗 占星参考', placeholder: 'https://example.com/zodiac-ref' },
+                  theme:  { label: '💡 关注问题', placeholder: '一句话描述想了解的问题（可选）' } }
+    };
+    const p = presets[expertId];
+    if (!p) return '';
+    return (
+      '<div class="ws-dispatch__extras" data-expert="' + escHtml(expertId) + '">' +
+        '<div class="ws-dispatch__extra-row">' +
+          '<label class="ws-dispatch__extra-label">' + p.image.label + ' <span class="ws-dispatch__optional">选填</span></label>' +
+          '<div class="ws-dispatch__image-upload" id="wsImageUpload">' +
+            '<input type="file" accept="image/*" multiple id="wsImageInput" hidden />' +
+            '<div class="ws-dispatch__image-grid" id="wsImageGrid"></div>' +
+            '<button type="button" class="ws-dispatch__image-add" id="wsImageAdd">' +
+              '<span class="ws-dispatch__image-add-icon">+</span>' +
+              '<span>上传图片</span>' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ws-dispatch__extra-row">' +
+          '<label class="ws-dispatch__extra-label">' + p.link.label + ' <span class="ws-dispatch__optional">选填</span></label>' +
+          '<div class="ws-dispatch__link-list" id="wsLinkList">' +
+            '<div class="ws-dispatch__link-input-row">' +
+              '<input type="text" class="ws-dispatch__link-input" id="wsLinkInput" placeholder="' + escHtml(p.link.placeholder) + '" />' +
+              '<button type="button" class="ws-dispatch__link-add" id="wsLinkAdd">添加</button>' +
+            '</div>' +
+            '<div class="ws-dispatch__link-chips" id="wsLinkChips"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ws-dispatch__extra-row">' +
+          '<label class="ws-dispatch__extra-label">' + p.theme.label + ' <span class="ws-dispatch__optional">选填</span></label>' +
+          '<input type="text" class="ws-dispatch__theme-input" id="wsThemeInput" placeholder="' + escHtml(p.theme.placeholder) + '" maxlength="60" />' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderPresetInlinePane(expert, color) {
+    const pane = document.getElementById('wsDispatchPresetPane');
+    if (!pane) return;
+    const presets = QUICK_PRESETS[expert.id];
+    if (!presets) { pane.innerHTML = ''; return; }
+    pane.style.setProperty('--qc-color', color);
+    pane.innerHTML = (
+      '<div class="ws-qc-inline__body">' +
+        presets.map((row, ri) => {
+          const initActive = (quickState[expert.id] && quickState[expert.id][row.label]) || [];
+          // v23: imageRow 走图片网格
+          if (row.imageRow) {
+            return (
+              '<div class="ws-qc-row" data-row-label="' + escHtml(row.label) + '">' +
+                '<div class="ws-qc-row__label">' + escHtml(row.label) + '</div>' +
+                '<div class="ws-qc-row__thumbs">' +
+                  row.options.map((opt, oi) => {
+                    const isOn = initActive.indexOf(opt.val) >= 0;
+                    return '<button class="ws-quick-thumb' + (isOn ? ' is-active' : '') + '" type="button"' +
+                      ' data-row-idx="' + ri + '" data-opt-idx="' + oi + '"' +
+                      ' data-row-label="' + escHtml(row.label) + '" data-opt-val="' + escHtml(opt.val) + '"' +
+                      ' style="--qc-color:' + color + '">' +
+                      '<span class="ws-quick-thumb__bg" style="background-image:url(' + opt.thumb + ');"></span>' +
+                      '<span class="ws-quick-thumb__label">' + escHtml(opt.val) + '</span>' +
+                    '</button>';
+                  }).join('') +
+                '</div>' +
+              '</div>'
+            );
+          }
+          // 普通文字 chip
+          return (
+            '<div class="ws-qc-row" data-row-label="' + escHtml(row.label) + '">' +
+              '<div class="ws-qc-row__label">' + escHtml(row.label) + '</div>' +
+              '<div class="ws-qc-row__chips">' +
+                row.options.map((opt, oi) => {
+                  const isOn = initActive.indexOf(opt) >= 0;
+                  return '<button class="ws-quick-chip' + (isOn ? ' is-active' : '') + '" type="button"' +
+                    ' data-row-idx="' + ri + '" data-opt-idx="' + oi + '"' +
+                    ' data-row-label="' + escHtml(row.label) + '" data-opt-val="' + escHtml(opt) + '"' +
+                    ' style="--qc-color:' + color + '">' +
+                    escHtml(opt) +
+                  '</button>';
+                }).join('') +
+              '</div>' +
+            '</div>'
+          );
+        }).join('') +
+      '</div>'
+    );
   }
 
   function bindQuickPresets(expert, color) {
@@ -2572,6 +2984,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const countEl = document.getElementById('wsQcCount');
     const statsEl = document.getElementById('wsQcStats');
     const clearBtn = document.getElementById('wsQuickClear');
+
+    // v20: 智能提词 tab 内联 chip 点击
+    const inlinePane = document.getElementById('wsDispatchPresetPane');
+    if (inlinePane) {
+      inlinePane.addEventListener('click', (e) => {
+        const chip = e.target.closest('.ws-quick-chip, .ws-quick-thumb');
+        if (!chip) return;
+        const rowLabel = chip.getAttribute('data-row-label');
+        const optVal = chip.getAttribute('data-opt-val');
+        if (!rowLabel || !optVal) return;
+        applyChipFromKey(rowLabel, optVal, 'body');
+        // 同步同 row 所有 chip 状态（单选模式：同 row 其他 chip 自动 deactivate）
+        const stateArr = (quickState[expert.id] && quickState[expert.id][rowLabel]) || [];
+        const rowSelector = '.ws-qc-row[data-row-label="' + cssEscape(rowLabel) + '"]';
+        const row = inlinePane.querySelector(rowSelector);
+        if (row) {
+          row.querySelectorAll('.ws-quick-chip, .ws-quick-thumb').forEach((c) => {
+            c.classList.toggle('is-active', stateArr.indexOf(c.getAttribute('data-opt-val')) >= 0);
+          });
+        }
+        // 同步 trigger count + 清除按钮
+        const total = Object.values(quickState[expert.id] || {}).reduce((s, arr) => s + arr.length, 0);
+        const cnt = document.getElementById('wsQcCount');
+        if (cnt) {
+          cnt.textContent = total;
+          cnt.dataset.state = total ? 'visible' : 'hidden';
+        }
+        const hasActive = Object.values(quickState[expert.id] || {}).some((arr) => arr.length > 0);
+        if (clearBtn) clearBtn.setAttribute('data-state', hasActive ? 'visible' : 'hidden');
+        // 同步 dispatch 区条件条
+        renderDispatchConditions();
+      });
+    }
 
     // 在 dispatch 区 textarea 上方渲染已选条件条（v15）
     function renderDispatchConditions() {
@@ -2589,10 +3034,15 @@ document.addEventListener('DOMContentLoaded', () => {
         '<div class="ws-dc-bar__chips">' + chipsHtml + '</div>' +
         '</div>';
       if (!bar) {
-        // 找可见的 textarea（隐藏的音频 mic textarea 也带 id，要排除）
-        const input = Array.from(dispatch.querySelectorAll('#wsDispatchInput'))
-          .find(el => el.style.display !== 'none' && el.offsetParent !== null);
-        if (input) input.insertAdjacentHTML('beforebegin', html);
+        // v20: 优先插到 preset-pane 之前；其次找可见的 textarea
+        const presetPane = document.getElementById('wsDispatchPresetPane');
+        if (presetPane && presetPane.style.display !== 'none') {
+          presetPane.insertAdjacentHTML('beforebegin', html);
+        } else {
+          const input = Array.from(dispatch.querySelectorAll('#wsDispatchInput, #wsDispatchInputManual'))
+            .find(el => el.style.display !== 'none' && el.offsetParent !== null);
+          if (input) input.insertAdjacentHTML('beforebegin', html);
+        }
       } else { bar.outerHTML = html; }
     }
 
@@ -2658,7 +3108,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!quickState[expert.id][rowLabel]) quickState[expert.id][rowLabel] = [];
       const stateArr = quickState[expert.id][rowLabel];
       const k = stateArr.indexOf(optVal);
-      if (source === 'ai' || source === 'recent') {
+      // v28: 单选模式 — 替换数组
+      const rowDef = (QUICK_PRESETS[expert.id] || []).find(r => r.label === rowLabel);
+      if (rowDef && rowDef.singleSelect) {
+        if (k >= 0) stateArr.length = 0;     // 再点取消
+        else { stateArr.length = 0; stateArr.push(optVal); }  // 单选替换
+      } else if (source === 'ai' || source === 'recent') {
         if (k < 0) stateArr.push(optVal);
       } else {
         if (k >= 0) stateArr.splice(k, 1);

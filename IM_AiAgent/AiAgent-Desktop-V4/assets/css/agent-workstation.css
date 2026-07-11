@@ -561,6 +561,31 @@
   justify-content: center;
   font-size: 22px;
 }
+.ws-detail__sample-thumb--img {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+.ws-detail__sample-thumb--img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 240ms ease;
+}
+.ws-detail__sample:hover .ws-detail__sample-thumb--img img {
+  transform: scale(1.04);
+}
+.ws-detail__sample-thumb-icon {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  font-size: 13px;
+  padding: 2px 5px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
 .ws-detail__sample-name {
   font-size: 10.5px;
   font-weight: 700;
@@ -597,6 +622,76 @@
   gap: 6px;
   /* trigger 在清除条件左边：无清除条件时 trigger 靠右 */
 }
+/* v20: 智能提词 tab 内联表格容器 */
+.ws-dispatch__preset-pane {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 8px 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* v25: 不限制高度，筛选区自然展开不滚动 */
+  max-height: none;
+  overflow: visible;
+}
+.ws-dispatch__preset-pane .ws-qc-row {
+  padding: 4px 0;
+}
+.ws-dispatch__preset-pane[data-tab="preset"] {
+  /* 默认显示 */
+}
+
+/* v19: 2 tab 行（智能提词 / 自己写） */
+.ws-dispatch__tabs {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(124, 92, 255, 0.06);
+  border: 1px solid rgba(124, 92, 255, 0.12);
+  border-radius: 999px;
+  padding: 2px;
+  gap: 2px;
+}
+.ws-dispatch-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 160ms ease;
+  white-space: nowrap;
+}
+.ws-dispatch-tab:hover {
+  color: var(--qc-color, var(--text-primary));
+}
+.ws-dispatch-tab.is-active {
+  background: white;
+  color: var(--qc-color, var(--text-primary));
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(124, 92, 255, 0.18);
+}
+.ws-dispatch-tab__spark {
+  display: inline-flex;
+  align-items: center;
+  color: var(--qc-color, var(--text-primary));
+}
+.ws-dispatch-tab__spark svg {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2.2;
+  fill: var(--qc-color, var(--text-primary));
+}
+.ws-dispatch-tab__icon {
+  font-size: 10px;
+}
 .ws-dispatch__head-title {
   font-size: 13px;
   font-weight: 800;
@@ -613,6 +708,205 @@
   color: rgba(26, 34, 56, 0.5);
   font-weight: 500;
 }
+/* v21: 条件下的 3 字段（参考图片 / 参考链接 / 生成主题） */
+.ws-dispatch__extras {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 0 12px;
+}
+.ws-dispatch__extra-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.ws-dispatch__extra-label {
+  flex-shrink: 0;
+  width: 92px;
+  padding-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+.ws-dispatch__optional {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  background: rgba(124, 92, 255, 0.08);
+  padding: 1px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+/* 图片上传 */
+.ws-dispatch__image-upload {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+}
+.ws-dispatch__image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.ws-dispatch__image-thumb {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.ws-dispatch__image-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ws-dispatch__image-remove {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.ws-dispatch__image-remove:hover {
+  background: #E54B4B;
+}
+.ws-dispatch__image-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 12px;
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 160ms ease;
+}
+.ws-dispatch__image-add:hover {
+  border-color: var(--qc-color, var(--text-primary));
+  color: var(--qc-color, var(--text-primary));
+}
+.ws-dispatch__image-add-icon {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1;
+}
+/* 链接 */
+.ws-dispatch__link-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.ws-dispatch__link-input-row {
+  display: flex;
+  gap: 5px;
+}
+.ws-dispatch__link-input {
+  flex: 1;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 160ms;
+}
+.ws-dispatch__link-input:focus {
+  border-color: var(--qc-color, #7C5CFF);
+}
+.ws-dispatch__link-add {
+  height: 30px;
+  padding: 0 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 160ms;
+}
+.ws-dispatch__link-add:hover {
+  border-color: var(--qc-color, #7C5CFF);
+  color: var(--qc-color, #7C5CFF);
+}
+.ws-dispatch__link-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.ws-dispatch__link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px 2px 10px;
+  background: rgba(124, 92, 255, 0.08);
+  border: 1px solid rgba(124, 92, 255, 0.18);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--text-primary);
+  max-width: 100%;
+}
+.ws-dispatch__link-chip span,
+.ws-dispatch__link-chip {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ws-dispatch__link-remove {
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+.ws-dispatch__link-remove:hover {
+  color: #E54B4B;
+}
+/* 主题 */
+.ws-dispatch__theme-input {
+  flex: 1;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 160ms;
+}
+.ws-dispatch__theme-input:focus {
+  border-color: var(--qc-color, #7C5CFF);
+}
+
 .ws-dispatch__input {
   width: 100%;
   min-height: 64px;
@@ -2582,6 +2876,20 @@
   line-height: 1.6;
 }
 .ws-chat-msg__content .ws-mr-section { margin-top: 6px; }
+/* v28: AI 生成结果展示真实图 */
+.ws-chat-msg__cover {
+  margin-top: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+.ws-chat-msg__cover img {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+}
 .ws-chat-msg__actions {
   display: flex;
   gap: 6px;
@@ -3782,6 +4090,95 @@
   gap: 6px;
   flex: 1;
   min-width: 0;
+}
+/* v23: 图片网格（brand / video 风格选择） */
+.ws-qc-row__thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.ws-quick-thumb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 8px;
+  transition: all 200ms ease;
+  overflow: hidden;
+  min-width: 0;
+}
+.ws-quick-thumb__bg {
+  width: 100%;
+  height: 50px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  position: relative;
+  transition: all 200ms ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.ws-quick-thumb__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+.ws-quick-thumb__label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 200ms ease;
+}
+.ws-quick-thumb:hover .ws-quick-thumb__bg {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.ws-quick-thumb.is-active {
+  border-color: var(--qc-color, #7C5CFF);
+}
+.ws-quick-thumb.is-active .ws-quick-thumb__bg {
+  border-color: var(--qc-color, #7C5CFF);
+  box-shadow:
+    0 0 0 2px var(--qc-color, #7C5CFF),
+    0 4px 12px color-mix(in srgb, var(--qc-color, #7C5CFF) 35%, transparent);
+}
+.ws-quick-thumb.is-active .ws-quick-thumb__icon {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+.ws-quick-thumb.is-active .ws-quick-thumb__label {
+  color: var(--qc-color, #7C5CFF);
+  font-weight: 700;
+}
+.ws-quick-thumb.is-active::after {
+  content: '✓';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  background: var(--qc-color, #7C5CFF);
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 .ws-qc-modal__nav {
   width: 200px;
