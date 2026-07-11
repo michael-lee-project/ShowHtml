@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #F8F6F0 0%, #F4F1EA 100%);
-  overflow: hidden;
+  overflow: visible;
   min-width: 0;
 }
 
@@ -125,7 +125,7 @@
   grid-template-columns: 260px 1fr 280px;
   gap: 12px;
   padding: 12px;
-  overflow: hidden;
+  overflow: visible;
   min-height: 0;
 }
 
@@ -136,7 +136,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow: hidden;
+  overflow: visible;
   min-height: 0;
 }
 
@@ -412,7 +412,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow-y: auto;
+  overflow: visible;
   min-height: 0;
 }
 .ws__center::-webkit-scrollbar { width: 6px; }
@@ -1145,7 +1145,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow: hidden;
+  overflow: visible;
   min-height: 0;
 }
 .ws__right-block {

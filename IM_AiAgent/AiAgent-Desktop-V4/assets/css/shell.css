@@ -2,11 +2,11 @@
  * shell.css · 外壳样式 · macOS 标题栏 + 左侧 6 图标导航
  * ============================================================ */
 
-/* ---- 应用窗口容器（1180 × 820 固定，更精致阴影） ---- */
+/* ---- 应用窗口容器（1180 × 820 · 小屏 page 自动滚动） ---- */
 .window {
   width: var(--window-w);
-  height: var(--window-h);
-  margin: 24px auto;
+  min-height: var(--window-h);
+  margin: 16px auto;
   background:
     radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255, 215, 0, 0.06) 0%, transparent 60%),
     radial-gradient(ellipse 60% 40% at 100% 100%, rgba(124, 92, 255, 0.04) 0%, transparent 70%),
