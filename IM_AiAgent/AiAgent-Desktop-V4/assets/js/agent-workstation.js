@@ -15,6 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- 1. 9 专家数据（CEO + 8 领域）---------- */
+  // v33: 专家结果封面图（仅 brand / video 有视觉化结果时显示缩略图）
+  const EXPERT_COVERS = {
+    brand: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735927_7be30112.png',
+    video: 'https://cdn.hailuoai.com/mcp/u343797689841790984/image_tool/output/1783735954_b99df7f7.png'
+  };
+
   const EXPERTS = [
     {
       id: 'ceo',
@@ -299,16 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    const samples = expert.samples.map((s, sIdx) => (
-      '<div class="ws-detail__sample" data-expert-id="' + expert.id + '" data-sample-idx="' + sIdx + '" role="button" tabindex="0">' +
-        (s.cover
-          ? '<div class="ws-detail__sample-thumb ws-detail__sample-thumb--img"><img src="' + s.cover + '" alt="' + escHtml(s.name) + '" /><span class="ws-detail__sample-thumb-icon">' + s.icon + '</span></div>'
-          : '<div class="ws-detail__sample-thumb" style="background:' + expert.avatar.gradient + ';">' + s.icon + '</div>') +
-        '<span class="ws-detail__sample-name">' + s.name + '</span>' +
-        '<span class="ws-detail__sample-meta">' + s.meta + '</span>' +
-      '</div>'
-    )).join('');
-
     center.innerHTML = (
       '<div class="ws-tabbar">' +
         '<button class="ws-tab' + (currentTab === 'dispatch' ? ' is-active' : '') + '" data-tab="dispatch" type="button">派单详情</button>' +
@@ -325,17 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '<div class="ws-detail__status"><span class="ws-detail__status-dot"></span>在线</div>' +
           '</div>' +
         '</div>' +
-        '<div class="ws-detail__stats">' +
-          '<div class="ws-detail__stat"><span class="ws-detail__stat-num ws-detail__stat-num--purple">' + expert.cost + '</span><span class="ws-detail__stat-label">Token 消耗</span></div>' +
-          '<div class="ws-detail__stat"><span class="ws-detail__stat-num ws-detail__stat-num--green">' + (expert.timeMs / 1000).toFixed(1) + 's</span><span class="ws-detail__stat-label">平均耗时</span></div>' +
-          '<div class="ws-detail__stat"><span class="ws-detail__stat-num ws-detail__stat-num--gold">' + expert.successRate + '%</span><span class="ws-detail__stat-label">成功率</span></div>' +
-          '<div class="ws-detail__stat"><span class="ws-detail__stat-num">' + expert.completed.toLocaleString('en-US') + '</span><span class="ws-detail__stat-label">累计完成</span></div>' +
-        '</div>' +
         '<div class="ws-detail__desc">' + expert.desc + '</div>' +
-        '<div>' +
-          '<div class="ws-detail__samples-title">最近案例</div>' +
-          '<div class="ws-detail__samples">' + samples + '</div>' +
-        '</div>' +
       '</div>' +
 
       '<div class="ws-dispatch" id="wsDispatch">' +
@@ -926,7 +912,8 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar: expert.avatar,
             cost: task.cost,
             requirement: task.requirement,
-            resultSummary: task.resultSummary
+            resultSummary: task.resultSummary,
+            cover: EXPERT_COVERS[expert.id] || null   // v33: brand/video 缩略图
           });
           while (resultHistory.length > HISTORY_MAX) resultHistory.pop();
           renderHistory();   // v29: 补上 history 渲染调用
@@ -1116,7 +1103,8 @@ document.addEventListener('DOMContentLoaded', () => {
             cost: currentCost,
             requirement: text,
             resultSummary: '追问 · ' + text.substring(0, 18) + (text.length > 18 ? '...' : ''),
-            isFollowup: true
+            isFollowup: true,
+            cover: EXPERT_COVERS[expert.id] || null   // v33
           });
           while (resultHistory.length > HISTORY_MAX) resultHistory.pop();
           renderHistory();
@@ -1969,8 +1957,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const items = resultHistory.slice(0, HISTORY_MAX).map(t => {
       const fullTask = tasks.find(x => x.id === t.taskId);
       const summary = t.resultSummary || (fullTask && fullTask.resultSummary) || t.expertName + ' · 已生成结果';
+      // v33: brand/video 加缩略图
+      const coverHtml = t.cover
+        ? '<div class="ws-history__item-cover"><img src="' + t.cover + '" alt="' + escHtml(t.expertName) + ' 缩略图" /></div>'
+        : '';
       return (
-        '<div class="ws-history__item" data-task-id="' + t.taskId + '">' +
+        '<div class="ws-history__item ' + (t.cover ? 'ws-history__item--with-cover' : '') + '" data-task-id="' + t.taskId + '">' +
           '<div class="ws-history__item-head">' +
             '<div class="ws-history__item-thumb" style="background:' + t.avatar.gradient + ';">' + t.avatar.emoji + '</div>' +
             '<div class="ws-history__item-head-info">' +
@@ -1979,6 +1971,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '</div>' +
           '</div>' +
           '<div class="ws-history__item-summary">' + summary + '</div>' +
+          coverHtml +
         '</div>'
       );
     }).join('');
