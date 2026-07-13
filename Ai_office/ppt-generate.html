@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PPT 生成 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/ppt-generate.css" />
+  </head>
+
+  <body class="ppt-gen-body">
+    <div id="header-slot"></div>
+
+    <main class="ppt-gen">
+      <div class="container">
+        <!-- ===== Step Indicator ===== -->
+        <div class="step-bar">
+          <a href="dashboard.html" class="step-bar-back">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            返回
+          </a>
+          <div class="steps">
+            <div class="step active" data-step="1">
+              <span class="step-num">01</span>
+              <span class="step-label">选场景</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="2">
+              <span class="step-num">02</span>
+              <span class="step-label">输主题</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="3">
+              <span class="step-num">03</span>
+              <span class="step-label">AI 大纲</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="4">
+              <span class="step-num">04</span>
+              <span class="step-label">选模板</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="5">
+              <span class="step-num">05</span>
+              <span class="step-label">生成</span>
+            </div>
+          </div>
+          <div class="step-bar-quota">
+            <span class="mono">本次消耗 8 额度</span>
+          </div>
+        </div>
+
+        <!-- ===== STEP 1: 选场景 ===== -->
+        <section class="step-panel active" data-panel="1">
+          <div class="panel-head">
+            <div class="eyebrow">第 1 步</div>
+            <h1>选一个工作场景</h1>
+            <p>
+              不同场景会调用不同的内容结构模板,确保你拿到的不是通用 PPT,而是真正能用的汇报。
+            </p>
+          </div>
+
+          <div class="scene-grid-large">
+            <button class="scene-card" data-scene="report" data-name="工作汇报">
+              <img
+                src="https://picsum.photos/seed/sc-report/400/240"
+                alt=""
+                loading="lazy"
+              />
+              <div class="scene-card-body">
+                <h3>工作汇报</h3>
+                <p>周报 · 月报 · 季度 · 年度</p>
+                <span class="tag">3 套模板</span>
+              </div>
+            </button>
+
+            <button class="scene-card" data-scene="proposal" data-name="项目方案">
+              <img
+                src="https://picsum.photos/seed/sc-proposal/400/240"
+                alt=""
+                loading="lazy"
+              />
+              <div class="scene-card-body">
+                <h3>项目方案</h3>
+                <p>背景 · 目标 · 计划 · 预算</p>
+                <span class="tag">3 套模板</span>
+              </div>
+            </button>
+
+            <button class="scene-card" data-scene="review" data-name="述职复盘">
+              <img
+                src="https://picsum.photos/seed/sc-review/400/240"
+                alt=""
+                loading="lazy"
+              />
+              <div class="scene-card-body">
+                <h3>述职复盘</h3>
+                <p>成果 · 问题 · 成长 · 规划</p>
+                <span class="tag">3 套模板</span>
+              </div>
+            </button>
+
+            <button class="scene-card" data-scene="bp" data-name="商业计划">
+              <img
+                src="https://picsum.photos/seed/sc-bp/400/240"
+                alt=""
+                loading="lazy"
+              />
+              <div class="scene-card-body">
+                <h3>商业计划</h3>
+                <p>市场 · 产品 · 模式 · 财务</p>
+                <span class="tag">3 套模板</span>
+              </div>
+            </button>
+
+            <button class="scene-card" data-scene="company" data-name="公司介绍">
+              <img
+                src="https://picsum.photos/seed/sc-company/400/240"
+                alt=""
+                loading="lazy"
+              />
+              <div class="scene-card-body">
+                <h3>公司介绍</h3>
+                <p>企业 · 产品 · 优势 · 案例</p>
+                <span class="tag">3 套模板</span>
+              </div>
+            </button>
+
+            <button class="scene-card" data-scene="sales" data-name="客户提案">
+              <img
+                src="https://picsum.photos/seed/sc-sales/400/240"
+                alt=""
+                loading="lazy"
+              />
+              <div class="scene-card-body">
+                <h3>客户提案</h3>
+                <p>需求 · 方案 · 价值 · 报价</p>
+                <span class="tag">3 套模板</span>
+              </div>
+            </button>
+
+            <button class="scene-card" data-scene="training" data-name="培训课件">
+              <img
+                src="https://picsum.photos/seed/sc-training/400/240"
+                alt=""
+                loading="lazy"
+              />
+              <div class="scene-card-body">
+                <h3>培训课件</h3>
+                <p>目标 · 知识 · 案例 · 练习</p>
+                <span class="tag">3 套模板</span>
+              </div>
+            </button>
+
+            <button class="scene-card scene-card--upload">
+              <div class="scene-card-body">
+                <div class="scene-card-icon">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                    ></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <h3>上传资料生成</h3>
+                <p>Word · PDF · Excel · 网页 · 旧 PPT</p>
+                <span class="tag">6 种来源</span>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <!-- ===== STEP 2: 输主题 + 简单问题 ===== -->
+        <section class="step-panel" data-panel="2">
+          <div class="panel-head">
+            <div class="eyebrow">第 2 步</div>
+            <h1>告诉我们这次汇报</h1>
+            <p>
+              回答 4 个简单问题,剩下的 AI 全部搞定。
+              <br />
+              不用写提示词,不用组织结构,不用考虑设计。
+            </p>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field form-field--wide">
+              <label class="form-label">主题</label>
+              <input
+                type="text"
+                class="form-input"
+                value="2026 Q2 季度工作汇报"
+                placeholder="例:2026 半年工作复盘"
+              />
+              <span class="form-hint">尽量具体,可以包含数字 / 关键节点</span>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">给谁看</label>
+              <div class="chip-group">
+                <button class="chip">直接领导</button>
+                <button class="chip active">部门同事</button>
+                <button class="chip">公司高层</button>
+                <button class="chip">外部客户</button>
+                <button class="chip">合作伙伴</button>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">希望多少页</label>
+              <div class="chip-group">
+                <button class="chip">8-10 页</button>
+                <button class="chip active">15-20 页</button>
+                <button class="chip">25-30 页</button>
+                <button class="chip">30+ 页</button>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">整体风格</label>
+              <div class="chip-group">
+                <button class="chip">更专业</button>
+                <button class="chip active">更简洁</button>
+                <button class="chip">更有创意</button>
+                <button class="chip">更活泼</button>
+              </div>
+            </div>
+
+            <div class="form-field form-field--wide">
+              <label class="form-label">参考资料(可选)</label>
+              <div class="upload-zone">
+                <div class="upload-zone-icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                    ></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <div class="upload-zone-text">
+                  <strong>拖入或点击上传</strong>
+                  <span
+                    >Word · PDF · Excel · 网页链接 · 旧 PPT,AI 自动提炼</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== STEP 3: AI 大纲 ===== -->
+        <section class="step-panel" data-panel="3">
+          <div class="panel-head">
+            <div class="eyebrow">第 3 步 · AI 已生成</div>
+            <h1>调整大纲 · 删改增</h1>
+            <p>
+              灵光 AI 根据你选的"工作汇报"模板生成了完整叙事结构。
+              你可以删除、调整顺序、增加重点,或者让 AI 改写。
+            </p>
+          </div>
+
+          <div class="outline-toolbar">
+            <div class="outline-toolbar-left">
+              <button class="btn btn-ghost btn-sm">+ 增加章节</button>
+              <button class="btn btn-ghost btn-sm">让 AI 重新生成</button>
+            </div>
+            <div class="outline-toolbar-right">
+              <span class="tag tag-accent">17 页 · 约 15 分钟</span>
+            </div>
+          </div>
+
+          <div class="outline-list">
+            <div class="outline-item">
+              <div class="outline-handle">⋮⋮</div>
+              <div class="outline-num">01</div>
+              <div class="outline-content">
+                <h4>封面</h4>
+                <p>2026 Q2 季度工作汇报 · 演讲人 · 日期</p>
+              </div>
+              <div class="outline-actions">
+                <button class="btn-icon-text">编辑</button>
+                <button class="btn-icon-text btn-icon-text--danger">删除</button>
+              </div>
+            </div>
+            <div class="outline-item">
+              <div class="outline-handle">⋮⋮</div>
+              <div class="outline-num">02</div>
+              <div class="outline-content">
+                <h4>本季度概览</h4>
+                <p>核心指标 · 关键里程碑 · 整体节奏</p>
+              </div>
+              <div class="outline-actions">
+                <button class="btn-icon-text">编辑</button>
+                <button class="btn-icon-text btn-icon-text--danger">删除</button>
+              </div>
+            </div>
+            <div class="outline-item">
+              <div class="outline-handle">⋮⋮</div>
+              <div class="outline-num">03</div>
+              <div class="outline-content">
+                <h4>业务进展</h4>
+                <p>核心业务 · 重点项目 · 客户拓展</p>
+              </div>
+              <div class="outline-actions">
+                <button class="btn-icon-text">编辑</button>
+                <button class="btn-icon-text btn-icon-text--danger">删除</button>
+              </div>
+            </div>
+            <div class="outline-item">
+              <div class="outline-handle">⋮⋮</div>
+              <div class="outline-num">04</div>
+              <div class="outline-content">
+                <h4>数据表现</h4>
+                <p>关键数据 · 同比环比 · 图表展示</p>
+              </div>
+              <div class="outline-actions">
+                <button class="btn-icon-text">编辑</button>
+                <button class="btn-icon-text btn-icon-text--danger">删除</button>
+              </div>
+            </div>
+            <div class="outline-item">
+              <div class="outline-handle">⋮⋮</div>
+              <div class="outline-num">05</div>
+              <div class="outline-content">
+                <h4>团队建设</h4>
+                <p>人员变化 · 培训成长 · 文化氛围</p>
+              </div>
+              <div class="outline-actions">
+                <button class="btn-icon-text">编辑</button>
+                <button class="btn-icon-text btn-icon-text--danger">删除</button>
+              </div>
+            </div>
+            <div class="outline-item">
+              <div class="outline-handle">⋮⋮</div>
+              <div class="outline-num">06</div>
+              <div class="outline-content">
+                <h4>问题与挑战</h4>
+                <p>客观问题 · 反思 · 改进方向</p>
+              </div>
+              <div class="outline-actions">
+                <button class="btn-icon-text">编辑</button>
+                <button class="btn-icon-text btn-icon-text--danger">删除</button>
+              </div>
+            </div>
+            <div class="outline-item">
+              <div class="outline-handle">⋮⋮</div>
+              <div class="outline-num">07</div>
+              <div class="outline-content">
+                <h4>下季度规划</h4>
+                <p>核心目标 · 关键举措 · 所需支持</p>
+              </div>
+              <div class="outline-actions">
+                <button class="btn-icon-text">编辑</button>
+                <button class="btn-icon-text btn-icon-text--danger">删除</button>
+              </div>
+            </div>
+            <div class="outline-item outline-item--add">
+              <span class="text-mute">+ 在末尾增加章节</span>
+            </div>
+          </div>
+
+          <div class="outline-tone">
+            <div class="outline-tone-label">让 AI 调整整体语气</div>
+            <div class="chip-group">
+              <button class="chip">更专业</button>
+              <button class="chip">更简洁</button>
+              <button class="chip">更有说服力</button>
+              <button class="chip">更详细</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== STEP 4: 选模板 ===== -->
+        <section class="step-panel" data-panel="4">
+          <div class="panel-head">
+            <div class="eyebrow">第 4 步</div>
+            <h1>选一套模板风格</h1>
+            <p>
+              工作汇报有 3 套模板,每套视觉风格不同,但内容结构一致。
+              <br />
+              选你喜欢的,后面还可以单页切换。
+            </p>
+          </div>
+
+          <div class="template-pick">
+            <button class="tpl-pick-card active">
+              <img
+                src="https://picsum.photos/seed/tpl-pick-1/600/400"
+                alt=""
+                loading="lazy"
+              />
+              <div class="tpl-pick-meta">
+                <strong>温润中性</strong>
+                <span>适合部门内汇报 / 跨团队同步</span>
+              </div>
+            </button>
+            <button class="tpl-pick-card">
+              <img
+                src="https://picsum.photos/seed/tpl-pick-2/600/400"
+                alt=""
+                loading="lazy"
+              />
+              <div class="tpl-pick-meta">
+                <strong>冷峻专业</strong>
+                <span>适合向高层汇报 / 战略沟通</span>
+              </div>
+            </button>
+            <button class="tpl-pick-card">
+              <img
+                src="https://picsum.photos/seed/tpl-pick-3/600/400"
+                alt=""
+                loading="lazy"
+              />
+              <div class="tpl-pick-meta">
+                <strong>活力明亮</strong>
+                <span>适合市场 / 销售 / 跨部门</span>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <!-- ===== STEP 5: 生成 ===== -->
+        <section class="step-panel" data-panel="5">
+          <div class="generating">
+            <div class="generating-visual">
+              <div class="generating-ring"></div>
+              <div class="generating-icon">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <h1>灵光正在生成中</h1>
+            <p>预计 2-3 分钟。你可以继续做别的事,完成后会有通知。</p>
+            <div class="generating-progress">
+              <div class="generating-progress-bar">
+                <div class="generating-progress-fill" style="--w: 38%"></div>
+              </div>
+              <div class="generating-progress-label">
+                <span>已完成 7 / 17 页</span>
+                <span class="mono">剩余约 1 分 42 秒</span>
+              </div>
+            </div>
+            <div class="generating-steps">
+              <div class="generating-step done">✓ 意图识别</div>
+              <div class="generating-step done">✓ 场景匹配</div>
+              <div class="generating-step done">✓ 资料解析</div>
+              <div class="generating-step done">✓ 结构规划</div>
+              <div class="generating-step active">⟳ 内容生成中</div>
+              <div class="generating-step">配图生成</div>
+              <div class="generating-step">版式编排</div>
+              <div class="generating-step">品牌应用</div>
+              <div class="generating-step">质量检查</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Step Footer ===== -->
+        <div class="step-footer">
+          <button class="btn btn-ghost" id="step-prev">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            上一步
+          </button>
+          <div class="step-footer-meta">
+            <span class="mono" id="step-current">第 1 步 / 共 5 步</span>
+          </div>
+          <button class="btn btn-primary" id="step-next">
+            下一步
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+    <script src="js/ppt-generate.js"></script>
+  </body>
+</html>

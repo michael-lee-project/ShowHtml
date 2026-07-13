@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>编辑器 · 2026 Q2 季度工作汇报 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/editor.css" />
+  </head>
+
+  <body class="editor-body">
+    <!-- ===== Top Toolbar ===== -->
+    <div class="editor-top">
+      <div class="editor-top-left">
+        <a href="dashboard.html" class="editor-logo">
+          <span class="logo-mark">灵</span>
+        </a>
+        <div class="editor-divider"></div>
+        <div class="editor-file">
+          <strong>2026 Q2 季度工作汇报</strong>
+          <span class="text-mute mono">工作汇报 · 已自动保存</span>
+        </div>
+      </div>
+
+      <div class="editor-top-center">
+        <button class="editor-tool" title="撤销">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+        </button>
+        <button class="editor-tool" title="重做">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </button>
+        <div class="editor-divider"></div>
+        <button class="editor-tool">文本</button>
+        <button class="editor-tool">图表</button>
+        <button class="editor-tool">配图</button>
+        <div class="editor-divider"></div>
+        <button class="editor-tool">演讲稿</button>
+      </div>
+
+      <div class="editor-top-right">
+        <button class="btn btn-ghost btn-sm">分享</button>
+        <a href="#" class="btn btn-accent btn-sm">
+          导出 PPTX
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <main class="editor">
+      <!-- ===== Left: 页面缩略图 ===== -->
+      <aside class="editor-thumbs">
+        <div class="thumbs-head">
+          <span class="mono">17 页</span>
+          <button class="btn-icon-text">+ 添加</button>
+        </div>
+        <div class="thumbs-list">
+          <div class="thumb">
+            <div class="thumb-num">01</div>
+            <div class="thumb-img" style="background: linear-gradient(135deg, oklch(35% 0.02 60), oklch(20% 0.02 60))">
+              <span>封面</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <div class="thumb-num">02</div>
+            <div class="thumb-img" style="background: oklch(95% 0.02 60)">
+              <span class="text-mute">本季度概览</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <div class="thumb-num">03</div>
+            <div class="thumb-img" style="background: oklch(95% 0.02 60)">
+              <span class="text-mute">业务进展</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <div class="thumb-num">04</div>
+            <div class="thumb-img" style="background: oklch(95% 0.02 60)">
+              <span class="text-mute">数据表现</span>
+            </div>
+          </div>
+          <div class="thumb thumb--active">
+            <div class="thumb-num">05</div>
+            <div class="thumb-img" style="background: linear-gradient(135deg, oklch(95% 0.04 50), oklch(90% 0.06 50))">
+              <strong>团队建设</strong>
+              <span>当前页 · 已锁定文字</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <div class="thumb-num">06</div>
+            <div class="thumb-img" style="background: oklch(95% 0.02 60)">
+              <span class="text-mute">问题与挑战</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <div class="thumb-num">07</div>
+            <div class="thumb-img" style="background: oklch(95% 0.02 60)">
+              <span class="text-mute">下季度规划</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <div class="thumb-num">08</div>
+            <div class="thumb-img" style="background: oklch(20% 0.02 60)">
+              <span style="color: oklch(85% 0.01 80)">结束页</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ===== Center: 画布 ===== -->
+      <section class="editor-canvas">
+        <div class="canvas-toolbar">
+          <div class="canvas-toolbar-left">
+            <button class="canvas-tool">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <span class="text-mute mono">05 / 17</span>
+            <button class="canvas-tool">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+          <div class="canvas-toolbar-right">
+            <button class="canvas-tool canvas-tool--active">适应</button>
+            <button class="canvas-tool">100%</button>
+          </div>
+        </div>
+
+        <div class="canvas-stage">
+          <div class="canvas-page">
+            <div class="canvas-page-head">
+              <div class="canvas-page-eyebrow">05 · 团队建设</div>
+              <div class="canvas-page-title">
+                <em>团队</em>的成长<br />
+                是我们最大的<em>复利</em>
+              </div>
+            </div>
+            <div class="canvas-page-body">
+              <div class="page-stat-row">
+                <div class="page-stat">
+                  <strong>4</strong>
+                  <span>新成员</span>
+                </div>
+                <div class="page-stat">
+                  <strong>12</strong>
+                  <span>培训场次</span>
+                </div>
+                <div class="page-stat">
+                  <strong>96%</strong>
+                  <span>满意度</span>
+                </div>
+                <div class="page-stat">
+                  <strong>3.2</strong>
+                  <span>人均课程</span>
+                </div>
+              </div>
+              <div class="page-quote">
+                <p>
+                  " 我们建立的不是团队,是一支能打仗、相互信任的队伍。
+                  每个人的成长,都会被团队看见。 "
+                </p>
+                <span class="page-quote-attr">— 季度回顾 · 团队负责人</span>
+              </div>
+            </div>
+            <div class="canvas-page-footer">
+              <span class="text-mute mono">2026 Q2 · 团队建设</span>
+              <span class="text-mute mono">05 / 17</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Right: 单页重做面板 ===== -->
+      <aside class="editor-panel">
+        <div class="panel-section">
+          <div class="panel-section-head">
+            <div class="eyebrow">第 5 页 · 操作</div>
+            <h3>单页重做</h3>
+            <p class="text-mute text-sm">
+              不用整套重做,只动你想要的部分。
+            </p>
+          </div>
+
+          <div class="panel-actions">
+            <button class="action-card">
+              <div class="action-card-icon">↻</div>
+              <div>
+                <strong>重新生成本页</strong>
+                <span class="text-mute text-sm">AI 重新生成整个页面</span>
+              </div>
+            </button>
+            <button class="action-card">
+              <div class="action-card-icon">⇄</div>
+              <div>
+                <strong>换一种版式</strong>
+                <span class="text-mute text-sm">保持内容 · 换排版</span>
+              </div>
+            </button>
+            <button class="action-card">
+              <div class="action-card-icon">📝</div>
+              <div>
+                <strong>内容更精简</strong>
+                <span class="text-mute text-sm">文字缩到一半</span>
+              </div>
+            </button>
+            <button class="action-card">
+              <div class="action-card-icon">📊</div>
+              <div>
+                <strong>增加数据图</strong>
+                <span class="text-mute text-sm">数据可视化</span>
+              </div>
+            </button>
+            <button class="action-card">
+              <div class="action-card-icon">🖼️</div>
+              <div>
+                <strong>换一张配图</strong>
+                <span class="text-mute text-sm">AI 重选配图</span>
+              </div>
+            </button>
+            <button class="action-card">
+              <div class="action-card-icon">⏱</div>
+              <div>
+                <strong>变成时间线</strong>
+                <span class="text-mute text-sm">改成时间线版式</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section panel-section--lock">
+          <div class="panel-section-head">
+            <div class="eyebrow">锁定元素 · 换其他</div>
+            <h3>精准控制</h3>
+          </div>
+
+          <div class="lock-card">
+            <div class="lock-card-row">
+              <label class="lock-toggle">
+                <input type="checkbox" checked />
+                <span class="lock-toggle-mark"></span>
+                <span>锁定文字</span>
+              </label>
+              <span class="text-mute text-sm">换设计 / 换配图</span>
+            </div>
+            <div class="lock-card-row">
+              <label class="lock-toggle">
+                <input type="checkbox" />
+                <span class="lock-toggle-mark"></span>
+                <span>锁定设计</span>
+              </label>
+              <span class="text-mute text-sm">只改文字</span>
+            </div>
+            <div class="lock-card-row">
+              <label class="lock-toggle">
+                <input type="checkbox" />
+                <span class="lock-toggle-mark"></span>
+                <span>锁定图片</span>
+              </label>
+              <span class="text-mute text-sm">只换版式</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-section-head">
+            <div class="eyebrow">本页备注 · 演讲稿</div>
+            <h3>AI 已生成</h3>
+          </div>
+
+          <div class="speech-tabs">
+            <button class="speech-tab active">3 分钟版</button>
+            <button class="speech-tab">10 分钟版</button>
+            <button class="speech-tab">问答</button>
+          </div>
+          <div class="speech-body">
+            <p>
+              在团队建设方面,本季度我们迎来了 4 位新成员,共组织了 12 场培训,
+              整体满意度达到 96%。我们不只是扩充了人数,更建立了一支能打仗、相互信任的队伍。
+            </p>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <div class="editor-statusbar">
+      <div class="statusbar-left">
+        <span class="status-dot"></span>
+        <span class="mono">已自动保存 · 11:42</span>
+      </div>
+      <div class="statusbar-center">
+        <span class="mono">17 页 · 约 15 分钟</span>
+      </div>
+      <div class="statusbar-right">
+        <a href="#" class="statusbar-link">生成汇报邮件 →</a>
+        <a href="#" class="statusbar-link">一键 PPTX 导出 →</a>
+      </div>
+    </div>
+  </body>
+</html>

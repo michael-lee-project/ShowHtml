@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>团队空间 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/team.css" />
+  </head>
+
+  <body>
+    <div id="header-slot"></div>
+
+    <main class="team-page">
+      <div class="container">
+        <!-- Team header -->
+        <div class="team-header">
+          <div class="team-header-left">
+            <div class="team-avatar">
+              <span>灵</span>
+            </div>
+            <div class="team-header-info">
+              <h1>灵光团队</h1>
+              <div class="team-header-meta">
+                <span>8 位成员 · 3 个小组</span>
+                <span class="text-mute">·</span>
+                <span class="text-mute">本月已生成 124 个项目</span>
+              </div>
+            </div>
+          </div>
+          <div class="team-header-right">
+            <button class="btn btn-ghost btn-sm">邀请成员</button>
+            <button class="btn btn-ghost btn-sm">权限设置</button>
+            <button class="btn btn-primary btn-sm">+ 新建项目</button>
+          </div>
+        </div>
+
+        <!-- Team nav -->
+        <div class="team-nav">
+          <a href="#" class="team-nav-item active">项目</a>
+          <a href="#" class="team-nav-item">成员</a>
+          <a href="#" class="team-nav-item">团队模板</a>
+          <a href="#" class="team-nav-item">素材库</a>
+          <a href="#" class="team-nav-item">审核</a>
+          <a href="#" class="team-nav-item">设置</a>
+        </div>
+
+        <!-- Stats row -->
+        <div class="team-stats">
+          <div class="team-stat">
+            <div class="team-stat-num">124</div>
+            <div class="team-stat-label">本月项目</div>
+            <div class="team-stat-trend">+18%</div>
+          </div>
+          <div class="team-stat">
+            <div class="team-stat-num">86%</div>
+            <div class="team-stat-label">平均完成率</div>
+            <div class="team-stat-trend team-stat-trend--up">+4%</div>
+          </div>
+          <div class="team-stat">
+            <div class="team-stat-num">3.2 天</div>
+            <div class="team-stat-label">平均完成时长</div>
+            <div class="team-stat-trend team-stat-trend--down">-0.8 天</div>
+          </div>
+          <div class="team-stat">
+            <div class="team-stat-num">42</div>
+            <div class="team-stat-label">团队模板</div>
+            <div class="team-stat-trend">+6</div>
+          </div>
+        </div>
+
+        <!-- Two columns: project list + members -->
+        <div class="team-grid">
+          <!-- Project list -->
+          <section class="team-projects">
+            <div class="team-section-head">
+              <h2>团队项目</h2>
+              <div class="team-section-actions">
+                <button class="btn btn-text btn-sm">最近</button>
+                <button class="btn btn-text btn-sm active">进行中</button>
+                <button class="btn btn-text btn-sm">已完成</button>
+              </div>
+            </div>
+
+            <div class="project-list">
+              <a href="editor.html" class="project-row">
+                <div class="project-thumb">
+                  <img
+                    src="https://picsum.photos/seed/team-p1/300/180"
+                    alt=""
+                    loading="lazy"
+                  />
+                </div>
+                <div class="project-meta">
+                  <strong>2026 Q2 全员工作汇报</strong>
+                  <p>工作汇报 · 18 页 · 由 王芳 发起</p>
+                </div>
+                <div class="project-team">
+                  <div class="avatar-stack">
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 25)">王</span>
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 145)">李</span>
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 250)">张</span>
+                  </div>
+                </div>
+                <div class="project-status">
+                  <span class="status-pill status-pill--progress">进行中</span>
+                </div>
+              </a>
+
+              <a href="editor.html" class="project-row">
+                <div class="project-thumb">
+                  <img
+                    src="https://picsum.photos/seed/team-p2/300/180"
+                    alt=""
+                    loading="lazy"
+                  />
+                </div>
+                <div class="project-meta">
+                  <strong>智能家居项目立项方案</strong>
+                  <p>项目方案 · 24 页 · 由 李明 发起</p>
+                </div>
+                <div class="project-team">
+                  <div class="avatar-stack">
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 250)">张</span>
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 75)">陈</span>
+                  </div>
+                </div>
+                <div class="project-status">
+                  <span class="status-pill status-pill--review">待审核</span>
+                </div>
+              </a>
+
+              <a href="editor.html" class="project-row">
+                <div class="project-thumb">
+                  <img
+                    src="https://picsum.photos/seed/team-p3/300/180"
+                    alt=""
+                    loading="lazy"
+                  />
+                </div>
+                <div class="project-meta">
+                  <strong>某品牌产品发布会</strong>
+                  <p>客户提案 · 32 页 · 由 张薇 发起</p>
+                </div>
+                <div class="project-team">
+                  <div class="avatar-stack">
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 75)">陈</span>
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 25)">王</span>
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 145)">李</span>
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 50)">赵</span>
+                  </div>
+                </div>
+                <div class="project-status">
+                  <span class="status-pill status-pill--progress">进行中</span>
+                </div>
+              </a>
+
+              <a href="editor.html" class="project-row">
+                <div class="project-thumb">
+                  <img
+                    src="https://picsum.photos/seed/team-p4/300/180"
+                    alt=""
+                    loading="lazy"
+                  />
+                </div>
+                <div class="project-meta">
+                  <strong>2026 春季新员工训练营</strong>
+                  <p>培训课件 · 30 页 · 由 赵磊 发起</p>
+                </div>
+                <div class="project-team">
+                  <div class="avatar-stack">
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 50)">赵</span>
+                    <span class="avatar-mini" style="background: oklch(60% 0.18 290)">周</span>
+                  </div>
+                </div>
+                <div class="project-status">
+                  <span class="status-pill status-pill--done">已完成</span>
+                </div>
+              </a>
+            </div>
+          </section>
+
+          <!-- Members -->
+          <section class="team-members">
+            <div class="team-section-head">
+              <h2>成员 · 8 人</h2>
+              <button class="btn btn-text btn-sm">+ 邀请</button>
+            </div>
+
+            <div class="member-list">
+              <div class="member-row">
+                <div class="avatar-mini avatar-mini--lg" style="background: oklch(60% 0.18 250)">张</div>
+                <div class="member-meta">
+                  <strong>张明</strong>
+                  <span class="text-mute">管理员 · 产品总监</span>
+                </div>
+                <span class="text-mute mono">本月 28 个</span>
+              </div>
+              <div class="member-row">
+                <div class="avatar-mini avatar-mini--lg" style="background: oklch(60% 0.18 25)">王</div>
+                <div class="member-meta">
+                  <strong>王芳</strong>
+                  <span class="text-mute">编辑 · 运营经理</span>
+                </div>
+                <span class="text-mute mono">本月 22 个</span>
+              </div>
+              <div class="member-row">
+                <div class="avatar-mini avatar-mini--lg" style="background: oklch(60% 0.18 145)">李</div>
+                <div class="member-meta">
+                  <strong>李明</strong>
+                  <span class="text-mute">编辑 · 市场经理</span>
+                </div>
+                <span class="text-mute mono">本月 18 个</span>
+              </div>
+              <div class="member-row">
+                <div class="avatar-mini avatar-mini--lg" style="background: oklch(60% 0.18 75)">陈</div>
+                <div class="member-meta">
+                  <strong>陈静</strong>
+                  <span class="text-mute">查看 · 设计师</span>
+                </div>
+                <span class="text-mute mono">本月 14 个</span>
+              </div>
+              <div class="member-row">
+                <div class="avatar-mini avatar-mini--lg" style="background: oklch(60% 0.18 50)">赵</div>
+                <div class="member-meta">
+                  <strong>赵磊</strong>
+                  <span class="text-mute">编辑 · 培训师</span>
+                </div>
+                <span class="text-mute mono">本月 12 个</span>
+              </div>
+              <div class="member-row">
+                <div class="avatar-mini avatar-mini--lg" style="background: oklch(60% 0.18 290)">周</div>
+                <div class="member-meta">
+                  <strong>周晓</strong>
+                  <span class="text-mute">查看 · HR</span>
+                </div>
+                <span class="text-mute mono">本月 8 个</span>
+              </div>
+            </div>
+
+            <div class="team-section-head" style="margin-top: var(--space-7)">
+              <h2>待审核 · 2 项</h2>
+            </div>
+            <div class="review-list">
+              <div class="review-row">
+                <strong>智能家居项目立项方案</strong>
+                <p>由 李明 提交 · 需要 1 位审核人</p>
+                <div class="review-actions">
+                  <button class="btn btn-ghost btn-sm">查看</button>
+                  <button class="btn btn-primary btn-sm">通过</button>
+                </div>
+              </div>
+              <div class="review-row">
+                <strong>某品牌产品发布会</strong>
+                <p>由 张薇 提交 · 需要 1 位审核人</p>
+                <div class="review-actions">
+                  <button class="btn btn-ghost btn-sm">查看</button>
+                  <button class="btn btn-primary btn-sm">通过</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+      document.querySelectorAll(".team-nav-item").forEach((t) => {
+        t.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelectorAll(".team-nav-item").forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+        });
+      });
+      document.querySelectorAll(".team-section-actions .btn-text").forEach((t) => {
+        t.addEventListener("click", () => {
+          document.querySelectorAll(".team-section-actions .btn-text").forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

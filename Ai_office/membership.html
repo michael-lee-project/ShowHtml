@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>会员中心 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/membership.css" />
+  </head>
+
+  <body>
+    <div id="header-slot"></div>
+
+    <main class="member-page">
+      <div class="container">
+        <!-- Current status -->
+        <div class="current-bar">
+          <div class="current-bar-left">
+            <div class="eyebrow">当前套餐</div>
+            <h2>个人专业版 · 月付</h2>
+            <span class="text-mute">下次续费 · 2026 年 8 月 13 日</span>
+          </div>
+          <div class="current-bar-right">
+            <div class="quota-mini">
+              <span class="mono">22 / 50 额度</span>
+              <div class="quota-mini-bar">
+                <div style="--w: 44%"></div>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm">用量明细</button>
+            <button class="btn btn-ghost btn-sm">管理订阅</button>
+          </div>
+        </div>
+
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">选择适合你的套餐</div>
+            <h1>不按次数收费<br />按你交付的价值收费</h1>
+            <p>基础编辑、项目保存和低成本操作不频繁扣点;高成本操作(整套重生成、高清图片、多尺寸批量)单独计费。失败任务自动返还。</p>
+          </div>
+        </div>
+
+        <!-- Plans -->
+        <div class="plan-grid">
+          <article class="plan-card">
+            <div class="plan-card-head">
+              <span class="plan-card-eyebrow">免费</span>
+              <h3>首次体验</h3>
+              <p>看看灵光是不是你想要的</p>
+            </div>
+            <div class="plan-card-price">
+              <span class="plan-price-num">¥0</span>
+              <span class="plan-price-unit">/ 永久</span>
+            </div>
+            <a href="#" class="btn btn-ghost">当前套餐</a>
+            <ul class="plan-card-list">
+              <li><span class="check">✓</span>每月 5 次 AI 生成</li>
+              <li><span class="check">✓</span>基础模板(7 套)</li>
+              <li><span class="check">✓</span>PDF 导出</li>
+              <li><span class="check">✓</span>平台标识</li>
+              <li class="muted"><span class="cross">·</span>不可商用</li>
+              <li class="muted"><span class="cross">·</span>无 PPTX 可编辑导出</li>
+            </ul>
+          </article>
+
+          <article class="plan-card plan-card--featured">
+            <div class="plan-card-head">
+              <span class="plan-card-eyebrow plan-card-eyebrow--accent">推荐</span>
+              <h3>个人专业版</h3>
+              <p>高频职场与专业用户</p>
+            </div>
+            <div class="plan-card-price">
+              <span class="plan-price-num">¥99</span>
+              <span class="plan-price-unit">/ 月</span>
+              <span class="plan-price-yearly">年付 ¥948 · 省 20%</span>
+            </div>
+            <a href="#" class="btn btn-accent">升级套餐</a>
+            <ul class="plan-card-list">
+              <li><span class="check">✓</span>每月 50 额度</li>
+              <li><span class="check">✓</span>全部 21 套精品模板</li>
+              <li><span class="check">✓</span><strong>PPTX 可编辑导出</strong></li>
+              <li><span class="check">✓</span>高清图片 / 多尺寸</li>
+              <li><span class="check">✓</span>品牌套件 / Logo / 字体</li>
+              <li><span class="check">✓</span>商用授权</li>
+              <li><span class="check">✓</span>优先客服</li>
+            </ul>
+          </article>
+
+          <article class="plan-card">
+            <div class="plan-card-head">
+              <span class="plan-card-eyebrow">中小企业</span>
+              <h3>团队版</h3>
+              <p>部门 / 工作室协作</p>
+            </div>
+            <div class="plan-card-price">
+              <span class="plan-price-num">¥30</span>
+              <span class="plan-price-unit">/ 席位 / 月</span>
+            </div>
+            <a href="#" class="btn btn-ghost">联系销售</a>
+            <ul class="plan-card-list">
+              <li><span class="check">✓</span>包含个人专业版所有权益</li>
+              <li><span class="check">✓</span>团队共享品牌中心</li>
+              <li><span class="check">✓</span>团队模板库 / 素材库</li>
+              <li><span class="check">✓</span>成员权限管理</li>
+              <li><span class="check">✓</span>协作与评论</li>
+              <li><span class="check">✓</span>统一账单</li>
+              <li><span class="check">✓</span>5 席起</li>
+            </ul>
+          </article>
+
+          <article class="plan-card plan-card--dark">
+            <div class="plan-card-head">
+              <span class="plan-card-eyebrow">企业</span>
+              <h3>企业版</h3>
+              <p>中大型组织</p>
+            </div>
+            <div class="plan-card-price">
+              <span class="plan-price-num">定制</span>
+              <span class="plan-price-unit">/ 年度合同</span>
+            </div>
+            <a href="#" class="btn btn-primary">商务咨询</a>
+            <ul class="plan-card-list">
+              <li><span class="check">✓</span>包含团队版所有权益</li>
+              <li><span class="check">✓</span>私有模板 / 企业知识库</li>
+              <li><span class="check">✓</span>API 接入 / SSO</li>
+              <li><span class="check">✓</span>数据权限 / 操作审计</li>
+              <li><span class="check">✓</span>私有化或专属模型方案</li>
+              <li><span class="check">✓</span>专属客户经理</li>
+            </ul>
+          </article>
+        </div>
+
+        <!-- Quota / Add-on -->
+        <section class="addons">
+          <div class="section-head">
+            <div class="eyebrow">AI 点数</div>
+            <h2>需要更多额度?单独买</h2>
+            <p class="text-mute">高成本操作(整套重生成、高清图片、多尺寸批量、高级模型)单独计费。点数不过期,失败任务自动返还。</p>
+          </div>
+
+          <div class="addon-grid">
+            <div class="addon-card">
+              <strong>20 点数</strong>
+              <span class="text-mute">适合临时补充</span>
+              <div class="addon-price">
+                <span class="text-display">¥29</span>
+                <span class="text-mute">1.45 元/点</span>
+              </div>
+              <button class="btn btn-ghost btn-sm">购买</button>
+            </div>
+            <div class="addon-card addon-card--featured">
+              <strong>100 点数</strong>
+              <span class="text-mute">最热销 · 个人专业版用户</span>
+              <div class="addon-price">
+                <span class="text-display">¥99</span>
+                <span class="text-mute">0.99 元/点 · 省 31%</span>
+              </div>
+              <button class="btn btn-accent btn-sm">购买</button>
+            </div>
+            <div class="addon-card">
+              <strong>500 点数</strong>
+              <span class="text-mute">适合企业重度使用</span>
+              <div class="addon-price">
+                <span class="text-display">¥399</span>
+                <span class="text-mute">0.80 元/点 · 省 45%</span>
+              </div>
+              <button class="btn btn-ghost btn-sm">购买</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Template add-on -->
+        <section class="addons">
+          <div class="section-head">
+            <div class="eyebrow">精品模板</div>
+            <h2>解锁更多高级模板</h2>
+            <p class="text-mute">每个精品模板由专业设计师出品,包含完整内容结构、视觉规范、版式组件,3 套合一包。</p>
+          </div>
+
+          <div class="template-pack-grid">
+            <div class="pack-card">
+              <div class="pack-thumb">
+                <img
+                  src="https://picsum.photos/seed/pack-1/600/300"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+              <div class="pack-info">
+                <strong>金融行业 3 套</strong>
+                <p>项目方案 / 述职 / 商业计划</p>
+              </div>
+              <div class="pack-price">
+                <span class="text-display">¥49</span>
+                <button class="btn btn-ghost btn-sm">解锁</button>
+              </div>
+            </div>
+            <div class="pack-card">
+              <div class="pack-thumb">
+                <img
+                  src="https://picsum.photos/seed/pack-2/600/300"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+              <div class="pack-info">
+                <strong>医疗行业 3 套</strong>
+                <p>项目方案 / 客户提案 / 公司介绍</p>
+              </div>
+              <div class="pack-price">
+                <span class="text-display">¥49</span>
+                <button class="btn btn-ghost btn-sm">解锁</button>
+              </div>
+            </div>
+            <div class="pack-card">
+              <div class="pack-thumb">
+                <img
+                  src="https://picsum.photos/seed/pack-3/600/300"
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
+              <div class="pack-info">
+                <strong>教育行业 3 套</strong>
+                <p>培训课件 / 述职 / 项目方案</p>
+              </div>
+              <div class="pack-price">
+                <span class="text-display">¥49</span>
+                <button class="btn btn-ghost btn-sm">解锁</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="addons">
+          <div class="section-head">
+            <div class="eyebrow">常见问题</div>
+            <h2>关于订阅</h2>
+          </div>
+
+          <div class="faq-list">
+            <details class="faq-item" open>
+              <summary>点数会过期吗?</summary>
+              <p>不会过期。点数永久有效,直到你用完为止。年度会员到期后,点数仍然保留在你的账户中。</p>
+            </details>
+            <details class="faq-item">
+              <summary>失败的任务会扣点吗?</summary>
+              <p>不会。如果 AI 生成失败或网络中断,系统会自动返还该次任务消耗的点数,你可以重新尝试。</p>
+            </details>
+            <details class="faq-item">
+              <summary>可以升级或降级套餐吗?</summary>
+              <p>可以。升级立即生效,差价按剩余天数比例计算;降级在当前周期结束后生效。随时可在账户设置中调整。</p>
+            </details>
+            <details class="faq-item">
+              <summary>团队版的点数怎么算?</summary>
+              <p>团队版按席位分配基础额度,共享团队点数池。管理员可以查看每个成员的使用情况,统一续费和升级。</p>
+            </details>
+            <details class="faq-item">
+              <summary>企业版支持私有部署吗?</summary>
+              <p>支持。企业版可选择公有云、私有云或本地化部署。我们提供专属模型方案、SSO、审计日志、SLA 等企业级能力。</p>
+            </details>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+  </body>
+</html>

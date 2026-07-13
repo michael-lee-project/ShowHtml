@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>模板中心 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/templates.css" />
+  </head>
+
+  <body>
+    <div id="header-slot"></div>
+
+    <main class="templates-page">
+      <div class="container">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">模板中心</div>
+            <h1>21 套精品模板<br />覆盖 7 大场景</h1>
+            <p>每套模板 = 视觉模板(色 / 字 / 图) + 版式模板(时间线 / 对比 / 数据) + 内容结构模板(自动形成完整叙事)。</p>
+          </div>
+          <div class="page-head-actions">
+            <a href="#" class="btn btn-ghost btn-sm">+ 创建私有模板</a>
+            <a href="#" class="btn btn-primary btn-sm">仅看我的</a>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+          <div class="filter-tabs">
+            <button class="filter-tab active">全部</button>
+            <button class="filter-tab">工作汇报</button>
+            <button class="filter-tab">项目方案</button>
+            <button class="filter-tab">述职复盘</button>
+            <button class="filter-tab">商业计划</button>
+            <button class="filter-tab">公司介绍</button>
+            <button class="filter-tab">客户提案</button>
+            <button class="filter-tab">培训课件</button>
+          </div>
+          <div class="filter-sort">
+            <span class="text-mute mono">按使用量</span>
+          </div>
+        </div>
+
+        <!-- Template Grid -->
+        <div class="tpl-market-grid">
+          <!-- Group: 工作汇报 (3) -->
+          <article class="tpl-card tpl-card--lg">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-r1/720/520"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>温润中性 · 工作汇报</strong>
+                <span class="tag tag-accent">最热</span>
+              </div>
+              <p>部门内汇报 / 跨团队同步</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">12 页 · 已用 1.2 万次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-r2/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>冷峻专业 · 工作汇报</strong>
+              </div>
+              <p>向高层汇报 / 战略沟通</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">15 页 · 已用 8 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-r3/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>活力明亮 · 工作汇报</strong>
+              </div>
+              <p>市场 / 销售 / 跨部门</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">14 页 · 已用 6 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Group: 项目方案 (3) -->
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-p1/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>商务简洁 · 项目方案</strong>
+              </div>
+              <p>立项 / 阶段汇报</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">24 页 · 已用 5 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-p2/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>科技蓝图 · 项目方案</strong>
+              </div>
+              <p>技术 / 产品 / 研发项目</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">20 页 · 已用 4 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-p3/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>视觉震撼 · 项目方案</strong>
+              </div>
+              <p>品牌 / 创意 / 设计项目</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">22 页 · 已用 3 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Group: 述职复盘 (3) -->
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-re1/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>成长叙事 · 述职复盘</strong>
+              </div>
+              <p>个人 / 团队季度述职</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">16 页 · 已用 4 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-re2/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>数据严谨 · 述职复盘</strong>
+              </div>
+              <p>管理层 / 业务复盘</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">18 页 · 已用 3 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-re3/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>故事讲述 · 述职复盘</strong>
+              </div>
+              <p>市场 / 创意 / 运营</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">14 页 · 已用 2 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Group: 商业计划 (3) -->
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-bp1/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>投资人视角 · 商业计划</strong>
+              </div>
+              <p>融资 / 路演</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">32 页 · 已用 3 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-bp2/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>战略分析 · 商业计划</strong>
+              </div>
+              <p>战略规划 / 经营计划</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">28 页 · 已用 2 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-bp3/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>产品发布 · 商业计划</strong>
+              </div>
+              <p>新产品 / 新业务</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">24 页 · 已用 2 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Group: 公司介绍 (3) -->
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-c1/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>品牌故事 · 公司介绍</strong>
+              </div>
+              <p>对外宣传 / 招商加盟</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">20 页 · 已用 2 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-c2/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>产品矩阵 · 公司介绍</strong>
+              </div>
+              <p>ToB / SaaS / 平台</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">22 页 · 已用 1.5 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-c3/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>简洁现代 · 公司介绍</strong>
+              </div>
+              <p>初创 / 工作室 / 自由职业</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">16 页 · 已用 1 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Group: 客户提案 (3) -->
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-s1/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>顾问型 · 客户提案</strong>
+              </div>
+              <p>咨询 / 培训 / 服务</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">28 页 · 已用 1.5 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-s2/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>价值聚焦 · 客户提案</strong>
+              </div>
+              <p>营销 / 销售 / 商务</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">24 页 · 已用 1.2 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-s3/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>案例驱动 · 客户提案</strong>
+              </div>
+              <p>设计 / 创意 / 代理</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">26 页 · 已用 800 次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Group: 培训课件 (3) -->
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-t1/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>知识传授 · 培训课件</strong>
+              </div>
+              <p>新员工 / 通用技能</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">30 页 · 已用 1.5 千次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-t2/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>互动练习 · 培训课件</strong>
+              </div>
+              <p>工作坊 / 实操培训</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">26 页 · 已用 800 次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+          <article class="tpl-card">
+            <div class="tpl-preview">
+              <img
+                src="https://picsum.photos/seed/market-t3/600/400"
+                alt=""
+                loading="lazy"
+              />
+            </div>
+            <div class="tpl-info">
+              <div class="tpl-info-head">
+                <strong>案例研讨 · 培训课件</strong>
+              </div>
+              <p>管理层 / 进阶培训</p>
+              <div class="tpl-info-meta">
+                <span class="text-mute mono">24 页 · 已用 600 次</span>
+                <a href="ppt-generate.html" class="btn btn-text btn-sm">使用 →</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+      document.querySelectorAll(".filter-tab").forEach((t) => {
+        t.addEventListener("click", () => {
+          document.querySelectorAll(".filter-tab").forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

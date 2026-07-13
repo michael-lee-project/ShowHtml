@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>工作台 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+
+  <body>
+    <div id="header-slot"></div>
+
+    <main class="dashboard">
+      <!-- ===== Welcome ===== -->
+      <section class="dash-welcome">
+        <div class="container">
+          <div class="welcome-grid">
+            <div class="welcome-text">
+              <div class="welcome-eyebrow">
+                <span class="dot"></span>
+                周三 · 7月 16
+              </div>
+              <h1>下午好,李同学</h1>
+              <p>
+                你今天还有 1 份季度汇报待完成,1 份提案已生成待编辑。
+                <br />
+                选一个开始吧。
+              </p>
+            </div>
+            <div class="welcome-quota">
+              <div class="quota-card">
+                <div class="quota-num">
+                  <span class="text-display">28</span>
+                  <span class="quota-unit">/ 50</span>
+                </div>
+                <div class="quota-label">本月 AI 额度</div>
+                <div class="quota-bar">
+                  <div class="quota-bar-fill" style="--w: 56%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 3 大入口 ===== -->
+      <section class="section section-entry">
+        <div class="container">
+          <div class="bento-entry">
+            <a href="ppt-generate.html" class="bento-cell bento-cell--ppt">
+              <div class="bento-cell-image">
+                <img
+                  src="https://picsum.photos/seed/dash-ppt/720/360"
+                  alt="PPT"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bento-cell-body">
+                <h3>我要做 PPT</h3>
+                <p>7 大场景 · 21 套精品模板 · 一键生成</p>
+                <span class="bento-cell-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="image-generate.html" class="bento-cell bento-cell--img">
+              <div class="bento-cell-image">
+                <img
+                  src="https://picsum.photos/seed/dash-img/720/360"
+                  alt="图片"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bento-cell-body">
+                <h3>我要做图片</h3>
+                <p>PPT 配图 · 海报 · 社媒图</p>
+                <span class="bento-cell-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="ppt-generate.html?mode=upload" class="bento-cell bento-cell--doc">
+              <div class="bento-cell-image">
+                <img
+                  src="https://picsum.photos/seed/dash-doc/720/360"
+                  alt="资料"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bento-cell-body">
+                <h3>我要整理资料</h3>
+                <p>Word · PDF · Excel · 网页</p>
+                <span class="bento-cell-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="#" class="bento-cell bento-cell--all">
+              <div class="bento-cell-body">
+                <div class="eyebrow">AI 工作成果包</div>
+                <h3>一次输入<br />整套交付物</h3>
+                <span class="bento-cell-arrow">→</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 7 大场景 ===== -->
+      <section class="section section-scenes">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">7 大场景</div>
+            <h2>选场景 · 输主题<br />开始一次汇报</h2>
+          </div>
+
+          <div class="scene-grid">
+            <a href="ppt-generate.html?scene=report" class="scene-cell">
+              <div class="scene-image">
+                <img
+                  src="https://picsum.photos/seed/scene-report/400/300"
+                  alt="工作汇报"
+                  loading="lazy"
+                />
+              </div>
+              <div class="scene-meta">
+                <strong>工作汇报</strong>
+                <span>3 套模板</span>
+              </div>
+            </a>
+            <a href="ppt-generate.html?scene=proposal" class="scene-cell">
+              <div class="scene-image">
+                <img
+                  src="https://picsum.photos/seed/scene-proposal/400/300"
+                  alt="项目方案"
+                  loading="lazy"
+                />
+              </div>
+              <div class="scene-meta">
+                <strong>项目方案</strong>
+                <span>3 套模板</span>
+              </div>
+            </a>
+            <a href="ppt-generate.html?scene=review" class="scene-cell">
+              <div class="scene-image">
+                <img
+                  src="https://picsum.photos/seed/scene-review/400/300"
+                  alt="述职复盘"
+                  loading="lazy"
+                />
+              </div>
+              <div class="scene-meta">
+                <strong>述职复盘</strong>
+                <span>3 套模板</span>
+              </div>
+            </a>
+            <a href="ppt-generate.html?scene=bp" class="scene-cell">
+              <div class="scene-image">
+                <img
+                  src="https://picsum.photos/seed/scene-bp/400/300"
+                  alt="商业计划"
+                  loading="lazy"
+                />
+              </div>
+              <div class="scene-meta">
+                <strong>商业计划</strong>
+                <span>3 套模板</span>
+              </div>
+            </a>
+            <a href="ppt-generate.html?scene=company" class="scene-cell">
+              <div class="scene-image">
+                <img
+                  src="https://picsum.photos/seed/scene-company/400/300"
+                  alt="公司介绍"
+                  loading="lazy"
+                />
+              </div>
+              <div class="scene-meta">
+                <strong>公司介绍</strong>
+                <span>3 套模板</span>
+              </div>
+            </a>
+            <a href="ppt-generate.html?scene=sales" class="scene-cell">
+              <div class="scene-image">
+                <img
+                  src="https://picsum.photos/seed/scene-sales/400/300"
+                  alt="客户提案"
+                  loading="lazy"
+                />
+              </div>
+              <div class="scene-meta">
+                <strong>客户提案</strong>
+                <span>3 套模板</span>
+              </div>
+            </a>
+            <a href="ppt-generate.html?scene=training" class="scene-cell">
+              <div class="scene-image">
+                <img
+                  src="https://picsum.photos/seed/scene-training/400/300"
+                  alt="培训课件"
+                  loading="lazy"
+                />
+              </div>
+              <div class="scene-meta">
+                <strong>培训课件</strong>
+                <span>3 套模板</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 最近项目 ===== -->
+      <section class="section section-recent">
+        <div class="container">
+          <div class="section-head section-head--split">
+            <div>
+              <div class="eyebrow">最近项目</div>
+              <h2>继续你的工作</h2>
+            </div>
+            <a href="#" class="btn btn-text">查看全部 →</a>
+          </div>
+
+          <div class="recent-grid">
+            <a href="editor.html" class="recent-card">
+              <div class="recent-thumb">
+                <img
+                  src="https://picsum.photos/seed/recent-1/600/400"
+                  alt=""
+                  loading="lazy"
+                />
+                <span class="recent-status">编辑中</span>
+              </div>
+              <div class="recent-meta">
+                <h4>2026 Q2 季度工作汇报</h4>
+                <p>工作汇报 · 18 页 · 2 天前</p>
+              </div>
+            </a>
+
+            <a href="editor.html" class="recent-card">
+              <div class="recent-thumb">
+                <img
+                  src="https://picsum.photos/seed/recent-2/600/400"
+                  alt=""
+                  loading="lazy"
+                />
+                <span class="recent-status recent-status--done">已完成</span>
+              </div>
+              <div class="recent-meta">
+                <h4>智能家居项目立项方案</h4>
+                <p>项目方案 · 24 页 · 5 天前</p>
+              </div>
+            </a>
+
+            <a href="editor.html" class="recent-card">
+              <div class="recent-thumb">
+                <img
+                  src="https://picsum.photos/seed/recent-3/600/400"
+                  alt=""
+                  loading="lazy"
+                />
+                <span class="recent-status">编辑中</span>
+              </div>
+              <div class="recent-meta">
+                <h4>市场部年中复盘</h4>
+                <p>述职复盘 · 16 页 · 1 周前</p>
+              </div>
+            </a>
+
+            <a href="editor.html" class="recent-card">
+              <div class="recent-thumb">
+                <img
+                  src="https://picsum.photos/seed/recent-4/600/400"
+                  alt=""
+                  loading="lazy"
+                />
+                <span class="recent-status recent-status--draft">草稿</span>
+              </div>
+              <div class="recent-meta">
+                <h4>某品牌产品发布会</h4>
+                <p>客户提案 · 32 页 · 2 周前</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+  </body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>品牌中心 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/brand.css" />
+  </head>
+
+  <body>
+    <div id="header-slot"></div>
+
+    <main class="brand-page">
+      <div class="container">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">品牌中心</div>
+            <h1>一次设置,所有输出自动应用</h1>
+            <p>所有 AI 生成的 PPT 和图片,默认带上你的品牌规范。团队成员共用同一套,品牌一致,无需重复设置。</p>
+          </div>
+          <div class="page-head-actions">
+            <a href="#" class="btn btn-ghost btn-sm">从模板导入</a>
+            <a href="#" class="btn btn-primary btn-sm">保存设置</a>
+          </div>
+        </div>
+
+        <!-- Brand Identity -->
+        <section class="brand-section">
+          <div class="section-head">
+            <div class="eyebrow">01</div>
+            <h2>品牌标识</h2>
+            <p class="text-mute">Logo 会出现在所有 PPT 封面、页脚、水印位置。</p>
+          </div>
+
+          <div class="brand-grid">
+            <div class="brand-card">
+              <div class="brand-card-label">主 Logo</div>
+              <div class="brand-card-body">
+                <div class="logo-preview">
+                  <span class="logo-mark-large">灵</span>
+                </div>
+                <div class="logo-meta">
+                  <strong>灵光工作台</strong>
+                  <span class="text-mute mono">PNG · 512x512 · 已自动去除背景</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm brand-card-action">替换</button>
+            </div>
+            <div class="brand-card">
+              <div class="brand-card-label">单色 Logo</div>
+              <div class="brand-card-body">
+                <div class="logo-preview logo-preview--mono">
+                  <span class="logo-mark-large">灵</span>
+                </div>
+                <div class="logo-meta">
+                  <strong>用于深色背景</strong>
+                  <span class="text-mute mono">SVG · 自动生成</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm brand-card-action">编辑</button>
+            </div>
+            <div class="brand-card">
+              <div class="brand-card-label">水印</div>
+              <div class="brand-card-body">
+                <div class="watermark-preview">灵光</div>
+                <div class="logo-meta">
+                  <strong>PPT 右下角 / 海报底部</strong>
+                  <span class="text-mute mono">透明度 12% · 可关闭</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm brand-card-action">编辑</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Brand Color -->
+        <section class="brand-section">
+          <div class="section-head">
+            <div class="eyebrow">02</div>
+            <h2>品牌色</h2>
+            <p class="text-mute">主色 + 辅色 + 中性色,所有生成的视觉默认使用这套调色板。</p>
+          </div>
+
+          <div class="color-system">
+            <div class="color-row">
+              <span class="color-row-label">主色</span>
+              <div class="color-swatches">
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(55% 0.20 250)"></div>
+                  <strong>主蓝</strong>
+                  <span class="text-mute mono">oklch(55% 0.20 250)</span>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(45% 0.22 250)"></div>
+                  <strong>深蓝</strong>
+                  <span class="text-mute mono">oklch(45% 0.22 250)</span>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(70% 0.15 250)"></div>
+                  <strong>浅蓝</strong>
+                  <span class="text-mute mono">oklch(70% 0.15 250)</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm">编辑</button>
+            </div>
+            <div class="color-row">
+              <span class="color-row-label">辅色</span>
+              <div class="color-swatches">
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(65% 0.18 145)"></div>
+                  <strong>绿</strong>
+                  <span class="text-mute mono">oklch(65% 0.18 145)</span>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(70% 0.16 75)"></div>
+                  <strong>橙</strong>
+                  <span class="text-mute mono">oklch(70% 0.16 75)</span>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(58% 0.22 25)"></div>
+                  <strong>红</strong>
+                  <span class="text-mute mono">oklch(58% 0.22 25)</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm">编辑</button>
+            </div>
+            <div class="color-row">
+              <span class="color-row-label">中性</span>
+              <div class="color-swatches">
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(15% 0 0)"></div>
+                  <strong>深</strong>
+                  <span class="text-mute mono">oklch(15% 0 0)</span>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(50% 0 0)"></div>
+                  <strong>中</strong>
+                  <span class="text-mute mono">oklch(50% 0 0)</span>
+                </div>
+                <div class="color-swatch">
+                  <div class="color-chip" style="background: oklch(95% 0 0)"></div>
+                  <strong>浅</strong>
+                  <span class="text-mute mono">oklch(95% 0 0)</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost btn-sm">编辑</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Brand Fonts -->
+        <section class="brand-section">
+          <div class="section-head">
+            <div class="eyebrow">03</div>
+            <h2>字体</h2>
+            <p class="text-mute">标题字体 + 正文字体 + 数字字体,所有 PPT 自动应用。</p>
+          </div>
+
+          <div class="font-grid">
+            <div class="font-card">
+              <span class="font-card-label">标题</span>
+              <div class="font-sample font-sample--display">Aa 灵光 2026</div>
+              <strong>Bricolage Grotesque</strong>
+              <span class="text-mute mono">Display · 500</span>
+            </div>
+            <div class="font-card">
+              <span class="font-card-label">正文</span>
+              <div class="font-sample font-sample--body">Aa 工作汇报 · 团队 · 增长</div>
+              <strong>Inter Tight</strong>
+              <span class="text-mute mono">Body · 400 / 500</span>
+            </div>
+            <div class="font-card">
+              <span class="font-card-label">数字</span>
+              <div class="font-sample font-sample--mono">+24% · 1,280 万</div>
+              <strong>JetBrains Mono</strong>
+              <span class="text-mute mono">Mono · 500</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Brand Assets -->
+        <section class="brand-section">
+          <div class="section-head section-head--split">
+            <div>
+              <div class="eyebrow">04</div>
+              <h2>企业资料与素材</h2>
+            </div>
+            <a href="#" class="btn btn-ghost btn-sm">+ 上传资料</a>
+          </div>
+
+          <div class="asset-tabs">
+            <button class="asset-tab active">企业资料库</button>
+            <button class="asset-tab">素材库</button>
+            <button class="asset-tab">私有模板</button>
+            <button class="asset-tab">禁用素材</button>
+          </div>
+
+          <div class="asset-list">
+            <div class="asset-row">
+              <div class="asset-icon">📄</div>
+              <div class="asset-meta">
+                <strong>2026 公司介绍.pdf</strong>
+                <span class="text-mute mono">8.4 MB · 上传于 3 天前</span>
+              </div>
+              <span class="tag tag-success">已学习</span>
+            </div>
+            <div class="asset-row">
+              <div class="asset-icon">📄</div>
+              <div class="asset-meta">
+                <strong>产品白皮书 v3.docx</strong>
+                <span class="text-mute mono">2.1 MB · 上传于 1 周前</span>
+              </div>
+              <span class="tag tag-success">已学习</span>
+            </div>
+            <div class="asset-row">
+              <div class="asset-icon">📊</div>
+              <div class="asset-meta">
+                <strong>2025 销售数据.xlsx</strong>
+                <span class="text-mute mono">340 KB · 上传于 2 周前</span>
+              </div>
+              <span class="tag">未学习</span>
+            </div>
+            <div class="asset-row">
+              <div class="asset-icon">📁</div>
+              <div class="asset-meta">
+                <strong>历年汇报合集</strong>
+                <span class="text-mute mono">12 个文件 · 上传于 1 月前</span>
+              </div>
+              <span class="tag">未学习</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Brand Application -->
+        <section class="brand-section">
+          <div class="section-head">
+            <div class="eyebrow">05</div>
+            <h2>品牌应用效果</h2>
+            <p class="text-mute">同一份内容,在不同模板下都会带上你的品牌标识与配色。</p>
+          </div>
+
+          <div class="apply-grid">
+            <figure class="apply-card">
+              <img
+                src="https://picsum.photos/seed/brand-apply-1/600/400"
+                alt=""
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>PPT 自动应用</strong>
+                <span class="text-mute">Logo / 品牌色 / 字体 / 水印</span>
+              </figcaption>
+            </figure>
+            <figure class="apply-card">
+              <img
+                src="https://picsum.photos/seed/brand-apply-2/600/400"
+                alt=""
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>图片自动应用</strong>
+                <span class="text-mute">海报 / 配图 / 社媒</span>
+              </figcaption>
+            </figure>
+            <figure class="apply-card">
+              <img
+                src="https://picsum.photos/seed/brand-apply-3/600/400"
+                alt=""
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>演讲稿自动应用</strong>
+                <span class="text-mute">字体 / 排版 / 配色</span>
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+      document.querySelectorAll(".asset-tab").forEach((t) => {
+        t.addEventListener("click", () => {
+          document.querySelectorAll(".asset-tab").forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

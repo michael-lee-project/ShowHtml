@@ -1,0 +1,148 @@
+/* Hallmark-style stamp for V2
+ * theme: Editorial Amber · Cobalt → Amber
+ * Bricolage Grotesque (display) + Inter Tight (body) + JetBrains Mono (mono)
+ * paper: warm cream · ink: espresso · accent: amber
+ * macrostructure: Editorial Manifesto Hero + Bento sections
+ */
+
+:root {
+  /* === COLORS (OKLCH) — warm cream + amber + espresso === */
+  /* Paper — warm cream */
+  --color-paper: oklch(98% 0.01 80);
+  --color-paper-2: oklch(96% 0.015 80);
+  --color-paper-3: oklch(92% 0.02 80);
+  --color-paper-4: oklch(86% 0.025 80);
+
+  /* Ink — espresso / deep brown-black */
+  --color-ink: oklch(20% 0.02 60);
+  --color-ink-2: oklch(35% 0.025 60);
+  --color-ink-3: oklch(50% 0.02 60);
+  --color-ink-mute: oklch(60% 0.02 60);
+  --color-ink-faint: oklch(75% 0.02 70);
+
+  /* Accent — Amber (warm) */
+  --color-accent: oklch(68% 0.18 50);
+  --color-accent-2: oklch(55% 0.20 45);
+  --color-accent-3: oklch(80% 0.12 55);
+  --color-accent-soft: oklch(95% 0.05 50);
+
+  /* System */
+  --color-success: oklch(60% 0.15 145);
+  --color-warning: oklch(72% 0.16 75);
+  --color-error: oklch(58% 0.20 25);
+
+  /* Soft warm gradients — gentler than V1 */
+  --gradient-soft: linear-gradient(
+    180deg,
+    oklch(98% 0.01 80) 0%,
+    oklch(95% 0.025 75) 100%
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    oklch(75% 0.16 55) 0%,
+    oklch(60% 0.20 40) 100%
+  );
+  --gradient-warm-mesh: radial-gradient(
+      at 20% 10%,
+      oklch(80% 0.14 60 / 0.20) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      at 80% 80%,
+      oklch(72% 0.16 50 / 0.12) 0%,
+      transparent 50%
+    );
+
+  /* === TYPOGRAPHY === */
+  --font-display: "Bricolage Grotesque", "Times New Roman", -apple-system,
+    BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", serif;
+  --font-body: "Inter Tight", -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Editorial scale — more dramatic than V1 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.625rem;
+  --text-5xl: 3.5rem;
+  --text-6xl: 4.5rem;
+  --text-display: 5.5rem; /* editorial giant */
+  --text-display-s: 4rem;
+
+  /* Line heights — editorial */
+  --lh-tight: 1.05;
+  --lh-snug: 1.2;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.65;
+
+  /* Letter spacing */
+  --ls-tight: -0.03em;
+  --ls-normal: 0;
+  --ls-wide: 0.05em;
+
+  /* === SPACING (4-pt scale) === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 5rem;
+  --space-12: 6rem;
+  --space-16: 8rem;
+
+  /* === RADIUS — softer (editorial) === */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-3xl: 2.5rem;
+  --radius-full: 9999px;
+
+  /* === SHADOWS — softer / warmer === */
+  --shadow-sm: 0 1px 3px 0 oklch(20% 0.02 60 / 0.04);
+  --shadow-md: 0 4px 12px -2px oklch(20% 0.02 60 / 0.06);
+  --shadow-lg: 0 16px 32px -8px oklch(20% 0.02 60 / 0.10);
+  --shadow-xl: 0 32px 64px -16px oklch(20% 0.02 60 / 0.14);
+  --shadow-warm: 0 12px 40px -8px oklch(70% 0.18 50 / 0.30);
+
+  /* === RULES === */
+  --rule-hairline: 1px solid var(--color-paper-3);
+  --rule-thin: 1px solid var(--color-paper-4);
+  --rule-thick: 2px solid var(--color-ink);
+
+  /* === MOTION === */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-fast: 200ms;
+  --dur-base: 300ms;
+  --dur-slow: 500ms;
+  --dur-slower: 700ms;
+
+  /* === LAYOUT === */
+  --container-max: 1320px;
+  --container-narrow: 920px;
+  --container-pad: var(--space-6);
+  --nav-height: 72px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

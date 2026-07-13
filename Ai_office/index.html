@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>灵光工作台 · 为汇报而生的 AI 视觉伙伴</title>
+    <meta
+      name="description"
+      content="选场景、输主题、出精品。灵光 AI 自动完成大纲、内容、版式与配图,21 套精品模板覆盖 7 大高频场景。"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+
+  <body>
+    <div id="header-slot"></div>
+
+    <main>
+      <!-- ========== HERO (Editorial Manifesto) ========== -->
+      <section class="hero">
+        <div class="container">
+          <div class="hero-grid">
+            <div class="hero-content">
+              <div class="hero-eyebrow">
+                <span class="dot"></span>
+                灵光 AI · 视觉办公伙伴
+              </div>
+              <h1 class="hero-title">
+                从一个主题<br />
+                到一整套<span class="title-accent">汇报</span>
+              </h1>
+              <p class="hero-sub">
+                选场景、回答几个问题,灵光 AI 自动完成大纲、内容、版式与配图。
+                21 套精品模板,7 大高频场景。
+              </p>
+              <div class="hero-cta">
+                <a href="ppt-generate.html" class="btn btn-accent btn-lg">
+                  开始创作
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+                <a href="#workflow" class="btn btn-ghost btn-lg"> 看 3 分钟演示 </a>
+              </div>
+            </div>
+
+            <div class="hero-visual">
+              <figure class="hero-figure">
+                <img
+                  src="https://picsum.photos/seed/lingo-hero-workspace/720/560"
+                  alt="工作场景"
+                  loading="eager"
+                />
+                <figcaption class="hero-figure-tag">
+                  <span class="mono">2026 · 工作汇报</span>
+                </figcaption>
+              </figure>
+
+              <div class="hero-stat">
+                <div class="hero-stat-num">
+                  <span class="text-display">21</span>
+                </div>
+                <div class="hero-stat-label">精品模板 · 7 大场景</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 3 入口 (Bento) ========== -->
+      <section class="section section-entry" id="workflow">
+        <div class="container">
+          <div class="section-head">
+            <div class="eyebrow">三个入口 · 一键开始</div>
+            <h2>不是空白输入框<br />是任务驱动的创作</h2>
+          </div>
+
+          <div class="bento-entry">
+            <a href="ppt-generate.html" class="bento-cell bento-cell--ppt">
+              <div class="bento-cell-image">
+                <img
+                  src="https://picsum.photos/seed/ppt-templates/640/420"
+                  alt="PPT 模板"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bento-cell-body">
+                <h3>我要做 PPT</h3>
+                <p>选场景 · 输主题 · 选模板 · AI 自动生成</p>
+                <div class="bento-cell-meta">
+                  <span class="tag tag-accent">7 场景</span>
+                  <span class="tag">21 模板</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="image-generate.html" class="bento-cell bento-cell--img">
+              <div class="bento-cell-image">
+                <img
+                  src="https://picsum.photos/seed/poster-design/640/420"
+                  alt="图片生成"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bento-cell-body">
+                <h3>我要做图片</h3>
+                <p>选用途 · 填内容 · AI 出图后由排版引擎叠中文</p>
+                <div class="bento-cell-meta">
+                  <span class="tag tag-accent">PPT 配图</span>
+                  <span class="tag">多尺寸</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="ppt-generate.html?mode=upload" class="bento-cell bento-cell--doc">
+              <div class="bento-cell-image">
+                <img
+                  src="https://picsum.photos/seed/documents-stack/640/420"
+                  alt="资料整理"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bento-cell-body">
+                <h3>我要整理资料</h3>
+                <p>Word · PDF · Excel · 网页 · 旧 PPT 一键转成品</p>
+                <div class="bento-cell-meta">
+                  <span class="tag tag-accent">6 种来源</span>
+                  <span class="tag">AI 提炼</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#bundle" class="bento-cell bento-cell--all">
+              <div class="bento-cell-body">
+                <div class="eyebrow">AI 工作成果包</div>
+                <h3>一次输入<br />整套交付物</h3>
+                <p>PPT · 封面 · 数据图 · 一页纸 · 演讲稿 · 朋友圈</p>
+                <span class="bento-cell-arrow">→</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 模板预览 (Bento 横向) ========== -->
+      <section class="section section-templates">
+        <div class="container">
+          <div class="section-head section-head--split">
+            <div>
+              <div class="eyebrow">21 套精品模板</div>
+              <h2>
+                不只是换背景<br />
+                而是<span class="text-accent">内容结构模板</span>
+              </h2>
+            </div>
+            <p class="section-sub">
+              视觉模板(色 / 字 / 图) + 版式模板(时间线 / 对比 / 数据) +
+              内容结构模板(项目汇报 = 背景 → 进度 → 成果 → 数据 → 问题 → 计划)。
+            </p>
+          </div>
+
+          <div class="bento-templates">
+            <a href="templates.html" class="tpl-cell tpl-cell--lg">
+              <img
+                src="https://picsum.photos/seed/tpl-report/640/720"
+                alt="工作汇报模板"
+                loading="lazy"
+              />
+              <div class="tpl-meta">
+                <strong>工作汇报</strong>
+                <span class="text-mute">3 套精品</span>
+              </div>
+            </a>
+            <a href="templates.html" class="tpl-cell tpl-cell--md">
+              <img
+                src="https://picsum.photos/seed/tpl-proposal/640/420"
+                alt="项目方案模板"
+                loading="lazy"
+              />
+              <div class="tpl-meta">
+                <strong>项目方案</strong>
+                <span class="text-mute">3 套</span>
+              </div>
+            </a>
+            <a href="templates.html" class="tpl-cell tpl-cell--md">
+              <img
+                src="https://picsum.photos/seed/tpl-review/640/420"
+                alt="述职复盘模板"
+                loading="lazy"
+              />
+              <div class="tpl-meta">
+                <strong>述职复盘</strong>
+                <span class="text-mute">3 套</span>
+              </div>
+            </a>
+            <a href="templates.html" class="tpl-cell tpl-cell--md">
+              <img
+                src="https://picsum.photos/seed/tpl-bp/640/420"
+                alt="商业计划模板"
+                loading="lazy"
+              />
+              <div class="tpl-meta">
+                <strong>商业计划</strong>
+                <span class="text-mute">3 套</span>
+              </div>
+            </a>
+            <a href="templates.html" class="tpl-cell tpl-cell--md">
+              <img
+                src="https://picsum.photos/seed/tpl-company/640/420"
+                alt="公司介绍模板"
+                loading="lazy"
+              />
+              <div class="tpl-meta">
+                <strong>公司介绍</strong>
+                <span class="text-mute">3 套</span>
+              </div>
+            </a>
+            <a href="templates.html" class="tpl-cell tpl-cell--view-all">
+              <div class="tpl-view-all">
+                <span class="text-mono">+ 9 套</span>
+                <span>查看全部</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== AI 工作成果包 (Bento 3x3) ========== -->
+      <section class="section section-bundle" id="bundle">
+        <div class="container">
+          <div class="bundle-card">
+            <div class="bundle-head">
+              <div class="eyebrow">AI 工作成果包</div>
+              <h2>
+                一次输入<br />
+                <span class="text-accent">整套交付物</span>
+              </h2>
+              <p class="bundle-sub">
+                输入"新能源汽车 2026 市场分析",平台同时输出 9 件套:PPT、封面、5 张数据图、一页纸、演讲稿、Word 报告、朋友圈、小红书、英文版。
+              </p>
+            </div>
+
+            <div class="bento-bundle">
+              <div class="bundle-item">
+                <div class="bundle-num">01</div>
+                <strong>20 页 PPT</strong>
+                <span>完整结构</span>
+              </div>
+              <div class="bundle-item">
+                <div class="bundle-num">02</div>
+                <strong>封面图</strong>
+                <span>3:4 适配</span>
+              </div>
+              <div class="bundle-item">
+                <div class="bundle-num">03</div>
+                <strong>5 张数据图</strong>
+                <span>AI 自动判断</span>
+              </div>
+              <div class="bundle-item">
+                <div class="bundle-num">04</div>
+                <strong>一页纸摘要</strong>
+                <span>快速分发</span>
+              </div>
+              <div class="bundle-item">
+                <div class="bundle-num">05</div>
+                <strong>演讲稿</strong>
+                <span>3 / 10 分钟双版</span>
+              </div>
+              <div class="bundle-item">
+                <div class="bundle-num">06</div>
+                <strong>Word 报告</strong>
+                <span>深度解读</span>
+              </div>
+              <div class="bundle-item">
+                <div class="bundle-num">07</div>
+                <strong>朋友圈 / 小红书</strong>
+                <span>图文双版</span>
+              </div>
+              <div class="bundle-item">
+                <div class="bundle-num">08</div>
+                <strong>英文版</strong>
+                <span>对外展示</span>
+              </div>
+              <div class="bundle-item bundle-item--all">
+                <div class="bundle-num">09</div>
+                <strong>整套交付</strong>
+                <span>一次生成</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 单页重做 (Split + 真实图) ========== -->
+      <section class="section section-rework">
+        <div class="container">
+          <div class="rework-grid">
+            <div class="rework-content">
+              <div class="eyebrow">单页重做</div>
+              <h2>
+                不需要整套重做<br />
+                只动<span class="text-accent">你想要的部分</span>
+              </h2>
+              <p class="rework-sub">
+                锁住文字换设计 · 锁住设计换文字 · 锁住图片换版式。AI 的可控性,是它能真正进入你工作流的关键。
+              </p>
+
+              <ul class="lock-list">
+                <li>
+                  <span class="lock-mark">01</span>
+                  <div>
+                    <strong>锁定文字 · 换设计</strong>
+                    <span>保持原内容,只刷新版式与配色</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="lock-mark">02</span>
+                  <div>
+                    <strong>锁定设计 · 换文字</strong>
+                    <span>保持视觉一致,只调整文案</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="lock-mark">03</span>
+                  <div>
+                    <strong>锁定图片 · 换版式</strong>
+                    <span>保持主视觉,只换信息排布</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="lock-mark">04</span>
+                  <div>
+                    <strong>重新生成本页</strong>
+                    <span>一键重做,不满意再换</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <figure class="rework-figure">
+              <img
+                src="https://picsum.photos/seed/rework-page/720/820"
+                alt="单页重做"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== CTA 收尾 ========== -->
+      <section class="section section-final-cta">
+        <div class="container">
+          <div class="final-cta">
+            <div class="final-cta-text">
+              <h2>
+                你的下一个汇报<br />
+                用灵光完成
+              </h2>
+              <p>选场景、输主题,3 分钟拿到第一版。</p>
+            </div>
+            <div class="final-cta-action">
+              <a href="ppt-generate.html" class="btn btn-primary btn-lg">
+                开始创作
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+  </body>
+</html>

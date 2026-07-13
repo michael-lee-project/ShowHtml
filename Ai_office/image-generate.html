@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片生成 · 灵光</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/image-generate.css" />
+  </head>
+
+  <body>
+    <div id="header-slot"></div>
+
+    <main class="img-gen">
+      <div class="container">
+        <!-- ===== Header ===== -->
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">图片生成</div>
+            <h1>选用途 · 填内容 · 出图</h1>
+            <p>不用研究提示词,不用学排版,选一个职场用途,灵光 AI 出图后由排版引擎叠中文,避免错字。</p>
+          </div>
+          <div class="page-head-meta">
+            <span class="tag">消耗 3 额度 / 张</span>
+          </div>
+        </div>
+
+        <!-- ===== Layout: 左侧表单 + 右侧结果 ===== -->
+        <div class="img-grid">
+          <!-- Form -->
+          <aside class="img-form">
+            <div class="form-block">
+              <label class="form-label">图片用途</label>
+              <div class="usage-grid">
+                <button class="usage-card">
+                  <span class="usage-emoji">📊</span>
+                  <strong>PPT 配图</strong>
+                </button>
+                <button class="usage-card active">
+                  <span class="usage-emoji">📕</span>
+                  <strong>小红书封面</strong>
+                </button>
+                <button class="usage-card">
+                  <span class="usage-emoji">📰</span>
+                  <strong>公众号首图</strong>
+                </button>
+                <button class="usage-card">
+                  <span class="usage-emoji">📅</span>
+                  <strong>活动海报</strong>
+                </button>
+                <button class="usage-card">
+                  <span class="usage-emoji">📈</span>
+                  <strong>数据信息图</strong>
+                </button>
+                <button class="usage-card">
+                  <span class="usage-emoji">🏢</span>
+                  <strong>企业文化海报</strong>
+                </button>
+                <button class="usage-card">
+                  <span class="usage-emoji">💼</span>
+                  <strong>招聘海报</strong>
+                </button>
+                <button class="usage-card">
+                  <span class="usage-emoji">🎨</span>
+                  <strong>Logo 概念图</strong>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-block">
+              <label class="form-label">内容</label>
+              <div class="form-fields">
+                <div class="form-field">
+                  <span class="form-mini-label">主题</span>
+                  <input
+                    type="text"
+                    class="form-input"
+                    value="2026 春季新员工训练营"
+                    placeholder="例:春季训练营"
+                  />
+                </div>
+                <div class="form-field-row">
+                  <div class="form-field">
+                    <span class="form-mini-label">时间</span>
+                    <input
+                      type="text"
+                      class="form-input"
+                      value="3 月 18 - 22 日"
+                    />
+                  </div>
+                  <div class="form-field">
+                    <span class="form-mini-label">地点</span>
+                    <input
+                      type="text"
+                      class="form-input"
+                      value="上海总部"
+                    />
+                  </div>
+                </div>
+                <div class="form-field">
+                  <span class="form-mini-label">核心卖点</span>
+                  <textarea
+                    class="form-input form-textarea"
+                    rows="2"
+                  >5 天封闭训练 · 12 位行业导师 · 实战项目 3 个</textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-block">
+              <label class="form-label">风格</label>
+              <div class="chip-group">
+                <button class="chip">活力明亮</button>
+                <button class="chip active">专业商务</button>
+                <button class="chip">极简</button>
+                <button class="chip">复古胶片</button>
+                <button class="chip">插画风</button>
+                <button class="chip">水墨</button>
+              </div>
+            </div>
+
+            <div class="form-block">
+              <label class="form-label">尺寸</label>
+              <div class="size-grid">
+                <button class="size-card">3:4 小红书</button>
+                <button class="size-card active">16:9 PPT</button>
+                <button class="size-card">1:1 方图</button>
+                <button class="size-card">9:16 手机</button>
+              </div>
+            </div>
+
+            <button class="btn btn-accent btn-lg form-submit">
+              <span>生成</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </aside>
+
+          <!-- Results -->
+          <section class="img-results">
+            <div class="results-head">
+              <h3>AI 已生成 · 4 张备选</h3>
+              <div class="results-actions">
+                <button class="btn btn-ghost btn-sm">换一批</button>
+                <button class="btn btn-ghost btn-sm">按风格继续生成</button>
+              </div>
+            </div>
+
+            <div class="result-grid">
+              <article class="result-card">
+                <div class="result-thumb">
+                  <img
+                    src="https://picsum.photos/seed/img-result-1/600/600"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div class="result-overlay">
+                    <button class="btn-icon-text">查看</button>
+                    <button class="btn-icon-text">使用</button>
+                  </div>
+                </div>
+                <div class="result-meta">
+                  <span class="text-mute mono">3:4 · 备选 1</span>
+                </div>
+              </article>
+              <article class="result-card">
+                <div class="result-thumb">
+                  <img
+                    src="https://picsum.photos/seed/img-result-2/600/600"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div class="result-overlay">
+                    <button class="btn-icon-text">查看</button>
+                    <button class="btn-icon-text">使用</button>
+                  </div>
+                </div>
+                <div class="result-meta">
+                  <span class="text-mute mono">3:4 · 备选 2</span>
+                </div>
+              </article>
+              <article class="result-card">
+                <div class="result-thumb">
+                  <img
+                    src="https://picsum.photos/seed/img-result-3/600/600"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div class="result-overlay">
+                    <button class="btn-icon-text">查看</button>
+                    <button class="btn-icon-text">使用</button>
+                  </div>
+                </div>
+                <div class="result-meta">
+                  <span class="text-mute mono">3:4 · 备选 3</span>
+                </div>
+              </article>
+              <article class="result-card">
+                <div class="result-thumb">
+                  <img
+                    src="https://picsum.photos/seed/img-result-4/600/600"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div class="result-overlay">
+                    <button class="btn-icon-text">查看</button>
+                    <button class="btn-icon-text">使用</button>
+                  </div>
+                </div>
+                <div class="result-meta">
+                  <span class="text-mute mono">3:4 · 备选 4</span>
+                </div>
+              </article>
+            </div>
+
+            <!-- Series section -->
+            <div class="series-block">
+              <div class="series-head">
+                <div>
+                  <h3>系列图</h3>
+                  <p class="text-mute text-sm">保持品牌一致:相同配色 / 字体 / 排版 / 风格</p>
+                </div>
+                <button class="btn btn-ghost btn-sm">+ 加入系列</button>
+              </div>
+              <div class="series-row">
+                <img
+                  src="https://picsum.photos/seed/series-1/300/300"
+                  alt=""
+                  loading="lazy"
+                />
+                <img
+                  src="https://picsum.photos/seed/series-2/300/300"
+                  alt=""
+                  loading="lazy"
+                />
+                <img
+                  src="https://picsum.photos/seed/series-3/300/300"
+                  alt=""
+                  loading="lazy"
+                />
+                <img
+                  src="https://picsum.photos/seed/series-4/300/300"
+                  alt=""
+                  loading="lazy"
+                />
+                <div class="series-add">
+                  <span>+ 添加</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Multi-size -->
+            <div class="size-block">
+              <h3>一键多尺寸</h3>
+              <p class="text-mute text-sm">同一张图,自动适配 8 种尺寸</p>
+              <div class="size-list">
+                <div class="size-item">
+                  <div class="size-icon" style="aspect-ratio: 3/4">3:4</div>
+                  <strong>小红书</strong>
+                </div>
+                <div class="size-item">
+                  <div class="size-icon" style="aspect-ratio: 16/9">16:9</div>
+                  <strong>PPT 配图</strong>
+                </div>
+                <div class="size-item">
+                  <div class="size-icon" style="aspect-ratio: 1/1">1:1</div>
+                  <strong>Instagram</strong>
+                </div>
+                <div class="size-item">
+                  <div class="size-icon" style="aspect-ratio: 9/16">9:16</div>
+                  <strong>手机海报</strong>
+                </div>
+                <div class="size-item">
+                  <div class="size-icon" style="aspect-ratio: 4/5">4:5</div>
+                  <strong>公众号</strong>
+                </div>
+                <div class="size-item">
+                  <div class="size-icon" style="aspect-ratio: 21/9">21:9</div>
+                  <strong>网站 Banner</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-slot"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+      // Chip toggle
+      document.querySelectorAll(".chip-group").forEach((g) => {
+        g.querySelectorAll(".chip").forEach((c) => {
+          c.addEventListener("click", () => {
+            g.querySelectorAll(".chip").forEach((x) => x.classList.remove("active"));
+            c.classList.add("active");
+          });
+        });
+      });
+      // Usage card toggle
+      document.querySelectorAll(".usage-card").forEach((c) => {
+        c.addEventListener("click", () => {
+          document.querySelectorAll(".usage-card").forEach((x) => x.classList.remove("active"));
+          c.classList.add("active");
+        });
+      });
+      // Size card toggle
+      document.querySelectorAll(".size-card").forEach((c) => {
+        c.addEventListener("click", () => {
+          document.querySelectorAll(".size-card").forEach((x) => x.classList.remove("active"));
+          c.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>
