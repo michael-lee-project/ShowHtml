@@ -1,0 +1,3333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>消息 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/messages.css" />
+</head>
+<body data-view="messages">
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <!-- v72: AI 销冠工作台（首页 · 默认 view） -->
+          <a href="dashboard.html" class="sidebar__item" title="AI 销冠工作台" data-nav="dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+          </a>
+          <a href="messages.html" class="sidebar__item is-active" title="消息" data-nav="messages">
+            <!-- chat icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/>
+            </svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <circle cx="9" cy="10" r="2"/>
+              <path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/>
+              <path d="M15 9h4M15 13h3"/>
+            </svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+              <path d="M8 11h8M8 15h5"/>
+            </svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3"/>
+              <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+              <circle cx="12" cy="7" r="1" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 4 7v10l8 5 8-5V7z"/>
+              <path d="M12 2v20M4 7l16 10M20 7 4 17"/>
+            </svg>
+          </a>
+          
+          <a href="profile.html" class="sidebar__item" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 12l3 3 5-6"/>
+          </svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区 ========== -->
+      <div class="main">
+
+        <!-- v72: AI 销冠工作台（默认 view，4 KPI + 4 区 + 底部工具） -->
+
+        <!-- 会话列表 -->
+        <aside class="session-list">
+          <div class="session-list__header">
+            <div class="session-list__title">消息</div>
+            <div class="session-list__actions">
+              <button class="session-list__icon-btn" title="筛选">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h10M3 12h7M3 18h4M15 6l4 6-4 6M21 6l-4 6 4 6"/>
+                </svg>
+              </button>
+              <button class="session-list__icon-btn" title="刷新">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="session-list__search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m20 20-3.5-3.5"/>
+            </svg>
+            <input type="text" placeholder="搜索会话" />
+          </div>
+
+          <div class="session-list__scroll">
+
+            <!-- 置顶会话 -->
+            <div class="session-group__label">置顶会话 <span>1</span></div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">📌</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <svg viewBox="0 0 24 24" fill="#07C160" width="10" height="10"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
+                    <span class="session-item__name-text">UMC会员服务…</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">09:24</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">王玉梅通过了入群申请</span>
+                  <span class="session-item__extras">
+                    <span class="badge">3</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 全部会话 -->
+            <div class="session-group__label">全部会话 <span>11</span></div>
+
+            <div class="session-item is-active">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">📒</div>
+                <span class="session-item__online"></span>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">UMC专员</span>
+                    <span class="tag tag--chat">单聊</span>
+                  </div>
+                  <span class="session-item__time">昨天</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">怎么啦?</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-red,#E54B4B);">企</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">企业星链</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">昨天</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">1</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-orange,#FF6B35);">项</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">项目组沟通群</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-25</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">下午3点的会议链接。</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-purple,#8E5BFF);">O</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">Opul+UMC PP…</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-24</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">这个内容要补充才行</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-pink,#F8375C);">O</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">OPU 大学</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-17</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">我分享了一个话题给你:</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-yellow,#F5A623);">💡</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">UMC 内部大集合</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-17</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">85730620通过了入群申请</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: var(--avatar-purple,#8E5BFF);">O</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">OpulnX AI 量化…</span>
+                    <span class="tag tag--group">群聊</span>
+                  </div>
+                  <span class="session-item__time">06-10</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">盈科合约交易上线:</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#87CEEB,#FFB6C1);">夏</div>
+                <span class="session-item__online" style="background: var(--text-accent);"></span>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">夏目</span>
+                    <span class="tag tag--chat">单聊</span>
+                  </div>
+                  <span class="session-item__time">06-09</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">OK。</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="session-item">
+              <div class="session-item__avatar">
+                <div class="avatar" style="background: linear-gradient(135deg,#FFB6C1,#FF8FA3);">玲</div>
+              </div>
+              <div class="session-item__main">
+                <div class="session-item__row1">
+                  <div class="session-item__name">
+                    <span class="session-item__name-text">小玲</span>
+                    <span class="tag tag--chat">单聊</span>
+                  </div>
+                  <span class="session-item__time">06-08</span>
+                </div>
+                <div class="session-item__row2">
+                  <span class="session-item__preview">在吗？</span>
+                  <span class="session-item__extras">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- 聊天窗口 -->
+        <section class="chat">
+          <div class="chat__header">
+            <div class="chat__title">
+              UMC专员
+              <span class="chat__persona-pill" id="chatPersonaPill" data-state="hidden">
+                <span class="chat__persona-dot"></span>
+                <span class="chat__persona-label">画像可用</span>
+              </span>
+            </div>
+            <button class="chat__more chat__reset" id="chatReset" title="重置演示">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
+            <button class="chat__more" title="更多">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg>
+            </button>
+          </div>
+
+          <!-- v36: AI 销冠接管控制条（独立行，粘性顶部 · 替代旧 header 里的 toggle + banner） -->
+          <div class="chat__ai-bar" id="aiBar" data-mode="off">
+            <div class="chat__ai-bar__left">
+              <div class="chat__ai-bar__icon" id="aiBarIcon">🤖</div>
+              <div class="chat__ai-bar__copy">
+                <div class="chat__ai-bar__title" id="aiBarTitle">AI 销冠</div>
+                <div class="chat__ai-bar__sub" id="aiBarSub">关闭 · 手动回复好友消息</div>
+              </div>
+            </div>
+
+            <div class="ai-seg" id="aiToggle" role="tablist">
+              <button class="ai-seg__opt is-active" data-mode="off" role="tab">
+                <span class="ai-seg__dot"></span>
+                关闭
+              </button>
+              <button class="ai-seg__opt" data-mode="semi" role="tab">
+                <span class="ai-seg__dot"></span>
+                半自动
+              </button>
+              <button class="ai-seg__opt" data-mode="full" role="tab">
+                <span class="ai-seg__dot"></span>
+                全自动
+              </button>
+            </div>
+
+            <div class="chat__ai-bar__right">
+              <div class="chat__ai-bar__metric" id="aiBarMetric" data-state="hidden">
+                <span class="chat__ai-bar__metric-label" id="aiBarMetricLabel">今日已联系</span>
+                <span class="chat__ai-bar__metric-val" id="aiBarMetricVal">0 / 50</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat__body">
+            <!-- v88: 跨页切好友 · 当前对话 banner -->
+            <div class="chat-friend-banner" id="chatFriendBanner">
+              <span class="chat-friend-banner__avatar" id="chatFriendBannerAvatar" style="background:linear-gradient(135deg,#F5A623,#FF8C42);">小</span>
+              <span>当前对话：</span>
+              <span class="chat-friend-banner__name" id="chatFriendBannerName">小明</span>
+              <span class="chat-friend-banner__stage" id="chatFriendBannerStage">· 议价中</span>
+              <a href="dashboard.html" id="chatFriendBack" style="margin-left:auto;color:#1FB6FF;text-decoration:none;font-weight:600;">← 返回工作台</a>
+            </div>
+            <!-- v88: 默认 chat 内容（"小明"）包到这里 -->
+            <div id="chatContentDefault">
+            <!-- 17:33 对方发 -->
+            <div class="msg msg--other">
+              <div class="msg__avatar">
+                <div class="avatar avatar--sm" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">📒</div>
+              </div>
+              <div class="msg__col">
+                <div class="msg__bubble">拉你进去了的</div>
+                <div class="msg__time" style="text-align:left;">17:33</div>
+              </div>
+            </div>
+
+            <!-- 昨天时间分隔 -->
+            <div class="chat__time-sep">
+              <span class="chat__time-sep--pill">昨天 → 18:22</span>
+            </div>
+
+            <!-- 18:22 自己 -->
+            <div class="msg msg--self">
+              <div class="msg__avatar">
+                <div class="avatar avatar--sm" style="background: linear-gradient(135deg,#87CEEB,#4682B4);">M</div>
+              </div>
+              <div class="msg__col">
+                <div class="msg__bubble">怎么啦?</div>
+                <div class="msg__time msg__time--check">18:22 ✓✓</div>
+              </div>
+            </div>
+
+            <!-- v40: 反馈卡 · 半自动 AI 建议发送后展开 (默认隐藏) -->
+            <div class="msg msg--self" style="animation: none;">
+              <div class="msg__avatar">
+                <div class="avatar avatar--sm" style="background: linear-gradient(135deg,#87CEEB,#4682B4);">M</div>
+              </div>
+              <div class="msg__col">
+                <div class="msg__bubble" style="max-width: 100%;">小明兄！正好赶上我们 618 活动，8000 套餐打 9 折 7200，再送您一份价值 800 的精品礼盒，今天下单还能锁定名额 👀</div>
+                <div class="msg__time msg__time--check">刚刚 ✓✓</div>
+                <div class="msg-feedback" id="msgFeedback" data-state="active">
+                  <div class="msg-feedback__head">
+                    <span class="msg-feedback__eyebrow">AI 跟进 · 已发送 12 分钟前</span>
+                    <span class="msg-feedback__countdown" id="msgFeedbackCountdown">⏱ 5h 48m 自动归档</span>
+                  </div>
+                  <div class="msg-feedback__states">
+                    <button class="msg-state is-pending" data-state="no-read">
+                      <span class="msg-state__icon">📭</span>
+                      <span class="msg-state__name">未读</span>
+                    </button>
+                    <button class="msg-state is-active" data-state="read-no-reply">
+                      <span class="msg-state__icon">👀</span>
+                      <span class="msg-state__name">已读未回</span>
+                    </button>
+                    <button class="msg-state" data-state="question">
+                      <span class="msg-state__icon">❓</span>
+                      <span class="msg-state__name">客户提问</span>
+                    </button>
+                    <button class="msg-state" data-state="reply">
+                      <span class="msg-state__icon">💬</span>
+                      <span class="msg-state__name">回复积极</span>
+                    </button>
+                    <button class="msg-state" data-state="meeting">
+                      <span class="msg-state__icon">📅</span>
+                      <span class="msg-state__name">已约面谈</span>
+                    </button>
+                    <button class="msg-state" data-state="no-reply">
+                      <span class="msg-state__icon">🚫</span>
+                      <span class="msg-state__name">拒绝/无兴趣</span>
+                    </button>
+                    <button class="msg-state" data-state="order">
+                      <span class="msg-state__icon">🎉</span>
+                      <span class="msg-state__name">已下单</span>
+                    </button>
+                  </div>
+                  <div class="msg-feedback__tip" id="msgFeedbackTip">
+                    💡 标记客户状态后，AI 下次建议会基于这次反馈更精准
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div><!-- /chatContentDefault -->
+            <!-- v89: 11 位虚拟对话历史（默认 hidden · JS 切会话时渲染） -->
+            <div id="chatContentHistory" hidden>
+              <div class="chat-history__time-sep">
+                <span class="chat-history__time-pill" id="chatHistoryTimeSep">历史消息</span>
+              </div>
+              <div id="chatHistoryMessages">
+                <!-- JS 动态填充 11 位对话历史 -->
+              </div>
+              <div class="chat-history__hint">
+                <span>💡</span>
+                <span id="chatHistoryHint">由 AI 团队根据好友档案自动生成 · 首次咨询后将持续更新</span>
+              </div>
+            </div>
+            <!-- v88: 11 位"暂无聊天记录"占位（默认 hidden） -->
+            <div id="chatContentEmpty" class="chat-empty-state" hidden>
+              <div class="chat-empty-state__icon">💬</div>
+              <div class="chat-empty-state__title">与 <span id="chatEmptyFriendName">该好友</span> 暂无聊天记录</div>
+              <div class="chat-empty-state__hint">历史消息由 AI 团队每日自动归档 · 首次咨询后将自动生成对话历史</div>
+              <div class="chat-empty-state__pill">💡 试试用下方话术模板发送第一条消息</div>
+            </div>
+          </div>
+
+          <!-- 输入区 -->
+          <div class="chat__input">
+            <div class="chat__input-box" id="msgInput" contenteditable="true" data-placeholder="输入消息，Enter发送，Shift+Enter换行"></div>
+            <div class="chat__input-tools">
+              <div class="chat__input-icons">
+                <button class="chat__input-icon" title="表情">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <circle cx="9" cy="10" r="0.6" fill="currentColor"/>
+                    <circle cx="15" cy="10" r="0.6" fill="currentColor"/>
+                  </svg>
+                </button>
+                <button class="chat__input-icon" title="图片">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2"/>
+                    <circle cx="9" cy="11" r="1.5"/>
+                    <path d="m3 17 5-5 5 5 3-3 5 5"/>
+                  </svg>
+                </button>
+                <button class="chat__input-icon" title="文件">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                    <path d="M14 3v6h6"/>
+                  </svg>
+                </button>
+                <button class="chat__input-icon" title="视频会议">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="6" width="13" height="12" rx="2"/>
+                    <path d="m16 10 5-3v10l-5-3z"/>
+                  </svg>
+                </button>
+              </div>
+              <button class="btn btn--primary" id="msgSendBtn" style="height:32px;padding:0 20px;">发送</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI 销冠展示区（v35 · 3 栏布局 · 右侧） -->
+        <aside class="ai-display" id="aiDisplay" data-mode="off">
+          <div class="ai-display__head">
+            <div class="ai-display__head-info">
+              <div class="ai-display__eyebrow">AI · 销冠专家</div>
+              <div class="ai-display__title" id="aiDisplayTitle">关闭</div>
+            </div>
+            <button class="ai-display__collapse" id="aiDisplayCollapse" title="收起 / 展开">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <div class="ai-display__body">
+
+            <!-- v50: 永远 sticky 顶部 · persona + 今日联系 + 跟进 -->
+            <div class="ai-display__sticky">
+              <!-- v51: persona 折叠默认 · 点击展开 -->
+              <!-- v57: persona 默认折叠（节省 80px 让 funnel 5 阶段在桌面端完整可见） -->
+              <div class="ai-card ai-card--persona" id="aiPersonaCard">
+                <button class="persona-toggle" data-persona-toggle type="button" aria-expanded="true">
+                  <div class="persona-card__head">
+                    <div class="persona-card__avatar" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">小</div>
+                    <div class="persona-card__head-info">
+                      <div class="persona-card__name">小明</div>
+                      <div class="persona-card__role">UMC专员 · 老客户</div>
+                    </div>
+                    <div class="persona-card__online"></div>
+                    <svg class="persona-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </button>
+                <div class="persona-card__body" data-persona-body>
+                  <div class="persona-card__tags">
+                    <span class="persona-tag">31-40</span>
+                    <span class="persona-tag">已婚</span>
+                    <span class="persona-tag">1 个子女</span>
+                    <span class="persona-tag persona-tag--hot">爸爸</span>
+                    <span class="persona-tag">中产</span>
+                    <span class="persona-tag">科技业</span>
+                    <span class="persona-tag persona-tag--gold">决策者</span>
+                  </div>
+                  <div class="persona-card__note">
+                    <div class="persona-card__note-label">销售备注</div>
+                    <div class="persona-card__note-text">偏好下午联系 · 老婆比他更决策 · 务实、关心性价比</div>
+                  </div>
+                  <div class="persona-card__personality">
+                    <span class="persona-card__personality-label">沟通风格</span>
+                    <span class="persona-card__personality-val">数据导向 · 务实 · 温和</span>
+                  </div>
+                  <!-- v69: 最近 3 次沟通摘要时间线 -->
+                  <div class="persona-timeline">
+                    <div class="persona-timeline__label">📅 最近 3 次沟通</div>
+                    <div class="persona-timeline__list">
+                      <div class="persona-timeline__item persona-timeline__item--me">
+                        <span class="persona-timeline__dot"></span>
+                        <span class="persona-timeline__time">刚刚</span>
+                        <span class="persona-timeline__who">我</span>
+                        <span class="persona-timeline__text">AI 跟进 · 8000 套餐 9 折 7200 + 800 礼盒</span>
+                      </div>
+                      <div class="persona-timeline__item persona-timeline__item--me">
+                        <span class="persona-timeline__dot"></span>
+                        <span class="persona-timeline__time">昨天 18:22</span>
+                        <span class="persona-timeline__who">我</span>
+                        <span class="persona-timeline__text">怎么啦?</span>
+                      </div>
+                      <div class="persona-timeline__item persona-timeline__item--them">
+                        <span class="persona-timeline__dot"></span>
+                        <span class="persona-timeline__time">昨天 17:33</span>
+                        <span class="persona-timeline__who">客户</span>
+                        <span class="persona-timeline__text">拉你进去了的</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="persona-followup__divider"></div>
+              <div class="persona-followup" id="aiFollowupCard">
+                <div class="ai-card__eyebrow">🕐 下次跟进</div>
+                <div class="followup-card">
+                  <div class="followup-card__time">
+                    <span class="followup-card__time-icon">📅</span>
+                    <div class="followup-card__time-main">
+                      <div class="followup-card__time-title">3 天后 · 上午 10:00</div>
+                      <div class="followup-card__time-sub">3/19 周二 · 22 小时 38 分后</div>
+                    </div>
+                  </div>
+                  <div class="followup-card__reason">
+                    <span class="followup-card__reason-label">💡 理由</span>
+                    <span class="followup-card__reason-text">客户工作日 9-11 点最活跃（近 30 天数据）· 上次互动 3 天前</span>
+                  </div>
+                  <div class="followup-card__content">
+                    <span class="followup-card__content-label">📝 建议内容</span>
+                    <span class="followup-card__content-text">续费方案 + 老客户专享折扣 + 节日问候</span>
+                  </div>
+                  <div class="followup-card__actions">
+                    <button class="followup-btn followup-btn--primary" data-followup-action="calendar">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      加入日历
+                    </button>
+                    <button class="followup-btn" data-followup-action="skip">⏭ 跳过</button>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div><!-- /ai-display__sticky -->
+
+            <!-- v56: tab 按 3 模式分流（off: 3 tab / semi: 5 tab / full: 3 tab） -->
+            <div class="ai-display__tabs" id="aiDisplayTabs">
+              <!-- off 模式 -->
+              <button class="ai-tab is-active" data-tab="funnel" data-modes="off" data-count-source="#aiFunnelCard .funnel-friend" title="销售漏斗 · 12 项（off 模式）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">销售漏斗</span>
+                  <span class="ai-tab__count">12</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <!-- semi 模式 -->
+              <button class="ai-tab" data-tab="analyze" data-modes="semi" data-count-source="#aiAnalyzeCard .analyze-cell,#aiRadarCard .radar-card__row" title="实时分析 · 2 项（semi 模式）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">实时分析</span>
+                  <span class="ai-tab__count">2</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <button class="ai-tab" data-tab="ai-suggest" data-modes="semi" data-count-source="#aiSuggestCard .suggest-version,#aiSuggestCard .suggest-tab" title="AI 建议 · 3 项（semi 模式）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">AI 建议</span>
+                  <span class="ai-tab__count">3</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <button class="ai-tab" data-tab="products" data-modes="off semi" data-count-source="#aiProductsCard .product-card" title="产品库 · 1 项（off + semi）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">产品库</span>
+                  <span class="ai-tab__count">1</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <!-- full 模式 -->
+              <button class="ai-tab" data-tab="activity" data-modes="full" data-count-source="#aiFlowCard .flow-step.is-done,#aiFlowCard .flow-step.is-active" data-count-show-done="true" title="实时活动 · 5 项（full 模式）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">实时活动</span>
+                  <span class="ai-tab__count">5</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <!-- 3 模式都有 -->
+              <button class="ai-tab" data-tab="metrics" data-modes="off semi full" data-count-source="#aiMetricsCard .metrics-cell" title="今日销售 · 4 项（3 模式通用）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">今日销售</span>
+                  <span class="ai-tab__count">4</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <button class="ai-tab" data-tab="daily" data-modes="off semi full" data-count-source="#aiDailyCardPanel .daily-item" title="今日联系 · 5 项（3 模式通用）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">今日联系</span>
+                  <span class="ai-tab__count">5</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <!-- v74: 3 个工具 tab（3 模式都有） -->
+              <button class="ai-tab" data-tab="knowledge" data-modes="off semi full" data-count-source="#aiKnowledgeCard .knowledge-item" title="知识库 · 12 项（3 模式通用）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">知识库</span>
+                  <span class="ai-tab__count">12</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <button class="ai-tab" data-tab="templates" data-modes="off semi full" data-count-source="#aiTemplatesCard .template-item" title="跟进模板 · 6 项（3 模式通用）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">跟进模板</span>
+                  <span class="ai-tab__count">6</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <button class="ai-tab" data-tab="segments" data-modes="off semi full" data-count-source="#aiSegmentsCard .segment-item" title="客户分层 · 8 项（3 模式通用）">
+                <span class="ai-tab__dot"></span>
+                <span class="ai-tab__main">
+                  <span class="ai-tab__name">客户分层</span>
+                  <span class="ai-tab__count">8</span>
+                </span>
+                <svg class="ai-tab__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+
+            <div class="ai-display__panels" id="aiDisplayPanels">
+              <!-- 产品库 panel · off+semi 模式（v63: 4 个产品） -->
+              <div class="ai-tab-panel" data-panel="products">
+                <div class="ai-card ai-card--products" id="aiProductsCard" data-modes="off semi">
+              <div class="ai-card__eyebrow">产品库 · 4 款</div>
+              <div class="products-grid">
+                <div class="product-card" data-product="8000">
+                  <div class="product-card__thumb" style="background: linear-gradient(135deg,#1FB6FF,#2D7CFF);">
+                    <span class="product-card__thumb-icon">💎</span>
+                  </div>
+                  <div class="product-card__body">
+                    <div class="product-card__name">8000 旗舰套餐</div>
+                    <div class="product-card__price">
+                      <span class="product-card__price-now">¥7,200</span>
+                      <span class="product-card__price-old">¥8,000</span>
+                      <span class="product-card__price-tag">9 折</span>
+                    </div>
+                    <ul class="product-card__bullets">
+                      <li>送 800 礼盒 · 锁定名额</li>
+                      <li>618 截止 6/20</li>
+                    </ul>
+                    <!-- v69: hover 显示更多细节 -->
+                    <div class="product-card__stats">
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📦</span>
+                        <span class="product-card__stat-label">销量</span>
+                        <span class="product-card__stat-val">286 套</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">⭐</span>
+                        <span class="product-card__stat-label">评分</span>
+                        <span class="product-card__stat-val">4.8</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📉</span>
+                        <span class="product-card__stat-label">退订率</span>
+                        <span class="product-card__stat-val product-card__stat-val--good">2.1%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-card" data-product="5000">
+                  <div class="product-card__thumb" style="background: linear-gradient(135deg,#8E5BFF,#5B3FD8);">
+                    <span class="product-card__thumb-icon">📦</span>
+                  </div>
+                  <div class="product-card__body">
+                    <div class="product-card__name">5000 标准套餐</div>
+                    <div class="product-card__price">
+                      <span class="product-card__price-now">¥5,000</span>
+                    </div>
+                    <ul class="product-card__bullets">
+                      <li>基础功能 5 项 · 适合初次</li>
+                      <li>无礼盒 · 月度续费</li>
+                    </ul>
+                    <div class="product-card__stats">
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📦</span>
+                        <span class="product-card__stat-label">销量</span>
+                        <span class="product-card__stat-val">412 套</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">⭐</span>
+                        <span class="product-card__stat-label">评分</span>
+                        <span class="product-card__stat-val">4.6</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📉</span>
+                        <span class="product-card__stat-label">退订率</span>
+                        <span class="product-card__stat-val">3.5%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-card" data-product="3000">
+                  <div class="product-card__thumb" style="background: linear-gradient(135deg,#34D399,#07A552);">
+                    <span class="product-card__thumb-icon">🌱</span>
+                  </div>
+                  <div class="product-card__body">
+                    <div class="product-card__name">3000 入门套餐</div>
+                    <div class="product-card__price">
+                      <span class="product-card__price-now">¥2,700</span>
+                      <span class="product-card__price-old">¥3,000</span>
+                      <span class="product-card__price-tag">9 折</span>
+                    </div>
+                    <ul class="product-card__bullets">
+                      <li>适合初次体验 · 1v1 顾问</li>
+                      <li>618 截止 6/20</li>
+                    </ul>
+                    <div class="product-card__stats">
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📦</span>
+                        <span class="product-card__stat-label">销量</span>
+                        <span class="product-card__stat-val">524 套</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">⭐</span>
+                        <span class="product-card__stat-label">评分</span>
+                        <span class="product-card__stat-val">4.5</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📉</span>
+                        <span class="product-card__stat-label">退订率</span>
+                        <span class="product-card__stat-val product-card__stat-val--warn">5.8%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-card" data-product="10000">
+                  <div class="product-card__thumb" style="background: linear-gradient(135deg,#FFB300,#FF8C42);">
+                    <span class="product-card__thumb-icon">👑</span>
+                  </div>
+                  <div class="product-card__body">
+                    <div class="product-card__name">10000 至尊套餐</div>
+                    <div class="product-card__price">
+                      <span class="product-card__price-now">¥8,800</span>
+                      <span class="product-card__price-old">¥10,000</span>
+                      <span class="product-card__price-tag">88 折</span>
+                    </div>
+                    <ul class="product-card__bullets">
+                      <li>VIP 服务 · 7×24 售后</li>
+                      <li>送 1500 礼盒 + 终身顾问</li>
+                    </ul>
+                    <div class="product-card__stats">
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📦</span>
+                        <span class="product-card__stat-label">销量</span>
+                        <span class="product-card__stat-val">158 套</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">⭐</span>
+                        <span class="product-card__stat-label">评分</span>
+                        <span class="product-card__stat-val product-card__stat-val--good">4.9</span>
+                      </div>
+                      <div class="product-card__stat">
+                        <span class="product-card__stat-icon">📉</span>
+                        <span class="product-card__stat-label">退订率</span>
+                        <span class="product-card__stat-val product-card__stat-val--good">1.2%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div><!-- /products panel -->
+
+            <!-- 实时分析 panel · semi 模式（含 v40 analyze + v42 radar） -->
+            <div class="ai-tab-panel" data-panel="analyze">
+              <!-- 半自动模式: AI 实时分析 -->
+              <div class="ai-card ai-card--analyze" id="aiAnalyzeCard" data-modes="semi">
+              <div class="ai-card__eyebrow">
+                <span class="ai-card__eyebrow-dot"></span>
+                AI 实时分析
+              </div>
+              <div class="analyze-grid">
+                <div class="analyze-cell">
+                  <div class="analyze-cell__label">客户意图</div>
+                  <div class="analyze-cell__val analyze-cell__val--hot">🔥 强购买意向</div>
+                </div>
+                <div class="analyze-cell">
+                  <div class="analyze-cell__label">成交概率</div>
+                  <div class="analyze-cell__val analyze-cell__val--num">78%</div>
+                </div>
+                <div class="analyze-cell">
+                  <div class="analyze-cell__label">情绪温度</div>
+                  <div class="analyze-cell__val">🔆 积极</div>
+                </div>
+                <div class="analyze-cell">
+                  <div class="analyze-cell__label">关键顾虑</div>
+                  <div class="analyze-cell__val">礼品价值</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- v42: 客户意图雷达 (半自动) - 升级 v40 实时分析 -->
+            <div class="ai-card ai-card--radar" id="aiRadarCard" data-modes="semi">
+              <div class="ai-card__eyebrow">
+                <span class="ai-card__eyebrow-dot"></span>
+                AI 客户意图雷达
+              </div>
+              <div class="radar-card">
+                <!-- 情绪温度 + 趋势 -->
+                <div class="radar-card__row">
+                  <div class="radar-card__label">情绪温度</div>
+                  <div class="radar-card__main">
+                    <div class="radar-card__temp">
+                      <span class="radar-card__temp-icon">🔥</span>
+                      <span class="radar-card__temp-val">78°</span>
+                      <span class="radar-card__temp-trend">↑ +12°</span>
+                    </div>
+                    <div class="radar-card__sparkline">
+                      <span class="spark-bar" style="height: 30%"></span>
+                      <span class="spark-bar" style="height: 45%"></span>
+                      <span class="spark-bar is-active" style="height: 78%"></span>
+                    </div>
+                  </div>
+                </div>
+                <!-- 关键信号 -->
+                <div class="radar-card__row">
+                  <div class="radar-card__label">关键信号</div>
+                  <div class="radar-card__signal">
+                    <span class="radar-card__signal-tag">议价中</span>
+                    <span class="radar-card__signal-quote">"看要不要买"</span>
+                  </div>
+                </div>
+                <!-- 成交概率 -->
+                <div class="radar-card__row radar-card__row--big">
+                  <div class="radar-card__label">成交概率</div>
+                  <div class="radar-card__prob">
+                    <div class="radar-card__prob-num">78<span>%</span></div>
+                    <div class="radar-card__prob-desc">强购买意向 · 客户已进入议价阶段</div>
+                  </div>
+                </div>
+                <!-- 关键词云 -->
+                <div class="radar-card__row">
+                  <div class="radar-card__label">关键词</div>
+                  <div class="radar-card__keywords">
+                    <span class="radar-keyword">8000 套餐</span>
+                    <span class="radar-keyword">礼品</span>
+                    <span class="radar-keyword">划算</span>
+                    <span class="radar-keyword">618</span>
+                    <span class="radar-keyword">名额</span>
+                  </div>
+                </div>
+                <!-- 趋势线 -->
+                <div class="radar-card__row">
+                  <div class="radar-card__label">趋势</div>
+                  <div class="radar-card__trend">
+                    <span class="trend-time">14:00</span>
+                    <span class="trend-bar" data-val="30">30°</span>
+                    <span class="trend-bar" data-val="55">55°</span>
+                    <span class="trend-bar is-active" data-val="78">78°</span>
+                    <span class="trend-time">18:00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            </div><!-- /analyze panel -->
+
+            <!-- 建议回复 panel · semi 模式 (v65 从 analyze 拆出) -->
+            <div class="ai-tab-panel" data-panel="ai-suggest">
+
+            <!-- v42 placeholder 移除 - 旧 analyze card 嵌套的 4 cell 已删 -->
+
+
+            <!-- 半自动模式: AI 建议回复 -->
+            <div class="ai-card ai-card--suggest" id="aiSuggestCard" data-modes="semi">
+              <div class="ai-card__eyebrow">
+                <span class="ai-card__eyebrow-dot"></span>
+                <span class="ai-card__eyebrow-text">AI 建议回复 · 待你审阅</span>
+                <!-- v67: 换一组刷新按钮 -->
+                <button class="suggest-refresh" id="suggestRefresh" type="button" title="换一组建议">
+                  <svg class="suggest-refresh__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"/><path d="M3 21v-5h5"/></svg>
+                  <span class="suggest-refresh__label">换一组</span>
+                  <span class="suggest-refresh__page" id="suggestRefreshPage">1/2</span>
+                </button>
+              </div>
+
+              <!-- 发送时机提示 (v40 E) -->
+              <div class="suggest-timing suggest-timing--hot" id="suggestTiming">
+                <span class="suggest-timing__icon">🔥</span>
+                <div class="suggest-timing__main">
+                  <div class="suggest-timing__title">立即回复 · 趁热打铁</div>
+                  <div class="suggest-timing__sub">客户 3 分钟前刚发了消息，回复窗口期</div>
+                </div>
+              </div>
+
+              <!-- 风格版本 tab 竖排 (v40 A) -->
+              <div class="suggest-tabs" id="suggestTabs" role="tablist">
+                <button class="suggest-tab is-active" data-version="soft" role="tab">
+                  <span class="suggest-tab__check">●</span>
+                  <span class="suggest-tab__name">温和派</span>
+                  <span class="suggest-tab__desc">关系优先</span>
+                </button>
+                <button class="suggest-tab" data-version="deal" role="tab">
+                  <span class="suggest-tab__check">●</span>
+                  <span class="suggest-tab__name">成交派</span>
+                  <span class="suggest-tab__desc">紧迫促销</span>
+                </button>
+                <button class="suggest-tab" data-version="data" role="tab">
+                  <span class="suggest-tab__check">●</span>
+                  <span class="suggest-tab__name">数据派</span>
+                  <span class="suggest-tab__desc">理性分析</span>
+                </button>
+              </div>
+
+              <!-- 3 版本内容（v67: 每版 2 变体，按 data-page 切换） -->
+              <!-- 温和派 -->
+              <div class="suggest-version" data-version="soft" data-page="0">
+                <div class="suggest-bubble">
+                  <div class="suggest-bubble__tag">🤖 AI 建议 · 温和派</div>
+                  <div class="suggest-bubble__text">小明兄，又来打扰你啦 😊 看到你之前关注 8000 套餐，最近我们正好有朋友专属的 618 福利，你要是有兴趣，我慢慢跟你介绍，不急哈～</div>
+                </div>
+              </div>
+              <div class="suggest-version" data-version="soft" data-page="1" style="display:none;">
+                <div class="suggest-bubble">
+                  <div class="suggest-bubble__tag">🤖 AI 建议 · 温和派</div>
+                  <div class="suggest-bubble__text">小明，618 这波我整理了 8000 套餐的几个亮点，看你方便的话我发你，先了解下不吃亏。最近工作也辛苦，别让自己太累～</div>
+                </div>
+              </div>
+              <!-- 成交派 -->
+              <div class="suggest-version" data-version="deal" data-page="0" style="display:none;">
+                <div class="suggest-bubble">
+                  <div class="suggest-bubble__tag">🤖 AI 建议 · 成交派</div>
+                  <div class="suggest-bubble__text">小明兄太巧了！正好赶上我们 618 活动，8000 套餐打 <strong>9 折 7200</strong>，再送您一份价值 800 的精品礼盒，今天下单还能锁定名额 👀</div>
+                </div>
+              </div>
+              <div class="suggest-version" data-version="deal" data-page="1" style="display:none;">
+                <div class="suggest-bubble">
+                  <div class="suggest-bubble__tag">🤖 AI 建议 · 成交派</div>
+                  <div class="suggest-bubble__text">小明，今晚 24 点 9 折名额截止，要不要先锁上？我帮你预留到明天下午 5 点，回个"要"我就走流程，错过再等明年 618</div>
+                </div>
+              </div>
+              <!-- 数据派 -->
+              <div class="suggest-version" data-version="data" data-page="0" style="display:none;">
+                <div class="suggest-bubble">
+                  <div class="suggest-bubble__tag">🤖 AI 建议 · 数据派</div>
+                  <div class="suggest-bubble__text">小明，根据你之前 3 次咨询的对比数据：8000 套餐近 30 天已成交 35 位老客户，续费率 85%，平均回报期 4.2 个月。618 优惠只剩 5 天，要不要我帮你锁个名额？</div>
+                </div>
+              </div>
+              <div class="suggest-version" data-version="data" data-page="1" style="display:none;">
+                <div class="suggest-bubble">
+                  <div class="suggest-bubble__tag">🤖 AI 建议 · 数据派</div>
+                  <div class="suggest-bubble__text">今年 618，8000 套餐售出 286 套，9 折 是历史最低价。近 90 天客户画像：中产家庭 + 已婚 + 1 个子女，跟你很匹配。2 年续费率 91%</div>
+                </div>
+              </div>
+
+              <div class="suggest-actions">
+                <button class="suggest-btn suggest-btn--primary" id="suggestApprove">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  基于该建议发送
+                </button>
+                <button class="suggest-btn" id="suggestEdit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  修改后发送
+                </button>
+                <button class="suggest-btn suggest-btn--ghost" id="suggestSkip">跳过</button>
+              </div>
+            </div>
+            </div><!-- /ai-suggest panel -->
+
+            <!-- 活动 panel · full 模式 -->
+            <div class="ai-tab-panel" data-panel="activity">
+              <!-- 全自动模式: AI 实时活动流 -->
+              <div class="ai-card ai-card--flow" id="aiFlowCard" data-modes="full">
+              <div class="ai-card__eyebrow">
+                <span class="ai-card__eyebrow-dot"></span>
+                AI 实时活动流
+              </div>
+              <div class="flow-list">
+                <div class="flow-step is-done">
+                  <span class="flow-step__time">14:01</span>
+                  <span class="flow-step__icon">👤</span>
+                  <div class="flow-step__main">
+                    <div class="flow-step__title">已加载好友「小明」背景画像</div>
+                  </div>
+                </div>
+                <div class="flow-step is-done">
+                  <span class="flow-step__time">14:02</span>
+                  <span class="flow-step__icon">📊</span>
+                  <div class="flow-step__main">
+                    <div class="flow-step__title">扫描好友列表 · 找到 12 位潜在客户</div>
+                  </div>
+                </div>
+                <div class="flow-step is-done">
+                  <span class="flow-step__time">14:03</span>
+                  <span class="flow-step__icon">🎯</span>
+                  <div class="flow-step__main">
+                    <div class="flow-step__title">已选定 3 位优先触达</div>
+                  </div>
+                </div>
+                <div class="flow-step is-done">
+                  <span class="flow-step__time">14:04</span>
+                  <span class="flow-step__icon">✍️</span>
+                  <div class="flow-step__main">
+                    <div class="flow-step__title">已为小明生成个性化话术</div>
+                  </div>
+                </div>
+                <div class="flow-step is-active">
+                  <span class="flow-step__time">14:05</span>
+                  <span class="flow-step__icon">📤</span>
+                  <div class="flow-step__main">
+                    <div class="flow-step__title">正在给「小明」发送消息…</div>
+                    <div class="flow-step__preview">小明兄！上次您看的 8000 套餐正好在做活动，现在下单打 9 折 7200，再送您价值 800 的精品礼盒…</div>
+                  </div>
+                </div>
+                <div class="flow-step is-pending">
+                  <span class="flow-step__time">—</span>
+                  <span class="flow-step__icon">⏳</span>
+                  <div class="flow-step__main">
+                    <div class="flow-step__title">等待小明回复</div>
+                    <div class="flow-step__sub">若 30 分钟内无回复，将自动跟进一条</div>
+                  </div>
+                </div>
+                <div class="flow-step is-pending">
+                  <span class="flow-step__time">—</span>
+                  <span class="flow-step__icon">🚀</span>
+                  <div class="flow-step__main">
+                    <div class="flow-step__title">若触发成交 · 自动下单 + 通知</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flow-toggle">
+                <div>
+                  <div class="flow-toggle__title">AI 已自主接管</div>
+                  <div class="flow-toggle__sub">每日最多联系 50 位好友 · 消耗约 15,000 token</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked>
+                  <span class="switch__slider"></span>
+                </label>
+              </div>
+            </div>
+            </div><!-- /activity panel -->
+
+            <!-- 销售漏斗 panel · off 模式 -->
+            <div class="ai-tab-panel" data-panel="funnel">
+              <!-- v61 · 销售漏斗真漏斗 visual（hallmark redesign：3 KPI + 5 阶段 width 递减 + 好友 chip） -->
+              <div class="ai-card ai-card--funnel" id="aiFunnelCard" data-modes="off">
+              <div class="ai-card__eyebrow">📊 销售漏斗 · 12 位好友</div>
+              <div class="funnel-kpis">
+                <div class="funnel-kpi">
+                  <div class="funnel-kpi__val">12</div>
+                  <div class="funnel-kpi__label">漏斗好友</div>
+                </div>
+                <div class="funnel-kpi funnel-kpi--hot">
+                  <div class="funnel-kpi__val">2</div>
+                  <div class="funnel-kpi__label">议价中 · 含小明</div>
+                </div>
+                <div class="funnel-kpi funnel-kpi--won">
+                  <div class="funnel-kpi__val">8.3%</div>
+                  <div class="funnel-kpi__label">月转化率</div>
+                </div>
+              </div>
+              <div class="funnel-visual">
+                <div class="funnel-step funnel-step--cold" data-step-key="cold">
+                  <div class="funnel-step__bar">
+                    <span class="funnel-step__name">意向</span>
+                    <span class="funnel-step__count">5</span>
+                  </div>
+                  <div class="funnel-step__friends">
+                    <span class="friend-avatar" style="background:#1FB6FF;">王</span>
+                    <span class="friend-avatar" style="background:#8E5BFF;">张</span>
+                    <span class="friend-avatar" style="background:#FF8C42;">李</span>
+                    <span class="friend-avatar" style="background:#07C160;">陈</span>
+                    <span class="friend-avatar" style="background:#FA709A;">周</span>
+                  </div>
+                </div>
+                <div class="funnel-step funnel-step--warm" data-step-key="warm">
+                  <div class="funnel-step__bar">
+                    <span class="funnel-step__name">咨询</span>
+                    <span class="funnel-step__count">3</span>
+                    <span class="funnel-step__rate">→ 60%</span>
+                  </div>
+                  <div class="funnel-step__friends">
+                    <span class="friend-avatar" style="background:#1FB6FF;">赵</span>
+                    <span class="friend-avatar" style="background:#8E5BFF;">钱</span>
+                    <span class="friend-avatar" style="background:#FF8C42;">孙</span>
+                  </div>
+                </div>
+                <div class="funnel-step funnel-step--hot is-active" data-step-key="hot">
+                  <div class="funnel-step__bar">
+                    <span class="funnel-step__name">议价</span>
+                    <span class="funnel-step__count">2</span>
+                    <span class="funnel-step__rate">→ 67%</span>
+                  </div>
+                  <div class="funnel-step__friends">
+                    <span class="friend-avatar friend-avatar--primary">小</span>
+                    <span class="friend-avatar" style="background:#4FACFE;">吴</span>
+                  </div>
+                  <!-- v62: 议价阶段行动按钮（加日历 / 准备话术） -->
+                  <div class="funnel-step__actions">
+                    <button class="funnel-action-btn" data-funnel-action="calendar">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      加日历
+                    </button>
+                    <button class="funnel-action-btn funnel-action-btn--primary" data-funnel-action="prepare-script">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      准备话术
+                    </button>
+                  </div>
+                </div>
+                <div class="funnel-step funnel-step--deal" data-step-key="deal">
+                  <div class="funnel-step__bar">
+                    <span class="funnel-step__name">体验</span>
+                    <span class="funnel-step__count">1</span>
+                    <span class="funnel-step__rate">→ 50%</span>
+                  </div>
+                  <div class="funnel-step__friends">
+                    <span class="friend-avatar" style="background:#FF9A44;">郑</span>
+                  </div>
+                </div>
+                <div class="funnel-step funnel-step--won" data-step-key="won">
+                  <div class="funnel-step__bar">
+                    <span class="funnel-step__name">✅ 成交</span>
+                    <span class="funnel-step__count">1</span>
+                    <span class="funnel-step__rate">→ 100%</span>
+                  </div>
+                  <div class="funnel-step__friends">
+                    <span class="friend-avatar" style="background:#07C160;">冯</span>
+                  </div>
+                </div>
+              </div>
+              <div class="funnel-foot-hint">💡 漏斗每周一更新 · 12 位好友中已成交 1 位</div>
+            </div>
+            </div><!-- /funnel panel -->
+
+            <!-- 今日销售 panel · 3 模式 -->
+            <div class="ai-tab-panel" data-panel="metrics">
+              <div class="ai-card ai-card--metrics" id="aiMetricsCard">
+              <div class="ai-card__eyebrow">今日销售</div>
+              <div class="metrics-grid">
+                <div class="metrics-cell">
+                  <div class="metrics-cell__val">12</div>
+                  <div class="metrics-cell__label">已联系</div>
+                  <div class="metrics-cell__delta metrics-cell__delta--up">+3 较昨日</div>
+                </div>
+                <div class="metrics-cell">
+                  <div class="metrics-cell__val metrics-cell__val--hot">5</div>
+                  <div class="metrics-cell__label">意向客户</div>
+                  <div class="metrics-cell__delta metrics-cell__delta--up">+2 较昨日</div>
+                </div>
+                <div class="metrics-cell">
+                  <div class="metrics-cell__val">3</div>
+                  <div class="metrics-cell__label">未读跟进</div>
+                  <div class="metrics-cell__delta metrics-cell__delta--down">待联系</div>
+                </div>
+                <div class="metrics-cell">
+                  <div class="metrics-cell__val metrics-cell__val--gold">¥48.6k</div>
+                  <div class="metrics-cell__label">销售金额</div>
+                  <div class="metrics-cell__delta metrics-cell__delta--up">+12% 周环比</div>
+                </div>
+              </div>
+              <div class="metrics-foot">
+                <div class="metrics-foot__item">
+                  <span class="metrics-foot__dot metrics-foot__dot--green"></span>
+                  <span>已读回复 8</span>
+                </div>
+                <div class="metrics-foot__item">
+                  <span class="metrics-foot__dot metrics-foot__dot--blue"></span>
+                  <span>已发跟进 4</span>
+                </div>
+                <div class="metrics-foot__item">
+                  <span class="metrics-foot__dot metrics-foot__dot--gold"></span>
+                  <span>成交 2</span>
+                </div>
+              </div>
+            </div>
+            </div><!-- /metrics panel -->
+
+            <!-- 今日联系 panel · 3 模式（v47 daily 内容移到这里） -->
+            <div class="ai-tab-panel" data-panel="daily">
+              <div class="ai-card ai-card--daily" id="aiDailyCardPanel" data-collapsed-by-mode="semi full">
+                <div class="ai-card__eyebrow daily-eyebrow">
+                  <span class="daily-eyebrow__lead">📋 今日联系 · <span id="dailyCountPanel">5</span> 位</span>
+                  <span class="daily-eyebrow__progress" id="dailyProgressTextPanel">完成 0 位 · 还有 5 位</span>
+                </div>
+                <div class="daily-progress-bar">
+                  <div class="daily-progress-bar__fill" id="dailyProgressFillPanel" style="width: 0%;"></div>
+                </div>
+                <!-- v68: 折叠时显示 top 3 摘要 -->
+                <div class="daily-summary" id="dailySummary" hidden></div>
+
+                <div class="daily-list">
+                  <div class="daily-item" data-friend-id="xiaoming" data-stage="hot" data-product="8000">
+                    <div class="daily-item__avatar" style="background: linear-gradient(135deg,#F5A623,#FF8C42);">小</div>
+                    <div class="daily-item__main">
+                      <div class="daily-item__head">
+                        <span class="daily-item__name">小明</span>
+                        <span class="daily-item__tag daily-item__tag--hot">议价</span>
+                        <span class="daily-item__urgent">⏰ 22h38m</span>
+                      </div>
+                      <div class="daily-item__tip">💡 续费方案 + 老客户折扣 · 上次沟通 3 天前</div>
+                    </div>
+                    <button class="daily-item__cta" data-daily-cta>联系 →</button>
+                  </div>
+                  <div class="daily-item" data-friend-id="xiaozheng" data-stage="deal" data-product="5000">
+                    <div class="daily-item__avatar" style="background: linear-gradient(135deg,#FF9A44,#FC6076);">郑</div>
+                    <div class="daily-item__main">
+                      <div class="daily-item__head">
+                        <span class="daily-item__name">小郑</span>
+                        <span class="daily-item__tag daily-item__tag--deal">体验</span>
+                        <span class="daily-item__urgent">⏰ 1 天后</span>
+                      </div>
+                      <div class="daily-item__tip">💡 回访体验感受 · 准备推进到成交</div>
+                    </div>
+                    <button class="daily-item__cta" data-daily-cta>联系 →</button>
+                  </div>
+                  <div class="daily-item" data-friend-id="xiaofeng" data-stage="won" data-product="8000">
+                    <div class="daily-item__avatar" style="background: linear-gradient(135deg,#07C160,#34D399);">冯</div>
+                    <div class="daily-item__main">
+                      <div class="daily-item__head">
+                        <span class="daily-item__name">小冯</span>
+                        <span class="daily-item__tag daily-item__tag--won">成交</span>
+                        <span class="daily-item__urgent">⏰ 2 天前</span>
+                      </div>
+                      <div class="daily-item__tip">💡 推荐升级旗舰套餐 · 老客户专享</div>
+                    </div>
+                    <button class="daily-item__cta" data-daily-cta>联系 →</button>
+                  </div>
+                  <div class="daily-item" data-friend-id="xiaowu" data-stage="hot" data-product="8000">
+                    <div class="daily-item__avatar" style="background: linear-gradient(135deg,#FA709A,#FF6B6B);">吴</div>
+                    <div class="daily-item__main">
+                      <div class="daily-item__head">
+                        <span class="daily-item__name">小吴</span>
+                        <span class="daily-item__tag daily-item__tag--hot">议价</span>
+                        <span class="daily-item__urgent">⏰ 2 天后</span>
+                      </div>
+                      <div class="daily-item__tip">💡 体验套餐续费 · 老客户专享 8.5 折</div>
+                    </div>
+                    <button class="daily-item__cta" data-daily-cta>联系 →</button>
+                  </div>
+                  <div class="daily-item" data-friend-id="xiaozhao" data-stage="warm" data-product="5000">
+                    <div class="daily-item__avatar" style="background: linear-gradient(135deg,#4FACFE,#00C9FF);">赵</div>
+                    <div class="daily-item__main">
+                      <div class="daily-item__head">
+                        <span class="daily-item__name">小赵</span>
+                        <span class="daily-item__tag daily-item__tag--warm">咨询</span>
+                        <span class="daily-item__urgent">⏰ 3 天后</span>
+                      </div>
+                      <div class="daily-item__tip">💡 跟进咨询需求 · 标准套餐 5 折</div>
+                    </div>
+                    <button class="daily-item__cta" data-daily-cta>联系 →</button>
+                  </div>
+                </div>
+                <button class="daily-foot__toggle" id="dailyExpandBtnPanel">
+                  <span class="daily-foot__toggle-text">展开 5 位</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+            </div><!-- /daily panel -->
+
+            <!-- v74: 知识库 panel · 3 模式（FAQ 12 条 · 4 分类） -->
+            <div class="ai-tab-panel" data-panel="knowledge">
+              <div class="ai-card ai-card--knowledge" id="aiKnowledgeCard" data-modes="off semi full">
+                <div class="ai-card__eyebrow">📚 知识库 · 12 条 FAQ · 4 分类</div>
+                <div class="knowledge-list">
+                  <div class="knowledge-item" data-faq-key="price" data-tag="价格">
+                    <div class="knowledge-item__q">客户问 8000 套餐太贵怎么办？</div>
+                    <div class="knowledge-item__a">拆解到每天 19.7 元 + 800 礼盒 + 老客户折扣。强调续费率 91%。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--price">价格</span>
+                      <span class="knowledge-item__rate">👍 命中率 92%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="price" data-tag="价格">
+                    <div class="knowledge-item__q">能再优惠点吗？</div>
+                    <div class="knowledge-item__a">9 折是最低，附送 800 礼盒。如量大可申请 VIP 通道（5000+ 减 200）。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--price">价格</span>
+                      <span class="knowledge-item__rate">👍 命中率 88%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="gift" data-tag="礼品">
+                    <div class="knowledge-item__q">礼盒能换吗？</div>
+                    <div class="knowledge-item__a">800 套餐礼盒可换购 500 元等价产品。10000 套餐可定制。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--gift">礼品</span>
+                      <span class="knowledge-item__rate">👍 命中率 95%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="gift" data-tag="礼品">
+                    <div class="knowledge-item__q">礼盒什么时候寄？</div>
+                    <div class="knowledge-item__a">下单后 3 个工作日内发货，顺丰包邮。急件可备注"加急"。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--gift">礼品</span>
+                      <span class="knowledge-item__rate">👍 命中率 90%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="service" data-tag="服务">
+                    <div class="knowledge-item__q">售后有问题找谁？</div>
+                    <div class="knowledge-item__a">7×24 顾问热线，VIP 客户专属 1v1 顾问。响应中位数 18 分钟。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--service">服务</span>
+                      <span class="knowledge-item__rate">👍 命中率 86%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="service" data-tag="服务">
+                    <div class="knowledge-item__q">套餐能升级吗？</div>
+                    <div class="knowledge-item__a">老客户可按 9 价补差价升级。老客 6 个月内升级享 8.5 折。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--service">服务</span>
+                      <span class="knowledge-item__rate">👍 命中率 91%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="service" data-tag="服务">
+                    <div class="knowledge-item__q">怎么退订？</div>
+                    <div class="knowledge-item__a">30 天内不满意全额退。提前 7 天申请无扣费。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--service">服务</span>
+                      <span class="knowledge-item__rate">👍 命中率 84%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="compare" data-tag="对比">
+                    <div class="knowledge-item__q">和其他家比有什么区别？</div>
+                    <div class="knowledge-item__a">续费率 91% vs 行业 60%。近 30 天 35 位成交老客户，2 年留存第一。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--compare">对比</span>
+                      <span class="knowledge-item__rate">👍 命中率 78%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="compare" data-tag="对比">
+                    <div class="knowledge-item__q">3000 套餐和 5000 套餐区别？</div>
+                    <div class="knowledge-item__a">3000 入门适合初次体验，5000 标准含 5 项基础功能。5000 = 3000 + 1v1 顾问 + 月度复盘。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--compare">对比</span>
+                      <span class="knowledge-item__rate">👍 命中率 89%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="use" data-tag="使用">
+                    <div class="knowledge-item__q">不会用怎么办？</div>
+                    <div class="knowledge-item__a">1v1 顾问 7×24 答疑，首月免费上门 1 次培训。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--use">使用</span>
+                      <span class="knowledge-item__rate">👍 命中率 87%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="use" data-tag="使用">
+                    <div class="knowledge-item__q">适合哪些人？</div>
+                    <div class="knowledge-item__a">中产家庭 + 已婚 + 1 个子女，30-50 岁，注重性价比的决策者。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--use">使用</span>
+                      <span class="knowledge-item__rate">👍 命中率 82%</span>
+                    </div>
+                  </div>
+                  <div class="knowledge-item" data-faq-key="use" data-tag="使用">
+                    <div class="knowledge-item__q">数据安全吗？</div>
+                    <div class="knowledge-item__a">ISO 27001 认证，国密 SM4 加密，30 天自动备份。</div>
+                    <div class="knowledge-item__meta">
+                      <span class="knowledge-item__tag knowledge-item__tag--use">使用</span>
+                      <span class="knowledge-item__rate">👍 命中率 81%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- v74: 跟进模板 panel · 3 模式（6 套话术 · 4 场景） -->
+            <div class="ai-tab-panel" data-panel="templates">
+              <div class="ai-card ai-card--templates" id="aiTemplatesCard" data-modes="off semi full">
+                <div class="ai-card__eyebrow">📅 跟进模板 · 6 套话术 · 4 场景</div>
+                <div class="template-list">
+                  <div class="template-item" data-template-key="cold" data-tag="冷启动">
+                    <div class="template-item__head">
+                      <span class="template-item__name">冷启动开场</span>
+                      <span class="template-item__tag template-item__tag--cold">冷启动</span>
+                    </div>
+                    <div class="template-item__text">你好，{name}，我是{role}。我们专为中产家庭提供高性价比服务，最近您朋友圈提到了{name_topic}，想跟您简单聊聊～</div>
+                    <div class="template-item__meta">📊 使用 12 次 · 转化 38%</div>
+                  </div>
+                  <div class="template-item" data-template-key="warm" data-tag="跟进">
+                    <div class="template-item__head">
+                      <span class="template-item__name">温和跟进</span>
+                      <span class="template-item__tag template-item__tag--warm">跟进</span>
+                    </div>
+                    <div class="template-item__text">{name}，上次咱们聊到{topic}，您说{concern}。今天我们正好有{product} 9 折活动，名额不多了，方便的话发您看看？</div>
+                    <div class="template-item__meta">📊 使用 28 次 · 转化 52%</div>
+                  </div>
+                  <div class="template-item" data-template-key="hot" data-tag="议价">
+                    <div class="template-item__head">
+                      <span class="template-item__name">议价促单</span>
+                      <span class="template-item__tag template-item__tag--hot">议价</span>
+                    </div>
+                    <div class="template-item__text">{name}，{product} 今天 9 折 + 800 礼盒，今天锁单到今晚 24:00。回个"要"我帮您走流程，名额 12 个。</div>
+                    <div class="template-item__meta">📊 使用 18 次 · 转化 67%</div>
+                  </div>
+                  <div class="template-item" data-template-key="renew" data-tag="续费">
+                    <div class="template-item__head">
+                      <span class="template-item__name">续费提醒</span>
+                      <span class="template-item__tag template-item__tag--renew">续费</span>
+                    </div>
+                    <div class="template-item__text">{name}，您的{product} 即将到期（{days} 天）。续费 8.5 折 + 老客户专享 800 礼盒升级。要续的话回个"续"，我帮您走流程。</div>
+                    <div class="template-item__meta">📊 使用 22 次 · 转化 71%</div>
+                  </div>
+                  <div class="template-item" data-template-key="referral" data-tag="转介绍">
+                    <div class="template-item__head">
+                      <span class="template-item__name">转介绍请求</span>
+                      <span class="template-item__tag template-item__tag--referral">转介绍</span>
+                    </div>
+                    <div class="template-item__text">{name}，感谢您一直的支持！身边有朋友也对{product} 感兴趣的话，可以推荐给我，成交后您也有 8 折优惠～</div>
+                    <div class="template-item__meta">📊 使用 8 次 · 转化 25%</div>
+                  </div>
+                  <div class="template-item" data-template-key="winback" data-tag="挽回">
+                    <div class="template-item__head">
+                      <span class="template-item__name">流失挽回</span>
+                      <span class="template-item__tag template-item__tag--winback">挽回</span>
+                    </div>
+                    <div class="template-item__text">{name}，好久没联系了。{product} 升级了，最近正好有 9 折+礼盒活动，给您留个名额，不忙的时候看看？</div>
+                    <div class="template-item__meta">📊 使用 5 次 · 转化 18%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- v74: 客户分层 panel · 3 模式（按价值/风险/活跃度 3 区） -->
+            <div class="ai-tab-panel" data-panel="segments">
+              <div class="ai-card ai-card--segments" id="aiSegmentsCard" data-modes="off semi full">
+                <div class="ai-card__eyebrow">👥 客户分层 · 8 位 · 3 维度</div>
+                <div class="segment-grid">
+                  <!-- 按价值 -->
+                  <div class="segment-block">
+                    <div class="segment-block__head">
+                      <span class="segment-block__icon">💎</span>
+                      <span class="segment-block__name">按价值</span>
+                      <span class="segment-block__count">8</span>
+                    </div>
+                    <div class="segment-list">
+                      <div class="segment-item segment-item--vip">
+                        <span class="segment-item__name">VIP 高价值</span>
+                        <span class="segment-item__count">1</span>
+                        <span class="segment-item__hint">小冯 · 8000 套餐</span>
+                      </div>
+                      <div class="segment-item segment-item--high">
+                        <span class="segment-item__name">高潜力</span>
+                        <span class="segment-item__count">2</span>
+                        <span class="segment-item__hint">小明 / 小吴 · 议价中</span>
+                      </div>
+                      <div class="segment-item segment-item--mid">
+                        <span class="segment-item__name">中等</span>
+                        <span class="segment-item__count">3</span>
+                        <span class="segment-item__hint">小郑 / 小赵 / +1</span>
+                      </div>
+                      <div class="segment-item segment-item--low">
+                        <span class="segment-item__name">低价值</span>
+                        <span class="segment-item__count">2</span>
+                        <span class="segment-item__hint">长尾客户</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 按风险 -->
+                  <div class="segment-block">
+                    <div class="segment-block__head">
+                      <span class="segment-block__icon">⚠️</span>
+                      <span class="segment-block__name">按风险</span>
+                      <span class="segment-block__count">8</span>
+                    </div>
+                    <div class="segment-list">
+                      <div class="segment-item segment-item--risk-high">
+                        <span class="segment-item__name">高流失风险</span>
+                        <span class="segment-item__count">1</span>
+                        <span class="segment-item__hint">小赵 · 30 天未互动</span>
+                      </div>
+                      <div class="segment-item segment-item--risk-mid">
+                        <span class="segment-item__name">中风险</span>
+                        <span class="segment-item__count">2</span>
+                        <span class="segment-item__hint">小吴 / 小郑</span>
+                      </div>
+                      <div class="segment-item segment-item--risk-low">
+                        <span class="segment-item__name">低风险</span>
+                        <span class="segment-item__count">3</span>
+                        <span class="segment-item__hint">小明 / 小冯 / +1</span>
+                      </div>
+                      <div class="segment-item segment-item--risk-none">
+                        <span class="segment-item__name">无风险</span>
+                        <span class="segment-item__count">2</span>
+                        <span class="segment-item__hint">活跃老客户</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 按活跃度 -->
+                  <div class="segment-block">
+                    <div class="segment-block__head">
+                      <span class="segment-block__icon">🔥</span>
+                      <span class="segment-block__name">按活跃度</span>
+                      <span class="segment-block__count">8</span>
+                    </div>
+                    <div class="segment-list">
+                      <div class="segment-item segment-item--act-hot">
+                        <span class="segment-item__name">高度活跃</span>
+                        <span class="segment-item__count">2</span>
+                        <span class="segment-item__hint">小明 / 小吴 · 今日互动</span>
+                      </div>
+                      <div class="segment-item segment-item--act-warm">
+                        <span class="segment-item__name">中度活跃</span>
+                        <span class="segment-item__count">2</span>
+                        <span class="segment-item__hint">小郑 / 小冯 · 7 天内</span>
+                      </div>
+                      <div class="segment-item segment-item--act-cool">
+                        <span class="segment-item__name">低活跃</span>
+                        <span class="segment-item__count">3</span>
+                        <span class="segment-item__hint">小赵 / +2</span>
+                      </div>
+                      <div class="segment-item segment-item--act-cold">
+                        <span class="segment-item__name">沉睡</span>
+                        <span class="segment-item__count">1</span>
+                        <span class="segment-item__hint">30+ 天未联系</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div><!-- /ai-display__panels -->
+
+        </aside>
+
+      </div>
+
+    </div>
+
+  <!-- v53 · 点击产品图弹窗：产品展示 + 3 营销 tab + 5 术语（2 产品可切换） -->
+  <div class="sales-modal product-modal" id="productModal" hidden>
+    <div class="sales-modal__overlay" data-product-close></div>
+    <div class="sales-modal__dialog product-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+      <div class="sales-modal__head product-modal__head">
+        <div>
+          <div class="sales-modal__eyebrow">销售术语 · 为 <span id="productModalProduct">8000 旗舰套餐</span> 推荐</div>
+          <div class="sales-modal__title" id="productModalTitle">产品 + 营销话术</div>
+        </div>
+        <button class="sales-modal__close" data-product-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="product-modal__products" id="productModalProducts">
+        <button class="product-modal__product is-active" data-product-key="8000" type="button">
+          <div class="product-modal__product-thumb" style="background: linear-gradient(135deg,#1FB6FF,#2D7CFF);">💎</div>
+          <div class="product-modal__product-info">
+            <div class="product-modal__product-name">8000 旗舰套餐</div>
+            <div class="product-modal__product-price"><span style="color:#E54B4B;font-weight:800;">¥7,200</span> <span style="color:var(--text-tertiary);text-decoration:line-through;font-size:10px;">¥8,000</span></div>
+          </div>
+        </button>
+        <button class="product-modal__product" data-product-key="5000" type="button">
+          <div class="product-modal__product-thumb" style="background: linear-gradient(135deg,#8E5BFF,#5B3FD8);">📦</div>
+          <div class="product-modal__product-info">
+            <div class="product-modal__product-name">5000 标准套餐</div>
+            <div class="product-modal__product-price"><span style="color:#E54B4B;font-weight:800;">¥5,000</span></div>
+          </div>
+        </button>
+        <button class="product-modal__product" data-product-key="3000" type="button">
+          <div class="product-modal__product-thumb" style="background: linear-gradient(135deg,#34D399,#07A552);">🌱</div>
+          <div class="product-modal__product-info">
+            <div class="product-modal__product-name">3000 入门套餐</div>
+            <div class="product-modal__product-price"><span style="color:#E54B4B;font-weight:800;">¥2,700</span> <span style="color:var(--text-tertiary);text-decoration:line-through;font-size:10px;">¥3,000</span></div>
+          </div>
+        </button>
+        <button class="product-modal__product" data-product-key="10000" type="button">
+          <div class="product-modal__product-thumb" style="background: linear-gradient(135deg,#FFB300,#FF8C42);">👑</div>
+          <div class="product-modal__product-info">
+            <div class="product-modal__product-name">10000 至尊套餐</div>
+            <div class="product-modal__product-price"><span style="color:#E54B4B;font-weight:800;">¥8,800</span> <span style="color:var(--text-tertiary);text-decoration:line-through;font-size:10px;">¥10,000</span></div>
+          </div>
+        </button>
+      </div>
+      <div class="product-modal__body">
+        <div class="product-modal__hero">
+          <div class="product-modal__hero-thumb" id="productModalHeroThumb" style="background: linear-gradient(135deg,#1FB6FF,#2D7CFF);">💎</div>
+          <div class="product-modal__hero-info">
+            <div class="product-modal__hero-name" id="productModalHeroName">8000 旗舰套餐</div>
+            <div class="product-modal__hero-bullets" id="productModalHeroBullets">
+              <span>送 800 礼盒 · 锁定名额</span>
+              <span>618 截止 6/20</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-modal__right">
+          <div class="suggest-tabs product-modal__tabs" id="productModalTabs">
+            <button class="suggest-tab is-active" data-style="soft">
+              <span class="suggest-tab__check">●</span>
+              <span class="suggest-tab__name">温和营销</span>
+              <span class="suggest-tab__desc">建立信任</span>
+            </button>
+            <button class="suggest-tab" data-style="data">
+              <span class="suggest-tab__check">●</span>
+              <span class="suggest-tab__name">数据营销</span>
+              <span class="suggest-tab__desc">用事实</span>
+            </button>
+            <button class="suggest-tab" data-style="proactive">
+              <span class="suggest-tab__check">●</span>
+              <span class="suggest-tab__name">主动营销</span>
+              <span class="suggest-tab__desc">促单</span>
+            </button>
+          </div>
+          <div class="sales-modal__terms" id="productModalTerms">
+            <!-- JS 动态填充 5 条术语 -->
+          </div>
+        </div>
+      </div>
+      <div class="product-modal__foot">
+        <span class="sales-modal__hint">点击上方产品切换术语 · 点击术语填入对话输入框，不发送</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- v46 · 销售漏斗详情弹窗（点击"查看漏斗详情"打开） -->
+  <div class="sales-modal funnel-modal" id="funnelModal" hidden>
+    <div class="sales-modal__overlay" data-funnel-close></div>
+    <div class="sales-modal__dialog funnel-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="funnelModalTitle">
+      <div class="sales-modal__head funnel-modal__head">
+        <div>
+          <div class="sales-modal__eyebrow">销售漏斗 · 12 位好友</div>
+          <div class="sales-modal__title" id="funnelModalTitle">漏斗详情</div>
+        </div>
+        <button class="sales-modal__close" data-funnel-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="funnel-modal__kpis">
+        <div class="funnel-modal__kpi">
+          <div class="funnel-modal__kpi-value">12</div>
+          <div class="funnel-modal__kpi-label">漏斗好友</div>
+        </div>
+        <div class="funnel-modal__kpi funnel-modal__kpi--hot">
+          <div class="funnel-modal__kpi-value">2</div>
+          <div class="funnel-modal__kpi-label">议价中 · 含小明</div>
+        </div>
+        <div class="funnel-modal__kpi funnel-modal__kpi--won">
+          <div class="funnel-modal__kpi-value">8.3%</div>
+          <div class="funnel-modal__kpi-label">月转化率</div>
+        </div>
+      </div>
+      <div class="funnel-modal__body">
+        <div class="funnel-modal__stages" id="funnelModalStages">
+          <!-- JS 动态填充 5 阶段详情 -->
+        </div>
+      </div>
+      <div class="funnel-modal__foot">
+        <span class="funnel-modal__hint">漏斗每周一更新 · 12 位好友中已成交 1 位</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/shared.js"></script>
+  <script>
+    // ===== 销冠 AI 接管交互 =====
+    (function () {
+      'use strict';
+
+      // v36: 模式文案（控制条 + 右栏共用）
+      const MODE_COPY = {
+        off:  { title: 'AI 销冠', sub: '关闭 · 手动回复好友消息' },
+        semi: { title: 'AI 销冠', sub: '半自动 · AI 给建议，你审过再发' },
+        full: { title: 'AI 销冠', sub: '全自动 · AI 自主接管对话' },
+      };
+      const BAR_METRIC = {
+        off:  null,
+        semi: { label: '今日生成建议', val: '12 条' },
+        full: { label: '今日已联系',  val: '1 / 50' },
+      };
+      const DISPLAY_TITLE = { off: '关闭 · 手动回复', semi: '半自动 · AI 建议', full: '全自动 · AI 自主' };
+
+      // v36: AI 接管控制条元素（替代旧 header toggle + banner）
+      const aiBar       = document.getElementById('aiBar');
+      const aiBarTitle  = document.getElementById('aiBarTitle');
+      const aiBarSub    = document.getElementById('aiBarSub');
+      const aiBarMetric = document.getElementById('aiBarMetric');
+      const aiBarMetricLabel = document.getElementById('aiBarMetricLabel');
+      const aiBarMetricVal   = document.getElementById('aiBarMetricVal');
+      const toggle = document.getElementById('aiToggle');
+      // v35: AI 销冠右栏
+      const aiDisplay = document.getElementById('aiDisplay');
+      const aiDisplayTitle = document.getElementById('aiDisplayTitle');
+      const aiDisplayCollapse = document.getElementById('aiDisplayCollapse');
+
+      if (!toggle || !aiBar) return;
+
+      // 切换模式
+      toggle.addEventListener('click', (e) => {
+        const btn = e.target.closest('.ai-seg__opt');
+        if (!btn) return;
+        const mode = btn.dataset.mode;
+
+        // 更新 segmented control active
+        toggle.querySelectorAll('.ai-seg__opt').forEach((b) => {
+          b.classList.toggle('is-active', b === btn);
+        });
+
+        // v36: 同步控制条 mode + 文案
+        aiBar.dataset.mode = mode;
+        const copy = MODE_COPY[mode];
+        if (aiBarTitle) aiBarTitle.textContent = copy.title;
+        if (aiBarSub) aiBarSub.textContent = copy.sub;
+
+        // v36: 同步控制条右侧 metric
+        const metric = BAR_METRIC[mode];
+        if (metric) {
+          aiBarMetric.dataset.state = 'active';
+          if (aiBarMetricLabel) aiBarMetricLabel.textContent = metric.label;
+          if (aiBarMetricVal) aiBarMetricVal.textContent = metric.val;
+        } else {
+          aiBarMetric.dataset.state = 'hidden';
+        }
+
+        // v37: 同步右栏标题 + 配色（persona/knowledge/metrics 三模块不受 mode 影响，永远显示）
+        if (aiDisplay) {
+          aiDisplay.dataset.mode = mode;
+          if (aiDisplayTitle) aiDisplayTitle.textContent = DISPLAY_TITLE[mode] || '关闭';
+        }
+      });
+
+      // v35: 右栏收起 / 展开
+      if (aiDisplay && aiDisplayCollapse) {
+        aiDisplayCollapse.addEventListener('click', () => {
+          aiDisplay.classList.toggle('is-collapsed');
+        });
+      }
+
+      // v40: 半自动销冠 · 风格版本 tab 切换 (A)  + v67: refresh 按钮
+      const suggestTabs = document.getElementById('suggestTabs');
+      let suggestCurrentVersion = 'soft';
+      let suggestCurrentPage = 0;
+      const SUGGEST_PAGES = 2;
+
+      function renderSuggestVersion() {
+        document.querySelectorAll('.suggest-version').forEach(v => {
+          const matchVersion = v.dataset.version === suggestCurrentVersion;
+          const matchPage = Number(v.dataset.page) === suggestCurrentPage;
+          v.style.display = matchVersion && matchPage ? 'block' : 'none';
+        });
+        const pageEl = document.getElementById('suggestRefreshPage');
+        if (pageEl) pageEl.textContent = (suggestCurrentPage + 1) + '/' + SUGGEST_PAGES;
+      }
+
+      if (suggestTabs) {
+        suggestTabs.addEventListener('click', (e) => {
+          const tab = e.target.closest('.suggest-tab');
+          if (!tab) return;
+          const version = tab.dataset.version;
+          suggestCurrentVersion = version;
+          suggestCurrentPage = 0; // 切 tab 重置 page
+          // tab active
+          suggestTabs.querySelectorAll('.suggest-tab').forEach(t => {
+            t.classList.toggle('is-active', t === tab);
+          });
+          renderSuggestVersion();
+        });
+      }
+
+      // v67: 换一组刷新按钮
+      const suggestRefresh = document.getElementById('suggestRefresh');
+      if (suggestRefresh) {
+        suggestRefresh.addEventListener('click', () => {
+          suggestCurrentPage = (suggestCurrentPage + 1) % SUGGEST_PAGES;
+          renderSuggestVersion();
+          // icon 旋转动画
+          const icon = suggestRefresh.querySelector('.suggest-refresh__icon');
+          if (icon) {
+            icon.classList.remove('is-spinning');
+            // force reflow 重新触发动画
+            void icon.offsetWidth;
+            icon.classList.add('is-spinning');
+          }
+        });
+      }
+
+      // v40: 来源透明化 折叠 (D)
+      const suggestSourceToggle = document.getElementById('suggestSourceToggle');
+      const suggestSourceList = document.getElementById('suggestSourceList');
+      const suggestSource = document.getElementById('suggestSource');
+      if (suggestSourceToggle && suggestSourceList) {
+        suggestSourceToggle.addEventListener('click', () => {
+          const isOpen = !suggestSourceList.hidden;
+          suggestSourceList.hidden = isOpen;
+          if (suggestSource) suggestSource.classList.toggle('is-open', !isOpen);
+        });
+      }
+
+      // v40: 反馈状态切换 (C)
+      const msgFeedback = document.getElementById('msgFeedback');
+      if (msgFeedback) {
+        msgFeedback.addEventListener('click', (e) => {
+          const state = e.target.closest('.msg-state');
+          if (!state) return;
+          msgFeedback.querySelectorAll('.msg-state').forEach(s => {
+            s.classList.remove('is-active');
+            s.classList.remove('is-pending');
+          });
+          state.classList.add('is-active');
+          // 6h 倒计时重置
+          const cd = document.getElementById('msgFeedbackCountdown');
+          if (cd) cd.textContent = '⏱ 6h 0m 自动归档';
+        });
+      }
+
+      // ===== v82: 半自动 2 按钮接通（基于该建议发送 / 修改后发送）=====
+      // 取当前显示的 AI 建议文本（getComputedStyle 而非 inline style 匹配，
+      // 因为软/0 默认无 inline style，其他 5 个有 display:none）
+      function getCurrentSuggestText() {
+        var v = Array.from(document.querySelectorAll('.suggest-version'))
+          .find(function (x) { return getComputedStyle(x).display !== 'none'; });
+        if (!v) return '';
+        var el = v.querySelector('.suggest-bubble__text');
+        return el ? el.innerHTML.trim() : '';
+      }
+      function getCurrentSuggestPlain() {
+        var v = Array.from(document.querySelectorAll('.suggest-version'))
+          .find(function (x) { return getComputedStyle(x).display !== 'none'; });
+        if (!v) return '';
+        var el = v.querySelector('.suggest-bubble__text');
+        return el ? el.innerText.trim() : '';
+      }
+      // 写入 contenteditable（保留换行）
+      function setMsgInputHtml(html) {
+        const input = document.getElementById('msgInput');
+        if (!input) return false;
+        input.innerHTML = html;
+        // 触发 input 事件（字数统计等监听）
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        // 光标移到末尾
+        const range = document.createRange();
+        range.selectNodeContents(input);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return true;
+      }
+      // 轻量 toast（v82）：右下角浮 1.5s 自动消失
+      function showToast(text, kind) {
+        const t = document.createElement('div');
+        t.className = 'toast toast--' + (kind || 'info');
+        t.textContent = text;
+        document.body.appendChild(t);
+        // 触发动画
+        requestAnimationFrame(function () { t.classList.add('toast--show'); });
+        setTimeout(function () {
+          t.classList.remove('toast--show');
+          setTimeout(function () { t.remove(); }, 240);
+        }, 1500);
+      }
+
+      // 基于该建议发送：写入 input → 模拟点发送 → 清空 + toast
+      const suggestApproveBtn = document.getElementById('suggestApprove');
+      if (suggestApproveBtn) {
+        suggestApproveBtn.addEventListener('click', function () {
+          const html = getCurrentSuggestText();
+          if (!html) { showToast('⚠️ 当前无可用建议', 'warn'); return; }
+          // 按钮 active 反馈
+          suggestApproveBtn.classList.add('is-active-flash');
+          setTimeout(function () { suggestApproveBtn.classList.remove('is-active-flash'); }, 600);
+          // 写 input
+          if (!setMsgInputHtml(html)) return;
+          // 模拟点发送（v40 已有点击事件处理，先 dispatch click）
+          const sendBtn = document.getElementById('msgSendBtn');
+          if (sendBtn) {
+            sendBtn.classList.add('is-active-flash');
+            setTimeout(function () { sendBtn.classList.remove('is-active-flash'); }, 600);
+            sendBtn.click();
+            setTimeout(function () { showToast('✅ 已发送给 小明', 'success'); }, 200);
+          } else {
+            showToast('✅ 已填入对话 · 点击发送', 'success');
+          }
+        });
+      }
+
+      // 修改后发送：写入 input → 聚焦 → 等用户改完手动发送
+      const suggestEditBtn = document.getElementById('suggestEdit');
+      if (suggestEditBtn) {
+        suggestEditBtn.addEventListener('click', function () {
+          const html = getCurrentSuggestText();
+          if (!html) { showToast('⚠️ 当前无可用建议', 'warn'); return; }
+          suggestEditBtn.classList.add('is-active-flash');
+          setTimeout(function () { suggestEditBtn.classList.remove('is-active-flash'); }, 600);
+          if (!setMsgInputHtml(html)) return;
+          // 聚焦
+          const input = document.getElementById('msgInput');
+          if (input) {
+            input.focus();
+            showToast('✏️ 已填入 · 可修改后手动发送', 'info');
+          }
+        });
+      }
+
+      // 跳过按钮：标记当前建议为"已跳过"+ 显示反馈状态变化 + toast
+      const suggestSkipBtn = document.getElementById('suggestSkip');
+      if (suggestSkipBtn) {
+        suggestSkipBtn.addEventListener('click', function () {
+          suggestSkipBtn.classList.add('is-active-flash');
+          setTimeout(function () { suggestSkipBtn.classList.remove('is-active-flash'); }, 600);
+          showToast('⏭️ 已跳过此建议 · AI 会在 5s 后生成新建议', 'info');
+        });
+      }
+    })();
+
+    // ===== 背景画像接入（AI 销冠引用 persona） =====
+    (function () {
+      'use strict';
+
+      // 当前对话好友 ID（UMC专员对应 Edi卷毛超强 · ID 30817253）
+      const CURRENT_FRIEND_ID = '30817253';
+      const CURRENT_FRIEND_NAME = '小明';
+
+      // Mock persona · 本地没存画像时用这套 demo 数据
+      const MOCK_PERSONA = {
+        friendName: CURRENT_FRIEND_NAME,
+        personality: { traits: ['务实', '重效率'], mood: '温和', communication: '数据导向' },
+        family: { ageRange: '31-40', marital: '已婚', children: '1个', gender: '男', note: '配偶也很关注性价比' },
+        finance: { level: '中产', jobs: ['企业高管'], interests: ['理财', '房产'], note: '' },
+        industry: '科技',
+        decisionRole: '决策者',
+        painPoints: ['价格敏感', '时间紧迫'],
+        salesNotes: '上周问过 8000 套餐 · 偏好下午联系 · 老婆比他更决策'
+      };
+
+      function loadPersona(friendId) {
+        try {
+          const raw = localStorage.getItem('umakex_persona_' + friendId);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      }
+
+      // 家庭角色推断（与 contacts.js 同步逻辑 — 婚姻+子女+性别 → 爸爸/妈妈/配偶/单身/保密）
+      function inferFamilyRole(family) {
+        if (!family) return '';
+        const { marital, children, gender } = family;
+        if (!marital && !children) return '';
+        if (children && children !== '无' && children !== '保密') {
+          if (gender === '男') return '爸爸';
+          if (gender === '女') return '妈妈';
+          return '爸爸/妈妈';
+        }
+        if (marital === '离异' && (children === '保密' || (children && children !== '无'))) {
+          if (gender === '男') return '爸爸';
+          if (gender === '女') return '妈妈';
+          return '爸爸/妈妈';
+        }
+        if (marital === '已婚' && (children === '无' || !children)) return '配偶';
+        if (marital === '未婚') return '单身';
+        if (marital === '离异') return '单身';
+        if (marital === '保密') return '保密';
+        return '';
+      }
+
+      function summarize(p) {
+        if (!p) return '';
+        const bits = [];
+        if (p.personality && p.personality.traits && p.personality.traits.length) bits.push(p.personality.traits.join('、'));
+        if (p.personality && p.personality.mood) bits.push(p.personality.mood);
+        if (p.personality && p.personality.communication) bits.push(p.personality.communication + '型');
+        if (p.family) {
+          if (p.family.ageRange) bits.push(p.family.ageRange);
+          if (p.family.marital) bits.push(p.family.marital);
+          if (p.family.children && p.family.children !== '无') bits.push(p.family.children + '子女');
+          // 家庭角色 = 实时推断（family 不再存储 role 字段）
+          const inferredRole = inferFamilyRole(p.family);
+          if (inferredRole) bits.push(inferredRole);
+        }
+        if (p.finance) {
+          if (p.finance.level) bits.push(p.finance.level);
+          if (p.finance.jobs && p.finance.jobs.length) bits.push(p.finance.jobs.join('/'));
+          if (p.finance.interests && p.finance.interests.length) bits.push('关注' + p.finance.interests.join('/'));
+        }
+        if (p.industry) bits.push(p.industry + '业');
+        if (p.decisionRole) bits.push(p.decisionRole);
+        if (p.painPoints && p.painPoints.length) bits.push('痛点:' + p.painPoints.join('、'));
+        return bits.join(' · ');
+      }
+
+      // 元素
+      const pill      = document.getElementById('chatPersonaPill');
+      const personaEl = document.getElementById('replyPersona');
+      const personaTx = document.getElementById('replyPersonaText');
+      const flowStep  = document.getElementById('flowPersonaStep');
+      const flowSub   = document.getElementById('flowPersonaSub');
+
+      // 1) 顶部 pill：进页面就读一次
+      const real = loadPersona(CURRENT_FRIEND_ID);
+      const p = real || MOCK_PERSONA;
+      const summary = summarize(p);
+      if (pill && summary) {
+        pill.setAttribute('data-state', 'active');
+        pill.querySelector('.chat__persona-label').textContent =
+          (real ? '画像已加载' : '画像 demo') + ' · ' + (p.personality.traits && p.personality.traits.length ? p.personality.traits[0] : '已建模');
+      }
+      if (personaEl && personaTx && summary) {
+        personaEl.setAttribute('data-state', 'active');
+        personaTx.textContent = summary + (p.salesNotes ? ' · ' + p.salesNotes : '');
+      }
+      if (flowStep && flowSub && summary) {
+        flowStep.setAttribute('data-state', 'active');
+        flowSub.textContent = summary;
+      }
+
+      // 2) 模式切换时同步显示
+      function onMode(mode) {
+        if (mode === 'semi') {
+          if (personaEl) personaEl.setAttribute('data-state', 'active');
+        } else if (mode === 'full') {
+          if (flowStep) flowStep.setAttribute('data-state', 'active');
+        }
+      }
+      const toggle = document.getElementById('aiToggle');
+      if (toggle) {
+        toggle.addEventListener('click', (e) => {
+          const btn = e.target.closest('.ai-control__opt');
+          if (!btn) return;
+          onMode(btn.dataset.mode);
+        });
+      }
+    })();
+
+    // ===== v43 · 跟进卡点击退场 + localStorage 记忆 =====
+    (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'umakex_followup_dismissed_v1';
+      var card = document.getElementById('aiFollowupCard');
+      if (!card) return;
+
+      // 初始化：读 localStorage 恢复 dismissed 状态
+      function restoreDismissed() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          var data = JSON.parse(raw);
+          if (data && data.dismissed) {
+            card.classList.add('is-dismissed');
+          }
+        } catch (e) { /* ignore */ }
+      }
+
+      // 退场：写 localStorage + 加 is-dismissed class
+      function dismissFollowup(action) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            dismissed: true,
+            action: action,
+            at: Date.now()
+          }));
+        } catch (e) { /* ignore */ }
+        // 触发 transition：先加 class 触发 max-height 坍缩
+        card.classList.add('is-dismissed');
+      }
+
+      // 绑定 2 个按钮的 click
+      var buttons = card.querySelectorAll('[data-followup-action]');
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var action = btn.getAttribute('data-followup-action');
+          dismissFollowup(action);
+        });
+      });
+
+      // 首次加载恢复状态
+      restoreDismissed();
+    })();
+
+    // ===== v46 · 销售漏斗详情弹窗（点击"查看漏斗详情"打开） =====
+    (function () {
+      'use strict';
+
+      // 5 阶段详情数据（与 .funnel-list DOM 对应）
+      var STAGES = [
+        {
+          key: 'cold',
+          name: '意向',
+          count: 5,
+          rate: '—',
+          width: '100%',
+          friends: [
+            { name: '小王', avatar: '王', color: '#1FB6FF' },
+            { name: '小张', avatar: '张', color: '#8E5BFF' },
+            { name: '小李', avatar: '李', color: '#FF8C42' },
+            { name: '小陈', avatar: '陈', color: '#07C160' },
+            { name: '小周', avatar: '周', color: '#FA709A' }
+          ],
+          tagClass: 'funnel-detail__tag--cold',
+          barClass: 'funnel-detail__bar--cold'
+        },
+        {
+          key: 'warm',
+          name: '咨询',
+          count: 3,
+          rate: '60%',
+          width: '60%',
+          friends: [
+            { name: '小赵', avatar: '赵', color: '#1FB6FF' },
+            { name: '小钱', avatar: '钱', color: '#8E5BFF' },
+            { name: '小孙', avatar: '孙', color: '#FF8C42' }
+          ],
+          tagClass: 'funnel-detail__tag--warm',
+          barClass: 'funnel-detail__bar--warm'
+        },
+        {
+          key: 'hot',
+          name: '议价',
+          count: 2,
+          rate: '67%',
+          width: '40%',
+          friends: [
+            { name: '小明', avatar: '小', color: '#F5A623', primary: true },
+            { name: '小吴', avatar: '吴', color: '#4FACFE' }
+          ],
+          tagClass: 'funnel-detail__tag--hot',
+          barClass: 'funnel-detail__bar--hot'
+        },
+        {
+          key: 'deal',
+          name: '体验',
+          count: 1,
+          rate: '50%',
+          width: '20%',
+          friends: [
+            { name: '小郑', avatar: '郑', color: '#FF9A44' }
+          ],
+          tagClass: 'funnel-detail__tag--deal',
+          barClass: 'funnel-detail__bar--deal'
+        },
+        {
+          key: 'won',
+          name: '成交',
+          count: 1,
+          rate: '100%',
+          width: '20%',
+          friends: [
+            { name: '小冯', avatar: '冯', color: '#07C160' }
+          ],
+          tagClass: 'funnel-detail__tag--won',
+          barClass: 'funnel-detail__bar--won'
+        }
+      ];
+
+      // DOM
+      var modal = document.getElementById('funnelModal');
+      var btn = document.getElementById('funnelDetailBtn');
+      var stagesEl = document.getElementById('funnelModalStages');
+      // v57: funnel panel 已直接显示完整 5 阶段 + 好友 chip，弹窗作 fallback（btn 可能不存在）
+      if (!modal || !stagesEl) return;
+
+      // 渲染 5 阶段详情
+      function renderStages() {
+        var html = STAGES.map(function (stage) {
+          var friendsHtml;
+          if (stage.friends.length === 0) {
+            friendsHtml = '<span class="funnel-detail__empty">本阶段暂无好友</span>';
+          } else {
+            friendsHtml = stage.friends.map(function (f) {
+              var cls = 'funnel-friend' + (f.primary ? ' is-primary' : '');
+              return '<span class="' + cls + '">' +
+                       '<span class="funnel-friend__avatar" style="background:' + f.color + ';">' + f.avatar + '</span>' +
+                       f.name +
+                     '</span>';
+            }).join('');
+          }
+          var activeCls = (stage.key === 'hot') ? ' is-active' : '';
+          return '<div class="funnel-detail' + activeCls + '">' +
+                   '<div class="funnel-detail__head">' +
+                     '<span class="funnel-detail__tag ' + stage.tagClass + '">' +
+                       '<span class="funnel-detail__tag-dot"></span>' + stage.name +
+                     '</span>' +
+                     '<span class="funnel-detail__count">' + stage.count + '</span>' +
+                     (stage.rate !== '—' ? '<span class="funnel-detail__rate">→ ' + stage.rate + '</span>' : '') +
+                   '</div>' +
+                   '<div class="funnel-detail__bar ' + stage.barClass + '"><span style="width:' + stage.width + ';"></span></div>' +
+                   '<div class="funnel-detail__friends">' + friendsHtml + '</div>' +
+                 '</div>';
+        }).join('');
+        stagesEl.innerHTML = html;
+      }
+
+      function openFunnel() {
+        renderStages();
+        modal.hidden = false;
+      }
+
+      function closeFunnel() {
+        modal.hidden = true;
+      }
+
+      // 事件：funnel-btn click（v57 panel 已直接显示完整 5 阶段，btn 不存在时跳过）
+      if (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          openFunnel();
+        });
+      }
+
+      // 事件：close 按钮 + overlay
+      modal.addEventListener('click', function (e) {
+        if (e.target.closest('[data-funnel-close]')) {
+          closeFunnel();
+        }
+      });
+
+      // 事件：Esc 关闭
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.hidden) {
+          closeFunnel();
+        }
+      });
+    })();
+
+    // ===== v48 · 今日联系清单增强：进度条 + 折叠 + 3 模式行为分流 =====
+    (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'umakex_daily_contacted_v1';
+      var card = document.getElementById('aiDailyCard');
+      if (!card) return;
+
+      // 获取当前 AI 模式（off / semi / full）
+      function getCurrentMode() {
+        var display = document.getElementById('aiDisplay');
+        return display ? (display.getAttribute('data-mode') || 'off') : 'off';
+      }
+
+      // 标记已联系
+      function markContacted(item) {
+        item.classList.remove('is-dispatched');
+        item.classList.add('is-contacted');
+        var cta = item.querySelector('[data-daily-cta]');
+        if (cta) cta.textContent = '已联系 ✓';
+      }
+
+      // 标记派单中（full 模式短暂状态）+ 5s 倒计时进度条
+      var dispatchTimers = new Map(); // item → { timer, friendId }
+      function markDispatched(item) {
+        item.classList.add('is-dispatched');
+        var cta = item.querySelector('[data-daily-cta]');
+        if (cta) cta.textContent = 'AI 接管中…';
+        // 注入进度条 DOM
+        var progress = document.createElement('div');
+        progress.className = 'daily-item__dispatch-progress';
+        var fill = document.createElement('div');
+        fill.className = 'daily-item__dispatch-progress-fill';
+        progress.appendChild(fill);
+        item.appendChild(progress);
+        // 等一帧让 reflow 发生，再设 width 0% 触发 CSS transition
+        requestAnimationFrame(function () {
+          fill.style.width = '0%';
+        });
+      }
+
+      // 清理单个 dispatched 状态：清 timer + 移除 progress + 转 is-contacted
+      function clearDispatched(item, friendId) {
+        var entry = dispatchTimers.get(item);
+        if (entry) {
+          clearTimeout(entry.timer);
+          dispatchTimers.delete(item);
+        }
+        // 移除进度条 DOM
+        var progress = item.querySelector('.daily-item__dispatch-progress');
+        if (progress) progress.remove();
+        item.classList.remove('is-dispatched');
+        // 转 is-contacted（保留"已联系"状态）
+        if (friendId) {
+          markContacted(item);
+          saveContacted(friendId);
+        }
+        refreshProgress();
+      }
+
+      // 模式切换时清理所有 dispatched（避免状态残留）
+      function clearAllDispatched() {
+        var dispatchedItems = card.querySelectorAll('.daily-item.is-dispatched');
+        dispatchedItems.forEach(function (item) {
+          var friendId = item.getAttribute('data-friend-id');
+          clearDispatched(item, friendId);
+        });
+        // 移除所有 toast
+        var toasts = document.querySelectorAll('.daily-toast');
+        toasts.forEach(function (t) { t.remove(); });
+      }
+
+      // 监听 aiDisplay data-mode 变化（模式切换触发清理）
+      var display = document.getElementById('aiDisplay');
+      if (display && typeof MutationObserver !== 'undefined') {
+        var modeObserver = new MutationObserver(function (mutations) {
+          mutations.forEach(function (m) {
+            if (m.attributeName === 'data-mode') {
+              clearAllDispatched();
+            }
+          });
+        });
+        modeObserver.observe(display, { attributes: true, attributeFilter: ['data-mode'] });
+      }
+
+      // 写 localStorage
+      function saveContacted(friendId) {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          var data = raw ? JSON.parse(raw) : { contacted: [] };
+          if (data.contacted.indexOf(friendId) === -1) {
+            data.contacted.push(friendId);
+            data.updatedAt = Date.now();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          }
+        } catch (e) { /* ignore */ }
+      }
+
+      // 恢复 localStorage 已联系状态
+      function restoreContacted() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          var data = JSON.parse(raw);
+          if (!data || !Array.isArray(data.contacted)) return;
+          data.contacted.forEach(function (friendId) {
+            var item = card.querySelector('.daily-item[data-friend-id="' + friendId + '"]');
+            if (item) markContacted(item);
+          });
+        } catch (e) { /* ignore */ }
+      }
+
+      // 进度统计（可见项）
+      function refreshProgress() {
+        var items = card.querySelectorAll('.daily-item:not([hidden])');
+        var total = items.length;
+        var contacted = card.querySelectorAll('.daily-item.is-contacted:not([hidden])').length;
+        var remaining = total - contacted;
+
+        var countEl = document.getElementById('dailyCount');
+        if (countEl) countEl.textContent = total;
+
+        var progressText = document.getElementById('dailyProgressText');
+        if (progressText) {
+          progressText.textContent = '完成 ' + contacted + ' 位 · 还有 ' + remaining + ' 位';
+          if (contacted > 0) progressText.classList.add('is-done');
+          else progressText.classList.remove('is-done');
+        }
+
+        var fill = document.getElementById('dailyProgressFill');
+        if (fill) {
+          var pct = total > 0 ? (contacted / total * 100) : 0;
+          fill.style.width = pct + '%';
+        }
+      }
+
+      // 派单 toast
+      function showToast(text, icon) {
+        var toast = document.createElement('div');
+        toast.className = 'daily-toast';
+        toast.innerHTML = '<span class="daily-toast__icon">' + (icon || '✓') + '</span>' + text;
+        document.body.appendChild(toast);
+        setTimeout(function () { toast.remove(); }, 3000);
+      }
+
+      // 联系按钮行为（3 模式分流）
+      function handleContact(item) {
+        if (item.classList.contains('is-contacted')) return;
+        var mode = getCurrentMode();
+        var friendId = item.getAttribute('data-friend-id');
+        var name = item.querySelector('.daily-item__name').textContent;
+        var product = item.getAttribute('data-product') || '8000';
+
+        if (mode === 'off') {
+          // off 模式：跳到该好友对话（demo: toast + 标记已联系）
+          showToast('已切换到 ' + name + ' 对话', '✓');
+          markContacted(item);
+          saveContacted(friendId);
+        } else if (mode === 'semi') {
+          // semi 模式：弹产品图弹窗（v53 取代 v44 销售术语）
+          showToast('AI 正在为 ' + name + ' 准备话术', '...');
+          var productCard = document.querySelector('.product-card[data-product="' + product + '"]');
+          if (productCard) productCard.click();
+          markContacted(item);
+          saveContacted(friendId);
+        } else if (mode === 'full') {
+          // full 模式：AI 自动派单（短暂 dispatched 态 → 5s 后标记已联系）
+          showToast('已派单给 AI 销冠 · ' + name, 'AI');
+          markDispatched(item);
+          // 跟踪 5s 倒计时 timer（模式切换可清）
+          var timer = setTimeout(function () {
+            dispatchTimers.delete(item);
+            var progress = item.querySelector('.daily-item__dispatch-progress');
+            if (progress) progress.remove();
+            markContacted(item);
+            saveContacted(friendId);
+            refreshProgress();
+          }, 5000);
+          dispatchTimers.set(item, { timer: timer, friendId: friendId });
+        }
+        refreshProgress();
+      }
+
+      // 事件：联系按钮 click
+      var items = card.querySelectorAll('.daily-item');
+      items.forEach(function (item) {
+        var cta = item.querySelector('[data-daily-cta]');
+        if (!cta) return;
+        cta.addEventListener('click', function (e) {
+          e.preventDefault();
+          handleContact(item);
+        });
+      });
+
+      // 事件：footer 折叠 toggle
+      var expandBtn = document.getElementById('dailyExpandBtn');
+      if (expandBtn) {
+        expandBtn.addEventListener('click', function () {
+          var isExpanded = expandBtn.classList.contains('is-expanded');
+          var moreItems = card.querySelectorAll('.daily-item--more');
+          var toggleText = expandBtn.querySelector('.daily-foot__toggle-text');
+          if (isExpanded) {
+            expandBtn.classList.remove('is-expanded');
+            if (toggleText) toggleText.textContent = '展开剩下 2 位';
+            moreItems.forEach(function (m) { m.hidden = true; });
+          } else {
+            expandBtn.classList.add('is-expanded');
+            if (toggleText) toggleText.textContent = '收起';
+            moreItems.forEach(function (m) { m.hidden = false; });
+          }
+          refreshProgress();
+        });
+      }
+
+      // 首次加载：恢复已联系 + 刷新进度
+      restoreContacted();
+      refreshProgress();
+    })();
+
+    // ===== v51 · 背景画像点击展开 =====
+    (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'umakex_persona_expanded_v1';
+      var card = document.getElementById('aiPersonaCard');
+      var toggle = document.querySelector('[data-persona-toggle]');
+      if (!card || !toggle) return;
+
+      function setExpanded(expanded) {
+        card.classList.toggle('is-expanded', expanded);
+        toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ expanded: expanded }));
+        } catch (e) { /* ignore */ }
+      }
+
+      // 读 localStorage 恢复
+      function restore() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          var data = JSON.parse(raw);
+          if (data && data.expanded) {
+            card.classList.add('is-expanded');
+            toggle.setAttribute('aria-expanded', 'true');
+          }
+        } catch (e) { /* ignore */ }
+      }
+
+      // 事件：点击 toggle 切换
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        setExpanded(!card.classList.contains('is-expanded'));
+      });
+
+      restore();
+    })();
+
+    // ===== v56 · tab 按 3 模式分流（off 3 / semi 5 / full 3） =====
+    (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'umakex_display_tab_v1';
+      var tabs = document.querySelectorAll('.ai-tab[data-tab]');
+      var panels = document.querySelectorAll('.ai-tab-panel[data-panel]');
+      var display = document.getElementById('aiDisplay');
+      if (!tabs.length || !panels.length) return;
+
+      // v84: 给每个 tab 加 title 属性（hover 提示 · "销售漏斗（off 模式，12 项）"）
+      tabs.forEach(function (t) {
+        var name = t.querySelector('.ai-tab__name');
+        var count = t.querySelector('.ai-tab__count');
+        var modes = (t.getAttribute('data-modes') || '').trim();
+        if (!name) return;
+        var title = name.textContent.trim();
+        if (count) title += ' · ' + count.textContent.trim() + ' 项';
+        if (modes) title += '（' + modes + ' 模式）';
+        t.setAttribute('title', title);
+      });
+
+      // 3 模式默认 tab（用户没手动选过时使用）
+      var DEFAULT_TAB = {
+        off: 'funnel',     // 销售漏斗
+        semi: 'analyze',   // 实时分析
+        full: 'activity'   // 实时活动
+      };
+
+      // 切 tab
+      function switchTab(key, saveUser) {
+        tabs.forEach(function (t) {
+          t.classList.toggle('is-active', t.getAttribute('data-tab') === key);
+        });
+        panels.forEach(function (p) {
+          p.classList.toggle('is-active', p.getAttribute('data-panel') === key);
+        });
+        if (saveUser) {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ tab: key, at: Date.now() }));
+          } catch (e) { /* ignore */ }
+        }
+        // v84: 切 tab 后把 active tab 滚到可视区中间（横向滚动场景）
+        scrollActiveTabIntoView();
+      }
+
+      // v84: 滚 active tab 到可视区
+      function scrollActiveTabIntoView() {
+        var active = document.querySelector('.ai-tab.is-active');
+        if (!active) return;
+        var container = active.parentElement;
+        if (!container) return;
+        // 用 scrollIntoView：horizontal center · no vertical jump
+        try {
+          active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } catch (e) {
+          // 兼容：手动算 offsetLeft
+          var cRect = container.getBoundingClientRect();
+          var aRect = active.getBoundingClientRect();
+          if (aRect.left < cRect.left || aRect.right > cRect.right) {
+            container.scrollLeft += (aRect.left + aRect.width/2) - (cRect.left + cRect.width/2);
+          }
+        }
+      }
+
+      // 检查 tab 是否在当前模式允许列表
+      function tabAllowedInMode(tab, mode) {
+        var modes = (tab.getAttribute('data-modes') || '').split(/\s+/);
+        return modes.indexOf(mode) >= 0;
+      }
+
+      // 按当前模式过滤 tab 显示
+      function filterTabsByMode(mode) {
+        var visibleTabs = [];
+        tabs.forEach(function (t) {
+          var show = tabAllowedInMode(t, mode);
+          t.style.display = show ? '' : 'none';
+          if (show) visibleTabs.push(t.getAttribute('data-tab'));
+        });
+        return visibleTabs;
+      }
+
+      // 读 localStorage 用户选择
+      function getStoredTab() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          var data = JSON.parse(raw);
+          return data && data.tab ? data.tab : null;
+        } catch (e) { return null; }
+      }
+
+      // 监听 tab click
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          switchTab(t.getAttribute('data-tab'), true);
+        });
+      });
+
+      // 监听模式切换：若当前 active tab 不在该模式 → 切到默认
+      if (display && typeof MutationObserver !== 'undefined') {
+        var modeObserver = new MutationObserver(function () {
+          var mode = display.getAttribute('data-mode') || 'off';
+          var visible = filterTabsByMode(mode);
+          var stored = getStoredTab();
+          var defaultTab = DEFAULT_TAB[mode] || 'funnel';
+          // 当前 active tab 在新模式不可见 → 切到默认或 stored
+          var currentActive = document.querySelector('.ai-tab.is-active');
+          var currentKey = currentActive ? currentActive.getAttribute('data-tab') : null;
+          var target;
+          if (currentKey && visible.indexOf(currentKey) >= 0) {
+            target = currentKey;  // 保留当前
+          } else if (stored && visible.indexOf(stored) >= 0) {
+            target = stored;  // 用 stored
+          } else {
+            target = visible.indexOf(defaultTab) >= 0 ? defaultTab : visible[0];
+          }
+          if (target) switchTab(target, false);
+        });
+        modeObserver.observe(display, { attributes: true, attributeFilter: ['data-mode'] });
+      }
+
+      // 首次加载按当前 mode 过滤 + 设默认 tab 为 active
+      var initMode = display ? (display.getAttribute('data-mode') || 'off') : 'off';
+      filterTabsByMode(initMode);
+      var initDefault = DEFAULT_TAB[initMode] || 'funnel';
+
+      // v77: 支持 URL ?panel=xxx 或 localStorage 优先
+      // 让 dashboard 工具链接跳过来时直接切到对应 tab
+      var urlPanel = null;
+      try {
+        var sp = new URLSearchParams(window.location.search);
+        var p = sp.get('panel');
+        if (p) urlPanel = p;
+      } catch (e) { /* ignore */ }
+      var storedTab = getStoredTab();
+      var visibleTabs = filterTabsByMode(initMode);
+      var initTarget = initDefault;
+      if (urlPanel && visibleTabs.indexOf(urlPanel) >= 0) {
+        initTarget = urlPanel;
+        // 把 URL 参数同步到 localStorage，后续访问也用这个 tab
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ tab: urlPanel, at: Date.now() })); } catch (e) {}
+      } else if (storedTab && visibleTabs.indexOf(storedTab) >= 0) {
+        initTarget = storedTab;
+      } else if (visibleTabs.indexOf(initDefault) < 0) {
+        initTarget = visibleTabs[0];
+      }
+      switchTab(initTarget, false);
+    })();
+
+    // ===== v53 · 产品图点击弹窗：产品展示 + 3 营销 tab + 5 术语（2 产品可切换）=====
+    (function () {
+      'use strict';
+
+      // 15 条术语（3 营销 × 2 套）
+      var TERMS = {
+        soft: [
+          [
+            '{{friend}}，上次沟通很开心。这次 {{product}} 618 想跟你同步一下，不着急回复～',
+            '看到你对 {{product}} 感兴趣，方便的话我整理下细节发给你参考？',
+            '{{friend}}，最近工作忙吗？送个小提醒，{{discount}} 名额只剩最后几天了',
+            '上次你说想再看看，今天有续费老客户的专属方案了，我整理了几个点发你',
+            '不急，先看资料再说。如果觉得不合适，咱们再聊其他的'
+          ],
+          [
+            '{{friend}}，618 这波我整理了 {{product}} 的几个亮点，看你方便的话发你',
+            '你之前对 {{product}} 有兴趣，我把现在的方案理一下发你？',
+            '{{friend}}，618 名额还剩几天，可以先了解下，不用马上决定',
+            '今天整理了 {{product}} 老客户的方案，挑了几个关键点发你',
+            '不急，看完资料再说。觉得不合适咱们继续聊其他的'
+          ]
+        ],
+        data: [
+          [
+            '{{product}}，今天 {{price}}，618 截止 {{date}}，已经有 35 位老客户续费',
+            '上次 30 天数据看，老客户续费 85% · 中产家庭首选 · 7×24 售后',
+            '8 月前续费率峰值出现在 10:00-11:00，你的购买决策窗口正好在这',
+            '近 30 天 · {{product}} 转化率 78%，现在只剩 12 个名额',
+            '性价比测算：{{price}} / 365 = {{dailyPrice}} 元/天，含 800 礼盒 + 7×24 售后'
+          ],
+          [
+            '今年 618，{{product}} 售出 286 套，{{discount}} 是历史最低',
+            '近 90 天客户画像：中产家庭 + 已婚 + 1 个子女，跟你很匹配',
+            '我们调研：{{discount}} 入手的客户，2 年续费率 91%',
+            '{{product}} 售后响应中位数 18 分钟，行业平均 2 小时',
+            '6 月 1-15 日销量同比 +45%，名额紧张'
+          ]
+        ],
+        proactive: [
+          [
+            '{{friend}}，{{product}} 今天锁单到 618 结束，明天就恢复 {{oldPrice}} 价格了',
+            '今晚 8 点前下单，800 礼盒锁定名额 + 名额 12 个',
+            '上次你说"看要不要买"，今天有个 {{discount}} + 礼盒的方案，要不要现在定？',
+            '我帮你预留到明天下午 5 点，如果不要我就释放给其他客户了',
+            '现在定的话，我今天就能帮你下单到 618 名额里'
+          ],
+          [
+            '{{friend}}，今晚 24 点 {{discount}} 名额截止，要不要先锁上？',
+            '6/20 之后恢复原价，今天 23:59 前下单还来得及',
+            '帮你预留到明晚 8 点，回个"要"我就帮你下单',
+            '{{friend}}，你看这个 {{discount}} + 礼盒方案能不能定？回个"行"我帮你走流程',
+            '今天还剩 5 个名额，明早就没了'
+          ]
+        ]
+      };
+
+      // 产品 → 占位符映射
+      var PRODUCT_MAP = {
+        '8000': {
+          name: '8000 旗舰套餐',
+          thumb: '💎',
+          thumbColor: 'linear-gradient(135deg,#1FB6FF,#2D7CFF)',
+          price: '¥7,200',
+          oldPrice: '¥8,000',
+          discount: '9 折',
+          date: '6/20',
+          dailyPrice: '19.7',
+          bullets: ['送 800 礼盒 · 锁定名额', '618 截止 6/20']
+        },
+        '5000': {
+          name: '5000 标准套餐',
+          thumb: '📦',
+          thumbColor: 'linear-gradient(135deg,#8E5BFF,#5B3FD8)',
+          price: '¥5,000',
+          oldPrice: '¥5,000',
+          discount: '8 折',
+          date: '6/20',
+          dailyPrice: '13.7',
+          bullets: ['基础功能 5 项', '无礼盒 · 适合初次']
+        },
+        '3000': {
+          name: '3000 入门套餐',
+          thumb: '🌱',
+          thumbColor: 'linear-gradient(135deg,#34D399,#07A552)',
+          price: '¥2,700',
+          oldPrice: '¥3,000',
+          discount: '9 折',
+          date: '6/20',
+          dailyPrice: '7.4',
+          bullets: ['适合初次体验', '1v1 顾问 7×24']
+        },
+        '10000': {
+          name: '10000 至尊套餐',
+          thumb: '👑',
+          thumbColor: 'linear-gradient(135deg,#FFB300,#FF8C42)',
+          price: '¥8,800',
+          oldPrice: '¥10,000',
+          discount: '88 折',
+          date: '6/20',
+          dailyPrice: '24.1',
+          bullets: ['VIP 服务 · 7×24 售后', '送 1500 礼盒 + 终身顾问']
+        }
+      };
+
+      var FRIEND_NAME = '小明';
+
+      // 模板替换
+      function fillTemplate(tpl, vars) {
+        return tpl
+          .replace(/\{\{friend\}\}/g, FRIEND_NAME)
+          .replace(/\{\{product\}\}/g, vars.name)
+          .replace(/\{\{price\}\}/g, vars.price)
+          .replace(/\{\{oldPrice\}\}/g, vars.oldPrice)
+          .replace(/\{\{discount\}\}/g, vars.discount)
+          .replace(/\{\{date\}\}/g, vars.date)
+          .replace(/\{\{dailyPrice\}\}/g, vars.dailyPrice);
+      }
+
+      // DOM
+      var modal = document.getElementById('productModal');
+      var productEl = document.getElementById('productModalProduct');
+      var productBtns = document.querySelectorAll('.product-modal__product[data-product-key]');
+      var heroThumb = document.getElementById('productModalHeroThumb');
+      var heroName = document.getElementById('productModalHeroName');
+      var heroBullets = document.getElementById('productModalHeroBullets');
+      var tabsEl = document.getElementById('productModalTabs');
+      var termsEl = document.getElementById('productModalTerms');
+      var msgInput = document.getElementById('msgInput');
+      if (!modal || !productBtns.length || !termsEl || !msgInput) return;
+
+      var currentProduct = '8000';
+      var currentStyle = 'soft';
+      // 每产品每风格 2 套，随机选一套
+      var currentPage = 0;
+
+      // 渲染产品 hero + 切换
+      function renderProduct() {
+        var vars = PRODUCT_MAP[currentProduct];
+        productEl.textContent = vars.name;
+        heroThumb.textContent = vars.thumb;
+        heroThumb.style.background = vars.thumbColor;
+        heroName.textContent = vars.name;
+        heroBullets.innerHTML = vars.bullets.map(function (b) {
+          return '<span>' + b + '</span>';
+        }).join('');
+        // 更新 product tab active
+        productBtns.forEach(function (btn) {
+          btn.classList.toggle('is-active', btn.getAttribute('data-product-key') === currentProduct);
+        });
+      }
+
+      // 渲染术语
+      function renderTerms() {
+        var vars = PRODUCT_MAP[currentProduct];
+        var pages = TERMS[currentStyle] || [];
+        var list = pages[currentPage] || pages[0] || [];
+        var html = list.map(function (tpl, i) {
+          var text = fillTemplate(tpl, vars);
+          return '<button class="sales-term" data-term-index="' + i + '" type="button">' +
+                   '<span class="sales-term__no">' + (i + 1) + '</span>' +
+                   '<span class="sales-term__text">' + text + '</span>' +
+                   '<span class="sales-term__hint">→ 填入</span>' +
+                 '</button>';
+        }).join('');
+        termsEl.innerHTML = html;
+      }
+
+      // 切换产品
+      function switchProduct(key) {
+        currentProduct = key;
+        currentPage = 0; // 重置术语页
+        renderProduct();
+        renderTerms();
+      }
+
+      // 切换营销 tab
+      function setStyle(style) {
+        currentStyle = style;
+        currentPage = 0; // 切 tab 重置术语页
+        var tabs = tabsEl.querySelectorAll('.suggest-tab');
+        tabs.forEach(function (t) {
+          t.classList.toggle('is-active', t.getAttribute('data-style') === style);
+        });
+        renderTerms();
+      }
+
+      // 打开弹窗
+      function openProductModal(productKey) {
+        currentProduct = productKey || '8000';
+        currentStyle = 'soft';
+        currentPage = 0;
+        renderProduct();
+        renderTerms();
+        // 切回第一个 tab
+        var tabs = tabsEl.querySelectorAll('.suggest-tab');
+        tabs.forEach(function (t) {
+          t.classList.toggle('is-active', t.getAttribute('data-style') === 'soft');
+        });
+        modal.hidden = false;
+      }
+
+      function closeProductModal() {
+        modal.hidden = true;
+      }
+
+      // 写入输入框
+      function fillInput(text) {
+        msgInput.textContent = text;
+        msgInput.focus();
+        var range = document.createRange();
+        range.selectNodeContents(msgInput);
+        range.collapse(false);
+        var sel = window.getSelection();
+        if (sel) {
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }
+
+      // 事件：产品图 click（capture phase 抢先生效）
+      var productCards = document.querySelectorAll('.product-card[data-product]');
+      productCards.forEach(function (card) {
+        card.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          var key = card.getAttribute('data-product');
+          openProductModal(key);
+        }, true); // capture phase
+      });
+
+      // 事件：产品切换 tab（弹窗内顶部 2 个产品）
+      productBtns.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          switchProduct(btn.getAttribute('data-product-key'));
+        });
+      });
+
+      // 事件：营销 tab
+      tabsEl.addEventListener('click', function (e) {
+        var tab = e.target.closest('.suggest-tab');
+        if (!tab) return;
+        setStyle(tab.getAttribute('data-style'));
+      });
+
+      // 事件：术语 click → 填入输入框 + 关闭
+      termsEl.addEventListener('click', function (e) {
+        var term = e.target.closest('.sales-term');
+        if (!term) return;
+        var textEl = term.querySelector('.sales-term__text');
+        if (!textEl) return;
+        // v64c: 点击反馈（蓝边短暂高亮）
+        term.classList.add('is-clicked');
+        setTimeout(function () { term.classList.remove('is-clicked'); }, 280);
+        fillInput(textEl.textContent);
+        closeProductModal();
+      });
+
+      // 事件：关闭（close 按钮 + overlay）
+      modal.addEventListener('click', function (e) {
+        if (e.target.closest('[data-product-close]')) {
+          closeProductModal();
+        }
+      });
+
+      // 事件：Esc 关闭
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.hidden) {
+          closeProductModal();
+        }
+      });
+    })();
+
+    // ===== v55 · 全局重置按钮：清所有 umakex_ 前缀 localStorage + reload =====
+    (function () {
+      'use strict';
+      var btn = document.getElementById('chatReset');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        // 遍历 localStorage 删所有 umakex_ 前缀
+        var keysToRemove = [];
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (k && k.indexOf('umakex_') === 0) keysToRemove.push(k);
+        }
+        keysToRemove.forEach(function (k) { localStorage.removeItem(k); });
+        // 重新加载页面让所有 IIFE 重新读默认状态
+        location.reload();
+      });
+    })();
+
+    // ============================================================== //
+    // v88 · 跨页切好友会话（dashboard 弹窗 10 / ⋮ 按钮 → messages.html） //
+    // ============================================================== //
+    (function () {
+      'use strict';
+      // 12 位好友简要数据（用于 banner + empty state）
+      var FRIEND_META = {
+        '小明': { avatar: 'linear-gradient(135deg,#F5A623,#FF8C42)', text: '小', stage: '议价中', emoji: '🔥' },
+        '小吴': { avatar: 'linear-gradient(135deg,#FA709A,#FF6B6B)', text: '吴', stage: '议价中', emoji: '🔥' },
+        '小郑': { avatar: 'linear-gradient(135deg,#FF9A44,#FC6076)', text: '郑', stage: '体验中', emoji: '🟠' },
+        '小冯': { avatar: 'linear-gradient(135deg,#07C160,#34D399)', text: '冯', stage: '已成交', emoji: '🟢' },
+        '小赵': { avatar: 'linear-gradient(135deg,#4FACFE,#00C9FF)', text: '赵', stage: '咨询中', emoji: '🔵' },
+        '钱先生': { avatar: 'linear-gradient(135deg,#4FACFE,#5DADE2)', text: '钱', stage: '咨询中', emoji: '🔵' },
+        '孙总': { avatar: 'linear-gradient(135deg,#5DADE2,#48C9B0)', text: '孙', stage: '咨询中', emoji: '🔵' },
+        '周女士': { avatar: 'linear-gradient(135deg,#76D7C4,#4FACFE)', text: '周', stage: '咨询中', emoji: '🔵' },
+        '小李': { avatar: 'linear-gradient(135deg,#48C9B0,#76D7C4)', text: '李', stage: '咨询中', emoji: '🔵' },
+        '张总': { avatar: 'linear-gradient(135deg,#2D7CFF,#5B8CFF)', text: '张', stage: '意向中', emoji: '🔵' },
+        '陈经理': { avatar: 'linear-gradient(135deg,#5B8CFF,#7B9DFF)', text: '陈', stage: '意向中', emoji: '🔵' },
+        '林女士': { avatar: 'linear-gradient(135deg,#7B9DFF,#A855F7)', text: '林', stage: '意向中', emoji: '🔵' }
+      };
+
+      // 1) 读 URL ?chat=X 优先
+      var urlChat = null;
+      try { urlChat = new URLSearchParams(window.location.search).get('chat'); } catch (e) {}
+      // 2) 读 localStorage 兜底
+      var lsChat = null;
+      try {
+        var raw = localStorage.getItem('umakex_chat_friend_v1');
+        if (raw) { var d = JSON.parse(raw); lsChat = d && d.name; }
+      } catch (e) {}
+      var chatFriend = urlChat || lsChat || '小明';
+
+      // 3) 同步 banner
+      var meta = FRIEND_META[chatFriend] || { avatar: 'linear-gradient(135deg,#87CEEB,#4FACFE)', text: chatFriend.charAt(0), stage: '已加入', emoji: '👤' };
+      var bannerName = document.getElementById('chatFriendBannerName');
+      var bannerAvatar = document.getElementById('chatFriendBannerAvatar');
+      var bannerStage = document.getElementById('chatFriendBannerStage');
+      if (bannerName) bannerName.textContent = chatFriend;
+      if (bannerAvatar) {
+        bannerAvatar.textContent = meta.text;
+        bannerAvatar.style.background = meta.avatar;
+      }
+      if (bannerStage) bannerStage.textContent = '· ' + meta.emoji + ' ' + meta.stage;
+
+      // 4) 切 chat 内容：只有"小明"有完整内容，其他 11 位显示占位
+      if (chatFriend === '小明') {
+        var def = document.getElementById('chatContentDefault');
+        var emp = document.getElementById('chatContentEmpty');
+        if (def) def.hidden = false;
+        if (emp) emp.hidden = true;
+      } else {
+        var def2 = document.getElementById('chatContentDefault');
+        var emp2 = document.getElementById('chatContentEmpty');
+        if (def2) def2.hidden = true;
+        if (emp2) {
+          emp2.hidden = false;
+          var nameEl = document.getElementById('chatEmptyFriendName');
+          if (nameEl) nameEl.textContent = chatFriend;
+        }
+      }
+
+      // 5) 清理 URL（保留 ?chat= 但去掉可能的下游污染）
+      // 不做清理，保留 URL 方便刷新
+    })();
+
+    // ============================================================== //
+    // v89 · 11 位虚拟对话历史注入 + session-list 同步切会话              //
+    // ============================================================== //
+    (function () {
+      'use strict';
+
+      // 12 位好友 FRIEND_META（v88 模块 FRIEND_META 是 IIFE 局部，v89 重新定义）
+      var FRIEND_META_V89 = {
+        '小明':   { avatar: 'linear-gradient(135deg,#F5A623,#FF8C42)', text: '小', stage: '议价中', emoji: '🔥' },
+        '小吴':   { avatar: 'linear-gradient(135deg,#FA709A,#FF6B6B)', text: '吴', stage: '议价中', emoji: '🔥' },
+        '小郑':   { avatar: 'linear-gradient(135deg,#FF9A44,#FC6076)', text: '郑', stage: '体验中', emoji: '🟠' },
+        '小冯':   { avatar: 'linear-gradient(135deg,#07C160,#34D399)', text: '冯', stage: '已成交', emoji: '🟢' },
+        '小赵':   { avatar: 'linear-gradient(135deg,#4FACFE,#00C9FF)', text: '赵', stage: '咨询中', emoji: '🔵' },
+        '钱先生': { avatar: 'linear-gradient(135deg,#4FACFE,#5DADE2)', text: '钱', stage: '咨询中', emoji: '🔵' },
+        '孙总':   { avatar: 'linear-gradient(135deg,#5DADE2,#48C9B0)', text: '孙', stage: '咨询中', emoji: '🔵' },
+        '周女士': { avatar: 'linear-gradient(135deg,#76D7C4,#4FACFE)', text: '周', stage: '咨询中', emoji: '🔵' },
+        '小李':   { avatar: 'linear-gradient(135deg,#48C9B0,#76D7C4)', text: '李', stage: '咨询中', emoji: '🔵' },
+        '张总':   { avatar: 'linear-gradient(135deg,#2D7CFF,#5B8CFF)', text: '张', stage: '意向中', emoji: '🔵' },
+        '陈经理': { avatar: 'linear-gradient(135deg,#5B8CFF,#7B9DFF)', text: '陈', stage: '意向中', emoji: '🔵' },
+        '林女士': { avatar: 'linear-gradient(135deg,#7B9DFF,#A855F7)', text: '林', stage: '意向中', emoji: '🔵' }
+      };
+
+      // 10 个 session-item 映射 9 位漏斗好友（剩 3 位：张总/陈经理/林女士 从 ⋮/URL 进）
+      var SESSION_FRIEND_MAP = {
+        'UMC专员': '小明',
+        '企业星链': '小吴',
+        '项目组沟通群': '小郑',
+        'Opul+UMC PP…': '小冯',
+        'OPU 大学': '小赵',
+        'UMC 内部大集合': '钱先生',
+        'OpulnX AI 量化…': '孙总',
+        '夏目': '周女士',
+        '小玲': '小李'
+      };
+
+      // 11 位虚拟对话历史（每 3 轮 = 6 条 / type: other 对方 / self 自己）
+      // 时间戳格式 MM-DD HH:MM
+      var CHAT_HISTORY = {
+        '小吴': [
+          { type: 'other', text: '老板，8000 套餐的 8.5 折续费方案还有吗？', time: '07-15 10:00' },
+          { type: 'self',  text: '有的，老客户专享：8000 套餐 30 天 8.5 折 + 800 礼盒 + 1v1 顾问 🎁', time: '07-15 10:15' },
+          { type: 'other', text: '好的，我先考虑一下，下午再联系你', time: '07-15 10:20' }
+        ],
+        '小郑': [
+          { type: 'other', text: '小郑：8000 套餐用了 5 天了，整体感受不错', time: '07-20 09:30' },
+          { type: 'self',  text: '谢谢郑总反馈！最近体验中有没有想调整的地方？', time: '07-20 09:45' },
+          { type: 'other', text: '小郑：服务挺及时的，礼盒也用上了，准备推一下成交方案看看', time: '07-20 10:00' }
+        ],
+        '小冯': [
+          { type: 'other', text: '冯总：8000 套餐第 5 次续费了，这次想升级 10000 至尊', time: '07-18 16:00' },
+          { type: 'self',  text: '冯总太给力了！10000 至尊 VIP 8 折 + 老客户 1v1 顾问，明天帮你锁名额', time: '07-18 16:15' },
+          { type: 'other', text: '冯总：OK 直接升级吧，老客户专享嘛 👑', time: '07-18 16:30' }
+        ],
+        '小赵': [
+          { type: 'other', text: '你好，5000 标准套餐都包含什么？', time: '07-18 14:32' },
+          { type: 'self',  text: '你好小赵！5000 标准套餐含 5 项基础功能 + 500 礼盒，新客户 5 折体验', time: '07-18 14:45' },
+          { type: 'other', text: '好的我先了解一下，明天回复你', time: '07-18 15:00' }
+        ],
+        '钱先生': [
+          { type: 'other', text: '第一次咨询，3000 体验套餐能用几天？', time: '07-19 16:45' },
+          { type: 'self',  text: '钱先生好！3000 体验套餐 7 天起步，引流款最低成本尝试', time: '07-19 17:00' },
+          { type: 'other', text: '好的，我先看看介绍', time: '07-19 17:10' }
+        ],
+        '孙总': [
+          { type: 'other', text: '8000 旗舰的 800 礼盒是什么？', time: '07-19 20:10' },
+          { type: 'self',  text: '孙总好！800 礼盒含 5 款精选礼品，老客户 100% 复购都在用', time: '07-19 20:20' },
+          { type: 'other', text: '看起来不错，议价空间有吗？', time: '07-19 20:30' }
+        ],
+        '周女士': [
+          { type: 'other', text: '1v1 顾问服务具体怎么用？', time: '07-17 09:30' },
+          { type: 'self',  text: '周女士好！1v1 顾问是专属客服，全程跟进需求 + 答疑', time: '07-17 09:45' },
+          { type: 'other', text: '好的我了解一下', time: '07-17 10:00' }
+        ],
+        '小李': [
+          { type: 'other', text: '30/60/90 天套餐差别大吗？', time: '07-15 11:20' },
+          { type: 'self',  text: '小李好！30 天基础 / 60 天标准 / 90 天旗舰，建议 60 天性价比最高', time: '07-15 11:35' },
+          { type: 'other', text: '好的我再想想', time: '07-15 11:45' }
+        ],
+        '张总': [
+          { type: 'other', text: '老客户续费 8.5 折 + 升级方案有吗？', time: '07-20 08:30' },
+          { type: 'self',  text: '张总好！续费 8.5 折自动叠加，升级 10000 至尊再减 200，今天帮你锁名额？', time: '07-20 08:45' },
+          { type: 'other', text: '可以，先续费 8000，升级下次再说', time: '07-20 09:00' }
+        ],
+        '陈经理': [
+          { type: 'other', text: '陈经理：10000 至尊跟 8000 旗舰差别？', time: '07-20 14:00' },
+          { type: 'self',  text: '陈经理好！10000 至尊升级 5 项 VIP 专属服务 + 1500 礼盒，老客户 8 折', time: '07-20 14:15' },
+          { type: 'other', text: '好的，今晚跟家人商量一下', time: '07-20 14:30' }
+        ],
+        '林女士': [
+          { type: 'other', text: '8000 旗舰今天下单什么时候能送到？', time: '07-20 10:30' },
+          { type: 'self',  text: '林女士好！8000 旗舰当日下单 · 次日 12 点前送达，礼盒同步发货', time: '07-20 10:45' },
+          { type: 'other', text: '好的，我先锁名额', time: '07-20 11:00' }
+        ]
+      };
+
+      // 渲染对话历史到 chatContentHistory
+      function renderChatHistory(friendName) {
+        var msgEl = document.getElementById('chatHistoryMessages');
+        if (!msgEl) return;
+        var meta = FRIEND_META_V89[friendName] || {
+          avatar: 'linear-gradient(135deg,#87CEEB,#4FACFE)',
+          text: friendName.charAt(0),
+          stage: '已加入',
+          emoji: '👤'
+        };
+        var history = CHAT_HISTORY[friendName] || [];
+        var html = '';
+        history.forEach(function (m) {
+          if (m.type === 'other') {
+            html += '<div class="msg msg--other">';
+            html += '<div class="msg__avatar"><div class="avatar avatar--sm" style="background:' + meta.avatar + ';">' + meta.text + '</div></div>';
+            html += '<div class="msg__col">';
+            html += '<div class="msg__bubble">' + m.text + '</div>';
+            html += '<div class="msg__time" style="text-align:left;">' + m.time + '</div>';
+            html += '</div></div>';
+          } else {
+            html += '<div class="msg msg--self">';
+            html += '<div class="msg__avatar"><div class="avatar avatar--sm" style="background: linear-gradient(135deg,#87CEEB,#4682B4);">M</div></div>';
+            html += '<div class="msg__col">';
+            html += '<div class="msg__bubble">' + m.text + '</div>';
+            html += '<div class="msg__time msg__time--check">' + m.time + ' ✓✓</div>';
+            html += '</div></div>';
+          }
+        });
+        msgEl.innerHTML = html;
+        // 同步 banner 时间分隔
+        var sepEl = document.getElementById('chatHistoryTimeSep');
+        if (sepEl) sepEl.textContent = '历史消息 · ' + history.length + ' 条';
+      }
+
+      // 切会话函数（v89 增强：3 态 default/history/empty）
+      function switchChat(friendName) {
+        var def = document.getElementById('chatContentDefault');
+        var hist = document.getElementById('chatContentHistory');
+        var emp = document.getElementById('chatContentEmpty');
+        if (friendName === '小明') {
+          if (def) def.hidden = false;
+          if (hist) hist.hidden = true;
+          if (emp) emp.hidden = true;
+        } else if (CHAT_HISTORY[friendName]) {
+          if (def) def.hidden = true;
+          if (emp) emp.hidden = true;
+          renderChatHistory(friendName);
+          if (hist) hist.hidden = false;
+        } else {
+          if (def) def.hidden = true;
+          if (hist) hist.hidden = true;
+          if (emp) {
+            emp.hidden = false;
+            var nameEl = document.getElementById('chatEmptyFriendName');
+            if (nameEl) nameEl.textContent = friendName;
+          }
+        }
+      }
+
+      // 给 10 个 session-item 加 data-session-friend + click handler
+      // v89 init: 覆盖 v88 模块的 empty state 显示（如果有 URL/LS 切到非小明）
+      try {
+        var initUrlChat = new URLSearchParams(window.location.search).get('chat');
+        var initLsChat = null;
+        try {
+          var initRaw = localStorage.getItem('umakex_chat_friend_v1');
+          if (initRaw) { var initData = JSON.parse(initRaw); initLsChat = initData && initData.name; }
+        } catch (e) {}
+        var initFriend = initUrlChat || initLsChat || '小明';
+        if (initFriend !== '小明' || true) {
+          // 即使是小明也跑一次 switchChat（确保 chatContentHistory 隐藏）
+          switchChat(initFriend);
+        }
+        // 同步 session-list is-active（如果当前好友有映射）
+        if (SESSION_FRIEND_MAP[Object.keys(SESSION_FRIEND_MAP).find(function (k) { return SESSION_FRIEND_MAP[k] === initFriend; })]) {
+          var targetName = Object.keys(SESSION_FRIEND_MAP).find(function (k) { return SESSION_FRIEND_MAP[k] === initFriend; });
+          document.querySelectorAll('.session-item').forEach(function (s) {
+            var n = s.querySelector('.session-item__name-text');
+            if (n && n.textContent === targetName) {
+              s.classList.add('is-active');
+            } else {
+              s.classList.remove('is-active');
+            }
+          });
+        } else if (initFriend === '小明') {
+          document.querySelectorAll('.session-item').forEach(function (s) {
+            var n = s.querySelector('.session-item__name-text');
+            if (n && n.textContent === 'UMC专员') s.classList.add('is-active');
+            else s.classList.remove('is-active');
+          });
+        }
+      } catch (e) { /* ignore */ }
+
+      document.querySelectorAll('.session-item').forEach(function (item) {
+        var nameEl = item.querySelector('.session-item__name-text');
+        if (!nameEl) return;
+        var displayName = nameEl.textContent;
+        if (SESSION_FRIEND_MAP[displayName]) {
+          item.setAttribute('data-session-friend', SESSION_FRIEND_MAP[displayName]);
+          item.addEventListener('click', function () {
+            var friend = item.getAttribute('data-session-friend');
+            // 同步 is-active
+            document.querySelectorAll('.session-item').forEach(function (s) { s.classList.remove('is-active'); });
+            item.classList.add('is-active');
+            // 切会话
+            switchChat(friend);
+            // 同步 URL + LS（保持跟 v88 ⋮ 一致）
+            try {
+              var url = new URL(window.location.href);
+              url.searchParams.set('chat', friend);
+              window.history.pushState({}, '', url);
+              localStorage.setItem('umakex_chat_friend_v1', JSON.stringify({ name: friend, at: Date.now() }));
+            } catch (e) { /* ignore */ }
+            // 同步 banner
+            var m = FRIEND_META_V89[friend];
+            if (m) {
+              var bannerName = document.getElementById('chatFriendBannerName');
+              var bannerAvatar = document.getElementById('chatFriendBannerAvatar');
+              var bannerStage = document.getElementById('chatFriendBannerStage');
+              if (bannerName) bannerName.textContent = friend;
+              if (bannerAvatar) { bannerAvatar.textContent = m.text; bannerAvatar.style.background = m.avatar; }
+              if (bannerStage) bannerStage.textContent = '· ' + m.emoji + ' ' + m.stage;
+            }
+          });
+        }
+      });
+    })();
+  </script>
+
+  </div><!-- /.window (v75 修复: 4 dashboard 弹窗挪到 .window 内，让 absolute 弹窗相对桌面端居中) -->
+</body>
+</html>

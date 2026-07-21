@@ -1,0 +1,3067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 销冠工作台 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/messages.css" />
+</head>
+<body data-view="dashboard">
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <!-- v72: AI 销冠工作台（首页 · 默认 view） -->
+          <a href="dashboard.html" class="sidebar__item is-active" title="AI 销冠工作台" data-nav="dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1"/>
+              <rect x="14" y="3" width="7" height="7" rx="1"/>
+              <rect x="3" y="14" width="7" height="7" rx="1"/>
+              <rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+          </a>
+          <a href="messages.html" class="sidebar__item" title="消息" data-nav="messages">
+            <!-- chat icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/>
+            </svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <circle cx="9" cy="10" r="2"/>
+              <path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/>
+              <path d="M15 9h4M15 13h3"/>
+            </svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+              <path d="M8 11h8M8 15h5"/>
+            </svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3"/>
+              <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+              <circle cx="12" cy="7" r="1" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 4 7v10l8 5 8-5V7z"/>
+              <path d="M12 2v20M4 7l16 10M20 7 4 17"/>
+            </svg>
+          </a>
+          
+          <a href="profile.html" class="sidebar__item" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 12l3 3 5-6"/>
+          </svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区 ========== -->
+      <div class="main">
+
+        <!-- v72: AI 销冠工作台（默认 view，4 KPI + 4 区 + 底部工具） -->
+        <div class="dashboard" id="dashboard">
+          <!-- v78: 顶部会员卡 banner（VIP/MN/MB · 蓝紫渐变 · 档位切换 + 升级对比） -->
+          <!-- v79: 等级行做大 + 续费记录小图标 -->
+          <div class="member-banner" id="memberBanner" data-tier="MB">
+            <div class="member-banner__crown">💎</div>
+            <div class="member-banner__main">
+              <div class="member-banner__head">
+                <span class="member-banner__tier" id="memberBannerTier">MB</span>
+                <span class="member-banner__tier-name" id="memberBannerTierName">高级版</span>
+                <span class="member-banner__badge" id="memberBannerBadge">最高级</span>
+                <span class="member-banner__sep">·</span>
+                <span class="member-banner__days-wrap" id="memberBannerDaysWrap">
+                  <span class="member-banner__days member-banner__days--ok" id="memberBannerDays">还剩 22 天 18:42</span>
+                  <span class="member-banner__days-expiry" id="memberBannerExpiry">到期 8/19</span>
+                  <div class="member-banner__progress" id="memberBannerProgress">
+                    <div class="member-banner__progress-bar" id="memberBannerProgressBar" style="width: 75%;"></div>
+                  </div>
+                </span>
+              </div>
+              <div class="member-banner__sub" id="memberBannerSub">
+                <span class="member-banner__quota">AI 接管 <strong>无限</strong> 位/天</span>
+                <span class="member-banner__sep">·</span>
+                <span class="member-banner__quota">客户画像 <strong>无限</strong></span>
+                <span class="member-banner__sep">·</span>
+                <span class="member-banner__quota">AI 战报 <strong>3 套</strong> 轮换</span>
+                <span class="member-banner__sep">·</span>
+                <span class="member-banner__quota">派单倒计时 <strong>实时</strong></span>
+              </div>
+            </div>
+            <div class="member-banner__actions">
+              <div class="member-banner__switch" role="tablist" aria-label="档位切换">
+                <button class="member-banner__switch-btn" data-tier="VIP" type="button">VIP</button>
+                <button class="member-banner__switch-btn" data-tier="MN" type="button">MN</button>
+                <button class="member-banner__switch-btn is-active" data-tier="MB" type="button">MB</button>
+              </div>
+              <button class="member-banner__icon-btn" data-modal="history" type="button" title="续费记录">🧾</button>
+              <button class="member-banner__icon-btn member-banner__icon-btn--segments" id="openSegmentsBtn" type="button" title="客户分层（8 位 · 3 维度）">👥</button>
+              <button class="member-banner__btn" data-modal="compare" type="button">📊 升级对比</button>
+              <button class="member-banner__btn member-banner__btn--primary" type="button">续费 ¥799</button>
+            </div>
+          </div>
+
+          <div class="dashboard__head">
+            <div>
+              <div class="dashboard__eyebrow">AI · 销冠专家</div>
+              <div class="dashboard__title">早上好，王哥 👋 今天是 7/18 周六</div>
+            </div>
+            <div class="dashboard__head-meta">
+              <span class="dashboard__mode-pill" data-mode="semi">半自动</span>
+            </div>
+          </div>
+
+          <!-- 4 KPI 卡片（v72 边界：分开显示「您联系 / AI 帮您」2 数字） -->
+          <div class="dashboard__kpis">
+            <div class="dashboard-kpi dashboard-kpi--contact">
+              <div class="dashboard-kpi__label">今日联系</div>
+              <div class="dashboard-kpi__row">
+                <div class="dashboard-kpi__pair">
+                  <div class="dashboard-kpi__num">3</div>
+                  <div class="dashboard-kpi__sub">您联系</div>
+                </div>
+                <div class="dashboard-kpi__divider"></div>
+                <div class="dashboard-kpi__pair dashboard-kpi__pair--ai">
+                  <div class="dashboard-kpi__num">9</div>
+                  <div class="dashboard-kpi__sub">AI 帮您</div>
+                </div>
+              </div>
+              <div class="dashboard-kpi__foot">完成 12 / 50 · 目标 50 位</div>
+            </div>
+            <div class="dashboard-kpi">
+              <div class="dashboard-kpi__label">漏斗好友</div>
+              <div class="dashboard-kpi__num">12<span class="dashboard-kpi__unit">位</span></div>
+              <div class="dashboard-kpi__foot">议价中 2 · 体验 1 · 成交 1</div>
+            </div>
+            <div class="dashboard-kpi">
+              <div class="dashboard-kpi__label">月成交率</div>
+              <div class="dashboard-kpi__num">8.3<span class="dashboard-kpi__unit">%</span></div>
+              <div class="dashboard-kpi__foot dashboard-kpi__foot--up">↑ 1.2% vs 上周</div>
+            </div>
+            <div class="dashboard-kpi">
+              <div class="dashboard-kpi__label">待跟进</div>
+              <div class="dashboard-kpi__num">5<span class="dashboard-kpi__unit">位</span></div>
+              <div class="dashboard-kpi__foot">⏰ 最早 22h38m 后（议价中）</div>
+            </div>
+          </div>
+
+          <!-- 4 区 2x2 grid -->
+          <div class="dashboard__grid">
+
+            <!-- ① 今日必做（v47/v48 派单 + v59 daily 折叠） -->
+            <div class="dashboard-card">
+              <div class="dashboard-card__head">
+                <div class="ai-card__eyebrow">
+                  <span class="ai-card__eyebrow-dot"></span>
+                  今日必做
+                </div>
+                <span class="dashboard-card__count">5 项</span>
+              </div>
+              <div class="dashboard-card__body">
+                <!-- 派单倒计时 -->
+                <div class="dashboard-pickup">
+                  <div class="dashboard-pickup__time">
+                    <span class="dashboard-pickup__icon">⏰</span>
+                    <div class="dashboard-pickup__main">
+                      <div class="dashboard-pickup__title">派单倒计时</div>
+                      <div class="dashboard-pickup__sub">02:34:12 后 AI 自动接管</div>
+                    </div>
+                  </div>
+                  <button class="dashboard-pickup__btn">立即开始</button>
+                </div>
+                <!-- 5 项清单 -->
+                <ul class="dashboard-todo">
+                  <li class="dashboard-todo__item">
+                    <span class="dashboard-todo__check"></span>
+                    <span class="dashboard-todo__name">联系 小明</span>
+                    <span class="dashboard-todo__tag dashboard-todo__tag--hot">议价</span>
+                    <span class="dashboard-todo__time">22h38m</span>
+                  </li>
+                  <li class="dashboard-todo__item">
+                    <span class="dashboard-todo__check"></span>
+                    <span class="dashboard-todo__name">回访 小郑</span>
+                    <span class="dashboard-todo__tag dashboard-todo__tag--deal">体验</span>
+                    <span class="dashboard-todo__time">1 天后</span>
+                  </li>
+                  <li class="dashboard-todo__item">
+                    <span class="dashboard-todo__check"></span>
+                    <span class="dashboard-todo__name">跟进 小冯</span>
+                    <span class="dashboard-todo__tag dashboard-todo__tag--won">成交</span>
+                    <span class="dashboard-todo__time">2 天前</span>
+                  </li>
+                  <li class="dashboard-todo__item">
+                    <span class="dashboard-todo__check"></span>
+                    <span class="dashboard-todo__name">联系 小吴</span>
+                    <span class="dashboard-todo__tag dashboard-todo__tag--hot">议价</span>
+                    <span class="dashboard-todo__time">2 天后</span>
+                  </li>
+                  <li class="dashboard-todo__item">
+                    <span class="dashboard-todo__check"></span>
+                    <span class="dashboard-todo__name">跟进 小赵</span>
+                    <span class="dashboard-todo__tag dashboard-todo__tag--warm">咨询</span>
+                    <span class="dashboard-todo__time">3 天后</span>
+                  </li>
+                </ul>
+                <button class="dashboard-card__more" data-modal="todo">查看完整清单 →</button>
+              </div>
+            </div>
+
+            <!-- ② 产品库（v78：替换 AI 客户画像） -->
+            <div class="dashboard-card" id="dashboardProductCard">
+              <div class="dashboard-card__head">
+                <div class="ai-card__eyebrow">
+                  <span class="ai-card__eyebrow-dot"></span>
+                  产品库 · 公司 4 款 · 全部无限选
+                </div>
+                <button class="dashboard-card__more" data-modal="product" type="button">管理 →</button>
+              </div>
+              <div class="dashboard-card__body">
+                <div class="product-shelf" id="productShelf">
+                  <div class="product-card" data-product-key="8000" data-in-shelf="true">
+                    <div class="product-card__icon" style="background: linear-gradient(135deg,#1FB6FF,#2D7CFF);">💎</div>
+                    <div class="product-card__main">
+                      <div class="product-card__name">8000 旗舰套餐</div>
+                      <div class="product-card__price product-card__price--editable" data-product-price="8000" title="点击修改我的售价">¥8,000<span class="product-card__custom-tag" hidden>自定义价</span></div>
+                      <div class="product-card__meta">在售 · 礼盒 800 价值</div>
+                    </div>
+                    <div class="product-card__shelf-tag">已上架</div>
+                  </div>
+                  <div class="product-card" data-product-key="10000" data-in-shelf="false">
+                    <div class="product-card__icon" style="background: linear-gradient(135deg,#6B4BFF,#A855F7);">👑</div>
+                    <div class="product-card__main">
+                      <div class="product-card__name">10000 至尊套餐</div>
+                      <div class="product-card__price product-card__price--editable" data-product-price="10000" title="点击修改我的售价">¥10,000<span class="product-card__custom-tag" hidden>自定义价</span></div>
+                      <div class="product-card__meta">高端定制 · VIP 专属</div>
+                    </div>
+                    <button class="product-card__add" type="button" title="加入我的产品库">+</button>
+                  </div>
+                  <div class="product-card" data-product-key="5000" data-in-shelf="true">
+                    <div class="product-card__icon" style="background: linear-gradient(135deg,#07C160,#34D399);">⭐</div>
+                    <div class="product-card__main">
+                      <div class="product-card__name">5000 标准套餐</div>
+                      <div class="product-card__price product-card__price--editable" data-product-price="5000" title="点击修改我的售价">¥5,000<span class="product-card__custom-tag" hidden>自定义价</span></div>
+                      <div class="product-card__meta">在售 · 礼盒 500 价值</div>
+                    </div>
+                    <div class="product-card__shelf-tag">已上架</div>
+                  </div>
+                  <div class="product-card" data-product-key="3000" data-in-shelf="false">
+                    <div class="product-card__icon" style="background: linear-gradient(135deg,#FA709A,#FF6B6B);">🎁</div>
+                    <div class="product-card__main">
+                      <div class="product-card__name">3000 体验套餐</div>
+                      <div class="product-card__price product-card__price--editable" data-product-price="3000" title="点击修改我的售价">¥3,000<span class="product-card__custom-tag" hidden>自定义价</span></div>
+                      <div class="product-card__meta">引流款 · 7 天体验</div>
+                    </div>
+                    <button class="product-card__add" type="button" title="加入我的产品库">+</button>
+                  </div>
+                </div>
+                <div class="product-shelf__foot">
+                  <span class="product-shelf__count">已上架 <strong>2</strong> / 4 款</span>
+                  <span class="product-shelf__hint">💡 点击 + 即可加入产品库</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ③ 销售漏斗（v57 5 阶段 + v61 真 visual + v62 行动按钮） -->
+            <div class="dashboard-card">
+              <div class="dashboard-card__head">
+                <div class="ai-card__eyebrow">
+                  <span class="ai-card__eyebrow-dot"></span>
+                  销售漏斗 · 12 好友
+                </div>
+                <span class="dashboard-card__count">月转化率 8.3%</span>
+              </div>
+              <div class="dashboard-card__body">
+                <div class="dashboard-funnel">
+                  <div class="dashboard-funnel__stage" data-stage="cold" style="width: 100%;">
+                    <div class="dashboard-funnel__bar">咨询 5</div>
+                  </div>
+                  <div class="dashboard-funnel__stage" data-stage="warm" style="width: 86%;">
+                    <div class="dashboard-funnel__bar">意向 3</div>
+                  </div>
+                  <div class="dashboard-funnel__stage" data-stage="hot" style="width: 68%;">
+                    <div class="dashboard-funnel__bar is-active">议价 2</div>
+                  </div>
+                  <div class="dashboard-funnel__stage" data-stage="deal" style="width: 48%;">
+                    <div class="dashboard-funnel__bar">体验 1</div>
+                  </div>
+                  <div class="dashboard-funnel__stage" data-stage="won" style="width: 28%;">
+                    <div class="dashboard-funnel__bar">成交 1</div>
+                  </div>
+                </div>
+                <button class="dashboard-card__more" data-modal="funnel">查看 12 位好友 →</button>
+              </div>
+            </div>
+
+            <!-- ④ 今日战报（v40 metrics + 客户分层） -->
+            <div class="dashboard-card">
+              <div class="dashboard-card__head">
+                <div class="ai-card__eyebrow">
+                  <span class="ai-card__eyebrow-dot"></span>
+                  今日战报
+                </div>
+                <span class="dashboard-card__count">个人</span>
+              </div>
+              <div class="dashboard-card__body">
+                <div class="dashboard-report">
+                  <div class="dashboard-report__row">
+                    <span class="dashboard-report__label">今日成交</span>
+                    <span class="dashboard-report__val">+2 单</span>
+                    <span class="dashboard-report__delta dashboard-report__delta--up">¥15,200</span>
+                  </div>
+                  <div class="dashboard-report__row">
+                    <span class="dashboard-report__label">本周</span>
+                    <span class="dashboard-report__val">+5 单</span>
+                    <span class="dashboard-report__delta">¥42,800</span>
+                  </div>
+                  <div class="dashboard-report__row">
+                    <span class="dashboard-report__label">月度目标</span>
+                    <span class="dashboard-report__val">60%</span>
+                    <span class="dashboard-report__delta">¥86,000 / ¥144,000</span>
+                  </div>
+                  <div class="dashboard-report__divider"></div>
+                  <div class="dashboard-report__row">
+                    <span class="dashboard-report__label">客户分层</span>
+                    <span class="dashboard-report__pills">
+                      <span class="dashboard-report__pill dashboard-report__pill--new">新客 2</span>
+                      <span class="dashboard-report__pill dashboard-report__pill--old">老客 5</span>
+                      <span class="dashboard-report__pill dashboard-report__pill--vip">高价值 1</span>
+                    </span>
+                  </div>
+                </div>
+                <button class="dashboard-card__more" data-modal="report">查看完整战报 →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- v73: 今日 AI 战报（全宽，AI 团队自动生成的洞察） -->
+          <div class="dashboard__report" id="dashboardReport">
+            <div class="dashboard__report-head">
+              <div class="ai-card__eyebrow">
+                <span class="ai-card__eyebrow-dot"></span>
+                ✨ 今日 AI 战报
+                <span class="dashboard__report-meta">由 AI 团队自动生成 · 3 分钟前</span>
+              </div>
+              <button class="dashboard__report-refresh" id="dashboardReportRefresh" title="重新生成">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"/><path d="M3 21v-5h5"/></svg>
+              </button>
+            </div>
+            <div class="dashboard__report-body">
+              <div class="dashboard__report-item dashboard__report-item--highlight">
+                <span class="dashboard__report-icon">🔥</span>
+                <div class="dashboard__report-text">
+                  <strong>小吴</strong> 议价中 22h，建议<strong>今晚 8 点前</strong>用 9 折 + 800 礼盒组合触达。竞品正在接触，窗口仅剩 6 小时。
+                </div>
+              </div>
+              <div class="dashboard__report-item">
+                <span class="dashboard__report-icon">📈</span>
+                <div class="dashboard__report-text">
+                  <strong>成交率本周 +1.2%</strong>，主要靠 8000 旗舰套餐。10000 至尊 0 单，建议<strong>明日主动联系 3 位老客户</strong>推升级。
+                </div>
+              </div>
+              <div class="dashboard__report-item">
+                <span class="dashboard__report-icon">💡</span>
+                <div class="dashboard__report-text">
+                  本周出现 <strong>2 次礼品价值顾虑</strong>，知识库已有 3 条应对方案。明日议价话术可加 1 句"礼盒可换购"。
+                </div>
+              </div>
+              <div class="dashboard__report-item">
+                <span class="dashboard__report-icon">⏰</span>
+                <div class="dashboard__report-text">
+                  <strong>明日 9:00</strong>推荐跟进：<strong>小赵（咨询 3 天）</strong>+ <strong>小冯（成交 2 天）</strong>，预计 30 分钟内完成。
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 底部 4 工具入口（v72 边界：知识库 / 产品库 / 跟进模板 / 客户分层） -->
+          <div class="dashboard__footer">
+            <div class="dashboard__footer-label">⚡ 快速工具</div>
+            <div class="dashboard__footer-grid">
+              <a href="messages.html?panel=knowledge" class="dashboard-tool" data-tool="knowledge" onclick="try{localStorage.setItem('umakex_display_tab_v1', JSON.stringify({tab:'knowledge',at:Date.now()}))}catch(e){}">
+                <span class="dashboard-tool__icon">📚</span>
+                <span class="dashboard-tool__name">知识库</span>
+                <span class="dashboard-tool__sub">异议 FAQ · 48 条</span>
+              </a>
+              <a href="messages.html?panel=products" class="dashboard-tool" data-tool="products" onclick="try{localStorage.setItem('umakex_display_tab_v1', JSON.stringify({tab:'products',at:Date.now()}))}catch(e){}">
+                <span class="dashboard-tool__icon">📦</span>
+                <span class="dashboard-tool__name">产品库</span>
+                <span class="dashboard-tool__sub">4 款套餐</span>
+              </a>
+              <a href="messages.html?panel=templates" class="dashboard-tool" data-tool="templates" onclick="try{localStorage.setItem('umakex_display_tab_v1', JSON.stringify({tab:'templates',at:Date.now()}))}catch(e){}">
+                <span class="dashboard-tool__icon">📅</span>
+                <span class="dashboard-tool__name">跟进模板</span>
+                <span class="dashboard-tool__sub">12 套话术</span>
+              </a>
+              <a href="messages.html?panel=segments" class="dashboard-tool" data-tool="segments" onclick="try{localStorage.setItem('umakex_display_tab_v1', JSON.stringify({tab:'segments',at:Date.now()}))}catch(e){}">
+                <span class="dashboard-tool__icon">👥</span>
+                <span class="dashboard-tool__name">客户分层</span>
+                <span class="dashboard-tool__sub">价值 / 风险</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- v75: 4 个 dashboard 弹窗（复用 .sales-modal 基类） -->
+  <div class="dashboard-modal" id="dashboardTodoModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="todoModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">📋 今日联系 · 5 位</div>
+          <div class="dashboard-modal__title" id="todoModalTitle">今日必做 · 完整清单</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <div class="dashboard-modal__progress">
+          <div class="dashboard-modal__progress-text">完成 0 位 · 还有 5 位 · 目标 50</div>
+          <div class="dashboard-modal__progress-bar"><div class="dashboard-modal__progress-fill" style="width: 0%"></div></div>
+        </div>
+        <ul class="dashboard-todo dashboard-todo--modal">
+          <li class="dashboard-todo__item"><span class="dashboard-todo__check"></span><span class="dashboard-todo__name">联系 小明</span><span class="dashboard-todo__tag dashboard-todo__tag--hot">议价</span><span class="dashboard-todo__time">⏰ 22h38m</span></li>
+          <li class="dashboard-todo__item"><span class="dashboard-todo__check"></span><span class="dashboard-todo__name">回访 小郑</span><span class="dashboard-todo__tag dashboard-todo__tag--deal">体验</span><span class="dashboard-todo__time">1 天后</span></li>
+          <li class="dashboard-todo__item"><span class="dashboard-todo__check"></span><span class="dashboard-todo__name">跟进 小冯</span><span class="dashboard-todo__tag dashboard-todo__tag--won">成交</span><span class="dashboard-todo__time">2 天前</span></li>
+          <li class="dashboard-todo__item"><span class="dashboard-todo__check"></span><span class="dashboard-todo__name">联系 小吴</span><span class="dashboard-todo__tag dashboard-todo__tag--hot">议价</span><span class="dashboard-todo__time">2 天后</span></li>
+          <li class="dashboard-todo__item"><span class="dashboard-todo__check"></span><span class="dashboard-todo__name">跟进 小赵</span><span class="dashboard-todo__tag dashboard-todo__tag--warm">咨询</span><span class="dashboard-todo__time">3 天后</span></li>
+        </ul>
+        <div class="dashboard-modal__detail-row">
+          <div class="dashboard-modal__detail-cell">
+            <div class="dashboard-modal__detail-num">12</div>
+            <div class="dashboard-modal__detail-label">今日已联系</div>
+          </div>
+          <div class="dashboard-modal__detail-cell">
+            <div class="dashboard-modal__detail-num">50</div>
+            <div class="dashboard-modal__detail-label">日目标</div>
+          </div>
+          <div class="dashboard-modal__detail-cell">
+            <div class="dashboard-modal__detail-num dashboard-modal__detail-num--up">24%</div>
+            <div class="dashboard-modal__detail-label">完成率</div>
+          </div>
+        </div>
+        <div class="dashboard-modal__hint">💡 标记完成后打勾，AI 自动跟进下一位</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗 2: 查看完整战报（4 项详细 + 行动建议） -->
+  <div class="dashboard-modal" id="dashboardReportModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">✨ 今日 AI 战报 · 由 AI 团队自动生成</div>
+          <div class="dashboard-modal__title" id="reportModalTitle">完整战报 · 4 项洞察</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <div class="dashboard-modal__section">
+          <div class="dashboard-modal__section-head"><span class="dashboard-modal__section-icon">🔥</span><span class="dashboard-modal__section-title">紧急关注</span></div>
+          <div class="dashboard-modal__section-body">
+            <div class="dashboard-modal__item dashboard-modal__item--highlight">
+              <strong>小吴</strong> 议价中 22h，建议<strong>今晚 8 点前</strong>用 9 折 + 800 礼盒组合触达。竞品正在接触，窗口仅剩 6 小时。
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-modal__section">
+          <div class="dashboard-modal__section-head"><span class="dashboard-modal__section-icon">📈</span><span class="dashboard-modal__section-title">趋势洞察</span></div>
+          <div class="dashboard-modal__section-body">
+            <div class="dashboard-modal__item"><strong>成交率本周 +1.2%</strong>，主要靠 8000 旗舰套餐。10000 至尊 0 单，建议<strong>明日主动联系 3 位老客户</strong>推升级。</div>
+          </div>
+        </div>
+        <div class="dashboard-modal__section">
+          <div class="dashboard-modal__section-head"><span class="dashboard-modal__section-icon">💡</span><span class="dashboard-modal__section-title">话术建议</span></div>
+          <div class="dashboard-modal__section-body">
+            <div class="dashboard-modal__item">本周出现 <strong>2 次礼品价值顾虑</strong>，知识库已有 3 条应对方案。明日议价话术可加 1 句"礼盒可换购"。</div>
+          </div>
+        </div>
+        <div class="dashboard-modal__section">
+          <div class="dashboard-modal__section-head"><span class="dashboard-modal__section-icon">⏰</span><span class="dashboard-modal__section-title">明日排程</span></div>
+          <div class="dashboard-modal__section-body">
+            <div class="dashboard-modal__item"><strong>明日 9:00</strong>推荐跟进：<strong>小赵（咨询 3 天）</strong>+ <strong>小冯（成交 2 天）</strong>，预计 30 分钟内完成。</div>
+          </div>
+        </div>
+        <div class="dashboard-modal__hint">💡 点击右上角 🔄 重新生成 · 由 AI 团队每日自动分析</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗 3: 查看 12 位好友（v87: 升级 12 张好友卡片 + 5 阶段 chip + 快捷回复术语） -->
+  <div class="dashboard-modal" id="dashboardFunnelModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="funnelModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">📊 销售漏斗 · 12 位好友 · 月转化率 8.3%</div>
+          <div class="dashboard-modal__title" id="funnelModalTitle">12 位好友 · 5 阶段</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <!-- v87: 5 阶段快速跳转 chip -->
+        <div class="funnel-modal-stages" id="funnelModalStages">
+          <div class="funnel-modal-stage" data-stage-target="warm">🔵 咨询 5</div>
+          <div class="funnel-modal-stage" data-stage-target="cold">🔵 意向 3</div>
+          <div class="funnel-modal-stage is-active" data-stage-target="hot">🔥 议价 2</div>
+          <div class="funnel-modal-stage" data-stage-target="deal">🟠 体验 1</div>
+          <div class="funnel-modal-stage" data-stage-target="won">🟢 成交 1</div>
+        </div>
+        <div id="funnelModalBody">
+          <!-- v87: 12 张好友卡片由 JS 渲染（5 段 · 5+3+2+1+1） -->
+        </div>
+        <!-- v87: 快捷回复术语（3 风格 + 4 条/风格 = 12 条） -->
+        <div class="funnel-scripts" id="funnelScriptsSection">
+          <div class="funnel-scripts__head">
+            <span class="funnel-scripts__icon">💬</span>
+            <span class="funnel-scripts__title">快捷回复术语</span>
+            <span class="funnel-scripts__count" id="funnelScriptsCount">12 条 · 3 风格</span>
+          </div>
+          <div class="funnel-scripts__styles" role="tablist">
+            <button class="funnel-scripts__style is-active" data-script-style="soft" type="button">🌸 温和</button>
+            <button class="funnel-scripts__style" data-script-style="data" type="button">📊 数据</button>
+            <button class="funnel-scripts__style" data-script-style="pro" type="button">🔥 主动</button>
+          </div>
+          <ul class="funnel-scripts__list" id="funnelScriptsList">
+            <!-- JS 动态填充 -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗 4: 立即开始（派单确认 + 倒计时） -->
+  <div class="dashboard-modal" id="dashboardStartModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="startModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">🚀 立即开始 · 派单确认</div>
+          <div class="dashboard-modal__title" id="startModalTitle">AI 销冠 · 接管今日 5 项任务</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <div class="dashboard-modal__countdown">
+          <div class="dashboard-modal__countdown-num" id="startCountdownNum">02:34:11</div>
+          <div class="dashboard-modal__countdown-label">派单倒计时 · AI 即将自动接管</div>
+        </div>
+        <ul class="dashboard-modal__checklist">
+          <li>✅ 半自动模式已开启</li>
+          <li>✅ 5 位好友 AI 已识别</li>
+          <li>✅ 异议知识库已加载（12 条）</li>
+          <li>✅ 4 款产品话术已就绪</li>
+        </ul>
+        <div class="dashboard-modal__actions">
+          <button class="dashboard-modal__btn dashboard-modal__btn--ghost" data-modal-close>稍后</button>
+          <button class="dashboard-modal__btn dashboard-modal__btn--primary" id="startConfirmBtn">确认接管</button>
+        </div>
+        <div class="dashboard-modal__hint">💡 AI 接管后会按议价 > 体验 > 成交 > 咨询 优先级排序触达</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v78: 弹窗 5: 升级对比（3 档对比表） -->
+  <div class="dashboard-modal dashboard-modal--wide" id="dashboardCompareModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">💎 升级对比 · 3 档会员</div>
+          <div class="dashboard-modal__title" id="compareModalTitle">选择最适合你的档位</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <div class="compare-grid">
+          <div class="compare-col compare-col--vip" data-tier-col="VIP">
+            <div class="compare-col__head">
+              <span class="compare-col__tier">VIP</span>
+              <span class="compare-col__name">基础版</span>
+              <span class="compare-col__price">¥99<small>/月</small></span>
+              <span class="compare-col__hint">适合新加入 · 入门使用</span>
+            </div>
+            <ul class="compare-col__list">
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 销冠 全功能</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 接管 <strong>5 位</strong>/天</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>客户画像 <strong>5 人</strong>/天</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>知识库 50 条/天</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>产品库·我的 无限</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>跟进模板 6 套</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 战报 1 套</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>派单倒计时 24h</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>Dashboard 弹窗 4 个</li>
+            </ul>
+            <button class="compare-col__btn" data-tier-switch="VIP" type="button">切到 VIP 演示</button>
+          </div>
+          <div class="compare-col compare-col--mn" data-tier-col="MN">
+            <div class="compare-col__head">
+              <span class="compare-col__tier">MN</span>
+              <span class="compare-col__name">标准版</span>
+              <span class="compare-col__price">¥299<small>/月</small></span>
+              <span class="compare-col__hint">适合成长期 · 中小团队</span>
+            </div>
+            <ul class="compare-col__list">
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 销冠 全功能</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 接管 <strong>20 位</strong>/天</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>客户画像 <strong>20 人</strong>/天</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>知识库 无限</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>产品库·我的 无限</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>跟进模板 12 套 + 自定义</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 战报 1 套</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>派单倒计时 12h</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>Dashboard 弹窗 4 个</li>
+            </ul>
+            <button class="compare-col__btn" data-tier-switch="MN" type="button">切到 MN 演示</button>
+          </div>
+          <div class="compare-col compare-col--mb is-current" data-tier-col="MB">
+            <div class="compare-col__head">
+              <span class="compare-col__ribbon">👑 最高级</span>
+              <span class="compare-col__tier">MB</span>
+              <span class="compare-col__name">高级版</span>
+              <span class="compare-col__price">¥799<small>/月</small></span>
+              <span class="compare-col__hint">适合成熟期 · 团队作战</span>
+            </div>
+            <ul class="compare-col__list">
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 销冠 全功能</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>AI 接管 <strong>无限</strong></li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>客户画像 <strong>无限</strong></li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>知识库 无限 + 自定义 FAQ</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>产品库·我的 无限</li>
+              <li class="compare-col__item"><span class="compare-col__icon">✅</span>跟进模板 12 套 + AI 生成</li>
+              <li class="compare-col__item"><span class="compare-col__icon">🌟</span>AI 战报 <strong>3 套轮换</strong></li>
+              <li class="compare-col__item"><span class="compare-col__icon">🌟</span>派单倒计时 <strong>实时</strong></li>
+              <li class="compare-col__item"><span class="compare-col__icon">🌟</span>Dashboard 弹窗 4 个全开</li>
+            </ul>
+            <button class="compare-col__btn compare-col__btn--current" data-tier-switch="MB" type="button">当前档位</button>
+          </div>
+        </div>
+        <div class="dashboard-modal__hint">💡 切换档位立即生效，dashboard 战报/接管/弹窗功能会同步变化</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v78: 弹窗 6: 产品库管理（4 款产品 · 选品到我的产品库） -->
+  <div class="dashboard-modal dashboard-modal--wide" id="dashboardProductModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">📦 产品库 · 4 款公司产品 · 全部无限选</div>
+          <div class="dashboard-modal__title" id="productModalTitle">管理我的产品库</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <div class="product-manage">
+          <div class="product-manage__row" data-product-key="8000" data-in-shelf="true">
+            <div class="product-manage__icon" style="background: linear-gradient(135deg,#1FB6FF,#2D7CFF);">💎</div>
+            <div class="product-manage__main">
+              <div class="product-manage__name">8000 旗舰套餐</div>
+              <div class="product-manage__meta"><span class="product-manage__price" data-product-price="8000" title="点击修改我的售价">¥8,000</span> · 礼盒 800 价值 · 热销</div>
+            </div>
+            <div class="product-manage__status product-manage__status--on">已上架</div>
+            <button class="product-manage__toggle" type="button" data-product-toggle="8000">下架</button>
+          </div>
+          <div class="product-manage__row" data-product-key="10000" data-in-shelf="false">
+            <div class="product-manage__icon" style="background: linear-gradient(135deg,#6B4BFF,#A855F7);">👑</div>
+            <div class="product-manage__main">
+              <div class="product-manage__name">10000 至尊套餐</div>
+              <div class="product-manage__meta"><span class="product-manage__price" data-product-price="10000" title="点击修改我的售价">¥10,000</span> · 高端定制 · VIP 专属</div>
+            </div>
+            <div class="product-manage__status product-manage__status--off">未上架</div>
+            <button class="product-manage__toggle product-manage__toggle--add" type="button" data-product-toggle="10000">上架</button>
+          </div>
+          <div class="product-manage__row" data-product-key="5000" data-in-shelf="true">
+            <div class="product-manage__icon" style="background: linear-gradient(135deg,#07C160,#34D399);">⭐</div>
+            <div class="product-manage__main">
+              <div class="product-manage__name">5000 标准套餐</div>
+              <div class="product-manage__meta"><span class="product-manage__price" data-product-price="5000" title="点击修改我的售价">¥5,000</span> · 礼盒 500 价值 · 主推</div>
+            </div>
+            <div class="product-manage__status product-manage__status--on">已上架</div>
+            <button class="product-manage__toggle" type="button" data-product-toggle="5000">下架</button>
+          </div>
+          <div class="product-manage__row" data-product-key="3000" data-in-shelf="false">
+            <div class="product-manage__icon" style="background: linear-gradient(135deg,#FA709A,#FF6B6B);">🎁</div>
+            <div class="product-manage__main">
+              <div class="product-manage__name">3000 体验套餐</div>
+              <div class="product-manage__meta"><span class="product-manage__price" data-product-price="3000" title="点击修改我的售价">¥3,000</span> · 引流款 · 7 天体验</div>
+            </div>
+            <div class="product-manage__status product-manage__status--off">未上架</div>
+            <button class="product-manage__toggle product-manage__toggle--add" type="button" data-product-toggle="3000">上架</button>
+          </div>
+        </div>
+        <div class="product-manage__foot">
+          <span class="product-manage__count" id="productManageCount">已上架 2 款 · 3 档均不限数量</span>
+          <span class="product-manage__hint">💡 点击"上架/下架"即可切换，dashboard 卡片会同步</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v79: 弹窗 7: 续费记录（3-5 条历史 · 状态 + 金额 + 方式） -->
+  <div class="dashboard-modal" id="dashboardHistoryModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">🧾 续费记录 · 由 AI 团队自动归档</div>
+          <div class="dashboard-modal__title" id="historyModalTitle">5 条续费历史</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <div class="history-list">
+          <div class="history-row history-row--active">
+            <div class="history-row__date">2026-07-20</div>
+            <div class="history-row__main">
+              <div class="history-row__tier">MB · 高级版</div>
+              <div class="history-row__meta">微信支付 · 30 天 · 2026/7/20 → 2026/8/19</div>
+            </div>
+            <div class="history-row__price">¥799.00</div>
+            <div class="history-row__status history-row__status--active">使用中</div>
+          </div>
+          <div class="history-row">
+            <div class="history-row__date">2026-06-20</div>
+            <div class="history-row__main">
+              <div class="history-row__tier">MB · 高级版</div>
+              <div class="history-row__meta">微信支付 · 30 天 · 2026/6/20 → 2026/7/19</div>
+            </div>
+            <div class="history-row__price">¥799.00</div>
+            <div class="history-row__status">已结束</div>
+          </div>
+          <div class="history-row">
+            <div class="history-row__date">2026-05-20</div>
+            <div class="history-row__main">
+              <div class="history-row__tier">MB · 高级版</div>
+              <div class="history-row__meta">支付宝 · 30 天 · 2026/5/20 → 2026/6/19</div>
+            </div>
+            <div class="history-row__price">¥799.00</div>
+            <div class="history-row__status">已结束</div>
+          </div>
+          <div class="history-row">
+            <div class="history-row__date">2026-04-20</div>
+            <div class="history-row__main">
+              <div class="history-row__tier">MN · 标准版（升级自 VIP）</div>
+              <div class="history-row__meta">微信支付 · 30 天 · 2026/4/20 → 2026/5/19</div>
+            </div>
+            <div class="history-row__price">¥299.00</div>
+            <div class="history-row__status">已结束</div>
+          </div>
+          <div class="history-row">
+            <div class="history-row__date">2026-03-20</div>
+            <div class="history-row__main">
+              <div class="history-row__tier">VIP · 基础版（首次开通）</div>
+              <div class="history-row__meta">支付宝 · 30 天 · 2026/3/20 → 2026/4/19</div>
+            </div>
+            <div class="history-row__price">¥99.00</div>
+            <div class="history-row__status">已结束</div>
+          </div>
+        </div>
+        <div class="history-foot">
+          <span class="history-foot__sum">累计支付 <strong>¥2,795.00</strong> · 5 个月 · 平均 ¥559/月</span>
+          <span class="history-foot__hint">💡 所有续费记录均由 AI 团队自动归档，可下载发票</span>
+        </div>
+        <div class="history-actions">
+          <button class="dashboard-modal__btn dashboard-modal__btn--ghost" type="button">下载发票</button>
+          <button class="dashboard-modal__btn dashboard-modal__btn--primary" type="button" data-modal-close>知道了</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v80: 弹窗 8: 产品详情（4 款产品 · 卖点 + 客群 + 选品） -->
+  <!-- v81: 加 tab "详情 / 话术" · 每款产品 3 套 AI 销冠话术 -->
+  <div class="dashboard-modal dashboard-modal--wide" id="dashboardProductDetailModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="productDetailTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow" id="productDetailEyebrow">📦 产品详情</div>
+          <div class="dashboard-modal__title" id="productDetailTitle">产品名</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <!-- v81: 详情/话术 tab -->
+      <div class="detail-tabs" role="tablist">
+        <button class="detail-tab is-active" data-detail-tab="info" type="button" role="tab">📋 详情</button>
+        <button class="detail-tab" data-detail-tab="script" type="button" role="tab">💬 销售话术 <span class="detail-tab__count">12</span></button>
+      </div>
+      <div class="dashboard-modal__body">
+        <!-- 详情面板 -->
+        <div class="product-detail" data-detail-panel="info">
+          <!-- 左：大图 + 价格 + 礼盒 -->
+          <div class="product-detail__hero" id="productDetailHero">
+            <div class="product-detail__icon" id="productDetailIcon">💎</div>
+            <div class="product-detail__price-row">
+              <div class="product-detail__price product-detail__price--editable" id="productDetailPrice" data-product-price="8000" title="点击修改我的售价">¥8,000</div>
+              <div class="product-detail__unit" id="productDetailUnit">/ 30 天起</div>
+            </div>
+            <div class="product-detail__gift" id="productDetailGift">🎁 含 800 价值礼盒</div>
+            <div class="product-detail__status" id="productDetailStatus">
+              <span class="product-detail__status-tag product-detail__status-tag--on" id="productDetailStatusTag">已上架</span>
+              <span class="product-detail__status-hint" id="productDetailStatusHint">您的产品库正在售卖</span>
+            </div>
+            <button class="product-detail__restore" id="productDetailRestore" type="button" data-product-key="8000" hidden>↺ 恢复标准价</button>
+          </div>
+          <!-- 右：卖点 + 客群 + 操作 -->
+          <div class="product-detail__main">
+            <div class="product-detail__section">
+              <div class="product-detail__section-head">
+                <span class="product-detail__section-icon">✨</span>
+                <span class="product-detail__section-title">产品卖点</span>
+              </div>
+              <ul class="product-detail__bullets" id="productDetailBullets">
+                <!-- JS 动态填充 4-5 条卖点 -->
+              </ul>
+            </div>
+            <div class="product-detail__section">
+              <div class="product-detail__section-head">
+                <span class="product-detail__section-icon">👥</span>
+                <span class="product-detail__section-title">适合客群</span>
+              </div>
+              <div class="product-detail__tags" id="productDetailTags">
+                <!-- JS 动态填充客群 chips -->
+              </div>
+            </div>
+            <div class="product-detail__section product-detail__section--meta">
+              <div class="product-detail__meta-row">
+                <span class="product-detail__meta-label">起订天数</span>
+                <span class="product-detail__meta-val" id="productDetailMinDays">30 天</span>
+              </div>
+              <div class="product-detail__meta-row">
+                <span class="product-detail__meta-label">礼盒价值</span>
+                <span class="product-detail__meta-val" id="productDetailGiftVal">¥800</span>
+              </div>
+              <div class="product-detail__meta-row">
+                <span class="product-detail__meta-label">续费折扣</span>
+                <span class="product-detail__meta-val" id="productDetailRenew">8.5 折</span>
+              </div>
+              <div class="product-detail__meta-row">
+                <span class="product-detail__meta-label">客户复购</span>
+                <span class="product-detail__meta-val" id="productDetailRepurchase">高 · 60%</span>
+              </div>
+            </div>
+            <div class="product-detail__actions">
+              <button class="dashboard-modal__btn dashboard-modal__btn--ghost" type="button" id="productDetailManual">查看产品手册</button>
+              <button class="dashboard-modal__btn dashboard-modal__btn--primary" type="button" id="productDetailToggle">加入我的产品库</button>
+            </div>
+          </div>
+        </div>
+        <!-- 话术面板（v81） -->
+        <div class="product-script" data-detail-panel="script" hidden>
+          <div class="product-script__styles" role="tablist" aria-label="话术风格">
+            <button class="product-script__style is-active" data-script-style="soft" type="button">🌸 温和</button>
+            <button class="product-script__style" data-script-style="data" type="button">📊 数据</button>
+            <button class="product-script__style" data-script-style="pro" type="button">🔥 主动</button>
+          </div>
+          <ul class="product-script__list" id="productScriptList">
+            <!-- JS 动态填充 4 条话术 -->
+          </ul>
+          <div class="product-script__foot">
+            <span class="product-script__hint">💡 点击"填入对话"即可发送到当前会话 · 由 AI 团队基于历史成交话术优化</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v86: 弹窗 9: 客户分层（v74 那套搬过来 · 3 维度 × 4 分层 = 12 行） -->
+  <div class="dashboard-modal dashboard-modal--wide" id="dashboardSegmentsModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="segmentsModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow">👥 客户分层 · 8 位 · 3 维度</div>
+          <div class="dashboard-modal__title" id="segmentsModalTitle">8 位好友 · 按价值 / 风险 / 活跃度</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dashboard-modal__body">
+        <div class="segments-grid">
+          <!-- 按价值 -->
+          <div class="segment-block">
+            <div class="segment-block__head">
+              <span class="segment-block__icon">💎</span>
+              <span class="segment-block__name">按价值</span>
+              <span class="segment-block__count">8</span>
+            </div>
+            <div class="segment-list">
+              <div class="segment-item segment-item--vip">
+                <span class="segment-item__name">VIP 高价值</span>
+                <span class="segment-item__count">1</span>
+                <span class="segment-item__hint">小冯 · 8000 套餐</span>
+              </div>
+              <div class="segment-item segment-item--high">
+                <span class="segment-item__name">高潜力</span>
+                <span class="segment-item__count">2</span>
+                <span class="segment-item__hint">小明 / 小吴 · 议价中</span>
+              </div>
+              <div class="segment-item segment-item--mid">
+                <span class="segment-item__name">中等</span>
+                <span class="segment-item__count">3</span>
+                <span class="segment-item__hint">小郑 / 小赵 / +1</span>
+              </div>
+              <div class="segment-item segment-item--low">
+                <span class="segment-item__name">低价值</span>
+                <span class="segment-item__count">2</span>
+                <span class="segment-item__hint">长尾客户</span>
+              </div>
+            </div>
+          </div>
+          <!-- 按风险 -->
+          <div class="segment-block">
+            <div class="segment-block__head">
+              <span class="segment-block__icon">⚠️</span>
+              <span class="segment-block__name">按风险</span>
+              <span class="segment-block__count">8</span>
+            </div>
+            <div class="segment-list">
+              <div class="segment-item segment-item--risk-high">
+                <span class="segment-item__name">高流失风险</span>
+                <span class="segment-item__count">1</span>
+                <span class="segment-item__hint">小赵 · 30 天未互动</span>
+              </div>
+              <div class="segment-item segment-item--risk-mid">
+                <span class="segment-item__name">中风险</span>
+                <span class="segment-item__count">2</span>
+                <span class="segment-item__hint">小吴 / 小郑</span>
+              </div>
+              <div class="segment-item segment-item--risk-low">
+                <span class="segment-item__name">低风险</span>
+                <span class="segment-item__count">3</span>
+                <span class="segment-item__hint">小明 / 小冯 / +1</span>
+              </div>
+              <div class="segment-item segment-item--risk-none">
+                <span class="segment-item__name">无风险</span>
+                <span class="segment-item__count">2</span>
+                <span class="segment-item__hint">活跃老客户</span>
+              </div>
+            </div>
+          </div>
+          <!-- 按活跃度 -->
+          <div class="segment-block">
+            <div class="segment-block__head">
+              <span class="segment-block__icon">🔥</span>
+              <span class="segment-block__name">按活跃度</span>
+              <span class="segment-block__count">8</span>
+            </div>
+            <div class="segment-list">
+              <div class="segment-item segment-item--act-hot">
+                <span class="segment-item__name">高度活跃</span>
+                <span class="segment-item__count">2</span>
+                <span class="segment-item__hint">小明 / 小吴 · 今日互动</span>
+              </div>
+              <div class="segment-item segment-item--act-warm">
+                <span class="segment-item__name">中度活跃</span>
+                <span class="segment-item__count">2</span>
+                <span class="segment-item__hint">小郑 / 小冯 · 7 天内</span>
+              </div>
+              <div class="segment-item segment-item--act-cool">
+                <span class="segment-item__name">低活跃</span>
+                <span class="segment-item__count">3</span>
+                <span class="segment-item__hint">小赵 / +2</span>
+              </div>
+              <div class="segment-item segment-item--act-cold">
+                <span class="segment-item__name">沉睡</span>
+                <span class="segment-item__count">1</span>
+                <span class="segment-item__hint">30+ 天未联系</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="product-manage__foot">
+          <span class="product-manage__count">8 位好友 · 3 维度交叉 · 由 AI 团队每日 9:00 刷新</span>
+          <span class="product-manage__hint">💡 完整分层 + 跟进建议在 <a href="messages.html?panel=segments" style="color:#1FB6FF;text-decoration:none;">消息页 · 客户分层 tab</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v88: 弹窗 10: 客户完整档案（12 位通用 · JS 渲染） -->
+  <div class="dashboard-modal dashboard-modal--narrow" id="dashboardProfileModal" hidden>
+    <div class="dashboard-modal__overlay"></div>
+    <div class="dashboard-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+      <div class="dashboard-modal__head">
+        <div>
+          <div class="dashboard-modal__eyebrow" id="profileModalEyebrow">👤 客户档案</div>
+          <div class="dashboard-modal__title" id="profileModalTitle">完整档案</div>
+        </div>
+        <button class="dashboard-modal__close" data-modal-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="profileModalBody">
+        <!-- JS 动态渲染完整档案（hero + 基本信息 + 实时指标 + AI 建议 + 跟进时间线 + 操作） -->
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /.window -->
+
+  <script src="assets/js/shared.js"></script>
+  <script>
+    // ===== v77: dashboard 独立页，sidebar 链接直接跳转（不再拦截）=====
+
+    // ===== v73 · dashboard 客户画像"换一位"真实切换 =====
+    (function () {
+      'use strict';
+      // v73: 5 位好友（按 stage 优先级排序：议价 > 体验 > 成交 > 咨询）
+      var PROFILES = [
+        { name: '小明', avatar: 'linear-gradient(135deg,#F5A623,#FF8C42)', avatarText: '小', role: 'UMC专员 · 老客户', stage: '议价', stageClass: 'hot', intent: '🔥 强购买', prob: '78%', sentiment: '🔆 积极 ↑12°', concern: '礼品价值', tip: '趁热打铁，9 折 + 800 礼盒组合推销 · 风险低' },
+        { name: '小吴', avatar: 'linear-gradient(135deg,#FA709A,#FF6B6B)', avatarText: '吴', role: '老客户 · 续费中', stage: '议价', stageClass: 'hot', intent: '🔥 强购买', prob: '75%', sentiment: '🔆 积极', concern: '价格', tip: '强调续费 8.5 折 · 老客户专享' },
+        { name: '小郑', avatar: 'linear-gradient(135deg,#FF9A44,#FC6076)', avatarText: '郑', role: '老客户 · 体验中', stage: '体验', stageClass: 'deal', intent: '🔆 准备推进', prob: '70%', sentiment: '☀️ 乐观', concern: '服务及时', tip: '回访体验感受 · 准备推进到成交' },
+        { name: '小冯', avatar: 'linear-gradient(135deg,#07C160,#34D399)', avatarText: '冯', role: '老客户 · VIP', stage: '成交', stageClass: 'won', intent: '✅ 已成交', prob: '90%', sentiment: '🌟 满意', concern: '套餐内容', tip: '推荐升级旗舰套餐 · 老客户专享' },
+        { name: '小赵', avatar: 'linear-gradient(135deg,#4FACFE,#00C9FF)', avatarText: '赵', role: '新客户 · 初次咨询', stage: '咨询', stageClass: 'warm', intent: '❓ 待跟进', prob: '60%', sentiment: '☁️ 中性', concern: '套餐类型', tip: '跟进咨询需求 · 标准套餐 5 折' }
+      ];
+      var currentIdx = 0;
+      var $name = document.getElementById('dashboardProfileName');
+      var $avatar = document.getElementById('dashboardProfileAvatar');
+      var $role = document.getElementById('dashboardProfileRole');
+      var $tag = document.getElementById('dashboardProfileTag');
+      var $intent = document.getElementById('dashboardProfileIntent');
+      var $prob = document.getElementById('dashboardProfileProb');
+      var $sentiment = document.getElementById('dashboardProfileSentiment');
+      var $concern = document.getElementById('dashboardProfileConcern');
+      var $tip = document.getElementById('dashboardProfileTip');
+      var $switch = document.getElementById('dashboardProfileSwitch');
+      if (!$switch || !$name) return;
+
+      function renderProfile() {
+        var p = PROFILES[currentIdx];
+        $name.textContent = p.name;
+        $avatar.style.background = p.avatar;
+        $avatar.textContent = p.avatarText;
+        $role.textContent = p.role;
+        $tag.textContent = p.stage;
+        $tag.className = 'dashboard-profile__tag dashboard-profile__tag--' + p.stageClass;
+        $intent.textContent = p.intent;
+        $prob.textContent = p.prob;
+        $sentiment.textContent = p.sentiment;
+        $concern.textContent = p.concern;
+        $tip.textContent = p.tip;
+      }
+      $switch.addEventListener('click', function () {
+        currentIdx = (currentIdx + 1) % PROFILES.length;
+        renderProfile();
+      });
+      renderProfile(); // init
+    })();
+
+    // ===== v73 · dashboard 派单倒计时真实计时 =====
+    (function () {
+      'use strict';
+      // v73: 真实倒计时 - 2h34m12s 后 AI 自动接管
+      var TOTAL_SECONDS = 2 * 3600 + 34 * 60 + 12; // 9252s
+      var remaining = TOTAL_SECONDS;
+      var el = document.querySelector('.dashboard-pickup__sub');
+      if (!el) return;
+      function fmt(s) {
+        var h = Math.floor(s / 3600);
+        var m = Math.floor((s % 3600) / 60);
+        var sec = s % 60;
+        return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec + ' 后 AI 自动接管';
+      }
+      function tick() {
+        el.textContent = fmt(remaining);
+        // 紧急态: < 30 分钟
+        var time = el.parentNode.parentNode;
+        if (time) {
+          if (remaining < 1800) time.classList.add('dashboard-pickup__time--urgent');
+          else time.classList.remove('dashboard-pickup__time--urgent');
+        }
+        if (remaining > 0) remaining--;
+        else remaining = 0; // 卡 0，不变负
+      }
+      tick(); // 立即渲染一次
+      setInterval(tick, 1000);
+    })();
+
+    // ===== v73 · dashboard 漏斗点 stage 跳到消息页漏斗 tab =====
+    (function () {
+      'use strict';
+      var stages = document.querySelectorAll('.dashboard-funnel__stage');
+      if (!stages.length) return;
+      stages.forEach(function (s) {
+        s.addEventListener('click', function () {
+          // 切到 messages view
+          document.body.setAttribute('data-view', 'messages');
+          // 切到 funnel tab + 切到 off 模式（漏斗只 off 模式显示）
+          // 切模式
+          var display = document.getElementById('aiDisplay');
+          if (display) display.setAttribute('data-mode', 'off');
+          // 切 tab
+          var segOff = document.querySelector('.ai-seg__opt[data-mode="off"]');
+          if (segOff) segOff.click();
+          // 切到 funnel tab
+          setTimeout(function () {
+            var funnelTab = document.querySelector('.ai-tab[data-tab="funnel"]');
+            if (funnelTab) funnelTab.click();
+          }, 100);
+          // 更新 sidebar active
+          var sidebar = document.querySelector('.sidebar__nav');
+          if (sidebar) {
+            sidebar.querySelectorAll('.sidebar__item').forEach(function (it) {
+              it.classList.toggle('is-active', it.getAttribute('data-nav') === 'messages');
+            });
+          }
+        });
+      });
+    })();
+
+    // ===== v73 · dashboard 4 工具链接到对应面板/视图 =====
+    (function () {
+      'use strict';
+      var tools = document.querySelectorAll('.dashboard-tool');
+      if (!tools.length) return;
+      tools.forEach(function (t) {
+        t.addEventListener('click', function (e) {
+          e.preventDefault();
+          var href = t.getAttribute('href') || '';
+          // 知识库 / 产品库 / 跟进模板 / 客户分层 都跳到对应 messages view
+          var tab = null;
+          if (href === '#knowledge') tab = 'knowledge';
+          else if (href === '#products') tab = 'products';
+          else if (href === '#templates') tab = 'templates';
+          else if (href === '#segments') tab = 'segments';
+          if (tab) {
+            document.body.setAttribute('data-view', 'messages');
+            var sidebar = document.querySelector('.sidebar__nav');
+            if (sidebar) {
+              sidebar.querySelectorAll('.sidebar__item').forEach(function (it) {
+                it.classList.toggle('is-active', it.getAttribute('data-nav') === 'messages');
+              });
+            }
+            setTimeout(function () {
+              var tabBtn = document.querySelector('.ai-tab[data-tab="' + tab + '"]');
+              if (tabBtn) tabBtn.click();
+            }, 50);
+          }
+        });
+      });
+    })();
+
+    // ===== v74 · AI 战报"重新生成"动画 + 内容刷新 =====
+    (function () {
+      'use strict';
+      var btn = document.getElementById('dashboardReportRefresh');
+      var report = document.getElementById('dashboardReport');
+      if (!btn || !report) return;
+      // v74: 多个战报变体（模拟 AI 重新生成不同内容）
+      var REPORTS = [
+        [
+          { icon: '🔥', text: '<strong>小吴</strong> 议价中 22h，建议<strong>今晚 8 点前</strong>用 9 折 + 800 礼盒组合触达。竞品正在接触，窗口仅剩 6 小时。', highlight: true },
+          { icon: '📈', text: '<strong>成交率本周 +1.2%</strong>，主要靠 8000 旗舰套餐。10000 至尊 0 单，建议<strong>明日主动联系 3 位老客户</strong>推升级。' },
+          { icon: '💡', text: '本周出现 <strong>2 次礼品价值顾虑</strong>，知识库已有 3 条应对方案。明日议价话术可加 1 句"礼盒可换购"。' },
+          { icon: '⏰', text: '<strong>明日 9:00</strong>推荐跟进：<strong>小赵（咨询 3 天）</strong>+ <strong>小冯（成交 2 天）</strong>，预计 30 分钟内完成。' }
+        ],
+        [
+          { icon: '🎯', text: '<strong>小郑</strong> 体验中超过 72h，建议<strong>明日 10 点</strong>电话回访，重点询问使用感受并<strong>准备推进 5000 套餐升级</strong>。', highlight: true },
+          { icon: '📊', text: '本周 <strong>老客续费转化率 71%</strong>，行业平均 60%。建议<strong>加大老客激活投入</strong>，预计本周+8 单。' },
+          { icon: '💬', text: '本周 <strong>价格顾虑客户 5 位</strong>，AI 已自动生成 3 套应对话术，建议优先跟单小冯（VIP 客户）。' },
+          { icon: '🌟', text: '<strong>本周亮点</strong>：小冯 8000→10000 升级成功，<strong>客单价 +¥5,600</strong>。建议复制该模式到 3 位类似客户。' }
+        ],
+        [
+          { icon: '⏳', text: '<strong>小赵</strong> 咨询 3 天未跟进，<strong>流失风险中高</strong>。建议今晚发 1 句温和问候 + 5 折限时优惠。', highlight: true },
+          { icon: '📉', text: '本周 <strong>议价转化率下降 5%</strong>，主要因 2 位客户在比价。建议<strong>突出礼盒独特性</strong>而非价格。' },
+          { icon: '🔍', text: '本周 <strong>3 位新客</strong>首次咨询转化率 38%，<strong>高于行业平均 25%</strong>。继续加大 618 推广。' },
+          { icon: '🚀', text: '明日 9:00 建议<strong>批量跟进 5 位</strong>沉睡客户，预计<strong>激活 1-2 位</strong>，带来 ¥3,000+ 增量。' }
+        ]
+      ];
+      var reportIdx = 0;
+
+      btn.addEventListener('click', function () {
+        // 旋转动画
+        btn.classList.remove('is-spinning');
+        void btn.offsetWidth;
+        btn.classList.add('is-spinning');
+        setTimeout(function () { btn.classList.remove('is-spinning'); }, 700);
+
+        // 内容刷新（轮换 3 套战报）
+        reportIdx = (reportIdx + 1) % REPORTS.length;
+        var items = report.querySelectorAll('.dashboard__report-item');
+        var data = REPORTS[reportIdx];
+        data.forEach(function (d, i) {
+          if (items[i]) {
+            items[i].className = 'dashboard__report-item' + (d.highlight ? ' dashboard__report-item--highlight' : '');
+            var icon = items[i].querySelector('.dashboard__report-icon');
+            var text = items[i].querySelector('.dashboard__report-text');
+            if (icon) icon.textContent = d.icon;
+            if (text) text.innerHTML = d.text;
+          }
+        });
+      });
+    })();
+
+    // ===== v59 · daily panel 默认按模式折叠（off 展开 / semi+full 折叠）+ 用户手动 toggle =====
+    (function () {
+      'use strict';
+      var STORAGE_KEY = 'umakex_daily_collapsed_v1';
+      var card = document.getElementById('aiDailyCardPanel');
+      var btn = document.getElementById('dailyExpandBtnPanel');
+      if (!card || !btn) return;
+
+      var display = document.getElementById('aiDisplay');
+      function getMode() {
+        return display ? (display.getAttribute('data-mode') || 'off') : 'off';
+      }
+      function collapsedByMode(mode) {
+        var modes = (card.getAttribute('data-collapsed-by-mode') || '').split(/\s+/);
+        return modes.indexOf(mode) >= 0;
+      }
+
+      // 读 localStorage 用户偏好
+      function getUserPref() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          var d = JSON.parse(raw);
+          return d && typeof d.collapsed === 'boolean' ? d.collapsed : null;
+        } catch (e) { return null; }
+      }
+      function setUserPref(collapsed) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ collapsed: collapsed, at: Date.now() }));
+        } catch (e) { /* ignore */ }
+      }
+
+      // 应用折叠状态
+      function apply(collapsed) {
+        card.classList.toggle('is-collapsed', collapsed);
+        btn.classList.toggle('is-expanded', !collapsed);
+        var textEl = btn.querySelector('.daily-foot__toggle-text');
+        if (textEl) textEl.textContent = collapsed ? '展开 ' + getDailyCount() + ' 位' : '收起';
+        renderDailySummary(collapsed);
+      }
+
+      // v68: 渲染折叠时的 top 3 摘要
+      var STAGE_PRIORITY = { hot: 3, deal: 2, warm: 1, won: 0, cold: -1 };
+      function getDailyCount() {
+        return card.querySelectorAll('.daily-item').length;
+      }
+      function renderDailySummary(collapsed) {
+        var summaryEl = document.getElementById('dailySummary');
+        if (!summaryEl) return;
+        if (!collapsed) {
+          summaryEl.hidden = true;
+          summaryEl.innerHTML = '';
+          return;
+        }
+        var items = Array.from(card.querySelectorAll('.daily-item')).map(function (el) {
+          return {
+            name: el.querySelector('.daily-item__name')?.textContent?.trim() || '',
+            stage: el.dataset.stage || 'warm',
+            tag: el.querySelector('.daily-item__tag')?.textContent?.trim() || '',
+            urgent: el.querySelector('.daily-item__urgent')?.textContent?.trim() || '',
+            tagClass: Array.from(el.querySelector('.daily-item__tag')?.classList || []).find(function (c) { return c.indexOf('daily-item__tag--') === 0; }) || ''
+          };
+        });
+        items.sort(function (a, b) {
+          return (STAGE_PRIORITY[b.stage] || 0) - (STAGE_PRIORITY[a.stage] || 0);
+        });
+        var top3 = items.slice(0, 3);
+        var rest = items.length - top3.length;
+        var html = top3.map(function (it) {
+          return '<div class="daily-summary__item">' +
+                   '<span class="daily-summary__name">' + it.name + '</span>' +
+                   '<span class="daily-summary__tag ' + it.tagClass + '">' + it.tag + '</span>' +
+                   '<span class="daily-summary__urgent">' + it.urgent + '</span>' +
+                 '</div>';
+        }).join('');
+        if (rest > 0) {
+          html += '<div class="daily-summary__more">还有 ' + rest + ' 位 →</div>';
+        }
+        summaryEl.innerHTML = html;
+        summaryEl.hidden = false;
+      }
+
+      // 根据模式 + 用户偏好决定初始状态
+      function refresh() {
+        var mode = getMode();
+        var userPref = getUserPref();
+        var collapsed;
+        if (userPref !== null) {
+          collapsed = userPref;  // 用户手动设过 → 保留
+        } else {
+          collapsed = collapsedByMode(mode);  // 否则按模式默认
+        }
+        apply(collapsed);
+      }
+
+      // 用户点击 toggle
+      btn.addEventListener('click', function () {
+        var newCollapsed = !card.classList.contains('is-collapsed');
+        setUserPref(newCollapsed);
+        apply(newCollapsed);
+      });
+
+      // 模式变化时重新应用（如果用户没手动设过）
+      if (display && typeof MutationObserver !== 'undefined') {
+        var modeObserver = new MutationObserver(function () {
+          // 用户手动设过 → 不变；否则按模式默认
+          refresh();
+        });
+        modeObserver.observe(display, { attributes: true, attributeFilter: ['data-mode'] });
+      }
+
+      // 首次加载
+      refresh();
+    })();
+
+    // ===== v60 · tab 计数动态计算（按 data-count-source selector 数元素）=====
+    (function () {
+      'use strict';
+      var tabs = document.querySelectorAll('.ai-tab[data-count-source]');
+      if (!tabs.length) return;
+
+      function countElements(selector) {
+        // 支持多个 selector 用逗号分隔
+        var selectors = selector.split(',').map(function (s) { return s.trim(); });
+        var total = 0;
+        selectors.forEach(function (sel) {
+          total += document.querySelectorAll(sel).length;
+        });
+        return total;
+      }
+
+      function refreshCount(tab) {
+        var source = tab.getAttribute('data-count-source');
+        if (!source) return;
+        var n = countElements(source);
+        var countEl = tab.querySelector('.ai-tab__count');
+        if (countEl) countEl.textContent = String(n);
+      }
+
+      function refreshAll() {
+        tabs.forEach(refreshCount);
+      }
+
+      // 首次加载算一次
+      refreshAll();
+
+      // 监听 panel 内容变化（daily 状态变化、flow step 状态变化等）
+      if (typeof MutationObserver !== 'undefined') {
+        var panels = document.getElementById('aiDisplayPanels');
+        if (panels) {
+          var panelObserver = new MutationObserver(function () {
+            refreshAll();
+          });
+          panelObserver.observe(panels, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class']
+          });
+        }
+      }
+    })();
+
+    // ===== v62 · 议价阶段行动按钮（加日历 toast / 准备话术弹 v53 productModal）=====
+    (function () {
+      'use strict';
+      var btns = document.querySelectorAll('.funnel-action-btn[data-funnel-action]');
+      if (!btns.length) return;
+
+      function showFunnelToast(text) {
+        // 复用 daily-toast 样式
+        var toast = document.createElement('div');
+        toast.className = 'daily-toast';
+        toast.innerHTML = '<span class="daily-toast__icon">✓</span><span>' + text + '</span>';
+        document.body.appendChild(toast);
+        setTimeout(function () { toast.remove(); }, 2200);
+      }
+
+      btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var action = btn.getAttribute('data-funnel-action');
+          if (action === 'calendar') {
+            showFunnelToast('已加入日历 · 3 天后 上午 10:00');
+          } else if (action === 'prepare-script') {
+            // 弹 v53 productModal（v62 8000 套餐，跟议价阶段关联的产品）
+            var productCard = document.querySelector('.product-card[data-product="8000"]');
+            if (productCard) productCard.click();
+          }
+        });
+      });
+    })();
+
+    // ===== v75 · dashboard 4 弹窗打开/关闭通用逻辑 =====
+    // 4 个弹窗在 script 之后才出现在 DOM，DOMContentLoaded 之后才能挂 listener
+    document.addEventListener('DOMContentLoaded', function () {
+      'use strict';
+      function open(id) {
+        var m = document.getElementById(id);
+        if (m) m.hidden = false;
+      }
+      function close(id) {
+        var m = document.getElementById(id);
+        if (m) m.hidden = true;
+      }
+      // 查看完整清单
+      var todoMore = document.querySelector('.dashboard-card__more[data-modal="todo"]');
+      if (todoMore) todoMore.addEventListener('click', function (e) {
+        e.preventDefault();
+        open('dashboardTodoModal');
+      });
+      // 查看完整战报
+      var reportMore = document.querySelector('[data-modal="report"]');
+      if (reportMore) reportMore.addEventListener('click', function (e) {
+        e.preventDefault();
+        open('dashboardReportModal');
+      });
+      // 查看 12 位好友
+      var funnelMore = document.querySelector('.dashboard-card__more[data-modal="funnel"]');
+      if (funnelMore) funnelMore.addEventListener('click', function (e) {
+        e.preventDefault();
+        open('dashboardFunnelModal');
+      });
+      // 立即开始
+      var pickupBtn = document.querySelector('.dashboard-pickup__btn');
+      if (pickupBtn) pickupBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        // 涟漪效果：先加 class 让 ::after 瞬时出现，再 480ms 后渐隐 + 移除
+        pickupBtn.classList.add('is-rippling');
+        setTimeout(function () { pickupBtn.classList.remove('is-rippling'); }, 480);
+        open('dashboardStartModal');
+      });
+
+      // 确认接管：弹窗内主按钮 → 关闭弹窗 + 切换卡片按钮为"已派单"态
+      var startConfirmBtn = document.getElementById('startConfirmBtn');
+      if (startConfirmBtn) startConfirmBtn.addEventListener('click', function () {
+        close('dashboardStartModal');
+        if (pickupBtn) {
+          pickupBtn.classList.add('is-picked');
+          pickupBtn.textContent = '已接管';
+          pickupBtn.disabled = true;
+        }
+      });
+      // 关闭：overlay + close 按钮
+      document.querySelectorAll('.dashboard-modal').forEach(function (m) {
+        m.addEventListener('click', function (e) {
+          if (e.target.classList.contains('dashboard-modal__overlay') || e.target.closest('[data-modal-close]')) {
+            m.hidden = true;
+          }
+        });
+      });
+      // ESC 关闭
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.dashboard-modal').forEach(function (m) { m.hidden = true; });
+        }
+      });
+
+      // ===== v78: 升级对比弹窗触发（banner "升级对比" 按钮）=====
+      var compareBtn = document.querySelector('[data-modal="compare"]');
+      if (compareBtn) compareBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        open('dashboardCompareModal');
+        refreshCompareCurrent();
+      });
+
+      // 产品库管理弹窗触发
+      var productBtn = document.querySelector('[data-modal="product"]');
+      if (productBtn) productBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        open('dashboardProductModal');
+      });
+
+      // v79: 续费记录弹窗触发
+      var historyBtn = document.querySelector('[data-modal="history"]');
+      if (historyBtn) historyBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        open('dashboardHistoryModal');
+      });
+
+      // ===== v80: 产品详情数据 + 4 款产品详情渲染 =====
+      var PRODUCT_DETAILS = {
+        '8000': {
+          name: '8000 旗舰套餐',
+          price: '¥8,000',
+          unit: '/ 30 天起',
+          gift: '🎁 含 800 价值礼盒',
+          icon: '💎',
+          giftVal: '¥800',
+          minDays: '30 天',
+          renew: '8.5 折',
+          repurchase: '高 · 60%',
+          heroGradient: 'linear-gradient(135deg, #1FB6FF 0%, #2D7CFF 50%, #6B4BFF 100%)',
+          bullets: [
+            { icon: '👑', text: '公司 <strong>核心套餐</strong>，销售冠军之选' },
+            { icon: '🎁', text: '含 <strong>800 价值</strong>礼盒（茶叶+红酒+定制礼卡）' },
+            { icon: '🔄', text: '老客户 <strong>续费 8.5 折</strong>，月节省 ¥1,200' },
+            { icon: '📈', text: '老客户复购率 <strong>60%</strong>，口碑稳' },
+            { icon: '🤝', text: '<strong>30 天</strong>起订，平均客单价 ¥10,400' }
+          ],
+          tags: [
+            { label: '老客户', cls: 'product-detail__tag--old' },
+            { label: '续费用户', cls: '' },
+            { label: '中等预算', cls: 'product-detail__tag--mid' }
+          ]
+        },
+        '10000': {
+          name: '10000 至尊套餐',
+          price: '¥10,000',
+          unit: '/ 90 天起',
+          gift: '🎁 含 2000 价值礼盒',
+          icon: '👑',
+          giftVal: '¥2,000',
+          minDays: '90 天',
+          renew: '9 折',
+          repurchase: '高 · 75%',
+          heroGradient: 'linear-gradient(135deg, #6B4BFF 0%, #A855F7 50%, #EC4899 100%)',
+          bullets: [
+            { icon: '💎', text: '<strong>高端定制</strong>，1v1 专属顾问' },
+            { icon: '🎁', text: '含 <strong>2000 价值</strong>顶级礼盒（茅台+冬虫夏草+定制西装）' },
+            { icon: '🌟', text: '<strong>VIP 专属</strong>，老客户专享升级路径' },
+            { icon: '📅', text: '<strong>90 天</strong>起订，平均客单价 ¥27,000' },
+            { icon: '🤝', text: '老客户复购率 <strong>75%</strong>，客单价高' }
+          ],
+          tags: [
+            { label: 'VIP 客户', cls: 'product-detail__tag--vip' },
+            { label: '高净值', cls: 'product-detail__tag--vip' },
+            { label: '续费升级', cls: 'product-detail__tag--old' }
+          ]
+        },
+        '5000': {
+          name: '5000 标准套餐',
+          price: '¥5,000',
+          unit: '/ 30 天起',
+          gift: '🎁 含 500 价值礼盒',
+          icon: '⭐',
+          giftVal: '¥500',
+          minDays: '30 天',
+          renew: '8 折',
+          repurchase: '中 · 35%',
+          heroGradient: 'linear-gradient(135deg, #07C160 0%, #34D399 50%, #2D7CFF 100%)',
+          bullets: [
+            { icon: '🌟', text: '<strong>标准款</strong>，日常送礼首选' },
+            { icon: '🎁', text: '含 <strong>500 价值</strong>礼盒（茶叶+定制礼卡）' },
+            { icon: '📈', text: '公司 <strong>主推款</strong>，AI 销冠话术优先推荐' },
+            { icon: '🔄', text: '老客户 <strong>续费 8 折</strong>，月节省 ¥1,000' },
+            { icon: '📅', text: '<strong>30 天</strong>起订，平均客单价 ¥5,800' }
+          ],
+          tags: [
+            { label: '成长期', cls: 'product-detail__tag--mid' },
+            { label: '中等预算', cls: 'product-detail__tag--mid' },
+            { label: '续费用户', cls: 'product-detail__tag--old' }
+          ]
+        },
+        '3000': {
+          name: '3000 体验套餐',
+          price: '¥3,000',
+          unit: '/ 7 天起',
+          gift: '🚫 不含礼盒',
+          icon: '🎁',
+          giftVal: '¥0',
+          minDays: '7 天',
+          renew: '9 折',
+          repurchase: '中 · 40%',
+          heroGradient: 'linear-gradient(135deg, #FA709A 0%, #FF6B6B 50%, #FFA500 100%)',
+          bullets: [
+            { icon: '🎁', text: '<strong>引流款</strong>，新客低成本体验' },
+            { icon: '⚡', text: '<strong>7 天</strong>即可起订，快速成交' },
+            { icon: '🤝', text: '转介绍 升级 <strong>5000 标准</strong> 转化率高' },
+            { icon: '💡', text: 'AI 销冠话术：<strong>"先体验，再升级"</strong>' },
+            { icon: '📈', text: '新客 30 天内 <strong>40%</strong> 转化为续费' }
+          ],
+          tags: [
+            { label: '新客', cls: 'product-detail__tag--new' },
+            { label: '初次咨询', cls: 'product-detail__tag--trial' },
+            { label: '试用款', cls: 'product-detail__tag--trial' }
+          ]
+        }
+      };
+
+      function renderProductDetail(key) {
+        var d = PRODUCT_DETAILS[key];
+        if (!d) return;
+        var modal = document.getElementById('dashboardProductDetailModal');
+        // hero
+        var hero = document.getElementById('productDetailHero');
+        if (hero) hero.style.background = d.heroGradient;
+        var iconEl = document.getElementById('productDetailIcon');
+        if (iconEl) iconEl.textContent = d.icon;
+        // title + eyebrow
+        var titleEl = document.getElementById('productDetailTitle');
+        if (titleEl) titleEl.textContent = d.name;
+        var eyebrowEl = document.getElementById('productDetailEyebrow');
+        if (eyebrowEl) eyebrowEl.textContent = '📦 ' + d.name + ' · 公司主推';
+        // price
+        var priceEl = document.getElementById('productDetailPrice');
+        if (priceEl) priceEl.textContent = d.price;
+        var unitEl = document.getElementById('productDetailUnit');
+        if (unitEl) unitEl.textContent = d.unit;
+        var giftEl = document.getElementById('productDetailGift');
+        if (giftEl) giftEl.textContent = d.gift;
+        // meta
+        var minDaysEl = document.getElementById('productDetailMinDays');
+        if (minDaysEl) minDaysEl.textContent = d.minDays;
+        var giftValEl = document.getElementById('productDetailGiftVal');
+        if (giftValEl) giftValEl.textContent = d.giftVal;
+        var renewEl = document.getElementById('productDetailRenew');
+        if (renewEl) renewEl.textContent = d.renew;
+        var repurchaseEl = document.getElementById('productDetailRepurchase');
+        if (repurchaseEl) repurchaseEl.textContent = d.repurchase;
+        // bullets
+        var bulletsEl = document.getElementById('productDetailBullets');
+        if (bulletsEl) {
+          bulletsEl.innerHTML = d.bullets.map(function (b) {
+            return '<li class="product-detail__bullet"><span class="product-detail__bullet-icon">' + b.icon + '</span><span>' + b.text + '</span></li>';
+          }).join('');
+        }
+        // tags
+        var tagsEl = document.getElementById('productDetailTags');
+        if (tagsEl) {
+          tagsEl.innerHTML = d.tags.map(function (t) {
+            return '<span class="product-detail__tag ' + t.cls + '">' + t.label + '</span>';
+          }).join('');
+        }
+        // status (in shelf?)
+        var inShelf = false;
+        var card = document.querySelector('.product-card[data-product-key="' + key + '"]');
+        if (card) inShelf = card.getAttribute('data-in-shelf') === 'true';
+        var statusTag = document.getElementById('productDetailStatusTag');
+        var statusHint = document.getElementById('productDetailStatusHint');
+        var toggleBtn = document.getElementById('productDetailToggle');
+        if (statusTag) {
+          statusTag.className = 'product-detail__status-tag ' + (inShelf ? 'product-detail__status-tag--on' : 'product-detail__status-tag--off');
+          statusTag.textContent = inShelf ? '已上架' : '未上架';
+        }
+        if (statusHint) statusHint.textContent = inShelf ? '您的产品库正在售卖此款' : '点击下方按钮加入产品库';
+        if (toggleBtn) {
+          toggleBtn.textContent = inShelf ? '下架' : '加入我的产品库';
+          toggleBtn.classList.toggle('dashboard-modal__btn--primary', !inShelf);
+          // 不直接切 primary 类 — 用 toggle css
+          if (inShelf) {
+            toggleBtn.style.background = 'white';
+            toggleBtn.style.color = '#4A5063';
+            toggleBtn.style.border = '1px solid #EEF0F3';
+            toggleBtn.style.boxShadow = 'none';
+          } else {
+            toggleBtn.style.background = '';
+            toggleBtn.style.color = '';
+            toggleBtn.style.border = '';
+            toggleBtn.style.boxShadow = '';
+          }
+        }
+        // 保存当前 key 到 modal data attr
+        modal.setAttribute('data-current-key', key);
+      }
+
+      // 详情弹窗打开触发
+      function openProductDetail(key) {
+        renderProductDetail(key);
+        // v81: 话术面板默认渲染当前风格
+        if (typeof renderScripts === 'function') renderScripts(currentScriptStyle);
+        // v81: 切回详情 tab（避免切产品时停留话术 tab）
+        if (typeof switchDetailTab === 'function') switchDetailTab('info');
+        // v85: 同步详情弹窗价（覆盖 renderProductDetail 的 d.price 默认）
+        if (typeof renderAllProductPrices === 'function') renderAllProductPrices();
+        // v85: restore 按钮绑当前 key
+        var restoreBtn = document.getElementById('productDetailRestore');
+        if (restoreBtn) restoreBtn.setAttribute('data-product-key', key);
+        open('dashboardProductDetailModal');
+      }
+      // 4 款产品卡 + 弹窗内"管理"列表的 toggle 都可触发详情
+      document.querySelectorAll('#productShelf .product-card').forEach(function (card) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function (e) {
+          // + 按钮点击不触发详情
+          if (e.target.closest('.product-card__add')) return;
+          // v85: 价点击不触发详情（v85 自己 startEditPrice）
+          if (e.target.closest('[data-product-price]')) return;
+          openProductDetail(card.getAttribute('data-product-key'));
+        });
+      });
+      // 弹窗 6 (管理) 4 行也可点
+      document.querySelectorAll('#dashboardProductModal .product-manage__row').forEach(function (row) {
+        row.style.cursor = 'pointer';
+        row.addEventListener('click', function (e) {
+          if (e.target.closest('.product-manage__toggle')) return;
+          // v85: 价点击不触发详情
+          if (e.target.closest('[data-product-price]')) return;
+          openProductDetail(row.getAttribute('data-product-key'));
+        });
+      });
+
+      // 详情弹窗"加入/下架"按钮
+      var detailToggleBtn = document.getElementById('productDetailToggle');
+      if (detailToggleBtn) detailToggleBtn.addEventListener('click', function () {
+        var modal = document.getElementById('dashboardProductDetailModal');
+        var key = modal.getAttribute('data-current-key');
+        if (!key) return;
+        // 复用 v78 的同步逻辑：dashboard card + manage row + 计数
+        function syncProductShelf(targetKey, inShelf) {
+          // dashboard 卡片
+          var card = document.querySelector('.product-card[data-product-key="' + targetKey + '"]');
+          if (card) {
+            card.setAttribute('data-in-shelf', inShelf ? 'true' : 'false');
+            var tag = card.querySelector('.product-card__shelf-tag');
+            var addBtn = card.querySelector('.product-card__add');
+            if (inShelf) {
+              if (!tag) {
+                var t = document.createElement('div');
+                t.className = 'product-card__shelf-tag';
+                t.textContent = '已上架';
+                card.appendChild(t);
+              }
+              if (addBtn) addBtn.remove();
+            } else {
+              if (tag) tag.remove();
+              if (!addBtn) {
+                var b = document.createElement('button');
+                b.className = 'product-card__add';
+                b.type = 'button';
+                b.title = '加入我的产品库';
+                b.textContent = '+';
+                card.appendChild(b);
+                // 重新挂 click handler
+                b.addEventListener('click', function (e) {
+                  e.stopPropagation();
+                  syncProductShelf(targetKey, true);
+                  // 同步弹窗 6
+                  var row = document.querySelector('#dashboardProductModal .product-manage__row[data-product-key="' + targetKey + '"]');
+                  if (row) {
+                    row.setAttribute('data-in-shelf', 'true');
+                    var s = row.querySelector('.product-manage__status');
+                    if (s) { s.textContent = '已上架'; s.classList.add('product-manage__status--on'); s.classList.remove('product-manage__status--off'); }
+                    var btn = row.querySelector('.product-manage__toggle');
+                    if (btn) { btn.textContent = '下架'; btn.classList.remove('product-manage__toggle--add'); }
+                  }
+                  refreshShelfCount();
+                });
+              }
+            }
+          }
+          // 弹窗 6 (管理) 行
+          var manageRow = document.querySelector('#dashboardProductModal .product-manage__row[data-product-key="' + targetKey + '"]');
+          if (manageRow) {
+            manageRow.setAttribute('data-in-shelf', inShelf ? 'true' : 'false');
+            var status = manageRow.querySelector('.product-manage__status');
+            if (status) {
+              status.textContent = inShelf ? '已上架' : '未上架';
+              status.classList.toggle('product-manage__status--on', inShelf);
+              status.classList.toggle('product-manage__status--off', !inShelf);
+            }
+            var btn = manageRow.querySelector('.product-manage__toggle');
+            if (btn) {
+              btn.textContent = inShelf ? '下架' : '上架';
+              btn.classList.toggle('product-manage__toggle--add', !inShelf);
+            }
+          }
+          refreshShelfCount();
+        }
+        function refreshShelfCount() {
+          var shelfOn = document.querySelectorAll('.product-card[data-in-shelf="true"]').length;
+          var cnt = document.querySelector('.product-shelf__count strong');
+          if (cnt) cnt.textContent = shelfOn;
+          var manageCnt = document.getElementById('productManageCount');
+          if (manageCnt) manageCnt.innerHTML = '已上架 <strong>' + shelfOn + ' 款</strong> · 3 档均不限数量';
+        }
+        // 当前状态取反
+        var card = document.querySelector('.product-card[data-product-key="' + key + '"]');
+        var isIn = card && card.getAttribute('data-in-shelf') === 'true';
+        syncProductShelf(key, !isIn);
+        // 重新渲染详情弹窗（更新状态 + 按钮文字）
+        renderProductDetail(key);
+      });
+
+      // 详情弹窗"查看产品手册"占位
+      var detailManualBtn = document.getElementById('productDetailManual');
+      if (detailManualBtn) detailManualBtn.addEventListener('click', function () {
+        var modal = document.getElementById('dashboardProductDetailModal');
+        var key = modal.getAttribute('data-current-key');
+        alert('📖 即将打开 ' + (PRODUCT_DETAILS[key] ? PRODUCT_DETAILS[key].name : '产品') + ' 的产品手册\n\n（v80 demo 占位，v81 接入 PDF）');
+      });
+
+      // ===== v81: 销售话术数据（4 款产品 × 3 风格 × 4 条 = 48 条）=====
+      var PRODUCT_SCRIPTS = {
+        '8000': {
+          soft: [
+            { text: '王哥，上次我们聊的 <strong>8000 旗舰套餐</strong>，您考虑的怎么样了？' },
+            { text: '这款是我们公司 <strong>主推款</strong>，老客户选得最多，含 800 价值礼盒。' },
+            { text: '<strong>30 天</strong>起订，您可以先了解下细节，不着急。' },
+            { text: '我整理了几个 <strong>老客户反馈</strong>，方便发您看看吗？' }
+          ],
+          data: [
+            { text: '<strong>8000 旗舰</strong>复购率 <strong>60%</strong>，老客户选得最多的套餐。' },
+            { text: '含 <strong>800 价值礼盒</strong>，相当于 1 万的套餐，您只花 8000。' },
+            { text: '续费 <strong>8.5 折</strong>，老客户每月省 ¥1,200。' },
+            { text: '平均客单价 <strong>¥10,400</strong>，含礼盒。' }
+          ],
+          pro: [
+            { text: '王哥，<strong>618 活动</strong>只剩最后 3 天，8000 旗舰 + 800 礼盒是您最佳选择。' },
+            { text: '今天签约 <strong>送 500 京东卡</strong>，我再帮您申请老客户额外 9 折。' },
+            { text: '升级到旗舰比您之前咨询的 5000 还划算，今晚 8 点前签约再加送 1 年售后。' },
+            { text: '名额只剩 <strong>最后 5 个</strong>，王哥今天定下来我直接锁名额。' }
+          ]
+        },
+        '10000': {
+          soft: [
+            { text: '王哥，针对您这样的 <strong>VIP 客户</strong>，我们有 10000 至尊套餐更适合您。' },
+            { text: '这款含 <strong>2000 价值礼盒</strong>（茅台+冬虫夏草+定制西装），送给重要客户很有面子。' },
+            { text: '我们 <strong>1v1 专属顾问</strong>，所有流程都为您定制。' },
+            { text: '90 天起订，您可以先了解下细节，王哥您看什么时候方便？' }
+          ],
+          data: [
+            { text: '<strong>10000 至尊</strong>，老客户复购率 <strong>75%</strong>，客单价高。' },
+            { text: '<strong>2000 价值礼盒</strong>，顶级茅台+冬虫夏草+定制西装组合。' },
+            { text: '平均客单价 <strong>¥27,000</strong>，90 天起订。' },
+            { text: '续费 <strong>9 折</strong>，老客户月省 ¥1,000。' }
+          ],
+          pro: [
+            { text: '王哥，至尊套餐是 <strong>VIP 专属</strong>，不是所有客户都能开通。' },
+            { text: '今天签约 <strong>送 1v1 私人顾问 1 年</strong>，这是其他套餐没有的。' },
+            { text: '<strong>2000 价值礼盒</strong>，送礼很有面子，今天签约送茅台+冬虫夏草组合。' },
+            { text: '王哥这种身份的，<strong>至少得上至尊</strong>，要不显得不够档次。' }
+          ]
+        },
+        '5000': {
+          soft: [
+            { text: '王哥，<strong>5000 标准套餐</strong>是我们日常送礼的首选。' },
+            { text: '含 <strong>500 价值礼盒</strong>（茶叶+定制礼卡），送给客户很合适。' },
+            { text: '30 天起订，<strong>续费 8 折</strong>，月省 ¥1,000。' },
+            { text: '我整理了下细节，方便发您看看吗？' }
+          ],
+          data: [
+            { text: '<strong>5000 标准</strong>，日常送礼最性价比的选择。' },
+            { text: '含 <strong>500 价值礼盒</strong>，相当于 5500 的套餐，您只花 5000。' },
+            { text: '续费 <strong>8 折</strong>，老客户月省 ¥1,000。' },
+            { text: '公司 <strong>主推款</strong>，AI 销冠话术优先推荐。' }
+          ],
+          pro: [
+            { text: '王哥，<strong>618 活动</strong>，5000 标准 + 500 礼盒，今天签约再减 200。' },
+            { text: '<strong>30 天起订</strong>，适合您这种客户，节奏不紧。' },
+            { text: '今天签约 <strong>送定制礼卡</strong>，王哥给重要客户送。' },
+            { text: '5000 是 <strong>基础</strong>，今天定下来我帮您升级。' }
+          ]
+        },
+        '3000': {
+          soft: [
+            { text: '王哥，先了解一下 <strong>3000 体验套餐</strong>，7 天就能起订。' },
+            { text: '这是 <strong>引流款</strong>，适合新客低成本体验。' },
+            { text: '不送礼盒，<strong>纯产品体验</strong>，王哥您可以先试试。' },
+            { text: '后续升级到 5000 标准，<strong>转化率 40%</strong>，老客户都在用。' }
+          ],
+          data: [
+            { text: '<strong>3000 体验</strong>，7 天即可起订，新客最低门槛。' },
+            { text: '不含礼盒，<strong>纯产品体验</strong>，快速成交。' },
+            { text: '<strong>30 天内 40% 转化为续费</strong>，转介绍升级 5000 标准。' },
+            { text: 'AI 销冠话术：<strong>"先体验，再升级"</strong>。' }
+          ],
+          pro: [
+            { text: '王哥，<strong>7 天体验</strong>，今天签约我帮您申请老客户价格。' },
+            { text: '<strong>3000 体验</strong>是引流款，新客首选，节奏快。' },
+            { text: '今天定下来 <strong>7 天即可生效</strong>，王哥直接体验。' },
+            { text: '30 天内升级 <strong>5000 标准</strong>，转化率 40%，老客户都在这么做。' }
+          ]
+        }
+      };
+
+      // v81: 详情/话术 tab 切换
+      function switchDetailTab(tab) {
+        document.querySelectorAll('.detail-tab').forEach(function (b) {
+          b.classList.toggle('is-active', b.getAttribute('data-detail-tab') === tab);
+        });
+        document.querySelectorAll('[data-detail-panel]').forEach(function (p) {
+          var show = p.getAttribute('data-detail-panel') === tab;
+          if (show) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
+        });
+      }
+      document.querySelectorAll('.detail-tab').forEach(function (b) {
+        b.addEventListener('click', function () {
+          switchDetailTab(b.getAttribute('data-detail-tab'));
+        });
+      });
+
+      // v81: 话术渲染（按当前产品 + 风格）
+      var currentScriptStyle = 'soft';
+      function renderScripts(style) {
+        var modal = document.getElementById('dashboardProductDetailModal');
+        var key = modal.getAttribute('data-current-key');
+        if (!key || !PRODUCT_SCRIPTS[key]) return;
+        var list = PRODUCT_SCRIPTS[key][style] || [];
+        var html = list.map(function (item, i) {
+          return '<li class="product-script__item" data-script-idx="' + i + '">' +
+            '<div class="product-script__item-text">' + item.text + '</div>' +
+            '<div class="product-script__item-actions">' +
+              '<button class="product-script__btn" data-script-action="copy" type="button">📋 复制</button>' +
+              '<button class="product-script__btn product-script__btn--primary" data-script-action="fill" type="button">填入对话</button>' +
+            '</div>' +
+          '</li>';
+        }).join('');
+        var listEl = document.getElementById('productScriptList');
+        if (listEl) listEl.innerHTML = html;
+      }
+      // 风格切换
+      document.querySelectorAll('.product-script__style').forEach(function (b) {
+        b.addEventListener('click', function () {
+          document.querySelectorAll('.product-script__style').forEach(function (x) {
+            x.classList.toggle('is-active', x === b);
+          });
+          currentScriptStyle = b.getAttribute('data-script-style');
+          renderScripts(currentScriptStyle);
+        });
+      });
+      // 复制/填入按钮（事件委托）
+      var scriptListEl = document.getElementById('productScriptList');
+      if (scriptListEl) scriptListEl.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-script-action]');
+        if (!btn) return;
+        var action = btn.getAttribute('data-script-action');
+        var item = btn.closest('.product-script__item');
+        if (!item) return;
+        var modal = document.getElementById('dashboardProductDetailModal');
+        var key = modal.getAttribute('data-current-key');
+        if (!key) return;
+        var list = PRODUCT_SCRIPTS[key][currentScriptStyle] || [];
+        var idx = parseInt(item.getAttribute('data-script-idx'), 10);
+        var text = (list[idx] && list[idx].text) || '';
+        if (action === 'copy') {
+          // 复制到剪贴板
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(text.replace(/<[^>]+>/g, '')).then(function () {
+              item.classList.add('product-script__item--copied');
+              var copyBtn = item.querySelector('[data-script-action="copy"]');
+              if (copyBtn) {
+                var orig = copyBtn.textContent;
+                copyBtn.textContent = '✓ 已复制';
+                copyBtn.classList.add('product-script__btn--copied');
+                setTimeout(function () {
+                  copyBtn.textContent = orig;
+                  copyBtn.classList.remove('product-script__btn--copied');
+                  item.classList.remove('product-script__item--copied');
+                }, 1500);
+              }
+            });
+          }
+        } else if (action === 'fill') {
+          // 填入对话输入框（v53 input 是 #chatInput）
+          var chatInput = document.getElementById('chatInput');
+          if (chatInput) {
+            chatInput.value = text.replace(/<[^>]+>/g, '');
+            chatInput.focus();
+            // 模拟一次 input 事件让字数统计更新
+            chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+            item.classList.add('product-script__item--copied');
+            var fillBtn = item.querySelector('[data-script-action="fill"]');
+            if (fillBtn) {
+              var orig2 = fillBtn.textContent;
+              fillBtn.textContent = '✓ 已填入';
+              fillBtn.classList.add('product-script__btn--copied');
+              setTimeout(function () {
+                fillBtn.textContent = orig2;
+                fillBtn.classList.remove('product-script__btn--copied');
+                item.classList.remove('product-script__item--copied');
+              }, 1500);
+            }
+          } else {
+            // 独立页面没有 chatInput，弹 toast 提示
+            alert('💬 已填入对话：\n\n' + text.replace(/<[^>]+>/g, ''));
+          }
+        }
+      });
+
+      // v81: 详情弹窗打开时，初始化话术（默认 soft 风格）
+      // （在原 openProductDetail 内部已加 renderScripts 调用，避免函数覆盖）
+
+      // ===== v78: 档位切换（banner 3 档 + 对比弹窗 3 列）=====
+      var STORAGE_KEY = 'umakex_member_tier_v1';
+      var TIER_INFO = {
+        VIP: { name: '基础版', badge: '',     quotaLine: 'AI 接管 <strong>5 位</strong>/天 · 客户画像 <strong>5 人</strong>/天 · AI 战报 <strong>1 套</strong> · 派单倒计时 <strong>24h</strong>' },
+        MN:  { name: '标准版', badge: '',     quotaLine: 'AI 接管 <strong>20 位</strong>/天 · 客户画像 <strong>20 人</strong>/天 · AI 战报 <strong>1 套</strong> · 派单倒计时 <strong>12h</strong>' },
+        MB:  { name: '高级版', badge: '最高级', quotaLine: 'AI 接管 <strong>无限</strong> · 客户画像 <strong>无限</strong> · AI 战报 <strong>3 套</strong> 轮换 · 派单倒计时 <strong>实时</strong>' }
+      };
+
+      function getStoredTier() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return 'MB';
+          var data = JSON.parse(raw);
+          return (data && data.tier) || 'MB';
+        } catch (e) { return 'MB'; }
+      }
+      function setStoredTier(tier) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ tier: tier, at: Date.now() })); } catch (e) {}
+      }
+
+      function applyTier(tier) {
+        // 1. body data-tier
+        document.body.setAttribute('data-tier', tier);
+        // 2. banner data-tier
+        var banner = document.getElementById('memberBanner');
+        if (banner) banner.setAttribute('data-tier', tier);
+        // 3. banner tier 文字
+        var tierEl = document.getElementById('memberBannerTier');
+        var nameEl = document.getElementById('memberBannerTierName');
+        var badgeEl = document.getElementById('memberBannerBadge');
+        var subEl = document.getElementById('memberBannerSub');
+        if (tierEl) tierEl.textContent = tier;
+        if (nameEl) nameEl.textContent = TIER_INFO[tier].name;
+        if (badgeEl) {
+          if (TIER_INFO[tier].badge) {
+            badgeEl.textContent = TIER_INFO[tier].badge;
+            badgeEl.classList.remove('member-banner__badge--hidden');
+          } else {
+            badgeEl.classList.add('member-banner__badge--hidden');
+          }
+        }
+        if (subEl) subEl.innerHTML = TIER_INFO[tier].quotaLine + '<span class="member-banner__sep">·</span><span class="member-banner__quota">产品库·我的 <strong>无限</strong></span>';
+        // 4. 续费按钮
+        var renewBtn = document.querySelector('.member-banner__btn--primary');
+        if (renewBtn) renewBtn.textContent = '续费 ¥' + (tier === 'VIP' ? '99' : tier === 'MN' ? '299' : '799');
+        // 5. switch 按钮 active
+        document.querySelectorAll('.member-banner__switch-btn').forEach(function (b) {
+          b.classList.toggle('is-active', b.getAttribute('data-tier') === tier);
+        });
+        // 6. 对比弹窗 is-current
+        refreshCompareCurrent();
+        // 7. localStorage
+        setStoredTier(tier);
+      }
+
+      function refreshCompareCurrent() {
+        var current = getStoredTier();
+        document.querySelectorAll('.compare-col').forEach(function (col) {
+          var t = col.getAttribute('data-tier-col');
+          col.classList.toggle('is-current', t === current);
+          var btn = col.querySelector('.compare-col__btn');
+          if (!btn) return;
+          if (t === current) {
+            btn.textContent = '当前档位';
+            btn.disabled = true;
+            btn.classList.add('compare-col__btn--current');
+          } else {
+            btn.textContent = '切到 ' + t + ' 演示';
+            btn.disabled = false;
+            btn.classList.remove('compare-col__btn--current');
+          }
+        });
+      }
+
+      // banner 3 档切换
+      document.querySelectorAll('.member-banner__switch-btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          applyTier(b.getAttribute('data-tier'));
+        });
+      });
+
+      // 对比弹窗 3 列 "切到 X 演示"
+      document.querySelectorAll('.compare-col__btn[data-tier-switch]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          applyTier(b.getAttribute('data-tier-switch'));
+        });
+      });
+
+      // 初始化档位
+      applyTier(getStoredTier());
+
+      // ===== v78: 产品库 · 上架/下架切换 =====
+      function refreshProductShelf() {
+        var rows = document.querySelectorAll('#dashboardProductModal .product-manage__row');
+        var shelfOn = 0;
+        rows.forEach(function (r) {
+          var inShelf = r.getAttribute('data-in-shelf') === 'true';
+          var key = r.getAttribute('data-product-key');
+          // 同步 dashboard product-card
+          var card = document.querySelector('.product-card[data-product-key="' + key + '"]');
+          if (card) {
+            card.setAttribute('data-in-shelf', inShelf ? 'true' : 'false');
+            var tag = card.querySelector('.product-card__shelf-tag');
+            var addBtn = card.querySelector('.product-card__add');
+            if (inShelf) {
+              if (!tag) {
+                var t = document.createElement('div');
+                t.className = 'product-card__shelf-tag';
+                t.textContent = '已上架';
+                card.appendChild(t);
+              }
+              if (addBtn) addBtn.remove();
+            } else {
+              if (tag) tag.remove();
+              if (!addBtn) {
+                var b = document.createElement('button');
+                b.className = 'product-card__add';
+                b.type = 'button';
+                b.title = '加入我的产品库';
+                b.textContent = '+';
+                card.appendChild(b);
+              }
+            }
+          }
+          if (inShelf) shelfOn++;
+        });
+        // 同步 dashboard 计数
+        var shelfCount = document.querySelector('.product-shelf__count strong');
+        if (shelfCount) shelfCount.textContent = shelfOn;
+        // 同步弹窗脚注
+        var manageCount = document.getElementById('productManageCount');
+        if (manageCount) {
+          manageCount.innerHTML = '已上架 <strong>' + shelfOn + ' 款</strong> · 3 档均不限数量';
+        }
+      }
+      // 弹窗内每行 toggle
+      document.querySelectorAll('#dashboardProductModal .product-manage__toggle').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var row = b.closest('.product-manage__row');
+          if (!row) return;
+          var inShelf = row.getAttribute('data-in-shelf') === 'true';
+          row.setAttribute('data-in-shelf', inShelf ? 'false' : 'true');
+          var status = row.querySelector('.product-manage__status');
+          if (status) {
+            status.textContent = inShelf ? '未上架' : '已上架';
+            status.classList.toggle('product-manage__status--on', !inShelf);
+            status.classList.toggle('product-manage__status--off', inShelf);
+          }
+          b.textContent = inShelf ? '上架' : '下架';
+          b.classList.toggle('product-manage__toggle--add', inShelf);
+          refreshProductShelf();
+        });
+      });
+      // dashboard shelf 上直接 + 加入
+      document.querySelectorAll('#productShelf .product-card__add').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var card = b.closest('.product-card');
+          if (!card) return;
+          var key = card.getAttribute('data-product-key');
+          // 同步弹窗内的 row
+          var row = document.querySelector('#dashboardProductModal .product-manage__row[data-product-key="' + key + '"]');
+          if (row) {
+            row.setAttribute('data-in-shelf', 'true');
+            var status = row.querySelector('.product-manage__status');
+            if (status) {
+              status.textContent = '已上架';
+              status.classList.add('product-manage__status--on');
+              status.classList.remove('product-manage__status--off');
+            }
+            var btn = row.querySelector('.product-manage__toggle');
+            if (btn) {
+              btn.textContent = '下架';
+              btn.classList.remove('product-manage__toggle--add');
+            }
+          }
+          refreshProductShelf();
+        });
+      });
+
+      // ============================================================== //
+      // v85 · 产品价 inline 编辑（3 处同步 + 蓝徽章 + localStorage 持久化） //
+      // ============================================================== //
+
+      // v85: 复用 v82 toast 系统（dashboard.html 独立一份，跟 messages.html 同步）
+      function showToast(text, kind) {
+        kind = kind || 'info';
+        var t = document.createElement('div');
+        t.className = 'toast toast--' + kind;
+        t.textContent = text;
+        document.body.appendChild(t);
+        requestAnimationFrame(function () { t.classList.add('toast--show'); });
+        setTimeout(function () {
+          t.classList.remove('toast--show');
+          setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 250);
+        }, 1500);
+      }
+
+      var DEFAULT_PRICES = { '8000': 8000, '10000': 10000, '5000': 5000, '3000': 3000 };
+      var STORAGE_PRICES = 'umakex_product_prices_v1';
+
+      function getProductPrices() {
+        var out = {};
+        try {
+          var raw = localStorage.getItem(STORAGE_PRICES);
+          var data = raw ? JSON.parse(raw) : null;
+        } catch (e) { data = null; }
+        Object.keys(DEFAULT_PRICES).forEach(function (k) {
+          var v = data && typeof data[k] === 'number' && data[k] > 0 ? data[k] : DEFAULT_PRICES[k];
+          out[k] = v;
+        });
+        return out;
+      }
+
+      function setProductPrice(key, newPrice) {
+        if (!DEFAULT_PRICES.hasOwnProperty(key)) return;
+        var prices = getProductPrices();
+        prices[key] = newPrice;
+        try {
+          localStorage.setItem(STORAGE_PRICES, JSON.stringify(prices));
+        } catch (e) { /* ignore */ }
+        renderAllProductPrices();
+        var isDefault = newPrice === DEFAULT_PRICES[key];
+        if (isDefault) {
+          showToast('已恢复标准价 ¥' + newPrice.toLocaleString(), 'info');
+        } else {
+          showToast('已保存我的售价 ¥' + newPrice.toLocaleString() + '（原 ¥' + DEFAULT_PRICES[key].toLocaleString() + '）', 'success');
+        }
+      }
+
+      function formatYuan(p) {
+        return '¥' + p.toLocaleString('zh-CN');
+      }
+
+      function renderAllProductPrices() {
+        var prices = getProductPrices();
+        Object.keys(prices).forEach(function (key) {
+          var isCustom = prices[key] !== DEFAULT_PRICES[key];
+          // 1) dashboard 卡片：价 + 蓝徽章
+          document.querySelectorAll('.product-card[data-product-key="' + key + '"] .product-card__price[data-product-price]').forEach(function (el) {
+            // 更新文本（保留 .product-card__custom-tag 子节点）
+            var tag = el.querySelector('.product-card__custom-tag');
+            // 清除文本节点（保留 tag）
+            var firstChild = el.firstChild;
+            if (firstChild && firstChild.nodeType === 3) {
+              firstChild.nodeValue = formatYuan(prices[key]);
+            } else {
+              el.insertBefore(document.createTextNode(formatYuan(prices[key])), el.firstChild);
+            }
+            if (tag) tag.hidden = !isCustom;
+          });
+          // 2) 弹窗 6 meta 行价格
+          document.querySelectorAll('.product-manage__price[data-product-price="' + key + '"]').forEach(function (el) {
+            el.textContent = formatYuan(prices[key]);
+            el.classList.toggle('product-manage__price--custom', isCustom);
+          });
+          // 3) 详情弹窗大字（如果当前 key 命中）
+          var detailEl = document.getElementById('productDetailPrice');
+          if (detailEl && detailEl.getAttribute('data-product-price') === key) {
+            detailEl.textContent = formatYuan(prices[key]);
+          }
+        });
+        // 详情弹窗 restore 按钮可见性
+        var restoreBtn = document.getElementById('productDetailRestore');
+        if (restoreBtn) {
+          var rKey = restoreBtn.getAttribute('data-product-key');
+          if (rKey && prices[rKey] !== undefined) {
+            restoreBtn.hidden = prices[rKey] === DEFAULT_PRICES[rKey];
+          }
+        }
+      }
+
+      function cancelAnyPriceEdit() {
+        document.querySelectorAll('.product-price-edit').forEach(function (editEl) {
+          var orig = editEl._origEl;
+          if (orig && editEl.parentNode) {
+            editEl.parentNode.insertBefore(orig, editEl);
+            editEl.parentNode.removeChild(editEl);
+          }
+        });
+      }
+
+      function startEditPrice(targetEl) {
+        if (!targetEl || targetEl.parentElement && targetEl.parentElement.classList.contains('product-price-edit')) return;
+        // 已有编辑中先取消
+        cancelAnyPriceEdit();
+        var key = targetEl.getAttribute('data-product-price');
+        if (!key || !DEFAULT_PRICES.hasOwnProperty(key)) return;
+        var current = getProductPrices()[key];
+
+        var container = document.createElement('span');
+        container.className = 'product-price-edit';
+        container._origEl = targetEl;
+        container.innerHTML =
+          '<span class="product-price-edit__prefix">¥</span>' +
+          '<input class="product-price-edit__input" type="number" min="1" step="100" value="' + current + '" aria-label="我的售价" />' +
+          '<button class="product-price-edit__btn product-price-edit__btn--ok" type="button" title="保存 (Enter)" aria-label="保存">✓</button>' +
+          '<button class="product-price-edit__btn product-price-edit__btn--cancel" type="button" title="取消 (Esc)" aria-label="取消">×</button>';
+
+        var parent = targetEl.parentNode;
+        parent.insertBefore(container, targetEl);
+        parent.removeChild(targetEl);
+
+        var input = container.querySelector('input');
+        var okBtn = container.querySelector('.product-price-edit__btn--ok');
+        var cancelBtn = container.querySelector('.product-price-edit__btn--cancel');
+
+        input.focus();
+        input.select();
+
+        function commit() {
+          var v = parseInt(input.value, 10);
+          if (isNaN(v) || v <= 0) {
+            // 无效值 → 取消
+            showToast('请输入大于 0 的金额', 'warn');
+            cancel();
+            return;
+          }
+          // 还原 DOM
+          parent.insertBefore(targetEl, container);
+          parent.removeChild(container);
+          setProductPrice(key, v);
+        }
+
+        function cancel() {
+          if (container.parentNode) {
+            parent.insertBefore(targetEl, container);
+            parent.removeChild(container);
+          }
+        }
+
+        okBtn.addEventListener('click', function (e) { e.stopPropagation(); commit(); });
+        cancelBtn.addEventListener('click', function (e) { e.stopPropagation(); cancel(); });
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); commit(); }
+          else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); cancel(); }
+        });
+        // 防止 input 内部 click 冒泡触发取消
+        container.addEventListener('click', function (e) { e.stopPropagation(); });
+        // 点外部取消（用 capture 避免与已有的 click 监听冲突）
+        setTimeout(function () {
+          function onOutside(e) {
+            if (!container.contains(e.target)) {
+              cancel();
+              document.removeEventListener('click', onOutside, true);
+              document.removeEventListener('keydown', onEscAfterOutside, true);
+            }
+          }
+          function onEscAfterOutside(e) {
+            if (e.key === 'Escape') {
+              cancel();
+              document.removeEventListener('click', onOutside, true);
+              document.removeEventListener('keydown', onEscAfterOutside, true);
+            }
+          }
+          document.addEventListener('click', onOutside, true);
+          document.addEventListener('keydown', onEscAfterOutside, true);
+        }, 0);
+      }
+
+      // 绑 3 处点击
+      document.querySelectorAll('[data-product-price]').forEach(function (el) {
+        // 跳过 .product-price-edit 内部
+        if (el.closest('.product-price-edit')) return;
+        el.addEventListener('click', function (e) {
+          // 详情弹窗大字 / 卡片价 / 弹窗 6 meta 价都可点
+          e.stopPropagation();
+          startEditPrice(el);
+        });
+      });
+
+      // restore 按钮
+      var restoreBtnEl = document.getElementById('productDetailRestore');
+      if (restoreBtnEl) {
+        restoreBtnEl.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var k = restoreBtnEl.getAttribute('data-product-key');
+          if (k && DEFAULT_PRICES.hasOwnProperty(k)) {
+            setProductPrice(k, DEFAULT_PRICES[k]);
+          }
+        });
+      }
+
+      // 初始化：渲染当前价（localStorage → DOM）
+      renderAllProductPrices();
+
+      // ============================================================== //
+      // v86 · banner 倒计时（DD HH:MM + 呼吸 + 颜色规则 + 进度条）       //
+      // ============================================================== //
+      // 演示时间锚：固定 2026-07-20 18:42（页面加载后 ms += realNow - loadTs）
+      var V86_NOW_TS = new Date('2026-07-20T18:42:00').getTime();
+      var V86_LOAD_TS = null;
+      var TIER_EXPIRY = {
+        'VIP': new Date('2026-07-22T18:42:00').getTime(),  // 剩 2 天（urgent 红）
+        'MN':  new Date('2026-08-03T18:42:00').getTime(),  // 剩 14 天（warn 橙）
+        'MB':  new Date('2026-08-19T18:42:00').getTime()   // 剩 30 天（ok 蓝紫）
+      };
+      var TIER_TOTAL_DAYS = 30;  // 进度条分母
+
+      function getV86Now() {
+        var realNow = Date.now();
+        if (V86_LOAD_TS === null) V86_LOAD_TS = realNow;
+        return V86_NOW_TS + (realNow - V86_LOAD_TS);
+      }
+
+      function getCountdown() {
+        var bannerEl = document.getElementById('memberBanner');
+        var tier = (bannerEl && bannerEl.getAttribute('data-tier')) || 'MB';
+        var nowDemo = getV86Now();
+        var expiry = TIER_EXPIRY[tier] || TIER_EXPIRY['MB'];
+        var ms = expiry - nowDemo;
+        if (ms < 0) ms = 0;
+        var days = Math.floor(ms / 86400000);
+        var hours = Math.floor((ms % 86400000) / 3600000);
+        var minutes = Math.floor((ms % 3600000) / 60000);
+        return { days: days, hours: hours, minutes: minutes, ms: ms, tier: tier };
+      }
+
+      function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+      function renderCountdown() {
+        var daysEl = document.getElementById('memberBannerDays');
+        var expiryEl = document.getElementById('memberBannerExpiry');
+        var barEl = document.getElementById('memberBannerProgressBar');
+        if (!daysEl) return;
+        var cd = getCountdown();
+        // 文字
+        daysEl.textContent = '还剩 ' + cd.days + ' 天 ' + pad2(cd.hours) + ':' + pad2(cd.minutes);
+        // 到期日 MM/DD
+        var expDate = new Date(TIER_EXPIRY[cd.tier]);
+        if (expiryEl) {
+          expiryEl.textContent = '到期 ' + (expDate.getMonth() + 1) + '/' + expDate.getDate();
+        }
+        // 颜色 class（v86: <=14 天 warn 橙 / <3 天 urgent 红 / 其余 ok 蓝紫）
+        var stateClass = 'member-banner__days--ok';
+        var barClass = '';
+        if (cd.days < 3) {
+          stateClass = 'member-banner__days--urgent';
+          barClass = 'member-banner__progress-bar--urgent';
+        } else if (cd.days <= 14) {
+          stateClass = 'member-banner__days--warn';
+          barClass = 'member-banner__progress-bar--warn';
+        }
+        daysEl.className = 'member-banner__days ' + stateClass;
+        if (barEl) {
+          barEl.className = 'member-banner__progress-bar' + (barClass ? ' ' + barClass : '');
+          var pct = Math.min(100, Math.max(0, (cd.days / TIER_TOTAL_DAYS) * 100));
+          barEl.style.width = pct.toFixed(1) + '%';
+        }
+      }
+
+      // 初始化 + 1 分钟更新
+      renderCountdown();
+      setInterval(renderCountdown, 60 * 1000);
+
+      // data-tier 变化时刷新（v78 applyTier 切档 hook）
+      var v86BannerEl = document.getElementById('memberBanner');
+      if (v86BannerEl && typeof MutationObserver !== 'undefined') {
+        var tierObs = new MutationObserver(function (mutations) {
+          mutations.forEach(function (m) {
+            if (m.attributeName === 'data-tier') renderCountdown();
+          });
+        });
+        tierObs.observe(v86BannerEl, { attributes: true, attributeFilter: ['data-tier'] });
+      }
+
+      // 客户分层弹窗触发
+      var v86SegBtn = document.getElementById('openSegmentsBtn');
+      if (v86SegBtn) v86SegBtn.addEventListener('click', function () {
+        open('dashboardSegmentsModal');
+      });
+
+      // ============================================================== //
+      // v87 · 弹窗 3 漏斗详情升级（主页行可点 + 12 张好友卡片 + 快捷回复术语）//
+      // ============================================================== //
+
+      // 12 位好友数据（按 5 阶段分类 · 5+3+2+1+1）
+      var FUNNEL_FRIENDS = {
+        warm: [  // 咨询 5
+          { name: '小赵', avatar: 'linear-gradient(135deg,#4FACFE,#00C9FF)', avatarText: '赵', role: '新客户 · 初次咨询', intent: '❓ 待跟进', prob: '60%', sentiment: '☁️ 中性', concern: '套餐类型', tip: '跟进咨询需求 · 标准套餐 5 折' },
+          { name: '钱先生', avatar: 'linear-gradient(135deg,#4FACFE,#5DADE2)', avatarText: '钱', role: '新客户 · 昨日咨询', intent: '❓ 待跟进', prob: '45%', sentiment: '☁️ 中性', concern: '价格预算', tip: '体验套餐 3000 引流 · 7 天低成本尝试' },
+          { name: '孙总', avatar: 'linear-gradient(135deg,#5DADE2,#48C9B0)', avatarText: '孙', role: '新客户 · 昨日咨询', intent: '🔆 略积极', prob: '50%', sentiment: '🔆 积极', concern: '礼盒价值', tip: '强调 800 礼盒 + 老客户口碑' },
+          { name: '周女士', avatar: 'linear-gradient(135deg,#76D7C4,#4FACFE)', avatarText: '周', role: '新客户 · 3 天前咨询', intent: '❓ 待跟进', prob: '40%', sentiment: '☁️ 中性', concern: '服务范围', tip: '回访未读消息 · 介绍 1v1 顾问' },
+          { name: '小李', avatar: 'linear-gradient(135deg,#48C9B0,#76D7C4)', avatarText: '李', role: '新客户 · 5 天前咨询', intent: '❓ 待跟进', prob: '55%', sentiment: '☁️ 中性', concern: '套餐时长', tip: '回访咨询 + 30/60/90 天多档介绍' }
+        ],
+        cold: [  // 意向 3
+          { name: '张总', avatar: 'linear-gradient(135deg,#2D7CFF,#5B8CFF)', avatarText: '张', role: '老客户 · 续费意向', intent: '🔆 准备推进', prob: '65%', sentiment: '🔆 积极', concern: '续费折扣', tip: '强调 8.5 折 + 老客户 1v1' },
+          { name: '陈经理', avatar: 'linear-gradient(135deg,#5B8CFF,#7B9DFF)', avatarText: '陈', role: '老客户 · 升级意向', intent: '🔆 准备推进', prob: '70%', sentiment: '☀️ 乐观', concern: '升级套餐', tip: '推 10000 至尊 · 升级优惠 8 折' },
+          { name: '林女士', avatar: 'linear-gradient(135deg,#7B9DFF,#A855F7)', avatarText: '林', role: '新客户 · 表达意向', intent: '🔆 略积极', prob: '60%', sentiment: '🔆 积极', concern: '配送时效', tip: '推 8000 旗舰 · 当日锁名额' }
+        ],
+        hot: [  // 议价 2
+          { name: '小明', avatar: 'linear-gradient(135deg,#F5A623,#FF8C42)', avatarText: '小', role: 'UMC专员 · 老客户', intent: '🔥 强购买', prob: '78%', sentiment: '🔆 积极 ↑12°', concern: '礼品价值', tip: '趁热打铁，9 折 + 800 礼盒组合推销 · 风险低' },
+          { name: '小吴', avatar: 'linear-gradient(135deg,#FA709A,#FF6B6B)', avatarText: '吴', role: '老客户 · 续费中', intent: '🔥 强购买', prob: '75%', sentiment: '🔆 积极', concern: '价格', tip: '强调续费 8.5 折 · 老客户专享' }
+        ],
+        deal: [  // 体验 1
+          { name: '小郑', avatar: 'linear-gradient(135deg,#FF9A44,#FC6076)', avatarText: '郑', role: '老客户 · 体验中', intent: '🔆 准备推进', prob: '70%', sentiment: '☀️ 乐观', concern: '服务及时', tip: '回访体验感受 · 准备推进到成交' }
+        ],
+        won: [  // 成交 1
+          { name: '小冯', avatar: 'linear-gradient(135deg,#07C160,#34D399)', avatarText: '冯', role: '老客户 · VIP', intent: '✅ 已成交', prob: '90%', sentiment: '🌟 满意', concern: '套餐内容', tip: '推荐升级旗舰套餐 · 老客户专享' }
+        ]
+      };
+      var FUNNEL_STAGE_META = [
+        { key: 'warm', emoji: '🔵', name: '咨询', color: '#4FACFE' },
+        { key: 'cold', emoji: '🔵', name: '意向', color: '#2D7CFF' },
+        { key: 'hot',  emoji: '🔥', name: '议价', color: '#F5A623' },
+        { key: 'deal', emoji: '🟠', name: '体验', color: '#FF9A44' },
+        { key: 'won',  emoji: '🟢', name: '成交', color: '#07C160' }
+      ];
+
+      // 12 条快捷回复术语（3 风格 × 4 条 · 漏斗场景话术）
+      var FUNNEL_SCRIPTS = {
+        soft: [
+          '小明，节日快乐～最近想给朋友也带一份吗？我们这边 8000 套餐今天 9 折，礼盒还能换购哦 🎁',
+          '看你之前问过 8000 套餐，618 期间老客户复购可以叠加 8 折，需要我帮你看看吗？',
+          '你上次说想再考虑一下，这周内要是决定可以送一份精品礼盒，价值 800～',
+          '不急，等你方便了再说～这边一直保留你的优惠名额到月底'
+        ],
+        data: [
+          '近 30 天 8000 套餐已成交 35 位老客户，续费率 85%，平均回报期 4.2 个月，要不要我帮你算下 ROI？',
+          '我们数据：60% 复购客户选 8000 套餐 + 8.5 折，平均每月省 ¥1,200',
+          '根据你之前的咨询，8000 旗舰最匹配你的需求 · 35 位成交客户 100% 满意',
+          '你议价 22h 了，行业数据：超过 24h 议价转化率降 35%，现在锁名额 8.5 折仅 5 天'
+        ],
+        pro: [
+          '小明，618 优惠只剩 5 天，今天锁名额加送 800 礼盒，要不要我直接帮你下单？',
+          '你之前 3 次咨询的对比数据我都看过了，8000 旗舰 8.5 折 + 老客户 1v1，今晚 8 点前确认就帮你锁',
+          '趁现在活动还在，8000 旗舰 8.5 折 + 800 礼盒 + 老客户专属顾问，要不要我帮你扣个名额？',
+          '提醒一下：你的 8.5 折优惠今天 24:00 截止，续费 + 升级一起更划算，要的话直接说'
+        ]
+      };
+
+      // 渲染好友卡片到弹窗 3
+      function renderFunnelFriends() {
+        var container = document.getElementById('funnelModalBody');
+        if (!container) return;
+        var html = '';
+        FUNNEL_STAGE_META.forEach(function (meta) {
+          var list = FUNNEL_FRIENDS[meta.key] || [];
+          html += '<div class="funnel-modal-block" data-stage="' + meta.key + '">';
+          html += '<div class="funnel-modal-block__head">';
+          html += '<span class="funnel-modal-block__name">' + meta.emoji + ' ' + meta.name + '</span>';
+          html += '<span class="funnel-modal-block__count">' + list.length + '</span>';
+          html += '</div>';
+          html += '<div class="funnel-modal-block__friends-list">';
+          list.forEach(function (f) {
+            html += '<div class="funnel-friend-card" data-friend-name="' + f.name + '">';
+            html += '<div class="funnel-friend-card__avatar" style="background:' + f.avatar + ';">' + f.avatarText + '</div>';
+            html += '<div class="funnel-friend-card__main">';
+            html += '<div class="funnel-friend-card__head">';
+            html += '<span class="funnel-friend-card__name">' + f.name + '</span>';
+            html += '<span class="funnel-friend-card__role">' + f.role + '</span>';
+            html += '</div>';
+            html += '<div class="funnel-friend-card__metrics">';
+            html += '<span class="funnel-friend-card__metric">意向 <span class="funnel-friend-card__metric-val">' + f.intent + '</span></span>';
+            html += '<span class="funnel-friend-card__metric">成交概率 <span class="funnel-friend-card__metric-val">' + f.prob + '</span></span>';
+            html += '<span class="funnel-friend-card__metric">情绪 <span class="funnel-friend-card__metric-val">' + f.sentiment + '</span></span>';
+            html += '<span class="funnel-friend-card__metric">顾虑 <span class="funnel-friend-card__metric-val">' + f.concern + '</span></span>';
+            html += '</div>';
+            html += '<div class="funnel-friend-card__tip">💡 ' + f.tip + '</div>';
+            html += '</div>';
+            html += '<div class="funnel-friend-card__actions">';
+            html += '<button class="funnel-friend-card__btn" type="button" title="查看完整档案" data-friend-action="profile">👤</button>';
+            html += '<button class="funnel-friend-card__btn" type="button" title="一键发送推荐话术" data-friend-action="script">💬</button>';
+            // v88: ⋮ 3 个点 → 跳聊天框
+            html += '<button class="funnel-friend-card__btn funnel-friend-card__btn--menu" type="button" title="跳到聊天框" data-friend-action="menu">⋮</button>';
+            html += '</div>';
+            html += '</div>';
+          });
+          html += '</div></div>';
+        });
+        container.innerHTML = html;
+      }
+
+      // 渲染术语列表
+      function renderFunnelScripts(style) {
+        var list = FUNNEL_SCRIPTS[style] || [];
+        var ul = document.getElementById('funnelScriptsList');
+        if (!ul) return;
+        var html = '';
+        list.forEach(function (s, i) {
+          html += '<li class="funnel-scripts__item">';
+          html += '<span class="funnel-scripts__item-text">' + s + '</span>';
+          html += '<button class="funnel-scripts__item-fill" type="button" data-script-idx="' + i + '">填入对话 →</button>';
+          html += '</li>';
+        });
+        ul.innerHTML = html;
+      }
+
+      // 弹窗 3 打开并定位到指定阶段
+      function openFunnelDetail(stageKey) {
+        stageKey = stageKey || 'hot';
+        // 1. 渲染好友卡片
+        renderFunnelFriends();
+        // 2. 默认渲染温和话术
+        renderFunnelScripts('soft');
+        // 3. 同步术语 tab 状态
+        document.querySelectorAll('.funnel-scripts__style').forEach(function (b) {
+          b.classList.toggle('is-active', b.getAttribute('data-script-style') === 'soft');
+        });
+        // 4. 同步 5 阶段 chip 高亮
+        document.querySelectorAll('.funnel-modal-stage').forEach(function (b) {
+          b.classList.toggle('is-active', b.getAttribute('data-stage-target') === stageKey);
+        });
+        // 5. 打开弹窗
+        open('dashboardFunnelModal');
+        // 6. 滚动到对应阶段 + 高亮（用 setTimeout 等弹窗渲染完）
+        setTimeout(function () {
+          var target = document.querySelector('#dashboardFunnelModal .funnel-modal-block[data-stage="' + stageKey + '"]');
+          if (target) {
+            // 移除其他高亮
+            document.querySelectorAll('#dashboardFunnelModal .funnel-modal-block--highlight').forEach(function (b) {
+              b.classList.remove('funnel-modal-block--highlight');
+            });
+            target.classList.add('funnel-modal-block--highlight');
+            // 滚到该 block（modal body 滚动）
+            var body = document.querySelector('#dashboardFunnelModal .dashboard-modal__body');
+            if (body) {
+              var tRect = target.getBoundingClientRect();
+              var bRect = body.getBoundingClientRect();
+              if (tRect.top < bRect.top || tRect.bottom > bRect.bottom) {
+                body.scrollTo({ top: target.offsetTop - 8, behavior: 'smooth' });
+              }
+            }
+          }
+        }, 80);
+      }
+
+      // 主页漏斗 5 行 click 绑
+      document.querySelectorAll('.dashboard-funnel__stage').forEach(function (stage) {
+        stage.addEventListener('click', function (e) {
+          var key = stage.getAttribute('data-stage');
+          openFunnelDetail(key);
+        });
+      });
+
+      // 弹窗 3 头部 5 阶段 chip click 绑
+      document.querySelectorAll('.funnel-modal-stage').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          var key = chip.getAttribute('data-stage-target');
+          // 同步 chip 高亮
+          document.querySelectorAll('.funnel-modal-stage').forEach(function (b) {
+            b.classList.toggle('is-active', b === chip);
+          });
+          // 滚动 + 高亮
+          var target = document.querySelector('#dashboardFunnelModal .funnel-modal-block[data-stage="' + key + '"]');
+          if (target) {
+            document.querySelectorAll('#dashboardFunnelModal .funnel-modal-block--highlight').forEach(function (b) {
+              b.classList.remove('funnel-modal-block--highlight');
+            });
+            target.classList.add('funnel-modal-block--highlight');
+            var body = document.querySelector('#dashboardFunnelModal .dashboard-modal__body');
+            if (body) {
+              body.scrollTo({ top: target.offsetTop - 8, behavior: 'smooth' });
+            }
+          }
+        });
+      });
+
+      // 弹窗 3 头部"查看 12 位好友"按钮（line 318）click 绑
+      var v87FunnelMore = document.querySelector('.dashboard-card__more[data-modal="funnel"]');
+      if (v87FunnelMore) v87FunnelMore.addEventListener('click', function (e) {
+        e.preventDefault();
+        openFunnelDetail('hot');  // 默认高亮议价（议价中）
+      });
+
+      // 术语 3 风格 tab 切换
+      document.querySelectorAll('.funnel-scripts__style').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var style = btn.getAttribute('data-script-style');
+          document.querySelectorAll('.funnel-scripts__style').forEach(function (b) {
+            b.classList.toggle('is-active', b === btn);
+          });
+          renderFunnelScripts(style);
+        });
+      });
+
+      // 术语"填入对话"按钮（事件委托）
+      var v87ScriptsList = document.getElementById('funnelScriptsList');
+      if (v87ScriptsList) {
+        v87ScriptsList.addEventListener('click', function (e) {
+          var btn = e.target.closest('.funnel-scripts__item-fill');
+          if (!btn) return;
+          var idx = parseInt(btn.getAttribute('data-script-idx'), 10);
+          var activeStyle = 'soft';
+          document.querySelectorAll('.funnel-scripts__style').forEach(function (b) {
+            if (b.classList.contains('is-active')) activeStyle = b.getAttribute('data-script-style');
+          });
+          var text = (FUNNEL_SCRIPTS[activeStyle] || [])[idx] || '';
+          // 写 chat input（如有）
+          var chatInput = document.getElementById('chatInput');
+          if (chatInput) {
+            chatInput.value = text;
+            chatInput.focus();
+            chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+            showToast('✅ 已填入对话 · 点击发送', 'success');
+          } else {
+            // dashboard 单独页：弹 alert
+            showToast('✅ 已复制到剪贴板', 'info');
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(text).catch(function(){});
+            }
+          }
+          // 按钮反馈
+          btn.classList.add('is-filled');
+          var origText = btn.textContent;
+          btn.textContent = '✓ 已填入';
+          setTimeout(function () {
+            btn.classList.remove('is-filled');
+            btn.textContent = origText;
+          }, 1500);
+        });
+      }
+
+      // 好友卡片右侧按钮（profile / script）
+      var v87FunnelBody = document.getElementById('funnelModalBody');
+      if (v87FunnelBody) {
+        v87FunnelBody.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-friend-action]');
+          if (!btn) return;
+          var card = btn.closest('.funnel-friend-card');
+          var name = card ? card.getAttribute('data-friend-name') : '客户';
+          var action = btn.getAttribute('data-friend-action');
+          if (action === 'profile') {
+            showToast('📖 ' + name + ' 完整档案 · v87 demo 占位（v88 接入）', 'info');
+          } else if (action === 'script') {
+            showToast('💬 为 ' + name + ' 准备推荐话术', 'info');
+            // 自动切到议价/成交话术 + 填入
+            var chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+              chatInput.value = '小' + name.replace('小', '') + '，根据你之前的咨询，8000 旗舰套餐 8.5 折 + 800 礼盒，要不要我帮你锁名额？';
+              chatInput.focus();
+            }
+          }
+        });
+      }
+
+      // ============================================================== //
+      // v88 · 弹窗 10 客户完整档案 + ⋮ 跳聊天框                          //
+      // ============================================================== //
+
+      // 12 位好友完整数据（5 位关键详情 + 7 位模板）
+      var FUNNEL_FRIENDS_FULL = {
+        warm: [
+          {
+            name: '小赵', avatar: 'linear-gradient(135deg,#4FACFE,#00C9FF)', avatarText: '赵', role: '新客户 · 初次咨询',
+            intent: '❓ 待跟进', prob: '60%', sentiment: '☁️ 中性', concern: '套餐类型', tip: '跟进咨询需求 · 标准套餐 5 折',
+            fullData: {
+              source: '朋友圈广告', lastInteract: '2 天前', totalSpent: '¥0', orderCount: 0, consultTime: '2026-07-18 14:32',
+              timeline: [
+                { time: '07-18 14:32', event: '首次咨询，询问 5000 标准套餐详情', type: 'init' },
+                { time: '07-19 10:15', event: 'AI 推送 5000 套餐介绍 + 老客户口碑 3 条', type: 'ai' },
+                { time: '07-20 09:00', event: '客户未读 24h，AI 标记待跟进', type: 'ai' }
+              ]
+            }
+          },
+          {
+            name: '钱先生', avatar: 'linear-gradient(135deg,#4FACFE,#5DADE2)', avatarText: '钱', role: '新客户 · 昨日咨询',
+            intent: '❓ 待跟进', prob: '45%', sentiment: '☁️ 中性', concern: '价格预算', tip: '体验套餐 3000 引流 · 7 天低成本尝试',
+            fullData: {
+              source: '朋友介绍', lastInteract: '1 天前', totalSpent: '¥0', orderCount: 0, consultTime: '2026-07-19 16:45',
+              timeline: [
+                { time: '07-19 16:45', event: '通过朋友介绍首次咨询', type: 'init' },
+                { time: '07-20 11:20', event: 'AI 推送 3000 体验套餐 7 天方案', type: 'ai' }
+              ]
+            }
+          },
+          {
+            name: '孙总', avatar: 'linear-gradient(135deg,#5DADE2,#48C9B0)', avatarText: '孙', role: '新客户 · 昨日咨询',
+            intent: '🔆 略积极', prob: '50%', sentiment: '🔆 积极', concern: '礼盒价值', tip: '强调 800 礼盒 + 老客户口碑',
+            fullData: {
+              source: '抖音广告', lastInteract: '1 天前', totalSpent: '¥0', orderCount: 0, consultTime: '2026-07-19 20:10',
+              timeline: [
+                { time: '07-19 20:10', event: '抖音广告引流咨询', type: 'init' },
+                { time: '07-20 14:00', event: 'AI 推送 8000 旗舰 + 800 礼盒展示', type: 'ai' }
+              ]
+            }
+          },
+          {
+            name: '周女士', avatar: 'linear-gradient(135deg,#76D7C4,#4FACFE)', avatarText: '周', role: '新客户 · 3 天前咨询',
+            intent: '❓ 待跟进', prob: '40%', sentiment: '☁️ 中性', concern: '服务范围', tip: '回访未读消息 · 介绍 1v1 顾问',
+            fullData: {
+              source: '小红书种草', lastInteract: '3 天前', totalSpent: '¥0', orderCount: 0, consultTime: '2026-07-17 09:30',
+              timeline: [
+                { time: '07-17 09:30', event: '小红书种草引流咨询', type: 'init' },
+                { time: '07-18 10:00', event: 'AI 推送 1v1 顾问介绍（未读）', type: 'ai' }
+              ]
+            }
+          },
+          {
+            name: '小李', avatar: 'linear-gradient(135deg,#48C9B0,#76D7C4)', avatarText: '李', role: '新客户 · 5 天前咨询',
+            intent: '❓ 待跟进', prob: '55%', sentiment: '☁️ 中性', concern: '套餐时长', tip: '回访咨询 + 30/60/90 天多档介绍',
+            fullData: {
+              source: '公众号文章', lastInteract: '5 天前', totalSpent: '¥0', orderCount: 0, consultTime: '2026-07-15 11:20',
+              timeline: [
+                { time: '07-15 11:20', event: '公众号文章引流咨询', type: 'init' },
+                { time: '07-17 16:00', event: 'AI 推送 30/60/90 天多档对比（未读）', type: 'ai' }
+              ]
+            }
+          }
+        ],
+        cold: [
+          {
+            name: '张总', avatar: 'linear-gradient(135deg,#2D7CFF,#5B8CFF)', avatarText: '张', role: '老客户 · 续费意向',
+            intent: '🔆 准备推进', prob: '65%', sentiment: '🔆 积极', concern: '续费折扣', tip: '强调 8.5 折 + 老客户 1v1',
+            fullData: {
+              source: '老客户自然续费', lastInteract: '12 小时前', totalSpent: '¥18,000', orderCount: 2, consultTime: '2026-07-20 08:30',
+              timeline: [
+                { time: '2026-04-15', event: '首次购买 8000 旗舰套餐', type: 'order' },
+                { time: '2026-07-15', event: '首次续费 8000 套餐（自动）', type: 'order' },
+                { time: '07-20 08:30', event: '询问 8000 续费 8.5 折 + 升级方案', type: 'init' }
+              ]
+            }
+          },
+          {
+            name: '陈经理', avatar: 'linear-gradient(135deg,#5B8CFF,#7B9DFF)', avatarText: '陈', role: '老客户 · 升级意向',
+            intent: '🔆 准备推进', prob: '70%', sentiment: '☀️ 乐观', concern: '升级套餐', tip: '推 10000 至尊 · 升级优惠 8 折',
+            fullData: {
+              source: '老客户自然续费', lastInteract: '6 小时前', totalSpent: '¥32,000', orderCount: 3, consultTime: '2026-07-20 14:00',
+              timeline: [
+                { time: '2025-12-10', event: '首次购买 8000 旗舰', type: 'order' },
+                { time: '2026-03-10', event: '续费 8000 + 升级 10000 咨询（未升级）', type: 'ai' },
+                { time: '2026-06-10', event: '续费 8000 第 3 次', type: 'order' },
+                { time: '07-20 14:00', event: '主动问 10000 至尊升级方案', type: 'init' }
+              ]
+            }
+          },
+          {
+            name: '林女士', avatar: 'linear-gradient(135deg,#7B9DFF,#A855F7)', avatarText: '林', role: '新客户 · 表达意向',
+            intent: '🔆 略积极', prob: '60%', sentiment: '🔆 积极', concern: '配送时效', tip: '推 8000 旗舰 · 当日锁名额',
+            fullData: {
+              source: '朋友介绍', lastInteract: '4 小时前', totalSpent: '¥0', orderCount: 0, consultTime: '2026-07-20 10:30',
+              timeline: [
+                { time: '07-20 10:30', event: '朋友介绍咨询 · 问 8000 旗舰', type: 'init' },
+                { time: '07-20 14:15', event: 'AI 推送 8000 旗舰 + 配送时效说明', type: 'ai' }
+              ]
+            }
+          }
+        ],
+        hot: [
+          {
+            name: '小明', avatar: 'linear-gradient(135deg,#F5A623,#FF8C42)', avatarText: '小', role: 'UMC专员 · 老客户',
+            intent: '🔥 强购买', prob: '78%', sentiment: '🔆 积极 ↑12°', concern: '礼品价值', tip: '趁热打铁，9 折 + 800 礼盒组合推销 · 风险低',
+            fullData: {
+              source: '老客户转介绍', lastInteract: '22 小时前', totalSpent: '¥45,000', orderCount: 5, consultTime: '2026-07-19 17:30',
+              timeline: [
+                { time: '2024-08-10', event: '首次购买 5000 标准套餐', type: 'order' },
+                { time: '2025-02-10', event: '续费 5000 + 升级 8000 咨询', type: 'ai' },
+                { time: '2025-08-10', event: '升级 8000 旗舰套餐', type: 'order' },
+                { time: '2026-02-10', event: '续费 8000 第 3 次', type: 'order' },
+                { time: '07-15 14:20', event: '问 8000 续费 9 折方案', type: 'init' },
+                { time: '07-18 10:30', event: 'AI 推送 9 折 + 800 礼盒', type: 'ai' },
+                { time: '07-19 17:30', event: '议价中（22h 未成交）', type: 'init' }
+              ]
+            }
+          },
+          {
+            name: '小吴', avatar: 'linear-gradient(135deg,#FA709A,#FF6B6B)', avatarText: '吴', role: '老客户 · 续费中',
+            intent: '🔥 强购买', prob: '75%', sentiment: '🔆 积极', concern: '价格', tip: '强调续费 8.5 折 · 老客户专享',
+            fullData: {
+              source: '老客户自然续费', lastInteract: '2 小时前', totalSpent: '¥24,000', orderCount: 3, consultTime: '2026-07-20 13:00',
+              timeline: [
+                { time: '2025-09-15', event: '首次购买 8000 旗舰', type: 'order' },
+                { time: '2026-03-15', event: '续费 8000 第 2 次', type: 'order' },
+                { time: '07-15 10:00', event: '问续费 8.5 折 + 升级', type: 'init' },
+                { time: '07-18 14:30', event: 'AI 推送续费方案', type: 'ai' },
+                { time: '07-20 13:00', event: '议价中（6h）', type: 'init' }
+              ]
+            }
+          }
+        ],
+        deal: [
+          {
+            name: '小郑', avatar: 'linear-gradient(135deg,#FF9A44,#FC6076)', avatarText: '郑', role: '老客户 · 体验中',
+            intent: '🔆 准备推进', prob: '70%', sentiment: '☀️ 乐观', concern: '服务及时', tip: '回访体验感受 · 准备推进到成交',
+            fullData: {
+              source: '老客户自然续费', lastInteract: '8 小时前', totalSpent: '¥12,000', orderCount: 2, consultTime: '2026-07-20 09:30',
+              timeline: [
+                { time: '2025-11-20', event: '首次购买 5000 标准套餐', type: 'order' },
+                { time: '2026-05-20', event: '续费 5000 第 2 次', type: 'order' },
+                { time: '07-10 11:00', event: '问 8000 升级体验', type: 'init' },
+                { time: '07-15 16:00', event: '升级 8000 进入体验期（5 天）', type: 'order' },
+                { time: '07-20 09:30', event: '回访体验感受（待推进成交）', type: 'init' }
+              ]
+            }
+          }
+        ],
+        won: [
+          {
+            name: '小冯', avatar: 'linear-gradient(135deg,#07C160,#34D399)', avatarText: '冯', role: '老客户 · VIP',
+            intent: '✅ 已成交', prob: '90%', sentiment: '🌟 满意', concern: '套餐内容', tip: '推荐升级旗舰套餐 · 老客户专享',
+            fullData: {
+              source: '老客户转介绍', lastInteract: '2 天前', totalSpent: '¥68,000', orderCount: 6, consultTime: '2026-07-18 16:00',
+              timeline: [
+                { time: '2024-06-15', event: '首次购买 5000 标准', type: 'order' },
+                { time: '2024-12-15', event: '续费 5000 + 升级 8000', type: 'order' },
+                { time: '2025-06-15', event: '续费 8000 第 3 次', type: 'order' },
+                { time: '2025-12-15', event: '续费 8000 第 4 次', type: 'order' },
+                { time: '2026-06-15', event: '续费 8000 第 5 次', type: 'order' },
+                { time: '07-18 16:00', event: '询问 10000 至尊升级（VIP 关怀）', type: 'init' }
+              ]
+            }
+          }
+        ]
+      };
+
+      // 渲染完整档案到弹窗 10
+      function renderProfileModal(friendName) {
+        // 找好友（v87 FUNNEL_FRIENDS 里）
+        var all = [];
+        Object.keys(FUNNEL_FRIENDS_FULL).forEach(function (k) {
+          FUNNEL_FRIENDS_FULL[k].forEach(function (f) { all.push(f); });
+        });
+        var f = all.find(function (x) { return x.name === friendName; });
+        if (!f) return;
+        var d = f.fullData;
+        var body = document.getElementById('profileModalBody');
+        if (!body) return;
+        var html = '';
+        // hero
+        html += '<div class="profile-modal__hero">';
+        html += '<div class="profile-modal__avatar" style="background:' + f.avatar + ';">' + f.avatarText + '</div>';
+        html += '<div>';
+        html += '<div class="profile-modal__name">' + f.name + '</div>';
+        html += '<div class="profile-modal__role">' + f.role + '</div>';
+        html += '<div class="profile-modal__tag-row">';
+        html += '<span class="profile-modal__tag profile-modal__tag--stage">🎯 ' + f.role.split(' · ')[0] + '</span>';
+        html += '<span class="profile-modal__tag profile-modal__tag--intent">' + f.intent + '</span>';
+        html += '<span class="profile-modal__tag profile-modal__tag--source">📡 ' + d.source + '</span>';
+        html += '</div>';
+        html += '</div></div>';
+        // 实时指标
+        html += '<div class="profile-modal__section">';
+        html += '<div class="profile-modal__section-title">📊 实时指标</div>';
+        html += '<div class="profile-modal__grid">';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">成交概率</span><span class="profile-modal__field-val profile-modal__field-val--accent">' + f.prob + '</span></div>';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">情绪</span><span class="profile-modal__field-val">' + f.sentiment + '</span></div>';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">顾虑</span><span class="profile-modal__field-val profile-modal__field-val--warn">' + f.concern + '</span></div>';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">最近互动</span><span class="profile-modal__field-val">' + d.lastInteract + '</span></div>';
+        html += '</div></div>';
+        // 累计成交
+        html += '<div class="profile-modal__section">';
+        html += '<div class="profile-modal__section-title">💰 累计成交</div>';
+        html += '<div class="profile-modal__grid">';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">累计金额</span><span class="profile-modal__field-val profile-modal__field-val--accent">' + d.totalSpent + '</span></div>';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">订单数</span><span class="profile-modal__field-val">' + d.orderCount + ' 笔</span></div>';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">首次咨询</span><span class="profile-modal__field-val">' + d.consultTime + '</span></div>';
+        html += '<div class="profile-modal__field"><span class="profile-modal__field-label">来源</span><span class="profile-modal__field-val">' + d.source + '</span></div>';
+        html += '</div></div>';
+        // AI 建议
+        html += '<div class="profile-modal__section">';
+        html += '<div class="profile-modal__section-title">💡 AI 建议</div>';
+        html += '<div class="profile-modal__tip">' + f.tip + '</div>';
+        html += '</div>';
+        // 跟进时间线
+        html += '<div class="profile-modal__section">';
+        html += '<div class="profile-modal__section-title">📅 跟进时间线（' + d.timeline.length + ' 条）</div>';
+        html += '<ul class="profile-modal__timeline">';
+        d.timeline.forEach(function (t) {
+          var dotCls = 'profile-modal__timeline-dot';
+          if (t.type === 'ai') dotCls += ' profile-modal__timeline-dot--ai';
+          if (t.type === 'order') dotCls += ' profile-modal__timeline-dot--order';
+          html += '<li class="profile-modal__timeline-item">';
+          html += '<span class="' + dotCls + '"></span>';
+          html += '<span class="profile-modal__timeline-time">' + t.time + '</span>';
+          html += '<span class="profile-modal__timeline-text">' + t.event + '</span>';
+          html += '</li>';
+        });
+        html += '</ul></div>';
+        // 操作
+        html += '<div class="profile-modal__actions">';
+        html += '<button class="dashboard-modal__btn dashboard-modal__btn--ghost" type="button" data-modal-close>关闭</button>';
+        html += '<button class="dashboard-modal__btn dashboard-modal__btn--primary" type="button" data-profile-jump="' + f.name + '">💬 跳到聊天框</button>';
+        html += '</div>';
+        body.innerHTML = html;
+      }
+
+      // 跳聊天框（v88 ⋮ 按钮 + 弹窗 10 跳按钮）
+      function jumpToChat(friendName) {
+        try {
+          localStorage.setItem('umakex_chat_friend_v1', JSON.stringify({ name: friendName, at: Date.now() }));
+        } catch (e) { /* ignore */ }
+        window.location.href = 'messages.html?chat=' + encodeURIComponent(friendName);
+      }
+
+      // 弹窗 10 跳聊天按钮（事件委托）
+      var v88ProfileBody = document.getElementById('profileModalBody');
+      if (v88ProfileBody) {
+        v88ProfileBody.addEventListener('click', function (e) {
+          var jumpBtn = e.target.closest('[data-profile-jump]');
+          if (jumpBtn) {
+            jumpToChat(jumpBtn.getAttribute('data-profile-jump'));
+            return;
+          }
+        });
+      }
+
+      // 改写 v87 👤 按钮：v88 接入完整档案
+      // v87 好友卡片渲染里 profile action 现在是 toast 占位，改成打开弹窗 10
+      // 因为 renderFunnelFriends 是 v87 模块函数，这里覆盖其 click handler
+      // 实际：v87 已经在 v87FunnelBody 上挂了 click 监听（line ~2500+），里面 profile → toast
+      // 我在 v88 重新挂一个更优先的监听
+      if (v87FunnelBody) {
+        v87FunnelBody.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-friend-action]');
+          if (!btn) return;
+          var card = btn.closest('.funnel-friend-card');
+          var name = card ? card.getAttribute('data-friend-name') : null;
+          var action = btn.getAttribute('data-friend-action');
+          if (action === 'profile' && name) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            // 关闭弹窗 3 + 打开弹窗 10
+            var m3 = document.getElementById('dashboardFunnelModal');
+            if (m3) m3.setAttribute('hidden', '');
+            renderProfileModal(name);
+            open('dashboardProfileModal');
+            // 同步 title
+            var titleEl = document.getElementById('profileModalTitle');
+            var eyebrowEl = document.getElementById('profileModalEyebrow');
+            if (titleEl) titleEl.textContent = name + ' · 完整档案';
+            if (eyebrowEl) eyebrowEl.textContent = '👤 客户档案 · ' + name;
+          }
+        }, true);  // capture 阶段，优先于 v87
+      }
+
+      // v88 · 给所有 v87 好友卡片加 ⋮ 按钮
+      // v87 渲染 funnel-friend-card 时 actions 只有 2 个 button（profile + script）
+      // v88 在 actions 里加 ⋮ 按钮：data-friend-action="menu" → 跳聊天框
+      // 由于 renderFunnelFriends 在 v87 模块里，我用 MutationObserver 监听 body 变化
+      // 或者：直接 patch renderFunnelFriends（v87 已定义）—— 在 v88 这里覆盖
+      // 简单做法：v88 直接在 body 监听 + 加 menu 按钮 click handler
+      if (v87FunnelBody) {
+        v87FunnelBody.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-friend-action="menu"]');
+          if (!btn) return;
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          var card = btn.closest('.funnel-friend-card');
+          var name = card ? card.getAttribute('data-friend-name') : null;
+          if (name) {
+            showToast('💬 跳到 ' + name + ' 的聊天框', 'info');
+            setTimeout(function () { jumpToChat(name); }, 600);
+          }
+        }, true);
+      }
+    });
+  </script>
+</body>
+</html>

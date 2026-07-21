@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Agent 协同工作台 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/agent-workstation.css" />
+</head>
+<body>
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop · AI Agent 协同工作台</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <a href="messages.html" class="sidebar__item" title="消息" data-nav="messages">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/></svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/><path d="M15 9h4M15 13h3"/></svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 11h8M8 15h5"/></svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item is-active" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3"/><path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/><circle cx="12" cy="7" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v10l8 5 8-5V7z"/><path d="M12 2v20M4 7l16 10M20 7 4 17"/></svg>
+          </a>
+          <a href="profile.html" class="sidebar__item" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区：协同工作台（3 列布局）========== -->
+      <div class="ws">
+
+        <!-- 顶部状态栏 -->
+        <div class="ws__topbar">
+          <div class="ws__title">
+            <span class="ws__title-dot"></span>
+            <span class="ws__title-prefix">OPS · LIVE</span>
+            <span class="ws__title-text">AI Agent 协同工作台</span>
+          </div>
+          <div class="ws__topbar-meta">
+            <div class="ws__quota">
+              <span class="ws__quota-label">Token 余额</span>
+              <span class="ws__quota-num" id="wsQuota">128,500</span>
+            </div>
+            <div class="ws__topbar-sep"></div>
+            <div class="ws__online">
+              <span class="ws__online-dot"></span>
+              <span><strong id="wsOnlineCount">9</strong> / 9 专家在线</span>
+            </div>
+            <div class="ws__topbar-sep"></div>
+            <div class="ws__clock" id="wsClock">17:54:00</div>
+          </div>
+        </div>
+
+        <!-- 3 列主体 -->
+        <div class="ws__grid">
+
+          <!-- ========== 左列 (260px) ========== -->
+          <aside class="ws__left">
+
+            <!-- CEO 状态卡 -->
+            <div class="ceo-card">
+              <div class="ceo-card__head">
+                <span class="eyebrow eyebrow--gold">
+                  <span class="eyebrow__dot"></span>
+                  <span>CEO</span>
+                </span>
+                <span class="ceo-card__status">在线</span>
+              </div>
+              <div class="ceo-card__avatar">
+                <span class="ceo-card__avatar-icon">★</span>
+              </div>
+              <div class="ceo-card__name">Michael</div>
+              <div class="ceo-card__title">首席执行官 · MB 等级</div>
+              <div class="ceo-card__stats">
+                <div class="ceo-card__stat">
+                  <span class="ceo-card__stat-num">23</span>
+                  <span class="ceo-card__stat-label">今日派单</span>
+                </div>
+                <div class="ceo-card__stat-sep"></div>
+                <div class="ceo-card__stat">
+                  <span class="ceo-card__stat-num">98%</span>
+                  <span class="ceo-card__stat-label">采纳率</span>
+                </div>
+                <div class="ceo-card__stat-sep"></div>
+                <div class="ceo-card__stat">
+                  <span class="ceo-card__stat-num">4.9</span>
+                  <span class="ceo-card__stat-label">评分</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 8 专家列表 -->
+            <div class="ws__left-section">
+              <div class="ws__left-title">
+                <span>9 位专家</span>
+                <span class="ws__left-count">在线 9</span>
+              </div>
+              <div class="ws__expert-list" id="wsExpertList">
+                <!-- JS 动态注入 -->
+              </div>
+            </div>
+          </aside>
+
+          <!-- ========== 中列 (flex) ========== -->
+          <main class="ws__center" id="wsCenter">
+            <!-- JS 动态注入：选中专家详情 + 派单表单 + 进度 -->
+          </main>
+
+          <!-- ========== 右列 (280px) ========== -->
+          <aside class="ws__right">
+
+            <!-- 任务队列 -->
+            <div class="ws__right-block">
+              <div class="ws__right-head">
+                <span class="eyebrow">
+                  <span class="eyebrow__dot eyebrow__dot--green"></span>
+                  <span>LIVE · 任务队列</span>
+                </span>
+                <span class="ws__right-count" id="wsTaskCount">0 进行中</span>
+              </div>
+              <div class="ws__task-list" id="wsTaskList">
+                <!-- JS 动态注入 -->
+              </div>
+            </div>
+
+            <!-- 算力消耗 -->
+            <div class="ws__right-block" id="wsConsumptionBlock">
+              <div class="ws__right-head">
+                <span class="eyebrow eyebrow--gold">
+                  <span class="eyebrow__dot"></span>
+                  <span>今日 Token 消耗</span>
+                </span>
+                <span class="ws__right-count" id="wsConsumption">0 / 128,500</span>
+              </div>
+              <div class="ws__consumption">
+                <div class="ws__consumption-bar">
+                  <div class="ws__consumption-fill" id="wsConsumptionFill" style="--p: 0%"></div>
+                </div>
+                <div class="ws__consumption-meta">
+                  <span>已消耗 <strong id="wsConsumed">0</strong> Token</span>
+                  <span>ROI <strong>4.2x</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 销冠模式入口（仅销冠专家显示） -->
+            <div class="ws__sales-entry" id="wsSalesEntry">
+              <div class="ws__sales-entry-icon">★</div>
+              <div class="ws__sales-entry-body">
+                <div class="ws__sales-entry-title">销冠模式</div>
+                <div class="ws__sales-entry-desc">AI 全自动接管对话 · 24h 不打烊</div>
+              </div>
+              <button class="ws__sales-entry-btn" id="wsSalesToggle">开启</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GSAP -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="assets/js/agent-workstation.js"></script>
+
+  <!-- ========== 派单结果大图 Modal ========== -->
+  <div class="ws-result-modal" id="wsResultModal" data-state="closed">
+    <div class="ws-result-modal__backdrop" data-modal-close></div>
+    <div class="ws-result-modal__card">
+      <header class="ws-result-modal__head">
+        <div class="ws-result-modal__expert">
+          <div class="ws-result-modal__expert-avatar" id="wsResultAvatar">★</div>
+          <div class="ws-result-modal__expert-body">
+            <div class="ws-result-modal__expert-name" id="wsResultExpertName">销冠专家</div>
+            <div class="ws-result-modal__expert-meta" id="wsResultExpertMeta">半自动 · T001 · 消耗 800 Token</div>
+          </div>
+        </div>
+        <button class="ws-result-modal__close" data-modal-close type="button">×</button>
+      </header>
+      <div class="ws-result-modal__body" id="wsResultModalBody">
+        <!-- JS 动态注入 -->
+      </div>
+      <footer class="ws-result-modal__foot" id="wsResultModalFoot">
+        <!-- JS 按专家类型动态注入按钮文字 -->
+        <button class="ws-result-modal__btn" id="wsResultCopy" type="button" data-default="复制内容">复制内容</button>
+        <button class="ws-result-modal__btn ws-result-modal__btn--ghost" id="wsResultRerun" type="button">↻ 重新生成</button>
+        <button class="ws-result-modal__btn ws-result-modal__btn--primary" id="wsResultShare" type="button" data-default="分享">分享</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ========== 分享 Modal ========== -->
+  <div class="ws-share-modal" id="wsShareModal" data-state="closed">
+    <div class="ws-share-modal__backdrop" data-modal-close></div>
+    <div class="ws-share-modal__card">
+      <header class="ws-share-modal__head">
+        <div class="ws-share-modal__title">分享给好友</div>
+        <button class="ws-share-modal__close" data-modal-close type="button">×</button>
+      </header>
+      <div class="ws-share-modal__body">
+        <div class="ws-share-modal__qr">
+          <div class="ws-share-modal__qr-img" id="wsShareQR">QR</div>
+          <div class="ws-share-modal__qr-hint">扫码查看完整结果</div>
+        </div>
+        <div class="ws-share-modal__link">
+          <input type="text" id="wsShareLink" value="https://umakex.com/share/T001" readonly />
+          <button class="ws-share-modal__link-btn" id="wsShareCopy" type="button">复制</button>
+        </div>
+        <div class="ws-share-modal__socials">
+          <button class="ws-share-modal__social" type="button"><span>💬</span>微信</button>
+          <button class="ws-share-modal__social" type="button"><span>🏢</span>企微</button>
+          <button class="ws-share-modal__social" type="button"><span>📧</span>邮件</button>
+          <button class="ws-share-modal__social" type="button"><span>📋</span>钉钉</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== V4.5 销冠接管 Modal ========== -->
+  <div class="ws-sales-modal" id="wsSalesModal" data-state="closed">
+    <div class="ws-sales-modal__backdrop" data-modal-close></div>
+    <div class="ws-sales-modal__card">
+      <header class="ws-sales-modal__head">
+        <div class="ws-sales-modal__expert">
+          <div class="ws-sales-modal__expert-avatar">★</div>
+          <div class="ws-sales-modal__expert-body">
+            <div class="ws-sales-modal__expert-name">销冠专家 · 全自动接管</div>
+            <div class="ws-sales-modal__expert-meta">
+              <span class="ws-sales-modal__pulse"></span>
+              <span id="wsSalesStatus">全速运转 · 已接管 <strong id="wsSalesCount">12</strong> 位好友</span>
+        </div>
+        <button class="ws-sales-modal__close" data-modal-close type="button">×</button>
+      </header>
+
+      <!-- 实时活动指标 -->
+      <div class="ws-sales-modal__metrics">
+        <div class="ws-sales-modal__metric">
+          <div class="ws-sales-modal__metric-num ws-sales-modal__metric-num--green" id="wsSalesMetric1">12</div>
+          <div class="ws-sales-modal__metric-label">今日接管</div>
+        </div>
+        <div class="ws-sales-modal__metric-sep"></div>
+        <div class="ws-sales-modal__metric">
+          <div class="ws-sales-modal__metric-num ws-sales-modal__metric-num--purple">23%</div>
+          <div class="ws-sales-modal__metric-label">转化率</div>
+        </div>
+        <div class="ws-sales-modal__metric-sep"></div>
+        <div class="ws-sales-modal__metric">
+          <div class="ws-sales-modal__metric-num" id="wsSalesMetric3">86</div>
+          <div class="ws-sales-modal__metric-label">累计回复</div>
+        </div>
+        <div class="ws-sales-modal__metric-sep"></div>
+        <div class="ws-sales-modal__metric">
+          <div class="ws-sales-modal__metric-num ws-sales-modal__metric-num--gold">2.4h</div>
+          <div class="ws-sales-modal__metric-label">为你节省</div>
+        </div>
+      </div>
+
+      <!-- 实时 chat 流 -->
+      <div class="ws-sales-modal__stream" id="wsSalesStream">
+        <!-- JS 动态注入 -->
+      </div>
+
+      <footer class="ws-sales-modal__foot">
+        <button class="ws-sales-modal__btn" id="wsSalesPause" type="button">⏸ 暂停接管</button>
+        <button class="ws-sales-modal__btn ws-sales-modal__btn--ghost" id="wsSalesOpenMessages" type="button">📬 打开消息页</button>
+        <button class="ws-sales-modal__btn ws-sales-modal__btn--primary" data-modal-close type="button">完成</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ========== 案例详情 modal · 9 专家通用 ========== -->
+  <div class="ws-sample-modal" id="wsSampleModal" data-state="closed">
+    <div class="ws-sample-modal__backdrop" data-sample-close></div>
+    <div class="ws-sample-modal__card" role="dialog" aria-labelledby="wsSampleTitle">
+      <header class="ws-sample-modal__head">
+        <div class="ws-sample-modal__head-left">
+          <div class="ws-sample-modal__icon" id="wsSampleIcon">★</div>
+          <div class="ws-sample-modal__head-info">
+            <div class="ws-sample-modal__head-title" id="wsSampleTitle">案例标题</div>
+            <div class="ws-sample-modal__head-sub" id="wsSampleSub">专家名 · 案例类型</div>
+          </div>
+        </div>
+        <button class="ws-sample-modal__close" id="wsSampleClose" data-sample-close type="button" title="关闭">×</button>
+      </header>
+      <div class="ws-sample-modal__body" id="wsSampleBody">
+        <!-- JS 动态注入预览 + 描述 + stats + tags -->
+      </div>
+      <footer class="ws-sample-modal__foot">
+        <button class="ws-sample-modal__btn" data-sample-close type="button">关闭</button>
+        <button class="ws-sample-modal__btn ws-sample-modal__btn--primary" id="wsSampleUseIt" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <path d="M5 13l4 4L19 7"/>
+          </svg>
+          用这个案例发需求
+        </button>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

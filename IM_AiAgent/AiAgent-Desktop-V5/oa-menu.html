@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>公众号菜单 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/official-account.css" />
+</head>
+<body data-page="menu">
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop · 公众号管理</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <a href="messages.html" class="sidebar__item" title="消息" data-nav="messages">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/></svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/><path d="M15 9h4M15 13h3"/></svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item is-active" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 11h8M8 15h5"/></svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3"/><path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/><circle cx="12" cy="7" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v10l8 5 8-5V7z"/><path d="M12 2v20M4 7l16 10M20 7 4 17"/></svg>
+          </a>
+          <a href="profile.html" class="sidebar__item" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区：菜单管理 ========== -->
+      <main class="oa">
+        <div class="oa__inner">
+
+          <!-- 顶部 nav 切换 -->
+          <nav class="oa__nav">
+            <a href="official-account.html" class="oa__nav-item" data-nav="home">
+              <span class="oa__nav-icon">🏠</span>
+              <span>主页</span>
+            </a>
+            <a href="oa-articles.html" class="oa__nav-item" data-nav="articles">
+              <span class="oa__nav-icon">📰</span>
+              <span>文章</span>
+              <span class="oa__nav-count">328</span>
+            </a>
+            <a href="oa-analytics.html" class="oa__nav-item" data-nav="analytics">
+              <span class="oa__nav-icon">📊</span>
+              <span>数据</span>
+            </a>
+            <a href="oa-menu.html" class="oa__nav-item is-active" data-nav="menu">
+              <span class="oa__nav-icon">⚙️</span>
+              <span>菜单</span>
+            </a>
+          </nav>
+
+          <!-- 子 tab：菜单 / 自动回复 / 客服 / 留言 -->
+          <div class="oa__subtab">
+            <button class="oa__subtab-item is-active" type="button">关键词回复</button>
+            <button class="oa__subtab-item" type="button">被关注回复</button>
+            <button class="oa__subtab-item" type="button">客服消息</button>
+            <button class="oa__subtab-item" type="button">留言管理</button>
+            <button class="oa__subtab-item" type="button">群发任务</button>
+          </div>
+
+          <!-- 留言管理 subpanel -->
+          <div class="oa__subpanel" data-sub="messages">
+
+            <!-- 4 KPI 统计 -->
+            <div class="oa__msg-kpi">
+              <div class="oa__msg-kpi-card">
+                <div class="oa__msg-kpi-num">128</div>
+                <div class="oa__msg-kpi-label">今日新增</div>
+              </div>
+              <div class="oa__msg-kpi-card oa__msg-kpi-card--warn">
+                <div class="oa__msg-kpi-num">23</div>
+                <div class="oa__msg-kpi-label">待回复</div>
+              </div>
+              <div class="oa__msg-kpi-card oa__msg-kpi-card--ok">
+                <div class="oa__msg-kpi-num">96.4%</div>
+                <div class="oa__msg-kpi-label">回复率</div>
+              </div>
+              <div class="oa__msg-kpi-card">
+                <div class="oa__msg-kpi-num">1.8h</div>
+                <div class="oa__msg-kpi-label">平均响应</div>
+              </div>
+            </div>
+
+            <!-- 留言管理工具栏 -->
+            <div class="oa__msg-toolbar">
+              <div class="oa__chips">
+                <button class="oa__chip is-active" type="button">全部 · 128</button>
+                <button class="oa__chip" type="button">待回复 · 23</button>
+                <button class="oa__chip" type="button">已回复 · 98</button>
+                <button class="oa__chip" type="button">精华 · 12</button>
+              </div>
+              <div class="oa__msg-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" placeholder="搜索留言内容…" />
+              </div>
+            </div>
+
+            <!-- 留言 + 回复双栏 -->
+            <div class="oa__msg-wrap">
+              <!-- 左侧：留言列表 -->
+              <div class="oa__msg-list">
+                <div class="oa__msg-item is-active" data-id="1">
+                  <div class="oa__msg-avatar" style="background: linear-gradient(135deg, #F5A623, #FF8C42);">小</div>
+                  <div class="oa__msg-body">
+                    <div class="oa__msg-head">
+                      <span class="oa__msg-name">小明同学</span>
+                      <span class="oa__msg-tag oa__msg-tag--warn">待回复</span>
+                      <span class="oa__msg-time">12 分钟前</span>
+                    </div>
+                    <div class="oa__msg-text">看了你们的 AI Agent 协同办公文章很受启发，想问下个人用户怎么接入？是注册就能用还是需要企业版？</div>
+                    <div class="oa__msg-meta">
+                      <span>📰 来自「AI Agent 协同办公的 5 个真相」</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="oa__msg-item" data-id="2">
+                  <div class="oa__msg-avatar" style="background: linear-gradient(135deg, #07C160, #4DD890);">王</div>
+                  <div class="oa__msg-body">
+                    <div class="oa__msg-head">
+                      <span class="oa__msg-name">王经理</span>
+                      <span class="oa__msg-tag oa__msg-tag--ok">已回复</span>
+                      <span class="oa__msg-time">1 小时前</span>
+                    </div>
+                    <div class="oa__msg-text">请问 Token 定价和企业版的最低消费是多少？我们 30 人团队想评估下成本。</div>
+                    <div class="oa__msg-meta">
+                      <span>📰 来自「Token 优化你的 AI 工作流」</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="oa__msg-item" data-id="3">
+                  <div class="oa__msg-avatar" style="background: linear-gradient(135deg, #1FB6FF, #2D7CFF);">L</div>
+                  <div class="oa__msg-body">
+                    <div class="oa__msg-head">
+                      <span class="oa__msg-name">Lisa</span>
+                      <span class="oa__msg-tag oa__msg-tag--warn">待回复</span>
+                      <span class="oa__msg-time">2 小时前</span>
+                    </div>
+                    <div class="oa__msg-text">销冠专家能接入企业微信吗？我们销售团队现在主要用企微对接客户。</div>
+                    <div class="oa__msg-meta">
+                      <span>📰 来自「销冠专家 30 天」</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="oa__msg-item" data-id="4">
+                  <div class="oa__msg-avatar" style="background: linear-gradient(135deg, #7C5CFF, #B695FF);">陈</div>
+                  <div class="oa__msg-body">
+                    <div class="oa__msg-head">
+                      <span class="oa__msg-name">陈博士</span>
+                      <span class="oa__msg-tag oa__msg-tag--featured">精华</span>
+                      <span class="oa__msg-time">3 小时前</span>
+                    </div>
+                    <div class="oa__msg-text">五行风水 + AI 的研究很新颖。我是中国哲学教授，期待与你们合作开展一项关于「传统玄学的 AI 解读」跨学科课题。</div>
+                    <div class="oa__msg-meta">
+                      <span>📰 来自「五行风水 + AI = ？」</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="oa__msg-item" data-id="5">
+                  <div class="oa__msg-avatar" style="background: linear-gradient(135deg, #FFD700, #FF8C42);">赵</div>
+                  <div class="oa__msg-body">
+                    <div class="oa__msg-head">
+                      <span class="oa__msg-name">赵老师</span>
+                      <span class="oa__msg-tag oa__msg-tag--ok">已回复</span>
+                      <span class="oa__msg-time">昨天</span>
+                    </div>
+                    <div class="oa__msg-text">学生认证的具体流程是什么？需要哪些材料？</div>
+                    <div class="oa__msg-meta">
+                      <span>📰 来自「AI Agent 协同办公」</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="oa__msg-item" data-id="6">
+                  <div class="oa__msg-avatar" style="background: linear-gradient(135deg, #E54B4B, #FF7B7B);">孙</div>
+                  <div class="oa__msg-body">
+                    <div class="oa__msg-head">
+                      <span class="oa__msg-name">孙总</span>
+                      <span class="oa__msg-tag oa__msg-tag--warn">待回复</span>
+                      <span class="oa__msg-time">昨天</span>
+                    </div>
+                    <div class="oa__msg-text">我们做 K12 教育，AI 能不能帮我们做学生作文批改？需要定制吗？</div>
+                    <div class="oa__msg-meta">
+                      <span>📰 来自「公众号数据洞察页」</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 右侧：回复面板 -->
+              <div class="oa__msg-reply">
+                <div class="oa__msg-reply-head">
+                  <div class="oa__msg-reply-title">回复留言</div>
+                  <div class="oa__msg-reply-meta">小明同学 · 待回复 · 12 分钟前</div>
+                </div>
+                <div class="oa__msg-reply-content">
+                  <div class="oa__msg-reply-original">
+                    <div class="oa__msg-reply-label">用户留言</div>
+                    <div class="oa__msg-reply-text">看了你们的 AI Agent 协同办公文章很受启发，想问下个人用户怎么接入？是注册就能用还是需要企业版？</div>
+                  </div>
+
+                  <!-- AI 智能回复建议 -->
+                  <div class="oa__msg-ai" id="msgAiSuggest">
+                    <div class="oa__msg-ai__head">
+                      <div class="oa__msg-ai__head-l">
+                        <span class="oa__msg-ai__icon">✨</span>
+                        <span class="oa__msg-ai__title">AI 智能回复建议</span>
+                        <span class="oa__msg-ai__count" id="msgAiCount">3 条 · 基于历史 + 关键词</span>
+                      </div>
+                      <button class="oa__msg-ai__refresh" type="button" id="msgAiRefresh">🔄 重新生成</button>
+                    </div>
+                    <div class="oa__msg-ai__list" id="msgAiList">
+                      <!-- JS 渲染 3 个建议 -->
+                    </div>
+                  </div>
+
+                  <div class="oa__msg-reply-compose">
+                    <div class="oa__msg-reply-label">回复内容</div>
+                    <textarea class="oa__msg-reply-input" placeholder="输入回复内容，支持 Markdown…&#10;&#10;提示：可在回复中插入图文 / 链接 / 优惠券"></textarea>
+                    <div class="oa__msg-reply-tools">
+                      <button class="oa__msg-tool" type="button">📎 附件</button>
+                      <button class="oa__msg-tool" type="button">🖼 图文</button>
+                      <button class="oa__msg-tool" type="button">🔗 链接</button>
+                      <button class="oa__msg-tool" type="button">🎟 优惠券</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="oa__msg-reply-foot">
+                  <button class="oa__msg-reply-btn oa__msg-reply-btn--ghost" type="button">稍后回复</button>
+                  <button class="oa__msg-reply-btn" type="button">💾 保存草稿</button>
+                  <button class="oa__msg-reply-btn oa__msg-reply-btn--primary" type="button">📤 发送回复</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 关键词回复 subpanel -->
+          <div class="oa__subpanel" data-sub="keywords" is-active>
+            <div class="oa__kpi">
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">关键词总数</div>
+                <div class="oa__kpi-num">156</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 较上周 +8 <span>本月新增</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">已启用</div>
+                <div class="oa__kpi-num">132</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 启用率 84.6% <span>+5 待启用</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">7 天触发</div>
+                <div class="oa__kpi-num">8,420</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 12.4% <span>日均 1,203</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">命中率</div>
+                <div class="oa__kpi-num">87%</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 命中 7,325 次 <span>未命中 13%</span></div>
+              </div>
+            </div>
+
+            <div class="oa__chart-block">
+              <div class="oa__chart-head">
+                <div class="oa__chart-title">关键词列表</div>
+                <div class="oa__chart-hint">关键词 = 用户消息中触发自动回复的关键词</div>
+              </div>
+              <div class="oa__kw-toolbar">
+                <div class="oa__chips">
+                  <button class="oa__chip is-active" type="button">全部 156</button>
+                  <button class="oa__chip" type="button">精确 89</button>
+                  <button class="oa__chip" type="button">模糊 42</button>
+                  <button class="oa__chip" type="button">正则 25</button>
+                </div>
+                <div class="oa__kw-actions">
+                  <div class="oa__search oa__search--mini">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" placeholder="搜索关键词…" />
+                  </div>
+                  <button class="oa__kw-btn oa__kw-btn--primary" type="button">+ 新建关键词</button>
+                </div>
+              </div>
+
+              <div class="oa__kw-table">
+                <div class="oa__kw-table__head">
+                  <div class="oa__kw-col oa__kw-col--keyword">关键词</div>
+                  <div class="oa__kw-col">匹配方式</div>
+                  <div class="oa__kw-col">回复类型</div>
+                  <div class="oa__kw-col oa__kw-col--num">7 天触发</div>
+                  <div class="oa__kw-col">状态</div>
+                  <div class="oa__kw-col oa__kw-col--op">操作</div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">价格</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--exact">精确</span></div>
+                  <div class="oa__kw-col">图文卡片</div>
+                  <div class="oa__kw-col oa__kw-col--num">1,247</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">客服</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--fuzzy">模糊</span></div>
+                  <div class="oa__kw-col">转人工客服</div>
+                  <div class="oa__kw-col oa__kw-col--num">986</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">Token</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--exact">精确</span></div>
+                  <div class="oa__kw-col">图文卡片</div>
+                  <div class="oa__kw-col oa__kw-col--num">812</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">优惠</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--fuzzy">模糊</span></div>
+                  <div class="oa__kw-col">文本 + 链接</div>
+                  <div class="oa__kw-col oa__kw-col--num">624</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">API</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--exact">精确</span></div>
+                  <div class="oa__kw-col">图文卡片</div>
+                  <div class="oa__kw-col oa__kw-col--num">512</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">文档</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--exact">精确</span></div>
+                  <div class="oa__kw-col">链接跳转</div>
+                  <div class="oa__kw-col oa__kw-col--num">438</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">试用</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--exact">精确</span></div>
+                  <div class="oa__kw-col">图文卡片</div>
+                  <div class="oa__kw-col oa__kw-col--num">342</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">合作</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--fuzzy">模糊</span></div>
+                  <div class="oa__kw-col">转人工客服</div>
+                  <div class="oa__kw-col oa__kw-col--num">218</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--on">● 启用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">停用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">入驻</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--regex">正则</span></div>
+                  <div class="oa__kw-col">链接跳转</div>
+                  <div class="oa__kw-col oa__kw-col--num">186</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--off">● 停用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">启用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+                <div class="oa__kw-table__row">
+                  <div class="oa__kw-col oa__kw-col--keyword"><span class="oa__kw-keyword">退款</span></div>
+                  <div class="oa__kw-col"><span class="oa__kw-match oa__kw-match--regex">正则</span></div>
+                  <div class="oa__kw-col">转人工客服</div>
+                  <div class="oa__kw-col oa__kw-col--num">94</div>
+                  <div class="oa__kw-col"><span class="oa__kw-status oa__kw-status--off">● 停用</span></div>
+                  <div class="oa__kw-col oa__kw-col--op"><button class="oa__kw-op">编辑</button><button class="oa__kw-op">启用</button><button class="oa__kw-op oa__kw-op--danger">删除</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 被关注回复 subpanel -->
+          <div class="oa__subpanel" data-sub="subscribe">
+            <div class="oa__kpi">
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">7 天新增关注</div>
+                <div class="oa__kpi-num">1,265</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 18.2% <span>日均 181</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">自动回复率</div>
+                <div class="oa__kpi-num">99.2%</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 1,255 已回复 <span>10 失败</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">平均回复</div>
+                <div class="oa__kpi-num">1.8s</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 较上周 -0.3s <span>业内均值 4.2s</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">二次互动率</div>
+                <div class="oa__kpi-num">38%</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 480 用户 <span>1 周内回访</span></div>
+              </div>
+            </div>
+
+            <div class="oa__sub-row">
+              <div class="oa__chart-block" style="flex: 1.6;">
+                <div class="oa__chart-head">
+                  <div class="oa__chart-title">欢迎语模板</div>
+                  <div class="oa__chart-hint">新用户关注后自动推送 · 仅 1 个生效</div>
+                </div>
+
+                <div class="oa__welcome-list">
+                  <div class="oa__welcome-card is-active">
+                    <div class="oa__welcome-card__head">
+                      <div class="oa__welcome-card__radio">●</div>
+                      <div class="oa__welcome-card__name">默认欢迎</div>
+                      <span class="oa__welcome-card__tag">当前生效</span>
+                      <div class="oa__welcome-card__num">已发送 12,580 次</div>
+                    </div>
+                    <div class="oa__welcome-card__preview">
+                      <div class="oa__welcome-msg">欢迎关注 <strong>UMC 联合生态</strong> 🎉<br/>我们是 AI Agent 协同工作平台，每天为你推送 AI 行业最前沿的洞察。<br/><br/>回复「<strong>目录</strong>」查看全部文章分类<br/>回复「<strong>试用</strong>」领取 7 天免费体验</div>
+                    </div>
+                    <div class="oa__welcome-card__stats">
+                      <span>展示 12,580</span>
+                      <span>互动 4,778</span>
+                      <span>转化 1,892</span>
+                    </div>
+                  </div>
+
+                  <div class="oa__welcome-card">
+                    <div class="oa__welcome-card__head">
+                      <div class="oa__welcome-card__radio">○</div>
+                      <div class="oa__welcome-card__name">关注引导</div>
+                      <span class="oa__welcome-card__tag oa__welcome-card__tag--draft">草稿</span>
+                      <div class="oa__welcome-card__num">预计 5.2k/月</div>
+                    </div>
+                    <div class="oa__welcome-card__preview">
+                      <div class="oa__welcome-msg">Hi～感谢关注 <strong>UMC</strong> 👋<br/>推荐先看这 3 篇精华：<br/>📌 《AI Agent 协同办公的 5 个真相》<br/>📌 《AI 工具盘点：让 ChatGPT 提升 10 倍效率》<br/>📌 《2026 AI 行业趋势预测》</div>
+                    </div>
+                    <div class="oa__welcome-card__stats">
+                      <span>预计展示 5,200</span>
+                      <span>预计互动 1,872</span>
+                      <span>预计转化 728</span>
+                    </div>
+                  </div>
+
+                  <div class="oa__welcome-card">
+                    <div class="oa__welcome-card__head">
+                      <div class="oa__welcome-card__radio">○</div>
+                      <div class="oa__welcome-card__name">私聊引导</div>
+                      <span class="oa__welcome-card__tag oa__welcome-card__tag--draft">草稿</span>
+                      <div class="oa__welcome-card__num">预计 4.8k/月</div>
+                    </div>
+                    <div class="oa__welcome-card__preview">
+                      <div class="oa__welcome-msg">欢迎 <strong>新朋友</strong>～<br/>我们提供 1v1 AI 顾问咨询，30 分钟帮你梳理业务痛点 + 给出 AI 解决方案。<br/><br/>👉 <strong>点击私聊</strong>立即预约</div>
+                    </div>
+                    <div class="oa__welcome-card__stats">
+                      <span>预计展示 4,800</span>
+                      <span>预计互动 2,304</span>
+                      <span>预计转化 1,152</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="oa__chart-block" style="flex: 1;">
+                <div class="oa__chart-head">
+                  <div class="oa__chart-title">微信预览效果</div>
+                  <div class="oa__chart-hint">实时模拟用户视角</div>
+                </div>
+                <div class="oa__wechat-preview">
+                  <div class="oa__wechat-preview__nav">
+                    <div class="oa__wechat-preview__back">‹</div>
+                    <div class="oa__wechat-preview__title">UMC 联合生态</div>
+                    <div class="oa__wechat-preview__more">⋯</div>
+                  </div>
+                  <div class="oa__wechat-preview__banner" style="background: linear-gradient(135deg, #7C5CFF, #5D3FE5);">UMC 联合生态</div>
+                  <div class="oa__wechat-preview__chat">
+                    <div class="oa__wechat-msg oa__wechat-msg--in">
+                      <div class="oa__wechat-msg__avatar">U</div>
+                      <div class="oa__wechat-msg__bubble">
+                        <div class="oa__wechat-msg__name">UMC 联合生态</div>
+                        <div class="oa__wechat-msg__text">欢迎关注 UMC 联合生态 🎉 我们是 AI Agent 协同工作平台...</div>
+                        <div class="oa__wechat-msg__time">刚刚</div>
+                      </div>
+                    </div>
+                    <div class="oa__wechat-msg oa__wechat-msg--in">
+                      <div class="oa__wechat-msg__avatar">U</div>
+                      <div class="oa__wechat-msg__bubble oa__wechat-msg__bubble--link">
+                        <div class="oa__wechat-msg__name">UMC 联合生态</div>
+                        <div class="oa__wechat-msg__link">📌 推荐精华文章 TOP 3</div>
+                        <div class="oa__wechat-msg__time">刚刚</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="oa__wechat-preview__input">
+                    <div class="oa__wechat-preview__input-box">输入消息…</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 客服消息 subpanel -->
+          <div class="oa__subpanel" data-sub="service">
+            <div class="oa__kpi">
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">在线客服</div>
+                <div class="oa__kpi-num">4</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 全部在线 <span>8 离线</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">待接入</div>
+                <div class="oa__kpi-num">23</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 排队中 <span>平均等待 38s</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">平均响应</div>
+                <div class="oa__kpi-num">38s</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 较上周 -8s <span>业内均值 1m42s</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">满意度</div>
+                <div class="oa__kpi-num">96%</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 4.8/5 星 <span>本月 1,238 评价</span></div>
+              </div>
+            </div>
+
+            <!-- AI 客户专家 banner -->
+            <div class="oa__cs-ai-banner" id="csAiBanner">
+              <div class="oa__cs-ai-banner__icon">✦</div>
+              <div class="oa__cs-ai-banner__body">
+                <div class="oa__cs-ai-banner__title">AI 客户专家 <span class="oa__cs-ai-banner__badge">Beta</span></div>
+                <div class="oa__cs-ai-banner__desc">6 套客服对话模板 · 全自动接管 24h 不打烊 · 半自动辅助人工</div>
+              </div>
+              <div class="oa__cs-ai-banner__mode">
+                <button class="oa__cs-ai-mode is-active" type="button" data-mode="semi">半自动</button>
+                <button class="oa__cs-ai-mode" type="button" data-mode="auto">全自动</button>
+              </div>
+              <button class="oa__cs-ai-banner__btn" type="button" id="csAiOpenBtn">打开 AI 客户专家 →</button>
+            </div>
+
+            <div class="oa__sub-row">
+              <div class="oa__chart-block" style="flex: 0.8;">
+                <div class="oa__chart-head">
+                  <div class="oa__chart-title">客服团队</div>
+                  <div class="oa__chart-hint">4 / 12 在线</div>
+                </div>
+                <div class="oa__cs-list">
+                  <div class="oa__cs-item is-active">
+                    <div class="oa__cs-item__avatar" style="background: linear-gradient(135deg, #7C5CFF, #5D3FE5);">晓</div>
+                    <div class="oa__cs-item__body">
+                      <div class="oa__cs-item__name">晓晓 <span class="oa__cs-status oa__cs-status--on">● 在线</span></div>
+                      <div class="oa__cs-item__meta">8 个会话 · 4.9 ★</div>
+                    </div>
+                    <div class="oa__cs-item__load">78%</div>
+                  </div>
+                  <div class="oa__cs-item">
+                    <div class="oa__cs-item__avatar" style="background: linear-gradient(135deg, #07C160, #0E7C3A);">涛</div>
+                    <div class="oa__cs-item__body">
+                      <div class="oa__cs-item__name">涛哥 <span class="oa__cs-status oa__cs-status--on">● 在线</span></div>
+                      <div class="oa__cs-item__meta">6 个会话 · 4.8 ★</div>
+                    </div>
+                    <div class="oa__cs-item__load">65%</div>
+                  </div>
+                  <div class="oa__cs-item">
+                    <div class="oa__cs-item__avatar" style="background: linear-gradient(135deg, #1FB6FF, #2D7CFF);">薇</div>
+                    <div class="oa__cs-item__body">
+                      <div class="oa__cs-item__name">薇薇 <span class="oa__cs-status oa__cs-status--on">● 在线</span></div>
+                      <div class="oa__cs-item__meta">5 个会话 · 4.9 ★</div>
+                    </div>
+                    <div class="oa__cs-item__load">52%</div>
+                  </div>
+                  <div class="oa__cs-item">
+                    <div class="oa__cs-item__avatar" style="background: linear-gradient(135deg, #FF8C42, #FFD700);">桐</div>
+                    <div class="oa__cs-item__body">
+                      <div class="oa__cs-item__name">桐桐 <span class="oa__cs-status oa__cs-status--on">● 在线</span></div>
+                      <div class="oa__cs-item__meta">4 个会话 · 5.0 ★</div>
+                    </div>
+                    <div class="oa__cs-item__load">38%</div>
+                  </div>
+                  <div class="oa__cs-item">
+                    <div class="oa__cs-item__avatar" style="background: linear-gradient(135deg, #8E5BFF, #5B3FD8);">林</div>
+                    <div class="oa__cs-item__body">
+                      <div class="oa__cs-item__name">林子 <span class="oa__cs-status oa__cs-status--off">● 离线</span></div>
+                      <div class="oa__cs-item__meta">最后在线 2h 前</div>
+                    </div>
+                    <div class="oa__cs-item__load">-</div>
+                  </div>
+                  <div class="oa__cs-item">
+                    <div class="oa__cs-item__avatar" style="background: linear-gradient(135deg, #F8375C, #C0294D);">乔</div>
+                    <div class="oa__cs-item__body">
+                      <div class="oa__cs-item__name">乔乔 <span class="oa__cs-status oa__cs-status--off">● 离线</span></div>
+                      <div class="oa__cs-item__meta">休息中</div>
+                    </div>
+                    <div class="oa__cs-item__load">-</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="oa__chart-block" style="flex: 1.5;">
+                <div class="oa__chart-head">
+                  <div class="oa__chart-title">当前对话 · 王小明</div>
+                  <div class="oa__chart-hint">已接入 · 晓晓 · 持续 04:23</div>
+                </div>
+                <div class="oa__cs-chat">
+                  <div class="oa__cs-chat__msg oa__cs-chat__msg--in">
+                    <div class="oa__cs-chat__avatar">王</div>
+                    <div class="oa__cs-chat__bubble">你好，我想咨询下企业版的定价</div>
+                    <div class="oa__cs-chat__time">14:23</div>
+                  </div>
+                  <div class="oa__cs-chat__msg oa__cs-chat__msg--in">
+                    <div class="oa__cs-chat__avatar">王</div>
+                    <div class="oa__cs-chat__bubble">我们公司 200 人规模，主要是客服和销售团队使用</div>
+                    <div class="oa__cs-chat__time">14:24</div>
+                  </div>
+                  <div class="oa__cs-chat__msg oa__cs-chat__msg--out">
+                    <div class="oa__cs-chat__bubble">您好王小明～企业版 200 人规模推荐 <strong>VIP 会员</strong>，月费 ¥698 / 人，9 折 + 5,000 月赠 token</div>
+                    <div class="oa__cs-chat__time">14:24</div>
+                  </div>
+                  <div class="oa__cs-chat__msg oa__cs-chat__msg--out">
+                    <div class="oa__cs-chat__bubble">您是侧重客服还是销售场景？我让对应的产品经理对接您</div>
+                    <div class="oa__cs-chat__time">14:25</div>
+                  </div>
+                  <div class="oa__cs-chat__msg oa__cs-chat__msg--in">
+                    <div class="oa__cs-chat__avatar">王</div>
+                    <div class="oa__cs-chat__bubble">两个都要，先从客服开始。可以发个详细方案吗？</div>
+                    <div class="oa__cs-chat__time">14:26</div>
+                  </div>
+                </div>
+                <div class="oa__cs-chat__input">
+                  <input type="text" placeholder="输入回复…" />
+                  <button type="button" class="oa__cs-send">📤 发送</button>
+                </div>
+              </div>
+
+              <div class="oa__chart-block" style="flex: 1;">
+                <div class="oa__chart-head">
+                  <div class="oa__chart-title">快捷回复</div>
+                  <div class="oa__chart-hint">6 个常用模板</div>
+                </div>
+                <div class="oa__cs-templates">
+                  <div class="oa__cs-template">
+                    <div class="oa__cs-template__name">报价模板</div>
+                    <div class="oa__cs-template__content">企业版 {N} 人推荐 VIP 会员，月费 ¥698/人，9 折 + 5,000 月赠 token</div>
+                    <button class="oa__cs-template__btn">引用</button>
+                  </div>
+                  <div class="oa__cs-template">
+                    <div class="oa__cs-template__name">产品介绍</div>
+                    <div class="oa__cs-template__content">UMC 是 AI Agent 协同工作平台，8 位专家 Agent + 1 位 CEO Agent 全场景协同</div>
+                    <button class="oa__cs-template__btn">引用</button>
+                  </div>
+                  <div class="oa__cs-template">
+                    <div class="oa__cs-template__name">试用邀请</div>
+                    <div class="oa__cs-template__content">可以先免费体验 7 天，我帮您开通账号，账号密码发短信给您</div>
+                    <button class="oa__cs-template__btn">引用</button>
+                  </div>
+                  <div class="oa__cs-template">
+                    <div class="oa__cs-template__name">转接</div>
+                    <div class="oa__cs-template__content">我帮您转给销售经理 张经理，稍后联系您</div>
+                    <button class="oa__cs-template__btn">引用</button>
+                  </div>
+                  <div class="oa__cs-template">
+                    <div class="oa__cs-template__name">致谢</div>
+                    <div class="oa__cs-template__content">感谢您的咨询，有任何问题随时联系我～</div>
+                    <button class="oa__cs-template__btn">引用</button>
+                  </div>
+                  <div class="oa__cs-template">
+                    <div class="oa__cs-template__name">投诉处理</div>
+                    <div class="oa__cs-template__content">非常抱歉给您带来困扰，我马上协调技术人员排查，30 分钟内回复您</div>
+                    <button class="oa__cs-template__btn">引用</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 群发任务 subpanel -->
+          <div class="oa__subpanel" data-sub="broadcast">
+            <div class="oa__kpi">
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">已发任务</div>
+                <div class="oa__kpi-num">48</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 本月 12 <span>本年 48</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">触达用户</div>
+                <div class="oa__kpi-num">386k</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 月均 64.3k <span>累计 1.2M</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">平均打开率</div>
+                <div class="oa__kpi-num">71%</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 较上月 +4% <span>业内均值 38%</span></div>
+              </div>
+              <div class="oa__kpi-card">
+                <div class="oa__kpi-label">转化率</div>
+                <div class="oa__kpi-num">18%</div>
+                <div class="oa__kpi-trend oa__kpi-trend--up">↑ 较上月 +2% <span>共转化 69.5k</span></div>
+              </div>
+            </div>
+
+            <div class="oa__chart-block">
+              <div class="oa__chart-head">
+                <div class="oa__chart-title">群发任务列表</div>
+                <div class="oa__chart-hint">每月 4 次群发额度（剩余 2 次）</div>
+              </div>
+              <div class="oa__bc-toolbar">
+                <div class="oa__chips">
+                  <button class="oa__chip is-active" type="button">全部 48</button>
+                  <button class="oa__chip" type="button">已发 42</button>
+                  <button class="oa__chip" type="button">排程中 3</button>
+                  <button class="oa__chip" type="button">草稿 3</button>
+                </div>
+                <button class="oa__kw-btn oa__kw-btn--primary" type="button">+ 新建群发任务</button>
+              </div>
+
+              <div class="oa__bc-list">
+                <div class="oa__bc-card">
+                  <div class="oa__bc-card__type">
+                    <div class="oa__bc-type oa__bc-type--news">图文</div>
+                  </div>
+                  <div class="oa__bc-card__body">
+                    <div class="oa__bc-card__title">618 优惠大促 · 全场 5 折起</div>
+                    <div class="oa__bc-card__meta">VIP / MN 会员推送 · 排程 2026-06-18 10:00 · 6 图文 + 1 链接</div>
+                  </div>
+                  <div class="oa__bc-card__stats">
+                    <div class="oa__bc-card__stat"><strong>23,580</strong><span>触达</span></div>
+                    <div class="oa__bc-card__stat"><strong style="color: #07C160;">67%</strong><span>打开率</span></div>
+                    <div class="oa__bc-card__stat"><strong style="color: #07C160;">12%</strong><span>转化率</span></div>
+                  </div>
+                  <div class="oa__bc-card__status oa__bc-card__status--sent">● 已发</div>
+                  <div class="oa__bc-card__op">
+                    <button>数据</button>
+                    <button>复制</button>
+                  </div>
+                </div>
+
+                <div class="oa__bc-card">
+                  <div class="oa__bc-card__type">
+                    <div class="oa__bc-type oa__bc-type--text">文本</div>
+                  </div>
+                  <div class="oa__bc-card__body">
+                    <div class="oa__bc-card__title">AI 工具盘点：让 ChatGPT 提升 10 倍效率的 5 个小众神器</div>
+                    <div class="oa__bc-card__meta">全部关注者 · 2026-06-15 14:30 · 1 文本 + 2 链接</div>
+                  </div>
+                  <div class="oa__bc-card__stats">
+                    <div class="oa__bc-card__stat"><strong>18,420</strong><span>触达</span></div>
+                    <div class="oa__bc-card__stat"><strong style="color: #07C160;">73%</strong><span>打开率</span></div>
+                    <div class="oa__bc-card__stat"><strong style="color: #07C160;">15%</strong><span>转化率</span></div>
+                  </div>
+                  <div class="oa__bc-card__status oa__bc-card__status--sent">● 已发</div>
+                  <div class="oa__bc-card__op">
+                    <button>数据</button>
+                    <button>复制</button>
+                  </div>
+                </div>
+
+                <div class="oa__bc-card">
+                  <div class="oa__bc-card__type">
+                    <div class="oa__bc-type oa__bc-type--news">图文</div>
+                  </div>
+                  <div class="oa__bc-card__body">
+                    <div class="oa__bc-card__title">邀请内测 UMakex V4 协同工作台</div>
+                    <div class="oa__bc-card__meta">MB 会员 + NU 会员 · 2026-06-12 09:00 · 3 图文 + 1 链接</div>
+                  </div>
+                  <div class="oa__bc-card__stats">
+                    <div class="oa__bc-card__stat"><strong>12,180</strong><span>触达</span></div>
+                    <div class="oa__bc-card__stat"><strong style="color: #07C160;">81%</strong><span>打开率</span></div>
+                    <div class="oa__bc-card__stat"><strong style="color: #07C160;">23%</strong><span>转化率</span></div>
+                  </div>
+                  <div class="oa__bc-card__status oa__bc-card__status--sent">● 已发</div>
+                  <div class="oa__bc-card__op">
+                    <button>数据</button>
+                    <button>复制</button>
+                  </div>
+                </div>
+
+                <div class="oa__bc-card is-scheduled">
+                  <div class="oa__bc-card__type">
+                    <div class="oa__bc-type oa__bc-type--news">图文</div>
+                  </div>
+                  <div class="oa__bc-card__body">
+                    <div class="oa__bc-card__title">端午节活动 · Token 翻倍 + 限定周边</div>
+                    <div class="oa__bc-card__meta">全部关注者 · 排程 2026-06-25 10:00 · 5 图文 + 1 链接</div>
+                  </div>
+                  <div class="oa__bc-card__stats">
+                    <div class="oa__bc-card__stat"><strong>-</strong><span>触达</span></div>
+                    <div class="oa__bc-card__stat"><strong>-</strong><span>打开率</span></div>
+                    <div class="oa__bc-card__stat"><strong>-</strong><span>转化率</span></div>
+                  </div>
+                  <div class="oa__bc-card__status oa__bc-card__status--schedule">⏱ 排程中</div>
+                  <div class="oa__bc-card__op">
+                    <button>编辑</button>
+                    <button>取消</button>
+                  </div>
+                </div>
+
+                <div class="oa__bc-card is-draft">
+                  <div class="oa__bc-card__type">
+                    <div class="oa__bc-type oa__bc-type--text">文本</div>
+                  </div>
+                  <div class="oa__bc-card__body">
+                    <div class="oa__bc-card__title">6 月会员福利日 · Token 充值 8 折</div>
+                    <div class="oa__bc-card__meta">草稿 · 创建于 2026-06-28 · 1 文本</div>
+                  </div>
+                  <div class="oa__bc-card__stats">
+                    <div class="oa__bc-card__stat"><strong>-</strong><span>触达</span></div>
+                    <div class="oa__bc-card__stat"><strong>-</strong><span>打开率</span></div>
+                    <div class="oa__bc-card__stat"><strong>-</strong><span>转化率</span></div>
+                  </div>
+                  <div class="oa__bc-card__status oa__bc-card__status--draft">📝 草稿</div>
+                  <div class="oa__bc-card__op">
+                    <button>编辑</button>
+                    <button>删除</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+
+        </div>
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- AI 客户专家 Modal -->
+  <div class="oa-modal" id="csAiModal" hidden>
+    <div class="oa-modal__backdrop" id="csAiBackdrop"></div>
+    <div class="oa-modal__panel">
+      <div class="oa-modal__head">
+        <div>
+          <div class="oa-modal__title">✦ AI 客户专家 <span class="oa-modal__badge" id="csAiModeLabel">半自动</span></div>
+          <div class="oa-modal__sub">6 套客服对话模板 · 24h 实时接管 · 1.2s 自动响应</div>
+        </div>
+        <button class="oa-modal__close" type="button" id="csAiCloseBtn">×</button>
+      </div>
+
+      <div class="oa-modal__kpi">
+        <div class="oa-modal__kpi-card">
+          <div class="oa-modal__kpi-label">今日接管</div>
+          <div class="oa-modal__kpi-num" id="csAiStat1">186</div>
+          <div class="oa-modal__kpi-hint">↑ 较昨日 +42</div>
+        </div>
+        <div class="oa-modal__kpi-card">
+          <div class="oa-modal__kpi-label">平均响应</div>
+          <div class="oa-modal__kpi-num" id="csAiStat2">1.2s</div>
+          <div class="oa-modal__kpi-hint">↓ 较人工 -28s</div>
+        </div>
+        <div class="oa-modal__kpi-card">
+          <div class="oa-modal__kpi-label">累计回复</div>
+          <div class="oa-modal__kpi-num" id="csAiStat3">2,847</div>
+          <div class="oa-modal__kpi-hint">本月 · 含辅助</div>
+        </div>
+        <div class="oa-modal__kpi-card">
+          <div class="oa-modal__kpi-label">满意度</div>
+          <div class="oa-modal__kpi-num" id="csAiStat4">97%</div>
+          <div class="oa-modal__kpi-hint">↑ 4.85/5 星</div>
+        </div>
+      </div>
+
+      <div class="oa-modal__templates">
+        <div class="oa-modal__templates-head">
+          <div class="oa-modal__templates-title">6 套对话模板（轮播中）</div>
+          <div class="oa-modal__templates-hint" id="csAiTemplateHint">1/6 · 询问功能</div>
+        </div>
+        <div class="oa-modal__template-list" id="csAiTemplateList">
+          <!-- JS 渲染 6 模板 -->
+        </div>
+      </div>
+
+      <div class="oa-modal__chat">
+        <div class="oa-modal__chat-head">
+          <div class="oa-modal__chat-title">实时接管对话</div>
+          <div class="oa-modal__chat-status" id="csAiChatStatus">● 接管中</div>
+        </div>
+        <div class="oa-modal__chat-list" id="csAiChatList">
+          <!-- JS 渲染 8 条流 -->
+        </div>
+        <div class="oa-modal__chat-foot">
+          <div class="oa-modal__chat-stat" id="csAiChatStat">已接管 0/8 条 · 平均响应 1.2s</div>
+          <div class="oa-modal__chat-actions">
+            <button class="oa-modal__chat-btn" type="button" id="csAiPauseBtn">⏸ 暂停接管</button>
+            <button class="oa-modal__chat-btn oa-modal__chat-btn--primary" type="button" id="csAiRestartBtn">↻ 重新接管</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="oa-modal__foot">
+        <div class="oa-modal__foot-tip">AI 接管前 8 条对话流 · 每 4s 推一条 · 1.2s 后 AI 回复 · 限 8 条后自动暂停</div>
+        <div class="oa-modal__foot-actions">
+          <button class="oa-modal__foot-btn" type="button" id="csAiOpenMessagesBtn">📨 打开 messages.html</button>
+          <button class="oa-modal__foot-btn oa-modal__foot-btn--primary" type="button" id="csAiSaveBtn">💾 保存设置</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="assets/js/shared.js"></script>
+  <script src="assets/js/oa.js"></script>
+</body>
+</html>

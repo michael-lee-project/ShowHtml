@@ -1,0 +1,235 @@
+/* ============================================================
+ * base.css · 基础样式 · UMakex_Desktop V4.0
+ * 颜色 / 字体 / 间距 / 公共原子类
+ * ============================================================ */
+
+/* ---- Reset ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+/* 整页滚动条（始终可见，macOS 默认隐藏，强制显示） */
+html::-webkit-scrollbar { width: 10px; }
+html::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb {
+  background: rgba(26, 34, 56, 0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 34, 56, 0.32);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+ul, ol, li { list-style: none; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+input, textarea { font: inherit; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ---- 字体（macOS 原生优先） ---- */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+               "PingFang SC", "Helvetica Neue", "Microsoft YaHei", "Source Han Sans CN",
+               "Noto Sans CJK SC", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+}
+
+/* ---- 字体渲染 ---- */
+body {
+  font-feature-settings: "tnum" 1, "kern" 1, "liga" 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- 颜色（macOS 浅色 + 微信绿主色） ---- */
+:root {
+  /* 背景层 */
+  --bg-app:        #F2F2F2;   /* 应用整体背景（窗口外圈灰） */
+  --bg-titlebar:   linear-gradient(to bottom, #ECECEC, #DCDCDC);   /* 标题栏 */
+  --bg-sidebar:    #1F2024;   /* 左侧深色导航 */
+  --bg-sidebar-hover: #2A2B30;
+  --bg-sidebar-active: #0E7C3A; /* 选中态绿色 */
+  --bg-main:       #FFFFFF;   /* 主区域 */
+  --bg-elevated:   #FAFAFA;   /* 次级面板背景 */
+  --bg-hover:      #F2F3F5;   /* hover */
+  --bg-selected:   #E8F5EE;   /* 列表选中（绿底） */
+  --bg-tag-purple: #EDE7FF;
+  --bg-tag-blue:   #E6F0FF;
+  --bg-tag-red:    #FFEDEC;
+
+  /* 文字 */
+  --text-primary:   #111418;
+  --text-secondary: #5F6470;
+  --text-tertiary:  #9CA3AF;
+  --text-on-dark:   #E6E7EA;
+  --text-on-dark-2: #9DA0A8;
+  --text-accent:    #07C160;
+  --text-accent-dark: #06A052;
+  --text-danger:    #E54B4B;
+
+  /* 边框 / 分割线 */
+  --border:        #E6E7EA;
+  --border-light:  #F2F3F5;
+  --border-dark:   #2A2B30;
+
+  /* 头像配色（参考用户原图） */
+  --avatar-yellow: #F5A623;
+  --avatar-orange: #FF6B35;
+  --avatar-pink:   #F8375C;
+  --avatar-purple: #8E5BFF;
+  --avatar-cyan:   #1FB6FF;
+  --avatar-blue:   #2D7CFF;
+  --avatar-green:  #07C160;
+
+  /* 圆角（squircle 升级版） */
+  --r-xs:   6px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   20px;
+  --r-2xl:  24px;
+  --r-pill: 999px;
+
+  /* 阴影（多层次 + inset 内高光） */
+  --shadow-card: 0 1px 2px rgba(15, 18, 22, 0.04),
+                 0 0 0 0.5px rgba(15, 18, 22, 0.06);
+  --shadow-pop:  0 12px 28px rgba(15, 18, 22, 0.12),
+                 0 2px 8px rgba(15, 18, 22, 0.06),
+                 inset 0 0.5px 0 rgba(255, 255, 255, 0.8);
+  --shadow-bubble-self: 0 1px 2px rgba(7, 193, 96, 0.16),
+                        inset 0 0.5px 0 rgba(255, 255, 255, 0.4);
+  --shadow-bubble-other: 0 1px 2px rgba(15, 18, 22, 0.06),
+                         inset 0 0.5px 0 rgba(255, 255, 255, 0.9);
+  --shadow-sidebar-item: inset 0 0.5px 0 rgba(255, 255, 255, 0.06);
+  --shadow-button-primary: 0 1px 2px rgba(7, 193, 96, 0.24),
+                          inset 0 0.5px 0 rgba(255, 255, 255, 0.3);
+  --shadow-button-danger: 0 1px 2px rgba(229, 75, 75, 0.24),
+                         inset 0 0.5px 0 rgba(255, 255, 255, 0.3);
+
+  /* 动效曲线（cubic-bezier 物理曲线） */
+  --ease-fluid:   cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft:    cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-exit:    cubic-bezier(0.4, 0, 1, 1);
+
+  /* 动效时长 */
+  --d-fast:    120ms;
+  --d-base:    220ms;
+  --d-slow:    400ms;
+  --d-slower:  700ms;
+
+  /* 尺寸 */
+  --titlebar-h:    28px;
+  --sidebar-w:     64px;
+  --window-w:      1180px;
+  --window-h:      820px;
+}
+
+/* ---- 基础排版 ---- */
+body {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-app);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.005em;
+}
+
+/* ---- 公共原子类 ---- */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: 4px; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary  { color: var(--text-tertiary); }
+.text-accent    { color: var(--text-accent); }
+.text-danger    { color: var(--text-danger); }
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- 选区颜色 ---- */
+::selection {
+  background: rgba(7, 193, 96, 0.18);
+  color: var(--text-primary);
+}
+
+/* ---- 滚动条（macOS 风格，更精致） ---- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color var(--d-base) var(--ease-fluid);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+/* ---- Focus ring（更精致） ---- */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(7, 193, 96, 0.18);
+}
+
+/* ---- entry 动画（消息气泡 / 列表项 fade-up） ---- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fade-up   { animation: fadeUp var(--d-slow) var(--ease-fluid) both; }
+.fade-in   { animation: fadeIn var(--d-slow) var(--ease-fluid) both; }
+.scale-in  { animation: scaleIn var(--d-base) var(--ease-spring) both; }

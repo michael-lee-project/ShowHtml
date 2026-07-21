@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的 · UMakex_Desktop</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/shell.css" />
+  <link rel="stylesheet" href="assets/css/profile.css" />
+</head>
+<body>
+  <div class="window">
+
+    <!-- ========== 标题栏 ========== -->
+    <div class="titlebar">
+      <div class="titlebar__lights">
+        <span class="titlebar__light titlebar__light--close"></span>
+        <span class="titlebar__light titlebar__light--min"></span>
+        <span class="titlebar__light titlebar__light--max"></span>
+      </div>
+      <div class="titlebar__title">UMakex_Desktop</div>
+    </div>
+
+    <!-- ========== 主体 ========== -->
+    <div class="window__body">
+
+      <!-- 左侧深色导航栏（6 图标） -->
+      <aside class="sidebar">
+        <a href="messages.html" class="sidebar__avatar" title="我的">
+          <span>MK</span>
+        </a>
+        <nav class="sidebar__nav">
+          <a href="messages.html" class="sidebar__item" title="消息" data-nav="messages">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16v11a2 2 0 0 1-2 2H9l-5 4z"/>
+            </svg>
+          </a>
+          <a href="contacts.html" class="sidebar__item" title="通讯录" data-nav="contacts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <circle cx="9" cy="10" r="2"/>
+              <path d="M5 17c.5-1.8 2.2-3 4-3s3.5 1.2 4 3"/>
+              <path d="M15 9h4M15 13h3"/>
+            </svg>
+          </a>
+          <a href="official-account.html" class="sidebar__item" title="公众号" data-nav="official">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+              <path d="M8 11h8M8 15h5"/>
+            </svg>
+          </a>
+          <a href="agent-workstation.html" class="sidebar__item" title="AI Agent 协同工作台" data-nav="agent-workstation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="7" r="3"/>
+              <path d="M5 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/>
+              <circle cx="12" cy="7" r="1" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="compute-center.html" class="sidebar__item" title="算力中心" data-nav="compute">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 4 7v10l8 5 8-5V7z"/>
+              <path d="M12 2v20M4 7l16 10M20 7 4 17"/>
+            </svg>
+          </a>
+          
+          <a href="profile.html" class="sidebar__item is-active" title="我的" data-nav="profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </a>
+        </nav>
+        <div class="sidebar__logo" title="UMakex">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 12l3 3 5-6"/>
+          </svg>
+        </div>
+      </aside>
+
+      <!-- ========== 主区：我的 ========== -->
+      <main class="profile">
+        <div class="profile__inner">
+
+          <!-- 个人卡 -->
+          <div class="profile__card">
+            <div class="profile__card-left">
+              <div class="avatar avatar--lg" style="background: linear-gradient(135deg,#87CEEB,#4682B4);">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                  <circle cx="12" cy="7" r="3"/>
+                  <path d="M5 22l2-6c2-3 5-4 7-4s4 1 4 4v6z"/>
+                  <path d="M12 2v3M9 4l1 1M15 4l-1 1"/>
+                </svg>
+              </div>
+              <div class="profile__card-info">
+                <div class="profile__name">Michael</div>
+                <div class="profile__email">18026299235@163.com</div>
+                <div class="profile__account">账号：<strong>41338458</strong></div>
+              </div>
+            </div>
+            <div class="profile__card-right">
+              <div class="profile__qr">
+                <!-- 简化二维码（视觉占位） -->
+                <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="80" height="80" fill="white"/>
+                  <!-- 4 角定位标记 -->
+                  <rect x="6" y="6" width="18" height="18" fill="#111"/>
+                  <rect x="9" y="9" width="12" height="12" fill="white"/>
+                  <rect x="12" y="12" width="6" height="6" fill="#111"/>
+                  <rect x="56" y="6" width="18" height="18" fill="#111"/>
+                  <rect x="59" y="9" width="12" height="12" fill="white"/>
+                  <rect x="62" y="12" width="6" height="6" fill="#111"/>
+                  <rect x="6" y="56" width="18" height="18" fill="#111"/>
+                  <rect x="9" y="59" width="12" height="12" fill="white"/>
+                  <rect x="12" y="62" width="6" height="6" fill="#111"/>
+                  <!-- 中间模拟点阵 -->
+                  <g fill="#111">
+                    <rect x="30" y="6" width="3" height="3"/><rect x="36" y="6" width="3" height="3"/><rect x="42" y="6" width="3" height="3"/><rect x="48" y="6" width="3" height="3"/>
+                    <rect x="30" y="12" width="3" height="3"/><rect x="42" y="12" width="3" height="3"/>
+                    <rect x="30" y="18" width="3" height="3"/><rect x="36" y="18" width="3" height="3"/><rect x="48" y="18" width="3" height="3"/>
+                    <rect x="30" y="30" width="3" height="3"/><rect x="36" y="30" width="3" height="3"/><rect x="42" y="30" width="3" height="3"/><rect x="54" y="30" width="3" height="3"/><rect x="60" y="30" width="3" height="3"/><rect x="66" y="30" width="3" height="3"/><rect x="72" y="30" width="3" height="3"/>
+                    <rect x="30" y="36" width="3" height="3"/><rect x="42" y="36" width="3" height="3"/><rect x="48" y="36" width="3" height="3"/><rect x="60" y="36" width="3" height="3"/><rect x="72" y="36" width="3" height="3"/>
+                    <rect x="36" y="42" width="3" height="3"/><rect x="48" y="42" width="3" height="3"/><rect x="54" y="42" width="3" height="3"/><rect x="66" y="42" width="3" height="3"/>
+                    <rect x="30" y="48" width="3" height="3"/><rect x="42" y="48" width="3" height="3"/><rect x="60" y="48" width="3" height="3"/><rect x="72" y="48" width="3" height="3"/>
+                    <rect x="30" y="54" width="3" height="3"/><rect x="36" y="54" width="3" height="3"/><rect x="48" y="54" width="3" height="3"/><rect x="54" y="54" width="3" height="3"/><rect x="66" y="54" width="3" height="3"/>
+                    <rect x="30" y="60" width="3" height="3"/><rect x="42" y="60" width="3" height="3"/><rect x="60" y="60" width="3" height="3"/>
+                    <rect x="36" y="66" width="3" height="3"/><rect x="48" y="66" width="3" height="3"/><rect x="54" y="66" width="3" height="3"/><rect x="66" y="66" width="3" height="3"/><rect x="72" y="66" width="3" height="3"/>
+                    <rect x="30" y="72" width="3" height="3"/><rect x="42" y="72" width="3" height="3"/><rect x="48" y="72" width="3" height="3"/><rect x="60" y="72" width="3" height="3"/>
+                  </g>
+                  <!-- 中心 logo -->
+                  <rect x="34" y="34" width="12" height="12" fill="white"/>
+                  <rect x="36" y="36" width="8" height="8" fill="#07C160"/>
+                </svg>
+              </div>
+              <span class="profile__status">IM 已连接</span>
+            </div>
+          </div>
+
+          <!-- 统计卡组 -->
+          <div class="profile__stats">
+            <div class="profile__stat-card">
+              <div class="profile__stat-num">23</div>
+              <div class="profile__stat-label">消息</div>
+            </div>
+            <div class="profile__stat-card">
+              <div class="profile__stat-num">14</div>
+              <div class="profile__stat-label">好友</div>
+            </div>
+            <div class="profile__stat-card">
+              <div class="profile__stat-num">14</div>
+              <div class="profile__stat-label">群聊</div>
+            </div>
+          </div>
+
+          <!-- 快捷功能 -->
+          <div class="profile__panel">
+            <div class="profile__panel-title">快捷功能</div>
+            <div class="profile__panel-list">
+
+              <div class="profile__row">
+                <div class="profile__row-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>
+                  </svg>
+                </div>
+                <div class="profile__row-name">语言切换</div>
+                <div class="profile__row-extra">简体中文
+                  <svg class="profile__row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                </div>
+              </div>
+
+              <div class="profile__row">
+                <div class="profile__row-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                    <path d="M10 21a2 2 0 0 0 4 0"/>
+                  </svg>
+                </div>
+                <div class="profile__row-name">消息通知设置</div>
+                <div class="profile__row-extra">
+                  <svg class="profile__row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                </div>
+              </div>
+
+              <div class="profile__row">
+                <div class="profile__row-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-3-6.7"/>
+                    <path d="M21 4v5h-5"/>
+                  </svg>
+                </div>
+                <div class="profile__row-name">聊天设置</div>
+                <div class="profile__row-extra">
+                  <svg class="profile__row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                </div>
+              </div>
+
+              <div class="profile__row">
+                <div class="profile__row-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="2"/>
+                    <path d="M3 10h18M7 14h4M7 17h6"/>
+                  </svg>
+                </div>
+                <div class="profile__row-name">存储与缓存管理</div>
+                <div class="profile__row-extra">
+                  <svg class="profile__row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                </div>
+              </div>
+
+              <div class="profile__row">
+                <div class="profile__row-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 3-6.7"/>
+                    <path d="M3 4v5h5"/>
+                    <path d="M12 8v5l3 2"/>
+                  </svg>
+                </div>
+                <div class="profile__row-name">检查更新</div>
+                <div class="profile__row-extra">1.0.0+3
+                  <svg class="profile__row-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 退出登录 -->
+          <div class="profile__logout">
+            <button class="profile__logout-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <path d="m16 17 5-5-5-5M21 12H9"/>
+              </svg>
+              退出登录
+            </button>
+          </div>
+
+        </div>
+      </main>
+
+    </div>
+
+  </div>
+  <script src="assets/js/shared.js"></script>
+</body>
+</html>
