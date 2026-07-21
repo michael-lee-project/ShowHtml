@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>审核商家 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .submit-time {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+    .doc-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: var(--text-xs);
+      font-family: var(--font-mono);
+      padding: 2px 8px;
+      background: var(--bg-overlay);
+      border-radius: var(--radius-full);
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="merchants.html">商家管理</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">审核商家</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索商家 ID / 名称 / 联系人">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">REVIEW QUEUE · 2026-07-21 18:42 · 平均 24 小时反馈</div>
+            <h1 class="page-header-title">审核商家</h1>
+            <div class="page-header-sub">18 家待审 · 含游戏 16 / 不含游戏 2 · 当前审核员：林琪</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="batch">批量操作</button>
+            <button class="btn btn-primary" data-action="assign">分派审核员</button>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-yellow">
+            <div class="kpi-head">
+              <span class="kpi-label">待审核</span>
+              <span class="kpi-icon">⏱</span>
+            </div>
+            <div class="kpi-value">18</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 3</span>
+              较昨日 · 含 M044/M045/M046
+            </div>
+          </div>
+          <div class="kpi-card accent-blue">
+            <div class="kpi-head">
+              <span class="kpi-label">今日提交</span>
+              <span class="kpi-icon">↓</span>
+            </div>
+            <div class="kpi-value">3</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend neutral">·</span>
+              平均 5 / 日
+            </div>
+          </div>
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">今日通过</span>
+              <span class="kpi-icon">✓</span>
+            </div>
+            <div class="kpi-value">5</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 1</span>
+              通过率 71.4%
+            </div>
+          </div>
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">今日驳回</span>
+              <span class="kpi-icon">✕</span>
+            </div>
+            <div class="kpi-value">1</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend down">↓ 2</span>
+              驳回率 14.3%
+            </div>
+          </div>
+        </div>
+
+        <!-- 筛选条 -->
+        <div class="filter-bar" data-aui-filter>
+          <span class="filter-chip active" data-filter-value="待审核">待审核 <span style="opacity: 0.6; margin-left: 2px;">18</span></span>
+          <span class="filter-chip" data-filter-value="审核中">审核中 <span style="opacity: 0.6; margin-left: 2px;">3</span></span>
+          <span class="filter-chip" data-filter-value="已通过">已通过 <span style="opacity: 0.6; margin-left: 2px;">142</span></span>
+          <span class="filter-chip" data-filter-value="已驳回">已驳回 <span style="opacity: 0.6; margin-left: 2px;">23</span></span>
+          <span class="filter-chip" data-filter-value="需补资料">需补资料 <span style="opacity: 0.6; margin-left: 2px;">8</span></span>
+          <div style="width: 1px; height: 16px; background: var(--border-hairline); margin: 0 4px;"></div>
+          <select style="padding: 4px 8px; font-size: var(--text-xs); background: var(--bg-base); border: 1px solid var(--border-hairline);">
+            <option>全部提交时间</option>
+            <option>今日提交</option>
+            <option>3 日内</option>
+            <option>7 日内</option>
+            <option>超过 24h 未审</option>
+          </select>
+          <div class="filter-bar-search">
+            <input type="text" placeholder="搜索 ID / 商家 / 联系人" data-aui-filter-search>
+          </div>
+        </div>
+
+        <!-- 待审商家列表 -->
+        <div class="panel" style="padding: 0; overflow: hidden;">
+          <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+              待审 <strong style="color: var(--text-primary);">18</strong> 家 ·
+              <span style="color: var(--accent-red);">3 家紧急</span>（超过 12h 未审）
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">
+              按提交时间降序
+            </div>
+          </div>
+          <table class="tbl" id="review-table">
+            <thead>
+              <tr>
+                <th data-sort-type="string">ID</th>
+                <th data-sort-type="string">商家名</th>
+                <th data-sort-type="string">类目</th>
+                <th data-sort-type="string">联系人</th>
+                <th data-sort-type="date">提交时间</th>
+                <th data-sort-type="number" style="text-align: right;">资料数</th>
+                <th>含游戏</th>
+                <th>状态</th>
+                <th class="no-sort">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-status="待审核" data-search="M046 蓝星战场 孙浩 FPS" data-mid="M046">
+                <td class="tbl-num text-tertiary">M046</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">蓝</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">蓝星战场</div>
+                      <div class="tbl-name-sub">M046 · FPS</div>
+                    </div>
+                  </div>
+                </td>
+                <td>FPS</td>
+                <td>孙浩 <span class="text-tertiary text-mono" style="font-size: 11px;">158****9753</span></td>
+                <td class="submit-time">2026-07-21 10:42<br><span style="color: var(--accent-red);">8 小时前</span></td>
+                <td class="tbl-num" style="text-align: right;">4</td>
+                <td><span class="badge gray"><span class="badge-dot"></span>无</span></td>
+                <td><span class="badge yellow"><span class="badge-dot"></span>待审核</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M046" class="btn btn-primary btn-sm">审核</a>
+                </td>
+              </tr>
+              <tr data-status="待审核" data-search="M045 云海仙途 赵丽 RPG" data-mid="M045">
+                <td class="tbl-num text-tertiary">M045</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">云</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">云海仙途</div>
+                      <div class="tbl-name-sub">M045 · RPG</div>
+                    </div>
+                  </div>
+                </td>
+                <td>RPG</td>
+                <td>赵丽 <span class="text-tertiary text-mono" style="font-size: 11px;">131****8642</span></td>
+                <td class="submit-time">2026-07-20 14:15<br><span style="color: var(--accent-red);">28 小时前</span></td>
+                <td class="tbl-num" style="text-align: right;">5</td>
+                <td><span class="badge green"><span class="badge-dot"></span>含</span></td>
+                <td><span class="badge yellow"><span class="badge-dot"></span>待审核</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M045" class="btn btn-primary btn-sm">审核</a>
+                </td>
+              </tr>
+              <tr data-status="待审核" data-search="M044 墨韵江湖 黄磊 MMO" data-mid="M044">
+                <td class="tbl-num text-tertiary">M044</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">墨</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">墨韵江湖</div>
+                      <div class="tbl-name-sub">M044 · MMO</div>
+                    </div>
+                  </div>
+                </td>
+                <td>MMO</td>
+                <td>黄磊 <span class="text-tertiary text-mono" style="font-size: 11px;">132****1357</span></td>
+                <td class="submit-time">2026-07-19 09:23<br><span style="color: var(--accent-red);">57 小时前</span></td>
+                <td class="tbl-num" style="text-align: right;">5</td>
+                <td><span class="badge green"><span class="badge-dot"></span>含</span></td>
+                <td><span class="badge yellow"><span class="badge-dot"></span>待审核</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M044" class="btn btn-primary btn-sm">审核</a>
+                </td>
+              </tr>
+              <tr data-status="审核中" data-search="M047 星海征途 徐明 SLG" data-mid="M047">
+                <td class="tbl-num text-tertiary">M047</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">星</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">星海征途</div>
+                      <div class="tbl-name-sub">M047 · SLG</div>
+                    </div>
+                  </div>
+                </td>
+                <td>SLG</td>
+                <td>徐明 <span class="text-tertiary text-mono" style="font-size: 11px;">186****3344</span></td>
+                <td class="submit-time">2026-07-18 16:48<br>3 天前</td>
+                <td class="tbl-num" style="text-align: right;">5</td>
+                <td><span class="badge green"><span class="badge-dot"></span>含</span></td>
+                <td><span class="badge blue"><span class="badge-dot"></span>审核中</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M047" class="btn btn-secondary btn-sm">继续</a>
+                </td>
+              </tr>
+              <tr data-status="审核中" data-search="M048 剑影无双 周晓 ARPG" data-mid="M048">
+                <td class="tbl-num text-tertiary">M048</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">剑</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">剑影无双</div>
+                      <div class="tbl-name-sub">M048 · ARPG</div>
+                    </div>
+                  </div>
+                </td>
+                <td>ARPG</td>
+                <td>周晓 <span class="text-tertiary text-mono" style="font-size: 11px;">177****5566</span></td>
+                <td class="submit-time">2026-07-18 11:22<br>3 天前</td>
+                <td class="tbl-num" style="text-align: right;">5</td>
+                <td><span class="badge green"><span class="badge-dot"></span>含</span></td>
+                <td><span class="badge blue"><span class="badge-dot"></span>审核中</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M048" class="btn btn-secondary btn-sm">继续</a>
+                </td>
+              </tr>
+              <tr data-status="需补资料" data-search="M049 宇宙起源 马莉 沙盒" data-mid="M049">
+                <td class="tbl-num text-tertiary">M049</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">宇</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">宇宙起源</div>
+                      <div class="tbl-name-sub">M049 · 沙盒</div>
+                    </div>
+                  </div>
+                </td>
+                <td>沙盒</td>
+                <td>马莉 <span class="text-tertiary text-mono" style="font-size: 11px;">155****7788</span></td>
+                <td class="submit-time">2026-07-17 14:00<br>4 天前</td>
+                <td class="tbl-num" style="text-align: right;">4</td>
+                <td><span class="badge green"><span class="badge-dot"></span>含</span></td>
+                <td><span class="badge yellow"><span class="badge-dot"></span>需补资料</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M049" class="btn btn-secondary btn-sm">查看</a>
+                </td>
+              </tr>
+              <tr data-status="待审核" data-search="M050 奇幻物语 冯雷 卡牌" data-mid="M050">
+                <td class="tbl-num text-tertiary">M050</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">奇</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">奇幻物语</div>
+                      <div class="tbl-name-sub">M050 · 卡牌</div>
+                    </div>
+                  </div>
+                </td>
+                <td>卡牌</td>
+                <td>冯雷 <span class="text-tertiary text-mono" style="font-size: 11px;">166****9911</span></td>
+                <td class="submit-time">2026-07-17 09:15<br>4 天前</td>
+                <td class="tbl-num" style="text-align: right;">5</td>
+                <td><span class="badge green"><span class="badge-dot"></span>含</span></td>
+                <td><span class="badge yellow"><span class="badge-dot"></span>待审核</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M050" class="btn btn-primary btn-sm">审核</a>
+                </td>
+              </tr>
+              <tr data-status="待审核" data-search="M051 梦境之旅 韩雪 休闲" data-mid="M051">
+                <td class="tbl-num text-tertiary">M051</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">梦</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">梦境之旅</div>
+                      <div class="tbl-name-sub">M051 · 休闲</div>
+                    </div>
+                  </div>
+                </td>
+                <td>休闲</td>
+                <td>韩雪 <span class="text-tertiary text-mono" style="font-size: 11px;">199****2233</span></td>
+                <td class="submit-time">2026-07-16 16:30<br>5 天前</td>
+                <td class="tbl-num" style="text-align: right;">5</td>
+                <td><span class="badge green"><span class="badge-dot"></span>含</span></td>
+                <td><span class="badge yellow"><span class="badge-dot"></span>待审核</span></td>
+                <td>
+                  <a href="merchants-review-detail.html?mid=M051" class="btn btn-primary btn-sm">审核</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding: var(--space-3) var(--space-5); border-top: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: space-between; font-size: var(--text-xs); color: var(--text-tertiary);">
+            <div>显示 1 - 8 / 共 18 家 · 含 3 家紧急（&gt;12h）</div>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary btn-sm">‹ 上一页</button>
+              <button class="btn btn-primary btn-sm">1</button>
+              <button class="btn btn-secondary btn-sm">2</button>
+              <button class="btn btn-secondary btn-sm">3</button>
+              <button class="btn btn-secondary btn-sm">下一页 ›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 审核说明 -->
+        <div class="panel" style="border-left: 3px solid var(--accent-blue); background: linear-gradient(90deg, var(--accent-blue-light), var(--bg-elevated) 40%);">
+          <div class="flex gap-3">
+            <div class="panel-icon blue" style="flex-shrink: 0;">i</div>
+            <div style="flex: 1;">
+              <div style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--text-primary); margin-bottom: 6px;">审核要点</div>
+              <ul style="margin: 0; padding-left: 20px; font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.8;">
+                <li>营业执照需在有效期内 · 法人身份证需清晰可辨</li>
+                <li>玩法 PPT 需包含核心机制说明 · 演示视频需能完整播放</li>
+                <li>游戏备案号需在国家新闻出版署可查 · 含游戏需额外核对资质</li>
+                <li>超过 12h 未审会自动标红 · 超过 24h 通知运营总监介入</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    // 初始化筛选 + 排序
+    AdminUI.Filter.init(document.getElementById('review-table'), {
+      emptyMessage: '无匹配商家，请调整筛选条件',
+    });
+    AdminUI.Sort.init(document.getElementById('review-table'));
+
+    // 行点击跳详情（避开按钮）
+    document.querySelectorAll('#review-table tbody tr').forEach(row => {
+      row.classList.add('aui-row-clickable');
+      row.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const mid = row.getAttribute('data-mid');
+        if (mid) window.location.href = `merchants-review-detail.html?mid=${mid}`;
+      });
+    });
+
+    // 顶部按钮
+    document.querySelector('[data-action="batch"]')?.addEventListener('click', function() {
+      const done = AdminUI.withLoading(this, '加载中...');
+      setTimeout(() => {
+        done();
+        AdminUI.Modal.open({
+          title: '批量操作',
+          body: `
+            <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.7;">
+              <p>选择批量操作：</p>
+              <ul style="margin: 12px 0; padding-left: 20px;">
+                <li>批量通过（仅「待审核」状态）</li>
+                <li>批量驳回（需填写驳回原因）</li>
+                <li>批量分派给其他审核员</li>
+                <li>导出待审列表为 Excel</li>
+              </ul>
+              <div style="margin-top: 16px; padding: 12px; background: var(--bg-overlay); border-radius: 4px; font-size: 12px; color: var(--text-tertiary);">
+                💡 已选中 <strong>0</strong> 条记录（mock 演示）
+              </div>
+            </div>
+          `,
+          size: 'sm',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>
+            <button type="button" class="btn btn-primary" id="aui-batch-confirm">前往批量操作</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('aui-batch-confirm')?.addEventListener('click', () => {
+            AdminUI.Modal.close();
+            AdminUI.toast('批量操作已就绪（mock 演示）', 'info');
+          });
+        }, 50);
+      }, 400);
+    });
+
+    document.querySelector('[data-action="assign"]')?.addEventListener('click', function() {
+      const body = document.createElement('div');
+      body.innerHTML = `
+        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">将「待审核」商家的 18 条记录分派给指定审核员：</div>
+        <div style="display: grid; gap: 10px;">
+          <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--border-hairline); border-radius: 4px; cursor: pointer;">
+            <input type="radio" name="reviewer" checked>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 500;">林琪 · 运营总监</div>
+              <div style="font-size: 11px; color: var(--text-tertiary);">当前已分配 3 条 · 剩余 15 条</div>
+            </div>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--border-hairline); border-radius: 4px; cursor: pointer;">
+            <input type="radio" name="reviewer">
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 500;">陈静 · 高级审核员</div>
+              <div style="font-size: 11px; color: var(--text-tertiary);">当前已分配 8 条</div>
+            </div>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--border-hairline); border-radius: 4px; cursor: pointer;">
+            <input type="radio" name="reviewer">
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 500;">周晓 · 审核员</div>
+              <div style="font-size: 11px; color: var(--text-tertiary);">当前已分配 5 条</div>
+            </div>
+          </label>
+        </div>
+      `;
+      AdminUI.Modal.open({
+        title: '分派审核员',
+        body,
+        size: 'sm',
+        footer: `
+          <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+          <button type="button" class="btn btn-primary" id="aui-assign-confirm">确认分派</button>
+        `,
+      });
+      setTimeout(() => {
+        document.getElementById('aui-assign-confirm')?.addEventListener('click', function() {
+          const btn = this;
+          const done = AdminUI.withLoading(btn, '分派中...');
+          setTimeout(() => {
+            done();
+            AdminUI.Modal.close();
+            AdminUI.toast('已分派 15 条待审记录给 林琪', 'success');
+          }, 800);
+        });
+      }, 50);
+    });
+
+    // 分页按钮
+    document.querySelectorAll('.panel [class*="btn-sm"]').forEach(btn => {
+      const t = btn.textContent.trim();
+      if (t.match(/^[‹›]/) || /^\d+$/.test(t)) {
+        btn.addEventListener('click', () => {
+          AdminUI.toast(`已切换到第 ${t} 页（mock 演示）`, 'info', 1500);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

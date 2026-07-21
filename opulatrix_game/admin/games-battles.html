@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实时对局 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: live-pulse 1.5s ease-in-out infinite;
+      margin-right: 6px;
+    }
+    @keyframes live-pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+    }
+    .battle-row {
+      display: grid;
+      grid-template-columns: 80px 100px 1fr 100px 80px 60px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--border-hairline);
+      font-size: var(--text-sm);
+      transition: all 0.15s;
+    }
+    .battle-row:hover { background: var(--bg-overlay); }
+    .battle-row.anomaly { background: rgba(220, 38, 38, 0.04); border-left: 3px solid var(--accent-red); }
+    .battle-time {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .battle-game {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .battle-game-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: var(--accent-red-light);
+      color: var(--accent-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: var(--weight-semibold);
+    }
+    .battle-game-name {
+      font-size: var(--text-xs);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .battle-players {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .battle-amount {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      text-align: right;
+      font-weight: var(--weight-medium);
+    }
+    .battle-amount.loss { color: var(--accent-red); }
+    .anomaly-tag {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      padding: 2px 6px;
+      background: var(--accent-red);
+      color: white;
+      border-radius: 3px;
+      text-align: center;
+    }
+    .rank-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .rank-row:last-child { border-bottom: 0; }
+    .rank-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      width: 20px;
+    }
+    .rank-num.top { color: var(--accent-red); font-weight: var(--weight-bold); }
+    .rank-name {
+      font-size: var(--text-xs);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+      flex: 1;
+    }
+    .rank-val {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+          <span class="admin-sidebar-badge" style="background: var(--accent-green);">LIVE</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="games.html">游戏 · 流水</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">
+              <span class="live-dot"></span>实时对局
+            </span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索对局 / 玩家 / 游戏">
+        </div>
+        <div class="admin-topbar-actions">
+          <span style="font-size: 10px; color: var(--accent-green-dark); background: var(--accent-green-light); padding: 4px 10px; border-radius: 9999px; font-family: var(--font-mono); font-weight: 600;">
+            <span class="live-dot"></span>实时同步中
+          </span>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">LIVE BATTLES · 2026-07-21 18:42:18 · 同步延迟 0.3s</div>
+            <h1 class="page-header-title">
+              <span class="live-dot"></span>实时对局
+            </h1>
+            <div class="page-header-sub">今日 268,400 局 · 当前并发 12,840 局 · 含 2 起大额异常</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="pause-sync" id="btn-sync">暂停同步</button>
+            <button class="btn btn-secondary" data-action="export">导出</button>
+            <button class="btn btn-primary" data-action="anomaly-config">异常配置</button>
+          </div>
+        </div>
+
+        <!-- 实时统计 KPI -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">今日局数</span>
+              <span class="kpi-icon">▶</span>
+            </div>
+            <div class="kpi-value">268,400</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 12.4%</span>
+              较昨日 · 当前 1,840 局/分
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">今日流水</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">¥612 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 8.2%</span>
+              较昨日
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">今日客损</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">¥156 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 4.2%</span>
+              流水客损比 25.5%
+            </div>
+          </div>
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">大额对局异常</span>
+              <span class="kpi-icon">!</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-red);">2</div>
+            <div class="kpi-meta">
+              <span style="color: var(--accent-red); font-weight: 600;">已自动暂停</span> · 累计拦截 ¥20,900
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-12" style="grid-template-columns: 1fr 320px;">
+          <!-- 实时对局 feed -->
+          <div class="panel" style="padding: 0; overflow: hidden;">
+            <div class="panel-head" style="padding: var(--space-4) var(--space-5); margin: 0;">
+              <div class="panel-title-group">
+                <div class="panel-icon red" style="width: 28px; height: 28px; font-size: 12px;">
+                  <span class="live-dot"></span>
+                </div>
+                <div>
+                  <div class="panel-title">实时对局 feed</div>
+                  <div class="panel-sub">最近 12 局 · 自动滚动 · 异常行高亮</div>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <span class="filter-chip active" data-feed-filter="all">全部</span>
+                <span class="filter-chip" data-feed-filter="anomaly">仅异常</span>
+                <span class="filter-chip" data-feed-filter="big">大额</span>
+              </div>
+            </div>
+
+            <div style="padding: var(--space-2) var(--space-4);" id="battles-feed">
+              <div class="battle-row" style="background: var(--bg-base); border-radius: 4px; margin-bottom: 4px; font-size: 11px; font-family: var(--font-mono); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 0;">
+                <span>时间</span>
+                <span>游戏</span>
+                <span>玩家</span>
+                <span style="text-align: right;">流水</span>
+                <span style="text-align: right;">客损</span>
+                <span style="text-align: center;">标记</span>
+              </div>
+
+              <div class="battle-row anomaly" data-battle-flag="anomaly" data-amount="8500" data-game="暗影潜行" data-merchant="M052">
+                <span class="battle-time">18:40:18</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon" style="background: var(--accent-yellow-light); color: #92400E;">暗</div>
+                  <span class="battle-game-name">暗影潜行</span>
+                </div>
+                <span class="battle-players">玩家 x***1 vs y***2</span>
+                <span class="battle-amount" style="color: var(--accent-red); font-weight: 600;">¥8,500</span>
+                <span class="battle-amount loss">¥7,800</span>
+                <span class="anomaly-tag">大额</span>
+              </div>
+
+              <div class="battle-row anomaly" data-battle-flag="anomaly" data-amount="12400" data-game="战火重燃" data-merchant="M058">
+                <span class="battle-time">18:38:32</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon" style="background: var(--accent-yellow-light); color: #92400E;">战</div>
+                  <span class="battle-game-name">战火重燃</span>
+                </div>
+                <span class="battle-players">玩家 d***2 vs b***7</span>
+                <span class="battle-amount" style="color: var(--accent-red); font-weight: 600;">¥12,400</span>
+                <span class="battle-amount loss">¥11,200</span>
+                <span class="anomaly-tag">大额</span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="1280" data-game="音浪对决" data-merchant="M001">
+                <span class="battle-time">18:42:18</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">音</div>
+                  <span class="battle-game-name">音浪对决</span>
+                </div>
+                <span class="battle-players">玩家 f***8 vs k***2</span>
+                <span class="battle-amount">¥1,280</span>
+                <span class="battle-amount loss">¥412</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="1840" data-game="银河拓荒者" data-merchant="M019">
+                <span class="battle-time">18:41:55</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">银</div>
+                  <span class="battle-game-name">银河拓荒者</span>
+                </div>
+                <span class="battle-players">玩家 h***5 vs w***9</span>
+                <span class="battle-amount">¥1,840</span>
+                <span class="battle-amount loss">¥624</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="920" data-game="音浪对决" data-merchant="M001">
+                <span class="battle-time">18:41:32</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">音</div>
+                  <span class="battle-game-name">音浪对决</span>
+                </div>
+                <span class="battle-players">玩家 n***1 vs m***7</span>
+                <span class="battle-amount">¥920</span>
+                <span class="battle-amount loss">¥348</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="2480" data-game="风语启示录" data-merchant="M003">
+                <span class="battle-time">18:41:08</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">风</div>
+                  <span class="battle-game-name">风语启示录</span>
+                </div>
+                <span class="battle-players">玩家 p***3 vs q***6</span>
+                <span class="battle-amount">¥2,480</span>
+                <span class="battle-amount loss">¥1,842</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="3200" data-game="风语启示录" data-merchant="M003">
+                <span class="battle-time">18:40:42</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">风</div>
+                  <span class="battle-game-name">风语启示录</span>
+                </div>
+                <span class="battle-players">玩家 r***4 vs t***8</span>
+                <span class="battle-amount">¥3,200</span>
+                <span class="battle-amount loss">¥2,680</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="480" data-game="萤火奇航" data-merchant="M007">
+                <span class="battle-time">18:39:55</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">萤</div>
+                  <span class="battle-game-name">萤火奇航</span>
+                </div>
+                <span class="battle-players">玩家 c***5 vs v***9</span>
+                <span class="battle-amount">¥480</span>
+                <span class="battle-amount loss">¥180</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="680" data-game="音浪对决" data-merchant="M001">
+                <span class="battle-time">18:39:08</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">音</div>
+                  <span class="battle-game-name">音浪对决</span>
+                </div>
+                <span class="battle-players">玩家 g***1 vs h***4</span>
+                <span class="battle-amount">¥680</span>
+                <span class="battle-amount loss">¥224</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="1240" data-game="七海冒险家" data-merchant="K012">
+                <span class="battle-time">18:38:42</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">七</div>
+                  <span class="battle-game-name">七海冒险家</span>
+                </div>
+                <span class="battle-players">玩家 j***6 vs l***3</span>
+                <span class="battle-amount">¥1,240</span>
+                <span class="battle-amount loss">¥482</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="1820" data-game="银河拓荒者" data-merchant="M019">
+                <span class="battle-time">18:38:15</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">银</div>
+                  <span class="battle-game-name">银河拓荒者</span>
+                </div>
+                <span class="battle-players">玩家 o***8 vs i***5</span>
+                <span class="battle-amount">¥1,820</span>
+                <span class="battle-amount loss">¥740</span>
+                <span></span>
+              </div>
+
+              <div class="battle-row" data-battle-flag="normal" data-amount="2840" data-game="风语启示录" data-merchant="M003">
+                <span class="battle-time">18:37:48</span>
+                <div class="battle-game">
+                  <div class="battle-game-icon">风</div>
+                  <span class="battle-game-name">风语启示录</span>
+                </div>
+                <span class="battle-players">玩家 e***2 vs s***4</span>
+                <span class="battle-amount">¥2,840</span>
+                <span class="battle-amount loss">¥1,980</span>
+                <span></span>
+              </div>
+            </div>
+
+            <div style="padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border-hairline); text-align: center;">
+              <span style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">↓ 自动滚动 · 共显示最近 12 局 · 每 2s 刷新</span>
+            </div>
+          </div>
+
+          <!-- 右侧：排行榜 + 异常告警 -->
+          <div>
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon green">★</div>
+                  <div>
+                    <div class="panel-title">游戏流水 Top 5</div>
+                    <div class="panel-sub">最近 1 小时</div>
+                  </div>
+                </div>
+              </div>
+              <div class="rank-row">
+                <span class="rank-num top">01</span>
+                <span class="rank-name">风语启示录</span>
+                <span class="rank-val">¥48 万</span>
+              </div>
+              <div class="rank-row">
+                <span class="rank-num top">02</span>
+                <span class="rank-name">银河拓荒者</span>
+                <span class="rank-val">¥36 万</span>
+              </div>
+              <div class="rank-row">
+                <span class="rank-num top">03</span>
+                <span class="rank-name">萤火奇航</span>
+                <span class="rank-val">¥28 万</span>
+              </div>
+              <div class="rank-row">
+                <span class="rank-num">04</span>
+                <span class="rank-name">七海冒险家</span>
+                <span class="rank-val">¥18 万</span>
+              </div>
+              <div class="rank-row">
+                <span class="rank-num">05</span>
+                <span class="rank-name">音浪对决</span>
+                <span class="rank-val">¥12 万</span>
+              </div>
+            </div>
+
+            <div class="panel" style="border-left: 3px solid var(--accent-red);">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon red">!</div>
+                  <div>
+                    <div class="panel-title">异常告警</div>
+                    <div class="panel-sub">最近 1 小时 · 2 起</div>
+                  </div>
+                </div>
+                <a href="risk-alerts.html" class="panel-link">全部 →</a>
+              </div>
+
+              <div style="padding: var(--space-3); background: rgba(220, 38, 38, 0.04); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-red); margin-bottom: var(--space-2);">
+                <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); margin-bottom: 4px;">18:40:18</div>
+                <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">
+                  <span class="badge red" style="margin-right: 6px;"><span class="badge-dot"></span>大额对局</span>
+                </div>
+                <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">
+                  暗影潜行 · ¥8,500 · 已自动暂停
+                </div>
+              </div>
+
+              <div style="padding: var(--space-3); background: rgba(220, 38, 38, 0.04); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-red); margin-bottom: 0;">
+                <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); margin-bottom: 4px;">18:38:32</div>
+                <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">
+                  <span class="badge red" style="margin-right: 6px;"><span class="badge-dot"></span>大额对局</span>
+                </div>
+                <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">
+                  战火重燃 · ¥12,400 · 已自动暂停
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" style="background: linear-gradient(135deg, var(--accent-blue-light), var(--bg-elevated) 50%);">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">⏰</div>
+                  <div>
+                    <div class="panel-title">今日峰值</div>
+                  </div>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+                <div>
+                  <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">并发对局峰值</div>
+                  <div style="font-size: var(--text-xl); font-weight: var(--weight-bold); color: var(--accent-blue); font-family: var(--font-mono); margin-top: 4px;">12,840</div>
+                  <div style="font-size: 10px; color: var(--text-tertiary);">21:30 晚高峰</div>
+                </div>
+                <div>
+                  <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">单分钟最高</div>
+                  <div style="font-size: var(--text-xl); font-weight: var(--weight-bold); color: var(--accent-red); font-family: var(--font-mono); margin-top: 4px;">2,180</div>
+                  <div style="font-size: 10px; color: var(--text-tertiary);">局/分钟</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 暂停/恢复同步
+      let syncing = true;
+      const syncBtn = document.getElementById('btn-sync');
+      syncBtn?.addEventListener('click', function() {
+        syncing = !syncing;
+        this.innerHTML = syncing
+          ? '<span>⏸</span> 暂停同步'
+          : '<span>▶</span> 恢复同步';
+        AdminUI.toast(syncing ? '实时同步已开启' : '实时同步已暂停', syncing ? 'success' : 'warning');
+      });
+
+      // 导出
+      document.querySelector('[data-action="export"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '导出中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('已导出最近 100 条对局数据', 'success');
+        }, 800);
+      });
+
+      // 异常配置
+      document.querySelector('[data-action="anomaly-config"]')?.addEventListener('click', () => {
+        window.location.href = 'rules-config.html';
+      });
+
+      // 筛选 chip
+      const feedChips = document.querySelectorAll('[data-feed-filter]');
+      feedChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          feedChips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          const v = chip.getAttribute('data-feed-filter');
+          document.querySelectorAll('#battles-feed .battle-row').forEach(row => {
+            if (row.style.borderBottom === '0' || row.querySelector('.battle-time')?.textContent.match(/时间|游戏|玩家|流水|客损|标记/)) return;
+            const flag = row.getAttribute('data-battle-flag');
+            const amount = parseInt(row.getAttribute('data-amount') || '0', 10);
+            let show = true;
+            if (v === 'anomaly') show = flag === 'anomaly';
+            if (v === 'big') show = amount >= 5000;
+            row.style.display = show ? '' : 'none';
+          });
+        });
+      });
+
+      // 排行榜 + 异常告警
+      // 排行榜行点击 → 跳游戏详情
+      document.querySelectorAll('.rank-row').forEach(r => {
+        r.style.cursor = 'pointer';
+        r.addEventListener('click', () => {
+          const name = r.querySelector('.rank-name')?.textContent || '';
+          AdminUI.toast(`正在跳转到 ${name} 的游戏详情...`, 'info', 1200);
+          setTimeout(() => {
+            // 跳转到第一个匹配的游戏
+            const link = document.querySelector(`a.game-name`);
+            if (link) window.location.href = link.href;
+          }, 800);
+        });
+      });
+
+      // 异常告警行点击 → 跳预警中心
+      document.querySelectorAll('.panel .rank-row, .panel [style*="background: rgba(220, 38, 38"]').forEach(r => {
+        r.style.cursor = 'pointer';
+        r.addEventListener('click', () => {
+          window.location.href = 'risk-alerts.html';
+        });
+      });
+
+      // 实时对局 feed：每 3 秒插入一条新对局（mock）
+      const merchantGames = [
+        { g: '音浪对决', m: 'M001', icon: '音', bg: 'var(--accent-red-light)', c: 'var(--accent-red)' },
+        { g: '风语启示录', m: 'M003', icon: '风', bg: 'var(--accent-red-light)', c: 'var(--accent-red)' },
+        { g: '银河拓荒者', m: 'M019', icon: '银', bg: 'var(--accent-red-light)', c: 'var(--accent-red)' },
+        { g: '萤火奇航', m: 'M007', icon: '萤', bg: 'var(--accent-red-light)', c: 'var(--accent-red)' },
+        { g: '七海冒险家', m: 'K012', icon: '七', bg: 'var(--accent-red-light)', c: 'var(--accent-red)' },
+      ];
+      function pad(n) { return String(n).padStart(2, '0'); }
+      function nowTime() {
+        const d = new Date();
+        return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      }
+      function pickPlayer() {
+        const chars = 'abcdefghjkmnpqrstuvwxyz';
+        const a = chars[Math.floor(Math.random() * chars.length)] + '***' + Math.floor(Math.random() * 10);
+        const b = chars[Math.floor(Math.random() * chars.length)] + '***' + Math.floor(Math.random() * 10);
+        return `玩家 ${a} vs ${b}`;
+      }
+      function genBattle() {
+        const mg = merchantGames[Math.floor(Math.random() * merchantGames.length)];
+        const isAnomaly = Math.random() < 0.15;
+        const revenue = isAnomaly ? Math.floor(5000 + Math.random() * 8000) : Math.floor(200 + Math.random() * 3000);
+        const loss = Math.floor(revenue * (0.4 + Math.random() * 0.5));
+        return {
+          time: nowTime(),
+          game: mg.g,
+          merchant: mg.m,
+          icon: mg.icon,
+          iconBg: mg.bg,
+          iconColor: mg.c,
+          players: pickPlayer(),
+          revenue,
+          loss,
+          anomaly: isAnomaly,
+        };
+      }
+      function prependBattle(b) {
+        const feed = document.getElementById('battles-feed');
+        if (!feed) return;
+        const row = document.createElement('div');
+        row.className = 'battle-row' + (b.anomaly ? ' anomaly' : '');
+        row.setAttribute('data-battle-flag', b.anomaly ? 'anomaly' : 'normal');
+        row.setAttribute('data-amount', String(b.revenue));
+        row.setAttribute('data-game', b.game);
+        row.setAttribute('data-merchant', b.merchant);
+        row.innerHTML = `
+          <span class="battle-time">${b.time}</span>
+          <div class="battle-game">
+            <div class="battle-game-icon" style="background: ${b.iconBg}; color: ${b.iconColor};">${b.icon}</div>
+            <span class="battle-game-name">${b.game}</span>
+          </div>
+          <span class="battle-players">${b.players}</span>
+          <span class="battle-amount"${b.anomaly ? ' style="color: var(--accent-red); font-weight: 600;"' : ''}>¥${b.revenue.toLocaleString()}</span>
+          <span class="battle-amount loss">¥${b.loss.toLocaleString()}</span>
+          <span${b.anomaly ? ' class="anomaly-tag"' : ''}>${b.anomaly ? '大额' : ''}</span>
+        `;
+        // 跳过表头行
+        const header = feed.querySelector('.battle-row');
+        if (header && header.style.background) {
+          feed.insertBefore(row, header.nextSibling);
+        } else {
+          feed.appendChild(row);
+        }
+        // 限制 12 条
+        const rows = feed.querySelectorAll('.battle-row');
+        if (rows.length > 13) { // 1 header + 12 data
+          for (let i = rows.length - 1; i >= 13; i--) {
+            if (!rows[i].style.background || !rows[i].style.background.includes('--bg-base')) {
+              rows[i].remove();
+            }
+          }
+        }
+        // 重新应用筛选
+        const activeFilter = document.querySelector('[data-feed-filter].active')?.getAttribute('data-feed-filter') || 'all';
+        if (activeFilter !== 'all') {
+          if ((activeFilter === 'anomaly' && !b.anomaly) || (activeFilter === 'big' && b.revenue < 5000)) {
+            row.style.display = 'none';
+          }
+        }
+      }
+      setInterval(() => {
+        if (!syncing) return;
+        prependBattle(genBattle());
+      }, 3000);
+
+      // 战局行操作：每行加 hover 显示的操作按钮（mock）
+      // 这里通过给每行加点击事件实现：弹 Modal 显示详情 + 操作
+      const battleRows = () => document.querySelectorAll('#battles-feed .battle-row');
+      document.addEventListener('click', (e) => {
+        const row = e.target.closest('#battles-feed .battle-row');
+        if (!row) return;
+        // 跳过表头
+        if (row.style.background && row.style.background.includes('--bg-base')) return;
+        const flag = row.getAttribute('data-battle-flag');
+        const game = row.getAttribute('data-game');
+        const merchant = row.getAttribute('data-merchant');
+        const amount = row.getAttribute('data-amount');
+        const time = row.querySelector('.battle-time')?.textContent || '';
+        const players = row.querySelector('.battle-players')?.textContent || '';
+        const isAnomaly = flag === 'anomaly';
+
+        const actions = isAnomaly ? `
+          <button type="button" class="btn btn-secondary btn-sm" data-act="mark-suspect">标记可疑</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-act="pause-game">暂停该游戏</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-act="view-detail">查看详情</button>
+        ` : `
+          <button type="button" class="btn btn-secondary btn-sm" data-act="view-detail">查看详情</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-act="mark-suspect">标记可疑</button>
+        `;
+
+        AdminUI.Modal.open({
+          title: `对局详情 · ${game}`,
+          body: `
+            <div style="display: grid; grid-template-columns: 80px 1fr; gap: 10px 16px; font-size: 13px;">
+              <div class="text-tertiary text-mono" style="font-size: 11px;">时间</div>
+              <div class="text-mono">${time}</div>
+              <div class="text-tertiary text-mono" style="font-size: 11px;">游戏</div>
+              <div>${game} · 所属 ${merchant}</div>
+              <div class="text-tertiary text-mono" style="font-size: 11px;">玩家</div>
+              <div>${players}</div>
+              <div class="text-tertiary text-mono" style="font-size: 11px;">流水</div>
+              <div class="text-mono" style="font-weight: 600;">¥${parseInt(amount).toLocaleString()}</div>
+              <div class="text-tertiary text-mono" style="font-size: 11px;">状态</div>
+              <div>${isAnomaly ? '<span class="badge red"><span class="badge-dot"></span>大额异常</span>' : '<span class="badge green"><span class="badge-dot"></span>正常</span>'}</div>
+            </div>
+            ${isAnomaly ? `<div style="margin-top: 16px; padding: 10px 12px; background: var(--accent-red-light); border-radius: 4px; font-size: 12px; color: var(--accent-red-dark);">
+              ⚠ 该对局流水超历史峰值，已自动暂停该游戏结算，建议人工复核。
+            </div>` : ''}
+          `,
+          size: 'sm',
+          footer: actions,
+        });
+        setTimeout(() => {
+          document.querySelector('[data-act="mark-suspect"]')?.addEventListener('click', function() {
+            AdminUI.confirm({
+              title: '标记为可疑对局？',
+              message: '将该对局标记为可疑，触发自动审核流程。',
+              confirmText: '确认标记',
+              cancelText: '取消',
+              type: 'danger',
+            }).then(ok => {
+              if (!ok) return;
+              const done = AdminUI.withLoading(this, '提交中...');
+              setTimeout(() => {
+                done();
+                AdminUI.Modal.close();
+                AdminUI.toast('已标记为可疑对局，触发自动审核', 'success');
+              }, 800);
+            });
+          });
+          document.querySelector('[data-act="pause-game"]')?.addEventListener('click', function() {
+            AdminUI.confirm({
+              title: `暂停 ${game}？`,
+              message: '暂停后该游戏将停止接收新对局，已开始的局可继续完成。',
+              confirmText: '确认暂停',
+              cancelText: '取消',
+              type: 'danger',
+              dangerText: '暂停',
+            }).then(ok => {
+              if (!ok) return;
+              const done = AdminUI.withLoading(this, '处理中...');
+              setTimeout(() => {
+                done();
+                AdminUI.Modal.close();
+                AdminUI.toast(`${game} 已暂停`, 'success');
+              }, 1000);
+            });
+          });
+          document.querySelector('[data-act="view-detail"]')?.addEventListener('click', () => {
+            AdminUI.Modal.close();
+            window.location.href = 'risk-alerts.html';
+          });
+        }, 50);
+      });
+      // 让对局行有 hover 提示可点击
+      battleRows().forEach(r => {
+        r.style.cursor = 'pointer';
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>运营消息 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .msg-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-4);
+      min-height: 600px;
+    }
+    .msg-categories {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: var(--space-2);
+    }
+    .cat-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+    .cat-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .cat-item.active {
+      background: var(--accent-red-light);
+      color: var(--accent-red);
+      font-weight: var(--weight-medium);
+    }
+    .cat-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: var(--bg-overlay);
+      color: var(--text-tertiary);
+    }
+    .cat-item.active .cat-icon {
+      background: var(--accent-red);
+      color: white;
+    }
+    .cat-count {
+      margin-left: auto;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+      background: var(--bg-overlay);
+      color: var(--text-tertiary);
+    }
+    .cat-item.active .cat-count {
+      background: var(--accent-red);
+      color: white;
+    }
+    .msg-list {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .msg-item {
+      display: grid;
+      grid-template-columns: 90px 100px 60px 1fr 80px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-hairline);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .msg-item:hover { background: var(--bg-overlay); }
+    .msg-item.unread { background: rgba(220, 38, 38, 0.02); }
+    .msg-item.unread:hover { background: rgba(220, 38, 38, 0.04); }
+    .msg-time {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .msg-from {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+    }
+    .msg-type-badge {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      padding: 2px 6px;
+      border-radius: 3px;
+      text-align: center;
+    }
+    .msg-type-badge.todo { background: var(--accent-yellow-light); color: #92400E; }
+    .msg-type-badge.anomaly { background: var(--accent-red-light); color: var(--accent-red-dark); }
+    .msg-type-badge.system { background: var(--accent-blue-light); color: #1E40AF; }
+    .msg-type-badge.merchant { background: var(--accent-green-light); color: var(--accent-green-dark); }
+    .msg-type-badge.finance { background: rgba(139,92,246,0.1); color: #6D28D9; }
+    .msg-content {
+      min-width: 0;
+    }
+    .msg-title {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+      margin-bottom: 2px;
+    }
+    .msg-item.unread .msg-title::before {
+      content: '●';
+      color: var(--accent-red);
+      margin-right: 6px;
+      font-size: 8px;
+    }
+    .msg-summary {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .msg-status {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+          <span class="admin-sidebar-badge">7</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">运营消息</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索消息">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="btn btn-ghost btn-sm" data-action="mark-all-read-2">全部标为已读</button>
+          <button class="btn btn-secondary btn-sm" data-action="msg-settings-2">消息设置</button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">MESSAGES · 2026-07-21 18:42</div>
+            <h1 class="page-header-title">运营消息</h1>
+            <div class="page-header-sub">7 项未读 · 18 条历史 · 含 2 项严重异常 + 3 项待办 + 1 项商家沟通</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="mark-all-read">全部已读</button>
+            <button class="btn btn-primary" data-action="msg-settings">消息设置</button>
+          </div>
+        </div>
+
+        <div class="msg-layout">
+          <!-- 左侧：消息分类 -->
+          <div class="msg-categories" id="msg-categories">
+            <div class="cat-item active" data-cat="all">
+              <div class="cat-icon">✉</div>
+              <span>全部消息</span>
+              <span class="cat-count">25</span>
+            </div>
+            <div class="cat-item" data-cat="todo">
+              <div class="cat-icon" style="background: var(--accent-yellow-light); color: #92400E;">⏱</div>
+              <span>待办</span>
+              <span class="cat-count">7</span>
+            </div>
+            <div class="cat-item" data-cat="anomaly">
+              <div class="cat-icon" style="background: var(--accent-red-light); color: var(--accent-red);">!</div>
+              <span>异常</span>
+              <span class="cat-count">5</span>
+            </div>
+            <div class="cat-item" data-cat="system">
+              <div class="cat-icon" style="background: var(--accent-blue-light); color: var(--accent-blue);">i</div>
+              <span>系统</span>
+              <span class="cat-count">8</span>
+            </div>
+            <div class="cat-item" data-cat="merchant">
+              <div class="cat-icon" style="background: var(--accent-green-light); color: var(--accent-green);">📞</div>
+              <span>商家沟通</span>
+              <span class="cat-count">3</span>
+            </div>
+            <div class="cat-item" data-cat="finance">
+              <div class="cat-icon" style="background: rgba(139,92,246,0.1); color: #6D28D9;">¥</div>
+              <span>财务</span>
+              <span class="cat-count">2</span>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-hairline); margin: var(--space-3) 0 var(--space-2);"></div>
+
+            <div class="cat-item" data-cat="read" style="font-size: var(--text-xs); color: var(--text-tertiary);">
+              <div class="cat-icon" style="background: transparent; font-size: 11px;">✓</div>
+              <span>已读</span>
+              <span class="cat-count" style="background: transparent;">18</span>
+            </div>
+            <div class="cat-item" data-cat="trash" style="font-size: var(--text-xs); color: var(--text-tertiary);">
+              <div class="cat-icon" style="background: transparent; font-size: 11px;">⊘</div>
+              <span>垃圾箱</span>
+              <span class="cat-count" style="background: transparent;">2</span>
+            </div>
+          </div>
+
+          <!-- 右侧：消息列表 -->
+          <div class="msg-list">
+            <!-- 筛选条 -->
+            <div class="filter-bar" style="border-radius: 0; border-left: 0; border-right: 0; border-top: 0; padding: var(--space-3) var(--space-4);">
+              <span class="filter-chip active">全部 25</span>
+              <span class="filter-chip">未读 7</span>
+              <span class="filter-chip">紧急 2</span>
+              <select style="padding: 4px 8px; font-size: var(--text-xs); background: var(--bg-base); border: 1px solid var(--border-hairline); margin-left: auto;">
+                <option>按时间降序</option>
+                <option>按时间升序</option>
+                <option>按严重度</option>
+                <option>按类型</option>
+              </select>
+            </div>
+
+            <!-- 消息 -->
+            <div class="msg-item unread" data-type="anomaly" data-read="0" data-search="A001 暗影潜行 大额对局">
+              <span class="msg-time">18:42:18</span>
+              <span class="msg-from">风控系统</span>
+              <span class="msg-type-badge anomaly">异常</span>
+              <div class="msg-content">
+                <div class="msg-title">A001 暗影潜行 大额对局 ¥8,500</div>
+                <div class="msg-summary">玩家 x***1 vs y***2 单局流水超历史峰值 5 倍 · 已自动暂停该游戏结算</div>
+              </div>
+              <div class="msg-status"><a href="risk-alerts.html" class="text-red">处理 →</a></div>
+            </div>
+
+            <div class="msg-item unread" data-type="anomaly" data-read="0" data-search="A002 战火重燃 大额对局">
+              <span class="msg-time">18:38:32</span>
+              <span class="msg-from">风控系统</span>
+              <span class="msg-type-badge anomaly">异常</span>
+              <div class="msg-content">
+                <div class="msg-title">A002 战火重燃 大额对局 ¥12,400</div>
+                <div class="msg-summary">玩家 d***2 vs b***7 单局流水超历史峰值 8 倍 · 已自动暂停该游戏结算</div>
+              </div>
+              <div class="msg-status"><a href="risk-alerts.html" class="text-red">处理 →</a></div>
+            </div>
+
+            <div class="msg-item unread" data-type="merchant" data-read="0" data-search="墨韵江湖 黄磊 审核 商家沟通">
+              <span class="msg-time">16:23</span>
+              <span class="msg-from">商家 M044</span>
+              <span class="msg-type-badge merchant">商家</span>
+              <div class="msg-content">
+                <div class="msg-title">墨韵江湖 黄磊 回复了审核反馈</div>
+                <div class="msg-summary">"已补充游戏备案补充材料，请查收。" · 附件：游戏备案补充页.pdf (2.1 MB)</div>
+              </div>
+              <div class="msg-status"><a href="merchants-review.html" class="text-red">查看 →</a></div>
+            </div>
+
+            <div class="msg-item unread" data-type="todo" data-read="0" data-search="墨韵江湖 审核 SLA 超时 待办">
+              <span class="msg-time">14:12</span>
+              <span class="msg-from">系统</span>
+              <span class="msg-type-badge system">系统</span>
+              <div class="msg-content">
+                <div class="msg-title">商家 M044 墨韵江湖 审核 SLA 即将超时</div>
+                <div class="msg-summary">提交 57 小时前，距 72h SLA 截止剩 15 小时，建议尽快处理或转交其他审核员</div>
+              </div>
+              <div class="msg-status"><a href="merchants-review.html" class="text-red">处理 →</a></div>
+            </div>
+
+            <div class="msg-item unread" data-type="finance" data-read="0" data-search="本月阶梯提成预估 财务">
+              <span class="msg-time">11:08</span>
+              <span class="msg-from">财务系统</span>
+              <span class="msg-type-badge finance">财务</span>
+              <div class="msg-content">
+                <div class="msg-title">本月阶梯提成预估 ¥718.2 万</div>
+                <div class="msg-summary">已根据 1,206 家活跃商家当前档位预估 · 实际结算以次月 5 号为准</div>
+              </div>
+              <div class="msg-status"><a href="revenue-overview.html" class="text-secondary">查看</a></div>
+            </div>
+
+            <div class="msg-item unread" data-type="merchant" data-read="0" data-search="萤火奇航 陈静 档位调整 商家沟通">
+              <span class="msg-time">09:30</span>
+              <span class="msg-from">商家 M007</span>
+              <span class="msg-type-badge merchant">商家</span>
+              <div class="msg-content">
+                <div class="msg-title">萤火奇航 陈静 申请了档位调整</div>
+                <div class="msg-summary">希望从第 3 档 1:6 调整至 1:5 · 理由：参加平台双 11 主推活动</div>
+              </div>
+              <div class="msg-status"><a href="merchants-config.html" class="text-red">处理 →</a></div>
+            </div>
+
+            <div class="msg-item unread" data-type="anomaly" data-read="0" data-search="A007 可疑交易 法务 严重">
+              <span class="msg-time">昨日</span>
+              <span class="msg-from">法务</span>
+              <span class="msg-type-badge anomaly">严重</span>
+              <div class="msg-content">
+                <div class="msg-title">A007 可疑交易案 法务已介入</div>
+                <div class="msg-summary">M058 战火重燃 同一玩家 30 分钟内连续 5 局胜利 · 已冻结分账 ¥32,000</div>
+              </div>
+              <div class="msg-status"><a href="risk-alerts.html" class="text-red">跟进 →</a></div>
+            </div>
+
+            <div class="msg-item" data-type="system" data-read="1" data-search="全局阶梯 v2.1 调档生效">
+              <span class="msg-time">昨日</span>
+              <span class="msg-from">系统</span>
+              <span class="msg-type-badge system">系统</span>
+              <div class="msg-content">
+                <div class="msg-title">7 月全局阶梯 v2.1 调档已生效</div>
+                <div class="msg-summary">2026-07-01 财务复核通过 · 1,206 家商家已按新档位执行</div>
+              </div>
+              <div class="msg-status"><a href="rules-config.html" class="text-tertiary">已读</a></div>
+            </div>
+
+            <div class="msg-item" data-type="system" data-read="1" data-search="新增合作商家 新游戏">
+              <span class="msg-time">07-19</span>
+              <span class="msg-from">系统</span>
+              <span class="msg-type-badge system">系统</span>
+              <div class="msg-content">
+                <div class="msg-title">新增 3 家合作商家 + 14 款新游戏</div>
+                <div class="msg-summary">本周新增：M044 墨韵江湖 / M045 云海仙途 / M046 蓝星战场 · 含游戏 14 款</div>
+              </div>
+              <div class="msg-status"><span class="text-tertiary" style="font-size: 11px;">已读</span></div>
+            </div>
+
+            <div class="msg-item" data-type="merchant" data-read="1" data-search="银河拓荒者 王芳 月度报告">
+              <span class="msg-time">07-18</span>
+              <span class="msg-from">商家 M019</span>
+              <span class="msg-type-badge merchant">商家</span>
+              <div class="msg-content">
+                <div class="msg-title">银河拓荒者 王芳 提交了月度报告</div>
+                <div class="msg-summary">本月客损 ¥402 万 / 月活 24,600 / 留存 42% · 希望了解升档条件</div>
+              </div>
+              <div class="msg-status"><span class="text-tertiary" style="font-size: 11px;">已读</span></div>
+            </div>
+
+            <div class="msg-item" data-type="system" data-read="1" data-search="风控模型 v2.1 升级 准确率">
+              <span class="msg-time">07-17</span>
+              <span class="msg-from">系统</span>
+              <span class="msg-type-badge system">系统</span>
+              <div class="msg-content">
+                <div class="msg-title">风控模型 v2.1 升级 · 准确率 92.4%</div>
+                <div class="msg-summary">识别准确率 +3.2% · 误报率 -1.8% · 新增「可疑交易」智能识别</div>
+              </div>
+              <div class="msg-status"><span class="text-tertiary" style="font-size: 11px;">已读</span></div>
+            </div>
+
+            <div class="msg-item" data-type="anomaly" data-read="1" data-search="A005 萤火奇航 流水突降 已恢复">
+              <span class="msg-time">07-15</span>
+              <span class="msg-from">风控系统</span>
+              <span class="msg-type-badge anomaly">异常</span>
+              <div class="msg-content">
+                <div class="msg-title">A005 萤火奇航 流水突降 已恢复</div>
+                <div class="msg-summary">单日流水 ¥4,200 较 7 日均值 -68% · 已通知商家 · 次日恢复 ¥13,200</div>
+              </div>
+              <div class="msg-status"><span class="text-tertiary" style="font-size: 11px;">已读</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 左侧分类切换
+      const catItems = document.querySelectorAll('#msg-categories .cat-item');
+      const msgItems = document.querySelectorAll('.msg-item[data-type]');
+      catItems.forEach(cat => {
+        cat.addEventListener('click', () => {
+          catItems.forEach(c => c.classList.remove('active'));
+          cat.classList.add('active');
+          const v = cat.getAttribute('data-cat');
+          let visible = 0;
+          msgItems.forEach(m => {
+            const type = m.getAttribute('data-type');
+            const read = m.getAttribute('data-read');
+            let show = true;
+            if (v === 'all') show = true;
+            else if (v === 'read') show = read === '1';
+            else if (v === 'trash') show = false;
+            else show = type === v;
+            m.style.display = show ? '' : 'none';
+            if (show) visible++;
+          });
+          if (visible === 0) {
+            AdminUI.toast('该分类下暂无消息', 'info', 1500);
+          }
+        });
+      });
+
+      // 消息行点击 → 弹 modal 显示详情
+      msgItems.forEach(m => {
+        m.addEventListener('click', (e) => {
+          if (e.target.closest('a')) return;
+          const title = m.querySelector('.msg-title')?.textContent || '';
+          const summary = m.querySelector('.msg-summary')?.textContent || '';
+          const time = m.querySelector('.msg-time')?.textContent || '';
+          const from = m.querySelector('.msg-from')?.textContent || '';
+          const type = m.querySelector('.msg-type-badge')?.textContent || '';
+          const isUnread = m.classList.contains('unread');
+          AdminUI.Modal.open({
+            title: '消息详情',
+            body: `
+              <div style="font-size: 13px; line-height: 1.7;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                  <span class="msg-type-badge ${type}">${type}</span>
+                  <span style="font-size: 12px; color: var(--text-tertiary);">${time} · 来自 ${from}</span>
+                </div>
+                <div style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">${title}</div>
+                <div style="padding: 12px; background: var(--bg-overlay); border-radius: 4px; margin-bottom: 12px;">
+                  <div style="font-size: 13px; line-height: 1.6;">${summary}</div>
+                </div>
+                <div style="font-size: 11px; color: var(--text-tertiary); padding: 8px 10px; background: var(--accent-blue-light); border-radius: 4px;">
+                  💡 消息关联操作：点击「相关操作」按钮跳转到对应处理页
+                </div>
+              </div>
+            `,
+            size: 'md',
+            footer: `
+              <button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>
+              ${isUnread ? '<button type="button" class="btn btn-secondary" id="mark-read-btn">标记已读</button>' : ''}
+              <button type="button" class="btn btn-primary" id="msg-go">相关操作</button>
+            `,
+          });
+          setTimeout(() => {
+            document.getElementById('msg-go')?.addEventListener('click', () => {
+              const link = m.querySelector('a');
+              if (link) window.location.href = link.href;
+              else {
+                AdminUI.Modal.close();
+                AdminUI.toast('此消息无关联操作', 'info');
+              }
+            });
+            document.getElementById('mark-read-btn')?.addEventListener('click', function() {
+              m.classList.remove('unread');
+              m.setAttribute('data-read', '1');
+              // 更新 unread 计数
+              const remaining = document.querySelectorAll('.msg-item.unread').length;
+              const badge = document.querySelector('.admin-sidebar-badge');
+              if (badge) badge.textContent = String(remaining);
+              const stat = document.querySelector('.page-header-sub');
+              if (stat) stat.textContent = stat.textContent.replace(/\d+ 项未读/, `${remaining} 项未读`);
+              AdminUI.Modal.close();
+              AdminUI.toast('已标记为已读', 'success');
+            });
+          }, 50);
+        });
+      });
+
+      // 全部已读（顶部 / 顶部右侧）
+      function markAllRead() {
+        const unread = document.querySelectorAll('.msg-item.unread');
+        if (unread.length === 0) {
+          AdminUI.toast('当前没有未读消息', 'info');
+          return;
+        }
+        AdminUI.confirm({
+          title: '全部标为已读？',
+          message: `当前 ${unread.length} 条未读消息将标记为已读。`,
+          confirmText: '确认',
+          cancelText: '取消',
+          type: 'default',
+        }).then(ok => {
+          if (!ok) return;
+          unread.forEach(m => {
+            m.classList.remove('unread');
+            m.setAttribute('data-read', '1');
+          });
+          // 更新计数
+          const badge = document.querySelector('.admin-sidebar-badge');
+          if (badge) badge.textContent = '0';
+          const stat = document.querySelector('.page-header-sub');
+          if (stat) stat.textContent = stat.textContent.replace(/\d+ 项未读/, '0 项未读');
+          AdminUI.toast(`已标记 ${unread.length} 条消息为已读`, 'success');
+        });
+      }
+      document.querySelector('[data-action="mark-all-read"]')?.addEventListener('click', markAllRead);
+      document.querySelector('[data-action="mark-all-read-2"]')?.addEventListener('click', markAllRead);
+
+      // 消息设置
+      function msgSettings() {
+        AdminUI.Modal.open({
+          title: '消息设置',
+          body: `
+            <div style="font-size: 13px; line-height: 1.7;">
+              <div style="margin-bottom: 16px;">配置您接收消息的方式和频率：</div>
+              <div style="display: grid; gap: 12px;">
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 500;">桌面通知</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">浏览器右下角弹窗</div>
+                  </div>
+                  <input type="checkbox" checked>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 500;">邮件通知</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">linqi@gamehub.com</div>
+                  </div>
+                  <input type="checkbox" checked>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 500;">钉钉 / 企微通知</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">仅严重级别</div>
+                  </div>
+                  <input type="checkbox" checked>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <div>
+                    <div style="font-size: 13px; font-weight: 500;">免打扰时段</div>
+                    <div style="font-size: 11px; color: var(--text-tertiary);">22:00 - 08:00 仅严重级</div>
+                  </div>
+                  <input type="checkbox" checked>
+                </label>
+              </div>
+            </div>
+          `,
+          size: 'sm',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+            <button type="button" class="btn btn-primary" id="msg-settings-save">保存</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('msg-settings-save')?.addEventListener('click', function() {
+            const done = AdminUI.withLoading(this, '保存中...');
+            setTimeout(() => {
+              done();
+              AdminUI.Modal.close();
+              AdminUI.toast('消息设置已更新', 'success');
+            }, 600);
+          });
+        }, 50);
+      }
+      document.querySelector('[data-action="msg-settings"]')?.addEventListener('click', msgSettings);
+      document.querySelector('[data-action="msg-settings-2"]')?.addEventListener('click', msgSettings);
+    })();
+  </script>
+</body>
+</html>

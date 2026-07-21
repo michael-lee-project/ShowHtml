@@ -278,40 +278,40 @@
     <div class="rules-hero">
       <div class="rules-hero-eyebrow">PARTNERSHIP RULES</div>
       <h1>合作规则公示</h1>
-      <p>双重收益模式 · 全程透明化分润 · 按月自动结算。每一个商户的合作条款都清晰可见,确保合作公平。</p>
+      <p>单一收益模式（v2 阶段）· 全程透明化分润 · 按月自动结算。每一个商户的合作条款都清晰可见,确保合作公平。</p>
     </div>
 
     <div class="mode-compare">
       <div class="mode-card ignite">
-        <div class="mode-eyebrow">PHASE 01 · IGNITE</div>
-        <div class="mode-name">星火养成期</div>
-        <p class="mode-sub">商户帮平台养成星火值,达成目标后切段到燎原期。</p>
+        <div class="mode-eyebrow">PHASE 01 · IGNITE <span style="background: #D1FAE5; color: #047857; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-family: var(--font-sans);">v2 唯一</span></div>
+        <div class="mode-name">星火养成期（业绩提成）</div>
+        <p class="mode-sub">按月度客损阶梯提成。客损越高,提成比例越高,500 万封顶 25%。</p>
         <div class="mode-stats">
           <div class="mode-stat">
-            <div class="mode-stat-val">6.5%</div>
-            <div class="mode-stat-label">积分结算比例</div>
+            <div class="mode-stat-val">5 档</div>
+            <div class="mode-stat-label">阶梯提成（1:10/8/6/5/4）</div>
           </div>
           <div class="mode-stat">
-            <div class="mode-stat-val">200 万</div>
-            <div class="mode-stat-label">月度养成目标</div>
+            <div class="mode-stat-val">100 万</div>
+            <div class="mode-stat-label">首档客损起点</div>
           </div>
         </div>
         <ul class="mode-features">
-          <li>独立核算 · 不与流水分润混淆</li>
-          <li>达成 100% 自动切段到燎原期</li>
-          <li>养成数据实时可查</li>
-          <li>段一期间不结算现金</li>
+          <li>按月度客损定档 · 一次性打档（不累进）</li>
+          <li>提成直接拿 RMB · 默认月结</li>
+          <li>客损 < 100 万不进入阶梯（数据留痕）</li>
+          <li>提成占客损比 10% - 25%</li>
         </ul>
       </div>
 
-      <div class="mode-card blaze">
-        <div class="mode-eyebrow">PHASE 02 · BLAZE</div>
-        <div class="mode-name">星火燎原期</div>
-        <p class="mode-sub">基于流水的分润启动,按规则每月底自动结算到平台钱包。</p>
+      <div class="mode-card blaze" style="opacity: 0.5;">
+        <div class="mode-eyebrow">PHASE 02 · BLAZE <span style="background: #FEF3C7; color: #B45309; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-family: var(--font-sans);">v3 启用</span></div>
+        <div class="mode-name">星火燎原期（流水抽佣）</div>
+        <p class="mode-sub">v3 阶段开放。基于流水的分润，按规则每月底自动结算到平台钱包。</p>
         <div class="mode-stats">
           <div class="mode-stat">
             <div class="mode-stat-val">8.5%</div>
-            <div class="mode-stat-label">流水分润比例</div>
+            <div class="mode-stat-label">流水分润比例 <span style="font-size: 9px; color: #B45309;">v3</span></div>
           </div>
           <div class="mode-stat">
             <div class="mode-stat-val">月度</div>
@@ -319,10 +319,10 @@
           </div>
         </div>
         <ul class="mode-features">
+          <li>v3 阶段开放 · v2 阶段不启用</li>
           <li>按月自动结算,提现 T+3 到账</li>
           <li>流水分润 + UMDT 充值分润</li>
           <li>超出档位自动升级</li>
-          <li>结算单可在后台随时下载</li>
         </ul>
       </div>
     </div>
@@ -334,44 +334,52 @@
         <thead>
           <tr>
             <th>档位</th>
-            <th>月流水范围</th>
-            <th>积分结算比例</th>
-            <th>流水分润比例</th>
-            <th>UMDT 充值分润</th>
+            <th>月客损范围</th>
+            <th>阶梯提成比例（客损:提成）</th>
+            <th>提成 RMB</th>
+            <th>提成占客损比</th>
             <th>当前</th>
           </tr>
         </thead>
         <tbody>
           <tr class="current">
-            <td><span class="tier-name">A 档</span><span class="tier-name-tag">本档</span></td>
-            <td>50 - 200 万</td>
-            <td><span class="tier-val">6.5%</span></td>
-            <td><span class="tier-val">8.5%</span></td>
-            <td><span class="tier-val">3.0%</span></td>
+            <td><span class="tier-name">第 1 档</span><span class="tier-name-tag">本档</span></td>
+            <td>100 万</td>
+            <td><span class="tier-val">1 : 10</span></td>
+            <td><span class="tier-val">10 万</span></td>
+            <td><span class="tier-val">10%</span></td>
             <td><span class="tier-name-tag">本档</span></td>
           </tr>
           <tr>
-            <td><span class="tier-name">B 档</span></td>
-            <td>200 - 500 万</td>
-            <td><span class="tier-val">7.0%</span></td>
-            <td><span class="tier-val">9.0%</span></td>
-            <td><span class="tier-val">3.5%</span></td>
+            <td><span class="tier-name">第 2 档</span></td>
+            <td>200 万</td>
+            <td><span class="tier-val">1 : 8</span></td>
+            <td><span class="tier-val">25 万</span></td>
+            <td><span class="tier-val">12.5%</span></td>
             <td>—</td>
           </tr>
           <tr>
-            <td><span class="tier-name">C 档</span></td>
-            <td>500 - 1,000 万</td>
-            <td><span class="tier-val">7.5%</span></td>
-            <td><span class="tier-val">9.5%</span></td>
-            <td><span class="tier-val">4.0%</span></td>
+            <td><span class="tier-name">第 3 档</span></td>
+            <td>300 万</td>
+            <td><span class="tier-val">1 : 6</span></td>
+            <td><span class="tier-val">50 万</span></td>
+            <td><span class="tier-val">16.7%</span></td>
             <td>—</td>
           </tr>
           <tr>
-            <td><span class="tier-name">D 档</span></td>
-            <td>1,000 万以上</td>
-            <td><span class="tier-val">8.0%</span></td>
-            <td><span class="tier-val">10.0%</span></td>
-            <td><span class="tier-val">5.0%</span></td>
+            <td><span class="tier-name">第 4 档</span></td>
+            <td>400 万</td>
+            <td><span class="tier-val">1 : 5</span></td>
+            <td><span class="tier-val">80 万</span></td>
+            <td><span class="tier-val">20%</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><span class="tier-name">第 5 档（封顶）</span></td>
+            <td>500 万</td>
+            <td><span class="tier-val">1 : 4</span></td>
+            <td><span class="tier-val">125 万</span></td>
+            <td><span class="tier-val">25%</span></td>
             <td>—</td>
           </tr>
         </tbody>

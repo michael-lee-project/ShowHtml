@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 · 平台管理后台 · Game Hub Console</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .login-back-home {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      z-index: 10;
+    }
+    .login-back-home a {
+      color: var(--accent-red);
+      text-decoration: none;
+    }
+    .login-form-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--bg-overlay);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      padding: 2px;
+      margin-bottom: var(--space-5);
+    }
+    .login-form-toggle-item {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      text-align: center;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .login-form-toggle-item.active {
+      background: var(--bg-elevated);
+      color: var(--accent-red);
+      font-weight: var(--weight-medium);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-back-home">
+    <a href="../website/index.html">← 返回游戏商户平台</a>
+  </div>
+
+  <div class="login-page">
+    <!-- 左侧品牌区 -->
+    <div class="login-side">
+      <div class="login-side-content">
+        <div class="login-side-brand">
+          <div class="login-side-brand-mark">G</div>
+          <div>Game Hub Console</div>
+        </div>
+
+        <h1 class="login-side-headline">
+          平台运营<br>
+          <span class="login-side-headline-accent">智能管理中心</span>
+        </h1>
+        <p class="login-side-sub">
+          统一管理 1,284 家游戏商户 · 386 款在营游戏 · 实时监控全平台流水与异常事件
+        </p>
+
+        <div class="login-side-stats">
+          <div>
+            <div class="login-side-stat-val">1,284</div>
+            <div class="login-side-stat-label">合作游戏商户</div>
+          </div>
+          <div>
+            <div class="login-side-stat-val">386</div>
+            <div class="login-side-stat-label">在营游戏</div>
+          </div>
+          <div>
+            <div class="login-side-stat-val">¥1.28 亿</div>
+            <div class="login-side-stat-label">本月流水</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧登录表单 -->
+    <div class="login-main">
+      <div class="login-card">
+        <div class="login-card-eyebrow">PLATFORM ADMIN CONSOLE</div>
+        <h2 class="login-card-title">欢迎回来</h2>
+        <p class="login-card-sub">使用您的平台运营账号登录管理后台</p>
+
+        <!-- 角色切换 -->
+        <div class="login-form-toggle">
+          <div class="login-form-toggle-item active">运营账号</div>
+          <div class="login-form-toggle-item">审核账号</div>
+          <div class="login-form-toggle-item">风控账号</div>
+        </div>
+
+        <form onsubmit="return false;">
+          <div class="login-form-group">
+            <label class="login-form-label">账号</label>
+            <input class="login-form-input" type="text" placeholder="请输入运营账号或邮箱" value="linqi@gamehub.com">
+          </div>
+          <div class="login-form-group">
+            <label class="login-form-label">密码</label>
+            <input class="login-form-input" type="password" placeholder="请输入密码" value="••••••••••">
+          </div>
+          <div class="login-form-group">
+            <label class="login-form-label">动态验证码</label>
+            <div style="display: flex; gap: 8px;">
+              <input class="login-form-input" type="text" placeholder="6 位动态码" value="482916" style="flex: 1;">
+              <button type="button" class="btn btn-secondary" style="height: 44px; white-space: nowrap;">获取验证码</button>
+            </div>
+          </div>
+
+          <div class="login-form-options">
+            <label class="login-form-checkbox">
+              <input type="checkbox" checked>
+              <span>7 天内自动登录</span>
+            </label>
+            <a href="#" class="login-form-link">忘记密码？</a>
+          </div>
+
+          <button type="button" class="login-form-btn" onclick="location.href='dashboard.html'">
+            登 录
+            <span style="font-size: 16px;">→</span>
+          </button>
+        </form>
+
+        <div class="login-form-foot">
+          © 2026 Opulatrix Game Hub · 平台管理后台
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

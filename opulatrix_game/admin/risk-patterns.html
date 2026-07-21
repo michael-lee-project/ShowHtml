@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>异常AI识别 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .echarts-mini { height: 60px; }
+    .pattern-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      transition: all 0.15s;
+    }
+    .pattern-card:hover {
+      border-color: var(--border-default);
+      box-shadow: var(--shadow-md);
+    }
+    .pattern-card.critical { border-left: 3px solid var(--accent-red); }
+    .pattern-card.warning { border-left: 3px solid var(--accent-yellow); }
+    .pattern-card.info { border-left: 3px solid var(--accent-blue); }
+
+    .pattern-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+    .pattern-title {
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .pattern-desc {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--space-3);
+    }
+    .pattern-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-top: 1px solid var(--border-hairline);
+      border-bottom: 1px solid var(--border-hairline);
+      margin-bottom: var(--space-3);
+    }
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .stat-val {
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .pattern-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+    }
+    .pattern-merchants {
+      color: var(--text-secondary);
+    }
+    .pattern-merchants strong { color: var(--text-primary); }
+    .pattern-link {
+      color: var(--accent-red);
+      font-weight: var(--weight-medium);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="risk-patterns.html">风控</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">异常AI识别</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">ANOMALY PATTERNS · v2.1 · 智能识别 · 持续优化</div>
+            <h1 class="page-header-title">异常AI识别</h1>
+            <div class="page-header-sub">智能识别 6 大异常模式 · 本月触发 65 起 · 识别准确率 92.4%</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="history">调档历史</button>
+            <a href="rules-config.html" class="btn btn-primary">阈值配置</a>
+          </div>
+        </div>
+
+        <!-- 6 个异常模式 -->
+        <div class="grid-3" id="pattern-cards">
+          <!-- 大额对局 -->
+          <div class="pattern-card critical" data-pattern="大额对局" data-merchants="M052 暗影潜行 · M058 战火重燃" data-rule="单局流水 > 该玩家历史峰值 5x 或绝对值 > ¥5,000" data-action="notify+auto-pause">
+            <div class="pattern-head">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <div class="panel-icon red" style="width: 28px; height: 28px; font-size: 12px;">¥</div>
+                <div class="pattern-title">大额对局</div>
+              </div>
+              <span class="badge red"><span class="badge-dot"></span>严重</span>
+            </div>
+            <div class="pattern-desc">
+              单局对局流水超过该玩家历史峰值 N 倍，自动暂停游戏结算并通知人工复核。
+            </div>
+            <div id="mini-1" class="echarts-mini"></div>
+            <div class="pattern-stats">
+              <div>
+                <div class="stat-label">本月触发</div>
+                <div class="stat-val" style="color: var(--accent-red);">12</div>
+              </div>
+              <div>
+                <div class="stat-label">较上月</div>
+                <div class="stat-val text-red">+45%</div>
+              </div>
+              <div>
+                <div class="stat-label">准确率</div>
+                <div class="stat-val">94%</div>
+              </div>
+            </div>
+            <div class="pattern-footer">
+              <div class="pattern-merchants">涉及 <strong>2</strong> 家 · M052 暗影潜行 · M058 战火重燃</div>
+              <a href="risk-alerts.html" class="pattern-link">查看 →</a>
+            </div>
+          </div>
+
+          <!-- 客损突增 -->
+          <div class="pattern-card warning" data-pattern="客损突增" data-merchants="M019 银河拓荒者 · M044 墨韵江湖" data-rule="单日客损 > 7 日均值 +200% 且 > ¥10,000" data-action="notify">
+            <div class="pattern-head">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <div class="panel-icon yellow" style="width: 28px; height: 28px; font-size: 12px;">↑</div>
+                <div class="pattern-title">客损突增</div>
+              </div>
+              <span class="badge yellow"><span class="badge-dot"></span>警告</span>
+            </div>
+            <div class="pattern-desc">
+              单日 / 单局客损较 7 日均值突增 ≥ 200%，自动通知运营 + 商家。
+            </div>
+            <div id="mini-2" class="echarts-mini"></div>
+            <div class="pattern-stats">
+              <div>
+                <div class="stat-label">本月触发</div>
+                <div class="stat-val" style="color: var(--accent-yellow);">8</div>
+              </div>
+              <div>
+                <div class="stat-label">较上月</div>
+                <div class="stat-val text-red">+23%</div>
+              </div>
+              <div>
+                <div class="stat-label">准确率</div>
+                <div class="stat-val">89%</div>
+              </div>
+            </div>
+            <div class="pattern-footer">
+              <div class="pattern-merchants">涉及 <strong>2</strong> 家 · M019 银河拓荒者 · M044 墨韵江湖</div>
+              <a href="risk-alerts.html" class="pattern-link">查看 →</a>
+            </div>
+          </div>
+
+          <!-- 流水突降 -->
+          <div class="pattern-card warning" data-pattern="流水突降" data-merchants="M007 萤火奇航" data-rule="单日流水 < 7 日均值 -50% 且连续 2 天" data-action="notify">
+            <div class="pattern-head">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <div class="panel-icon yellow" style="width: 28px; height: 28px; font-size: 12px;">↓</div>
+                <div class="pattern-title">流水突降</div>
+              </div>
+              <span class="badge yellow"><span class="badge-dot"></span>警告</span>
+            </div>
+            <div class="pattern-desc">
+              单日流水较 7 日均值下降 ≥ 50%，自动通知商家核实。
+            </div>
+            <div id="mini-3" class="echarts-mini"></div>
+            <div class="pattern-stats">
+              <div>
+                <div class="stat-label">本月触发</div>
+                <div class="stat-val" style="color: var(--accent-yellow);">5</div>
+              </div>
+              <div>
+                <div class="stat-label">较上月</div>
+                <div class="stat-val text-green">-12%</div>
+              </div>
+              <div>
+                <div class="stat-label">准确率</div>
+                <div class="stat-val">91%</div>
+              </div>
+            </div>
+            <div class="pattern-footer">
+              <div class="pattern-merchants">涉及 <strong>1</strong> 家 · M007 萤火奇航</div>
+              <a href="risk-alerts.html" class="pattern-link">查看 →</a>
+            </div>
+          </div>
+
+          <!-- 玩家投诉 -->
+          <div class="pattern-card warning" data-pattern="玩家投诉" data-merchants="M052 暗影潜行 · M058 战火重燃 · M019 银河拓荒者" data-rule="同一游戏 24h 内累计投诉 ≥ 3 起" data-action="recheck">
+            <div class="pattern-head">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <div class="panel-icon yellow" style="width: 28px; height: 28px; font-size: 12px;">⚑</div>
+                <div class="pattern-title">玩家投诉</div>
+              </div>
+              <span class="badge yellow"><span class="badge-dot"></span>警告</span>
+            </div>
+            <div class="pattern-desc">
+              同一游戏 / 商家累计玩家投诉 ≥ 3 起，自动升级为警告。
+            </div>
+            <div id="mini-4" class="echarts-mini"></div>
+            <div class="pattern-stats">
+              <div>
+                <div class="stat-label">本月触发</div>
+                <div class="stat-val" style="color: var(--accent-yellow);">14</div>
+              </div>
+              <div>
+                <div class="stat-label">较上月</div>
+                <div class="stat-val text-red">+8%</div>
+              </div>
+              <div>
+                <div class="stat-label">准确率</div>
+                <div class="stat-val">96%</div>
+              </div>
+            </div>
+            <div class="pattern-footer">
+              <div class="pattern-merchants">涉及 <strong>3</strong> 家 · M052 · M058 · M019</div>
+              <a href="risk-alerts.html" class="pattern-link">查看 →</a>
+            </div>
+          </div>
+
+          <!-- 可疑交易 -->
+          <div class="pattern-card critical" data-pattern="可疑交易" data-merchants="M058 战火重燃" data-rule="同一玩家 30 分钟内连续 ≥ 5 局胜率 100%" data-action="freeze+legal">
+            <div class="pattern-head">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <div class="panel-icon red" style="width: 28px; height: 28px; font-size: 12px;">⚠</div>
+                <div class="pattern-title">可疑交易</div>
+              </div>
+              <span class="badge red"><span class="badge-dot"></span>严重</span>
+            </div>
+            <div class="pattern-desc">
+              同一玩家短时间内胜率异常（如 100%），自动冻结分账 + 通知法务。
+            </div>
+            <div id="mini-5" class="echarts-mini"></div>
+            <div class="pattern-stats">
+              <div>
+                <div class="stat-label">本月触发</div>
+                <div class="stat-val" style="color: var(--accent-red);">3</div>
+              </div>
+              <div>
+                <div class="stat-label">较上月</div>
+                <div class="stat-val text-tertiary">0%</div>
+              </div>
+              <div>
+                <div class="stat-label">准确率</div>
+                <div class="stat-val">98%</div>
+              </div>
+            </div>
+            <div class="pattern-footer">
+              <div class="pattern-merchants">涉及 <strong>1</strong> 家 · M058 战火重燃</div>
+              <a href="risk-alerts.html" class="pattern-link">查看 →</a>
+            </div>
+          </div>
+
+          <!-- 数据一致性 -->
+          <div class="pattern-card info" data-pattern="数据一致性" data-merchants="M019 银河拓荒者 · M003 风语启示录 等 8 家" data-rule="平台 vs 商家流水偏差 > 0.5%" data-action="auto-reconcile">
+            <div class="pattern-head">
+              <div style="display: flex; align-items: center; gap: var(--space-2);">
+                <div class="panel-icon blue" style="width: 28px; height: 28px; font-size: 12px;">≡</div>
+                <div class="pattern-title">数据一致性</div>
+              </div>
+              <span class="badge blue"><span class="badge-dot"></span>提示</span>
+            </div>
+            <div class="pattern-desc">
+              平台流水与商家流水偏差 &gt; 0.5%，自动对账。容差内自动通过。
+            </div>
+            <div id="mini-6" class="echarts-mini"></div>
+            <div class="pattern-stats">
+              <div>
+                <div class="stat-label">本月触发</div>
+                <div class="stat-val" style="color: var(--accent-blue);">23</div>
+              </div>
+              <div>
+                <div class="stat-label">较上月</div>
+                <div class="stat-val text-green">-15%</div>
+              </div>
+              <div>
+                <div class="stat-label">准确率</div>
+                <div class="stat-val">99%</div>
+              </div>
+            </div>
+            <div class="pattern-footer">
+              <div class="pattern-merchants">涉及 <strong>8</strong> 家 · M019 · M003 等</div>
+              <a href="risk-alerts.html" class="pattern-link">查看 →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 整体分析 -->
+        <div class="panel" style="background: linear-gradient(135deg, var(--accent-red-light), var(--bg-elevated) 50%);">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">◈</div>
+              <div>
+                <div class="panel-title">智能识别引擎 · v2.1</div>
+                <div class="panel-sub">基于历史异常数据 + 机器学习模型 · 持续优化中</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-3 gap-4">
+            <div>
+              <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">识别准确率</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--accent-green); font-family: var(--font-mono); margin-top: 4px;">92.4%</div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">较上版本 +3.2%</div>
+            </div>
+            <div>
+              <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">平均响应时间</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--accent-blue); font-family: var(--font-mono); margin-top: 4px;">180ms</div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">实时检测 + 自动拦截</div>
+            </div>
+            <div>
+              <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">自动拦截率</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--accent-red); font-family: var(--font-mono); margin-top: 4px;">82%</div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">53 起自动处理</div>
+            </div>
+            <div>
+              <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">训练样本数</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 4px;">12,840</div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">历史异常 + 标注</div>
+            </div>
+            <div>
+              <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">误报率</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 4px;">7.6%</div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">人工复核中标注</div>
+            </div>
+            <div>
+              <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">模型更新</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 4px;">每日</div>
+              <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">增量训练 + A/B 测试</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script>
+    // 6 个 mini 趋势图
+    const colors = ['#EF4444', '#F59E0B', '#F59E0B', '#F59E0B', '#EF4444', '#3B82F6'];
+    const data = [
+      [3, 4, 5, 4, 6, 7, 5, 8, 9, 7, 8, 12],
+      [2, 3, 2, 4, 3, 5, 4, 5, 6, 5, 7, 8],
+      [1, 2, 1, 3, 2, 2, 4, 1, 2, 3, 2, 5],
+      [2, 3, 3, 4, 4, 5, 6, 5, 6, 8, 9, 14],
+      [1, 0, 1, 1, 2, 0, 1, 2, 1, 0, 1, 3],
+      [5, 4, 6, 5, 4, 3, 4, 3, 2, 3, 2, 23],
+    ];
+    for (let i = 1; i <= 6; i++) {
+      const chart = echarts.init(document.getElementById('mini-' + i));
+      chart.setOption({
+        grid: { top: 4, right: 4, bottom: 4, left: 4 },
+        xAxis: { type: 'category', show: false, data: data[i-1].map((_, idx) => idx) },
+        yAxis: { type: 'value', show: false },
+        tooltip: { show: false },
+        series: [{
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: data[i-1],
+          lineStyle: { color: colors[i-1], width: 1.5 },
+          areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: colors[i-1] + '40' }, { offset: 1, color: colors[i-1] + '00' }] } },
+        }],
+      });
+    }
+    window.addEventListener('resize', () => {
+      for (let i = 1; i <= 6; i++) {
+        echarts.getInstanceByDom(document.getElementById('mini-' + i))?.resize();
+      }
+    });
+  </script>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 6 个模式卡片 → 点击弹 Modal 显示完整说明 + 涉及商家
+      document.querySelectorAll('.pattern-card[data-pattern]').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('a')) return;
+          const p = card.getAttribute('data-pattern');
+          const merchants = card.getAttribute('data-merchants');
+          const rule = card.getAttribute('data-rule');
+          const action = card.getAttribute('data-action');
+          const desc = card.querySelector('.pattern-desc')?.textContent || '';
+          const stats = Array.from(card.querySelectorAll('.pattern-stats > div')).map(d => d.textContent.trim());
+          AdminUI.Modal.open({
+            title: p + ' · 模式说明',
+            body: `
+              <div style="font-size: 13px; line-height: 1.7;">
+                <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">${desc}</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+                  <div style="padding: 10px; background: var(--bg-overlay); border-radius: 4px;">
+                    <div style="font-size: 11px; color: var(--text-tertiary);">触发规则</div>
+                    <div style="font-size: 13px; font-weight: 500; font-family: var(--font-mono); margin-top: 4px;">${rule}</div>
+                  </div>
+                  <div style="padding: 10px; background: var(--bg-overlay); border-radius: 4px;">
+                    <div style="font-size: 11px; color: var(--text-tertiary);">自动动作</div>
+                    <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">${action}</div>
+                  </div>
+                </div>
+                <div style="padding: 12px; background: var(--bg-overlay); border-radius: 4px; margin-bottom: 12px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px;">涉及商家</div>
+                  <div style="font-size: 13px;">${merchants}</div>
+                </div>
+                <div style="font-size: 12px; color: var(--text-tertiary);">
+                  <strong>本月数据：</strong>${stats.join(' · ')}
+                </div>
+              </div>
+            `,
+            size: 'md',
+            footer: `
+              <button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>
+              <button type="button" class="btn btn-primary" id="goto-rule">调整阈值</button>
+              <button type="button" class="btn btn-secondary" id="goto-alerts">查看相关预警</button>
+            `,
+          });
+          setTimeout(() => {
+            document.getElementById('goto-rule')?.addEventListener('click', () => {
+              window.location.href = 'rules-config.html';
+            });
+            document.getElementById('goto-alerts')?.addEventListener('click', () => {
+              window.location.href = 'risk-alerts.html';
+            });
+          }, 50);
+        });
+      });
+
+      // 调档历史
+      document.querySelector('[data-action="history"]')?.addEventListener('click', () => {
+        AdminUI.Modal.open({
+          title: '调档历史 · 异常规则',
+          body: `
+            <div style="display: grid; gap: 10px;">
+              <div style="padding: 10px; border-left: 3px solid var(--accent-red); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">2026-07-15 · 林琪</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">大额对局阈值：3x → 5x</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">降低误报率 · 准确率 91% → 94%</div>
+              </div>
+              <div style="padding: 10px; border-left: 3px solid var(--accent-red); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">2026-07-10 · 系统</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">新增「可疑交易」模式</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">v2.1 升级 · 准确率 98%</div>
+              </div>
+              <div style="padding: 10px; border-left: 3px solid var(--border-default); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">2026-07-01 · 系统</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">v2.1 异常模式库生效</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">6 大模式 · 整体准确率 92.4%</div>
+              </div>
+            </div>
+          `,
+          size: 'sm',
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

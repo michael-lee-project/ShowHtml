@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全局阶梯配置 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .warning-banner {
+      background: linear-gradient(90deg, var(--accent-red-light), var(--bg-elevated) 50%);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-left: 3px solid var(--accent-red);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .warning-banner-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-red);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .config-table input {
+      width: 100px;
+      padding: 6px 8px;
+      text-align: right;
+      font-family: var(--font-mono);
+    }
+    .config-table .tier-cell {
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      color: var(--accent-red);
+      font-family: var(--font-mono);
+    }
+    .form-group {
+      margin-bottom: var(--space-4);
+    }
+    .form-label {
+      display: block;
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-family: var(--font-mono);
+      margin-bottom: var(--space-2);
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+    }
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--accent-red);
+      box-shadow: var(--shadow-glow-red);
+    }
+    .rule-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 120px 140px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-2);
+      transition: all 0.15s;
+    }
+    .rule-row:hover { border-color: var(--border-default); }
+    .rule-name {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+    }
+    .rule-threshold {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">全局阶梯配置</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">GLOBAL CONFIG · v2.1 · 影响所有未单独覆盖的商家</div>
+            <h1 class="page-header-title">全局阶梯配置</h1>
+            <div class="page-header-sub">5 档阶梯 · 平台统一 · 调档需财务复核 · 当前生效 v2.1（2026-07-01）</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="history">调档历史</button>
+            <button class="btn btn-secondary" data-action="export-cfg">导出配置</button>
+          </div>
+        </div>
+
+        <!-- 警告 banner -->
+        <div class="warning-banner">
+          <div class="warning-banner-icon">!</div>
+          <div style="flex: 1;">
+            <div style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--accent-red-dark);">
+              当前编辑为全局默认配置
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 2px;">
+              修改后将影响所有 <strong>未单独覆盖</strong> 的商家（当前 1,277 家），单独覆盖的 7 家不受影响。
+              调档需财务复核，重大调整会通知所有运营 + 财务 + 高管。
+            </div>
+          </div>
+          <a href="merchants-config.html" class="btn btn-secondary btn-sm">查看商家覆盖</a>
+        </div>
+
+        <!-- 5 档档位编辑表 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">▲</div>
+              <div>
+                <div class="panel-title">5 档阶梯 · 全局默认</div>
+                <div class="panel-sub">客损越高 · 提成比例越大 · 当前 v2.1 自 2026-07-01 生效</div>
+              </div>
+            </div>
+            <span class="badge green"><span class="badge-dot"></span>生效中</span>
+          </div>
+
+          <table class="tbl config-table" id="global-tiers-table">
+            <thead>
+              <tr>
+                <th>档位</th>
+                <th>客损起点 (万)</th>
+                <th>提成比例</th>
+                <th>提成占比</th>
+                <th>档位提成 (万)</th>
+                <th>覆盖商家数</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tier-cell">1</td>
+                <td><input type="number" value="100"></td>
+                <td><input type="text" value="1:10"></td>
+                <td class="tbl-num">10%</td>
+                <td class="tbl-num">10</td>
+                <td class="tbl-num text-secondary">687 家</td>
+              </tr>
+              <tr>
+                <td class="tier-cell">2</td>
+                <td><input type="number" value="200"></td>
+                <td><input type="text" value="1:8"></td>
+                <td class="tbl-num">12.5%</td>
+                <td class="tbl-num">25</td>
+                <td class="tbl-num text-secondary">324 家</td>
+              </tr>
+              <tr style="background: var(--bg-base);">
+                <td class="tier-cell">3</td>
+                <td><input type="number" value="300"></td>
+                <td><input type="text" value="1:6"></td>
+                <td class="tbl-num">16.7%</td>
+                <td class="tbl-num">50</td>
+                <td class="tbl-num text-secondary">128 家</td>
+              </tr>
+              <tr>
+                <td class="tier-cell">4</td>
+                <td><input type="number" value="400"></td>
+                <td><input type="text" value="1:5"></td>
+                <td class="tbl-num">20%</td>
+                <td class="tbl-num">80</td>
+                <td class="tbl-num text-secondary">52 家</td>
+              </tr>
+              <tr>
+                <td class="tier-cell">5</td>
+                <td><input type="number" value="500"></td>
+                <td><input type="text" value="1:4"></td>
+                <td class="tbl-num">25%</td>
+                <td class="tbl-num">125</td>
+                <td class="tbl-num text-secondary">15 家</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top: var(--space-3); padding: var(--space-3); background: var(--accent-blue-light); border-radius: var(--radius-sm); font-size: var(--text-xs); color: #1E40AF;">
+            💡 <strong>说明：</strong>档位 1:10 表示每 10 元客损给商家 1 元提成。提成比例越高，商家激励越大，但平台利润越低。当前 v2.1 是 2026-07-01 财务复核后生效。
+          </div>
+        </div>
+
+        <!-- 异常规则配置 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon yellow">⚠</div>
+              <div>
+                <div class="panel-title">异常规则配置 · 6 类模式</div>
+                <div class="panel-sub">阈值 + 严重度 + 触发动作 · 调整后实时生效</div>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="color: var(--accent-red);" id="restore-rule-btn">恢复默认 →</button>
+          </div>
+
+          <div>
+            <div class="rule-row">
+              <span class="rule-name">大额对局</span>
+              <span class="rule-threshold">单局流水 &gt; 该玩家历史峰值 <strong>5x</strong> 或 绝对值 &gt; <strong>¥5,000</strong></span>
+              <span><span class="badge red"><span class="badge-dot"></span>严重</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">自动暂停 + 通知</span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-name">客损突增</span>
+              <span class="rule-threshold">单日客损 &gt; 7 日均值 <strong>+200%</strong> 且 &gt; <strong>¥10,000</strong></span>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">通知运营 + 商家</span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-name">流水突降</span>
+              <span class="rule-threshold">单日流水 &lt; 7 日均值 <strong>-50%</strong> 且连续 <strong>2 天</strong></span>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">通知商家</span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-name">玩家投诉</span>
+              <span class="rule-threshold">同一游戏 <strong>24h 内</strong> 累计投诉 <strong>≥ 3 起</strong></span>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">调取录像 + 复核</span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-name">可疑交易</span>
+              <span class="rule-threshold">同一玩家 <strong>30 分钟</strong> 内连续 <strong>≥ 5 局</strong> 胜率 <strong>100%</strong></span>
+              <span><span class="badge red"><span class="badge-dot"></span>严重</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">冻结分账 + 法务</span>
+            </div>
+            <div class="rule-row">
+              <span class="rule-name">数据一致性</span>
+              <span class="rule-threshold">平台 vs 商家流水偏差 <strong>&gt; 0.5%</strong></span>
+              <span><span class="badge blue"><span class="badge-dot"></span>提示</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">自动对账</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 调整原因 + 操作 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon blue">i</div>
+              <div>
+                <div class="panel-title">生效与审计</div>
+                <div class="panel-sub">所有调档操作都会被记录在审计日志中</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2 gap-3">
+            <div class="form-group">
+              <label class="form-label">生效时间</label>
+              <select class="form-select">
+                <option>下月 1 日生效（推荐 · 1 个月通知期）</option>
+                <option>立即生效（紧急 · 需财务总监复核）</option>
+                <option>指定日期生效</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">财务复核人</label>
+              <input class="form-input" type="text" value="王芳 · 财务总监" readonly style="background: var(--bg-overlay);">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">调整原因（必填，至少 20 字）</label>
+            <textarea class="form-textarea" id="global-reason" placeholder="详细说明本次调整的原因、影响范围和预期效果。例如：考虑到 2026 年 7-9 月暑期高峰，为激励头部商家加大投入，将第 4 档和第 5 档提成比例分别上调 1%。"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">通知对象</label>
+            <div class="flex flex-col gap-2">
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--text-secondary);">
+                <input type="checkbox" checked style="accent-color: var(--accent-red);">
+                <span>通知所有 1,206 活跃商家</span>
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--text-secondary);">
+                <input type="checkbox" checked style="accent-color: var(--accent-red);">
+                <span>通知 <strong class="text-primary">财务总监 王芳</strong>（强制）</span>
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--text-secondary);">
+                <input type="checkbox" checked style="accent-color: var(--accent-red);">
+                <span>抄送 <strong class="text-primary">CEO 张总</strong></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mt-4">
+            <button class="btn btn-danger btn-lg" id="save-global-btn">
+              <span>✓</span> 保存配置（需财务复核）
+            </button>
+            <button class="btn btn-secondary btn-lg" id="cancel-global-btn">取消</button>
+            <button class="btn btn-ghost" style="margin-left: auto; color: var(--accent-red);" id="restore-default-btn">恢复默认</button>
+          </div>
+
+          <div style="margin-top: var(--space-4); padding: var(--space-3); background: var(--bg-overlay); border-radius: var(--radius-sm); font-size: var(--text-xs); color: var(--text-secondary);">
+            📋 <strong>调档历史：</strong>v2.1 (2026-07-01) · v2.0 (2026-04-01) · v1.5 (2026-01-01) · v1.0 (2025-10-01 平台上线) ·
+            <a href="#" class="text-red">查看完整审计日志 →</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 5 档输入校验：客损递增
+      const rows = document.querySelectorAll('#global-tiers-table tbody tr');
+      rows.forEach((row, idx) => {
+        const lossInput = row.querySelector('input[type="number"]');
+        const ratioInput = row.querySelector('input[type="text"]');
+        if (idx > 0) {
+          const prev = rows[idx - 1].querySelector('input[type="number"]');
+          lossInput?.addEventListener('input', () => {
+            const cur = parseFloat(lossInput.value) || 0;
+            const pre = parseFloat(prev.value) || 0;
+            if (cur <= pre) {
+              lossInput.style.borderColor = 'var(--accent-red)';
+              lossInput.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.1)';
+            } else {
+              lossInput.style.borderColor = '';
+              lossInput.style.boxShadow = '';
+            }
+          });
+        }
+      });
+
+      // 调整原因 → 启用/禁用保存按钮
+      const reasonEl = document.getElementById('global-reason');
+      const saveBtn = document.getElementById('save-global-btn');
+      reasonEl?.addEventListener('input', () => {
+        const ok = reasonEl.value.trim().length >= 20;
+        saveBtn.disabled = !ok;
+        saveBtn.style.opacity = ok ? '1' : '0.5';
+        saveBtn.style.cursor = ok ? 'pointer' : 'not-allowed';
+      });
+
+      // 保存（二次确认：输入 CONFIRM）
+      saveBtn?.addEventListener('click', function() {
+        if (this.disabled) return;
+        AdminUI.confirm({
+          title: '保存全局阶梯配置？',
+          message: '这将修改平台全局阶梯，影响所有未单独覆盖的商家月度结算。请输入「CONFIRM」以继续。',
+          confirmText: '确认保存',
+          cancelText: '取消',
+          type: 'danger',
+          dangerText: 'CONFIRM',
+        }).then(ok => {
+          if (!ok) return;
+          const done = AdminUI.withLoading(this, '提交中...');
+          setTimeout(() => {
+            done();
+            AdminUI.toast('已提交财务复核 · 王芳 将审核后生效', 'success', 3000);
+          }, 1500);
+        });
+      });
+
+      // 取消
+      document.getElementById('cancel-global-btn')?.addEventListener('click', () => {
+        AdminUI.confirm({
+          title: '放弃修改？',
+          message: '取消后将还原所有未保存的修改。',
+          confirmText: '放弃修改',
+          cancelText: '继续编辑',
+        }).then(ok => {
+          if (ok) AdminUI.toast('已取消修改', 'info');
+        });
+      });
+
+      // 恢复默认（两次都需要二次确认）
+      function restore() {
+        AdminUI.confirm({
+          title: '恢复默认配置？',
+          message: '将清空当前所有自定义阶梯配置和异常规则，恢复到 v2.1 默认值。此操作不可撤销！',
+          confirmText: '确认恢复',
+          cancelText: '取消',
+          type: 'danger',
+          dangerText: '恢复',
+        }).then(ok => {
+          if (ok) AdminUI.toast('已恢复为 v2.1 默认配置', 'success');
+        });
+      }
+      document.getElementById('restore-default-btn')?.addEventListener('click', restore);
+      document.getElementById('restore-rule-btn')?.addEventListener('click', restore);
+
+      // 顶部按钮
+      document.querySelector('[data-action="history"]')?.addEventListener('click', () => {
+        AdminUI.Modal.open({
+          title: '调档历史 · 全局阶梯',
+          body: `
+            <div style="display: grid; gap: 10px;">
+              <div style="padding: 10px; border-left: 3px solid var(--accent-red); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">v2.1 · 2026-07-01</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">生效中 · 5 档阶梯 1:10/8/6/5/4</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">财务：王芳 · 调整人：林琪</div>
+              </div>
+              <div style="padding: 10px; border-left: 3px solid var(--border-default); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">v2.0 · 2026-04-01</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">5 档阶梯 1:12/9/7/5.5/4.5</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">财务：王芳</div>
+              </div>
+              <div style="padding: 10px; border-left: 3px solid var(--border-default); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">v1.5 · 2026-01-01</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">5 档阶梯 1:15/10/8/6/5</div>
+              </div>
+              <div style="padding: 10px; border-left: 3px solid var(--border-default); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">v1.0 · 2025-10-01</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">平台上线 · 5 档阶梯 1:20/12/10/8/6</div>
+              </div>
+            </div>
+          `,
+          size: 'sm',
+        });
+      });
+
+      document.querySelector('[data-action="export-cfg"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '导出中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('当前 v2.1 配置已导出为 JSON', 'success');
+        }, 800);
+      });
+
+      // 异常规则行点击 → 弹 modal 编辑
+      document.querySelectorAll('.rule-row').forEach(row => {
+        row.style.cursor = 'pointer';
+        const name = row.querySelector('.rule-name')?.textContent || '';
+        row.addEventListener('click', () => {
+          const thresh = row.querySelector('.rule-threshold')?.textContent || '';
+          const sev = row.querySelector('.badge')?.textContent || '';
+          AdminUI.Modal.open({
+            title: name + ' · 规则配置',
+            body: `
+              <div style="font-size: 13px; line-height: 1.7;">
+                <div style="margin-bottom: 12px;">当前规则：</div>
+                <div style="padding: 12px; background: var(--bg-overlay); border-radius: 4px; margin-bottom: 16px;">
+                  <div style="font-size: 12px; color: var(--text-tertiary);">触发条件</div>
+                  <div style="font-size: 13px; font-family: var(--font-mono); margin-top: 4px;">${thresh.trim()}</div>
+                </div>
+                <div style="padding: 12px; background: var(--bg-overlay); border-radius: 4px; margin-bottom: 16px;">
+                  <div style="font-size: 12px; color: var(--text-tertiary);">严重度</div>
+                  <div style="font-size: 13px; margin-top: 4px;">${sev.trim()}</div>
+                </div>
+                <div style="font-size: 11px; color: var(--text-tertiary); padding: 8px; background: var(--accent-blue-light); border-radius: 4px;">
+                  💡 完整规则编辑（阈值 + 触发动作）需进入 v3 配置界面（mock 演示）
+                </div>
+              </div>
+            `,
+            size: 'sm',
+            footer: `<button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>`,
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

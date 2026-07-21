@@ -167,8 +167,8 @@
       <div class="app-sidebar-section">
         <div class="app-sidebar-label">模式</div>
         <a href="mode-status.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">◐</span><span>模式状态</span></a>
-        <a href="mode-consumption.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">火</span><span>星火养成</span></a>
-        <a href="mode-commission.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">润</span><span>星火燎原</span></a>
+        <a href="mode-consumption.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">火</span><span>星火养成（业绩提成）</span></a>
+        <a href="mode-commission.html" class="app-sidebar-item"><span class="app-sidebar-item-icon">润</span><span>星火燎原<span style="color: var(--text-tertiary); font-size: 10px; margin-left: 4px;">v3</span></span></a>
       </div>
       <div class="app-sidebar-section">
         <div class="app-sidebar-label">数据</div>
@@ -206,7 +206,7 @@
       <div class="app-content">
         <div class="kpi-strip">
           <div class="kpi-card blaze">
-            <div class="kpi-label">本月已分润(预估)</div>
+            <div class="kpi-label">本月已提成（预估）</div>
             <div class="kpi-value">¥42,800</div>
             <div class="kpi-meta">6/30 自动结算</div>
           </div>
@@ -245,7 +245,7 @@
               <tr>
                 <th>月份</th>
                 <th>流水金额</th>
-                <th>分润金额</th>
+                <th>提成金额</th>
                 <th>实际到账</th>
                 <th>状态</th>
                 <th>操作</th>
@@ -334,7 +334,7 @@
       <div class="modal-head">
         <div>
           <div class="modal-title" data-sd-title>结算单明细</div>
-          <div class="modal-sub" data-sd-sub>按《Game Hub 合作协议》约定 · 分润结算明细</div>
+          <div class="modal-sub" data-sd-sub>按《Game Hub 合作协议》约定 · 业绩提成结算明细</div>
         </div>
         <button class="modal-close" onclick="SettlementDetail.close()" aria-label="关闭">×</button>
       </div>
@@ -356,7 +356,7 @@
 
       <div class="modal-footer">
         <span style="font-size: var(--text-xs); color: var(--text-tertiary);">
-          分润比例与结算方式均按《Game Hub 合作协议》v3.2 约定执行
+          提成比例与结算方式均按《Game Hub 合作协议》v3.2 约定执行（v2.1 阶梯提成规则）
         </span>
         <button class="btn btn-ghost btn-sm" onclick="SettlementDetail.close()">关闭</button>
       </div>
@@ -373,7 +373,7 @@
         period: '2026-05', monthLabel: '2026 年 5 月', withdrawn: true, withdrawnAt: '2026-06-08',
         monthlyFlow: 447021,
         breakdown: [
-          { name: '流水分润', amount: 26600, percent: 70, color: '#2563EB' },
+          { name: '业绩提成', amount: 26600, percent: 70, color: '#2563EB' },
           { name: 'UMDT 充值',   amount:  9500, percent: 25, color: '#10B981' },
         ],
         sources: [
@@ -387,7 +387,7 @@
         period: '2026-04', monthLabel: '2026 年 4 月', withdrawn: true, withdrawnAt: '2026-05-08',
         monthlyFlow: 400000,
         breakdown: [
-          { name: '流水分润', amount: 23800, percent: 70, color: '#2563EB' },
+          { name: '业绩提成', amount: 23800, percent: 70, color: '#2563EB' },
           { name: 'UMDT 充值',   amount:  8500, percent: 25, color: '#10B981' },
         ],
         sources: [
@@ -401,7 +401,7 @@
         period: '2026-03', monthLabel: '2026 年 3 月', withdrawn: true, withdrawnAt: '2026-04-08',
         monthlyFlow: 432500,
         breakdown: [
-          { name: '流水分润', amount: 25700, percent: 70, color: '#2563EB' },
+          { name: '业绩提成', amount: 25700, percent: 70, color: '#2563EB' },
           { name: 'UMDT 充值',   amount:  9200, percent: 25, color: '#10B981' },
         ],
         sources: [
@@ -415,7 +415,7 @@
         period: '2026-02', monthLabel: '2026 年 2 月', withdrawn: true, withdrawnAt: '2026-03-08',
         monthlyFlow: 396000,
         breakdown: [
-          { name: '流水分润', amount: 23500, percent: 70, color: '#2563EB' },
+          { name: '业绩提成', amount: 23500, percent: 70, color: '#2563EB' },
           { name: 'UMDT 充值',   amount:  8400, percent: 25, color: '#10B981' },
         ],
         sources: [
@@ -429,7 +429,7 @@
         period: '2026-01', monthLabel: '2026 年 1 月', withdrawn: true, withdrawnAt: '2026-02-08',
         monthlyFlow: 348000,
         breakdown: [
-          { name: '流水分润', amount: 20700, percent: 70, color: '#2563EB' },
+          { name: '业绩提成', amount: 20700, percent: 70, color: '#2563EB' },
           { name: 'UMDT 充值',   amount:  7400, percent: 25, color: '#10B981' },
         ],
         sources: [
@@ -443,7 +443,7 @@
         period: '2025-12', monthLabel: '2025 年 12 月', withdrawn: true, withdrawnAt: '2026-01-08',
         monthlyFlow: 382000,
         breakdown: [
-          { name: '流水分润', amount: 22750, percent: 70, color: '#2563EB' },
+          { name: '业绩提成', amount: 22750, percent: 70, color: '#2563EB' },
           { name: 'UMDT 充值',   amount:  8100, percent: 25, color: '#10B981' },
         ],
         sources: [
@@ -457,7 +457,7 @@
         period: '2025-11', monthLabel: '2025 年 11 月', withdrawn: true, withdrawnAt: '2025-12-08',
         monthlyFlow: 346000,
         breakdown: [
-          { name: '流水分润', amount: 20650, percent: 70, color: '#2563EB' },
+          { name: '业绩提成', amount: 20650, percent: 70, color: '#2563EB' },
           { name: 'UMDT 充值',   amount:  7400, percent: 25, color: '#10B981' },
         ],
         sources: [
@@ -469,7 +469,7 @@
       },
     };
 
-    // 计算单月分润 = 流水 × 协议比例 (按 8.5%)
+    // 计算单月提成 = 客损 × 阶梯比例 (5 档：1:10/8/6/5/4)
     function _calc(bill, ratio) {
       return {
         total: bill.breakdown.reduce((s, x) => s + x.amount, 0),
@@ -488,7 +488,7 @@
 
         // 头部
         document.querySelector('[data-sd-title]').textContent = `${bill.monthLabel} 结算单 · 按《合作协议》约定`;
-        document.querySelector('[data-sd-sub]').innerHTML = `分润结算明细 · 协议编号 <span style="font-family: var(--font-mono);">AGREEMENT-2026-M001-V3</span> · ${bill.agreementClause}`;
+        document.querySelector('[data-sd-sub]').innerHTML = `业绩提成结算明细 · 协议编号 <span style="font-family: var(--font-mono);">AGREEMENT-2026-M001-V3</span> · ${bill.agreementClause}`;
         document.querySelector('[data-sd-period]').textContent = bill.monthLabel;
 
         // 状态
@@ -506,7 +506,7 @@
               <div class="modal-summary-val">¥ ${(bill.monthlyFlow / 10000).toFixed(1)} 万</div>
             </div>
             <div class="modal-summary-cell">
-              <div class="modal-summary-label">协议分润（8.5%）</div>
+              <div class="modal-summary-label">阶梯提成（5 档）</div>
               <div class="modal-summary-val" style="color: var(--green-700, #047857);">¥ ${(settlement.total / 10000).toFixed(2)} 万</div>
             </div>
             <div class="modal-summary-cell">
@@ -519,8 +519,8 @@
             </div>
           </div>
 
-          <!-- 分润构成 -->
-          <div class="modal-section-title">分润构成</div>
+          <!-- 提成构成 -->
+          <div class="modal-section-title">提成构成</div>
           <table class="modal-table">
             <thead>
               <tr>
@@ -577,9 +577,9 @@
               📄 协议依据
             </div>
             <div style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.7;">
-              · ${bill.agreementClause} · 分润由流水分润 + UMDT 充值两部分组成<br>
+              · ${bill.agreementClause} · v2 阶段：提成由「阶梯提成」组成（v3 阶段再开放流水分润）<br>
               · 第 6 条 · 重新评估 · 水位显著变化时按协议约定开展协商<br>
-              · 第 8 条 · 双方权利 · 商户与平台按协议共同确定分润条款
+              · 第 8 条 · 双方权利 · 商户与平台按协议共同确定提成条款（v3 阶段再开放流水分润）
             </div>
             <div style="margin-top: var(--space-3); display: flex; gap: var(--space-2); justify-content: flex-end;">
               <a href="parameters.html#agreement-info" class="form-link" style="font-size: var(--text-xs);">查看完整《合作协议》 →</a>

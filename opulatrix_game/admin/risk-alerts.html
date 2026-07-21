@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>预警中心 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .alert-row {
+      display: grid;
+      grid-template-columns: 130px 80px 1fr 100px 100px 100px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-hairline);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .alert-row:hover { background: var(--bg-overlay); }
+    .alert-row.critical { background: rgba(220, 38, 38, 0.03); }
+    .alert-time {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .alert-id {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+    .alert-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .alert-title {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .alert-desc {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="risk-patterns.html">风控</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">预警中心</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索异常 ID / 商家 / 游戏">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">RISK ALERTS · 2026-07-21 18:42 · 实时同步</div>
+            <h1 class="page-header-title">预警中心</h1>
+            <div class="page-header-sub">今日 7 起 · 严重 2 · 警告 5 · 已处理 2 · 待处理 5</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="batch">批量处理</button>
+            <button class="btn btn-secondary" data-action="export">导出</button>
+            <a href="rules-config.html" class="btn btn-primary">异常规则</a>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">待处理</span>
+              <span class="kpi-icon">⏱</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-red);">5</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 2</span>
+              较昨日 · 严重 2 / 警告 3
+            </div>
+          </div>
+          <div class="kpi-card accent-yellow">
+            <div class="kpi-head">
+              <span class="kpi-label">复核中</span>
+              <span class="kpi-icon">⌬</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-yellow);">2</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend neutral">·</span>
+              较昨日持平
+            </div>
+          </div>
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">已处理</span>
+              <span class="kpi-icon">✓</span>
+            </div>
+            <div class="kpi-value">2</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 1</span>
+              处理率 28.6%
+            </div>
+          </div>
+          <div class="kpi-card accent-blue">
+            <div class="kpi-head">
+              <span class="kpi-label">已解决</span>
+              <span class="kpi-icon">○</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-blue);">38</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 5</span>
+              本月累计
+            </div>
+          </div>
+        </div>
+
+        <!-- 筛选条 -->
+        <div class="filter-bar" data-aui-filter>
+          <span class="filter-chip active" data-filter-value="all">全部 <span style="opacity: 0.6; margin-left: 2px;">7</span></span>
+          <span class="filter-chip" data-filter-value="严重">严重 <span style="opacity: 0.6; margin-left: 2px;">2</span></span>
+          <span class="filter-chip" data-filter-value="警告">警告 <span style="opacity: 0.6; margin-left: 2px;">5</span></span>
+          <span class="filter-chip" data-filter-value="提示">提示 <span style="opacity: 0.6; margin-left: 2px;">0</span></span>
+          <div style="width: 1px; height: 16px; background: var(--border-hairline); margin: 0 4px;"></div>
+          <span class="filter-chip" data-filter-value="待处理">待处理 <span style="opacity: 0.6; margin-left: 2px;">5</span></span>
+          <span class="filter-chip" data-filter-value="复核中">复核中 <span style="opacity: 0.6; margin-left: 2px;">2</span></span>
+          <span class="filter-chip" data-filter-value="已处理">已处理 <span style="opacity: 0.6; margin-left: 2px;">2</span></span>
+          <div style="width: 1px; height: 16px; background: var(--border-hairline); margin: 0 4px;"></div>
+          <select style="padding: 4px 8px; font-size: var(--text-xs); background: var(--bg-base); border: 1px solid var(--border-hairline);">
+            <option>全部类型</option>
+            <option>大额对局</option>
+            <option>客损突增</option>
+            <option>流水突降</option>
+            <option>玩家投诉</option>
+            <option>可疑交易</option>
+            <option>数据一致性</option>
+          </select>
+          <div class="filter-bar-search">
+            <input type="text" placeholder="搜索 ID / 商家 / 游戏" data-aui-filter-search>
+          </div>
+        </div>
+
+        <!-- 异常事件列表 -->
+        <div class="panel" style="padding: 0; overflow: hidden;">
+          <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+              显示 <strong style="color: var(--text-primary);">1 - 7</strong> / 共 7 起 ·
+              <span style="color: var(--accent-red);">含 2 起严重</span>
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">按时间降序</div>
+          </div>
+
+          <div>
+            <div class="alert-row" style="background: var(--bg-base); font-size: 10px; font-family: var(--font-mono); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; cursor: default;">
+              <span>时间</span>
+              <span>ID</span>
+              <span>事件描述</span>
+              <span>严重度</span>
+              <span>类型</span>
+              <span style="text-align: right;">状态</span>
+            </div>
+
+            <div class="alert-row critical" data-severity="严重" data-status="待处理" data-aid="A001" data-search="A001 暗影潜行 大额对局">
+              <span class="alert-time">18:40:18</span>
+              <span class="alert-id">A001</span>
+              <div class="alert-content">
+                <span class="alert-title">暗影潜行 · 大额对局 ¥8,500</span>
+                <span class="alert-desc">玩家 x***1 vs y***2 单局流水超历史峰值 5 倍 · 已自动暂停该游戏结算</span>
+              </div>
+              <span><span class="badge red"><span class="badge-dot"></span>严重</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">大额对局</span>
+              <span style="text-align: right;"><span class="badge yellow"><span class="badge-dot"></span>待处理</span></span>
+            </div>
+
+            <div class="alert-row critical" data-severity="严重" data-status="待处理" data-aid="A002" data-search="A002 战火重燃 大额对局">
+              <span class="alert-time">18:38:32</span>
+              <span class="alert-id">A002</span>
+              <div class="alert-content">
+                <span class="alert-title">战火重燃 · 大额对局 ¥12,400</span>
+                <span class="alert-desc">玩家 d***2 vs b***7 单局流水超历史峰值 8 倍 · 已自动暂停该游戏结算</span>
+              </div>
+              <span><span class="badge red"><span class="badge-dot"></span>严重</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">大额对局</span>
+              <span style="text-align: right;"><span class="badge yellow"><span class="badge-dot"></span>待处理</span></span>
+            </div>
+
+            <div class="alert-row" data-severity="警告" data-status="复核中" data-aid="A003" data-search="A003 银河拓荒者 客损突增">
+              <span class="alert-time">16:23:48</span>
+              <span class="alert-id">A003</span>
+              <div class="alert-content">
+                <span class="alert-title">银河拓荒者 · 客损突增 +312%</span>
+                <span class="alert-desc">单日客损 ¥18,400，较 7 日均值突增 312% · 已通知运营 + 商家</span>
+              </div>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">客损突增</span>
+              <span style="text-align: right;"><span class="badge blue"><span class="badge-dot"></span>复核中</span></span>
+            </div>
+
+            <div class="alert-row" data-severity="警告" data-status="待处理" data-aid="A004" data-search="A004 暗影潜行 玩家投诉">
+              <span class="alert-time">14:12:15</span>
+              <span class="alert-id">A004</span>
+              <div class="alert-content">
+                <span class="alert-title">暗影潜行 · 玩家投诉累计 3 起</span>
+                <span class="alert-desc">玩家投诉"对局结果异常" · 建议调取该游戏对局录像复核</span>
+              </div>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">玩家投诉</span>
+              <span style="text-align: right;"><span class="badge yellow"><span class="badge-dot"></span>待处理</span></span>
+            </div>
+
+            <div class="alert-row" data-severity="警告" data-status="已处理" data-aid="A005" data-search="A005 萤火奇航 流水突降">
+              <span class="alert-time">11:45:30</span>
+              <span class="alert-id">A005</span>
+              <div class="alert-content">
+                <span class="alert-title">萤火奇航 · 流水突降 -68%</span>
+                <span class="alert-desc">单日流水 ¥4,200，较 7 日均值 -68% · 已通知商家，预计次日恢复</span>
+              </div>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">流水突降</span>
+              <span style="text-align: right;"><span class="badge green"><span class="badge-dot"></span>已处理</span></span>
+            </div>
+
+            <div class="alert-row" data-severity="提示" data-status="已处理" data-aid="A006" data-search="A006 银河拓荒者 数据一致性">
+              <span class="alert-time">09:18:42</span>
+              <span class="alert-id">A006</span>
+              <div class="alert-content">
+                <span class="alert-title">银河拓荒者 · 数据一致性 0.8%</span>
+                <span class="alert-desc">平台流水 vs 商家流水差 0.8%（容差内）· 已自动对账通过</span>
+              </div>
+              <span><span class="badge blue"><span class="badge-dot"></span>提示</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">数据一致性</span>
+              <span style="text-align: right;"><span class="badge green"><span class="badge-dot"></span>已处理</span></span>
+            </div>
+
+            <div class="alert-row critical" data-severity="严重" data-status="调查中" data-aid="A007" data-search="A007 战火重燃 可疑交易">
+              <span class="alert-time">昨日 22:34</span>
+              <span class="alert-id">A007</span>
+              <div class="alert-content">
+                <span class="alert-title">战火重燃 · 可疑交易 · 胜率 100%</span>
+                <span class="alert-desc">同一玩家 30 分钟内连续 5 局胜利，胜率 100%（异常）· 已冻结分账 + 通知法务</span>
+              </div>
+              <span><span class="badge red"><span class="badge-dot"></span>严重</span></span>
+              <span class="text-secondary" style="font-size: var(--text-xs);">可疑交易</span>
+              <span style="text-align: right;"><span class="badge purple"><span class="badge-dot"></span>调查中</span></span>
+            </div>
+          </div>
+
+          <div style="padding: var(--space-3) var(--space-5); border-top: 1px solid var(--border-hairline); text-align: center; font-size: var(--text-xs); color: var(--text-tertiary);">
+            显示全部 7 条 · 加载更多历史记录 →
+          </div>
+        </div>
+
+        <!-- 严重异常详情预览 -->
+        <div class="panel" style="border-left: 3px solid var(--accent-red); background: linear-gradient(90deg, rgba(220,38,38,0.04), var(--bg-elevated) 40%);">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">!</div>
+              <div>
+                <div class="panel-title">A001 重点关注 · 暗影潜行 · 大额对局 ¥8,500</div>
+                <div class="panel-sub">18:40:18 触发 · 等待人工复核 · 关联商家 M052 暗影潜行</div>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-success btn-sm" data-action="confirm-normal">✓ 确认为正常</button>
+              <button class="btn btn-primary btn-sm" data-action="escalate">升级处理</button>
+              <button class="btn btn-danger btn-sm" data-action="pause-merchant">暂停商家</button>
+            </div>
+          </div>
+
+          <div class="grid-3 gap-4">
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">事件详情</div>
+              <div style="font-size: var(--text-sm); line-height: 1.6; color: var(--text-primary);">
+                玩家 <strong>x***1</strong> vs <strong>y***2</strong> 在 G052-1 暗影潜行 单局流水 <strong style="color: var(--accent-red);">¥8,500</strong>，<br>
+                超过该玩家历史峰值 5 倍（历史峰值 ¥1,720）。<br>
+                <span style="color: var(--text-tertiary); font-size: var(--text-xs);">系统已自动暂停该游戏结算。</span>
+              </div>
+            </div>
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">关联分析</div>
+              <div style="font-size: var(--text-sm); line-height: 1.6; color: var(--text-primary);">
+                M052 暗影潜行 商家本月已 <strong style="color: var(--accent-red);">5 起异常</strong>，<br>
+                累计被自动拦截 ¥32,400。<br>
+                <span style="color: var(--text-tertiary); font-size: var(--text-xs);">建议：人工复核后决定是否暂停商家。</span>
+              </div>
+            </div>
+            <div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">建议操作</div>
+              <div style="font-size: var(--text-sm); line-height: 1.6; color: var(--text-primary);">
+                1. 调取该对局录像复核<br>
+                2. 查询玩家历史对局数据<br>
+                3. 联系商家提供说明<br>
+                <span style="color: var(--text-tertiary); font-size: var(--text-xs);">预计处理时间 30 分钟</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 筛选：data-status 的复合筛选需要 custom 处理（因为严重度 + 状态 是两个维度）
+      // 这里改用手动 chip 切换逻辑
+      const bar = document.querySelector('[data-aui-filter]');
+      const rows = document.querySelectorAll('.alert-row[data-severity]');
+      const chips = bar.querySelectorAll('[data-filter-value]');
+      const searchInput = bar.querySelector('[data-aui-filter-search]');
+
+      let activeVal = 'all';
+      let searchVal = '';
+      function apply() {
+        let visible = 0;
+        rows.forEach(row => {
+          const sev = row.getAttribute('data-severity');
+          const status = row.getAttribute('data-status');
+          const search = row.getAttribute('data-search') || '';
+          // chip 可能是 严重/警告/提示 (严重度) 或 待处理/复核中/已处理/调查中 (状态)
+          let matchVal = activeVal === 'all';
+          if (!matchVal) {
+            matchVal = (sev === activeVal) || (status === activeVal);
+          }
+          const matchSearch = !searchVal || search.toLowerCase().indexOf(searchVal) !== -1;
+          if (matchVal && matchSearch) {
+            row.style.display = '';
+            visible++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        // header 始终显示
+        const header = document.querySelector('.alert-row[style*="cursor: default"], .alert-row:first-child');
+        if (header) header.style.display = '';
+      }
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          activeVal = chip.getAttribute('data-filter-value');
+          apply();
+        });
+      });
+      let t;
+      searchInput?.addEventListener('input', (e) => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          searchVal = e.target.value.trim().toLowerCase();
+          apply();
+        }, 150);
+      });
+      apply();
+
+      // 排序（按时间）
+      const thead = document.querySelector('.alert-row[style*="cursor: default"]');
+      // 给 header th 加 data-sort-type — 暂时不重写表头，简化：通过 rowClick 处理
+
+      // 行点击 → 弹 Modal 显示完整异常详情
+      rows.forEach(row => {
+        row.style.cursor = 'pointer';
+        row.addEventListener('click', () => {
+          const aid = row.getAttribute('data-aid');
+          const title = row.querySelector('.alert-title')?.textContent || '';
+          const desc = row.querySelector('.alert-desc')?.textContent || '';
+          const time = row.querySelector('.alert-time')?.textContent || '';
+          const sev = row.getAttribute('data-severity');
+          const status = row.getAttribute('data-status');
+          AdminUI.Modal.open({
+            title: `${aid} · 异常详情`,
+            body: `
+              <div style="font-size: 13px; line-height: 1.7;">
+                <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">${title}</div>
+                <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;">触发时间：${time} · ID：${aid}</div>
+                <div style="padding: 12px; background: var(--bg-overlay); border-radius: 4px; margin-bottom: 12px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px;">事件描述</div>
+                  <div style="font-size: 13px;">${desc}</div>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                  <div style="flex: 1; padding: 8px 12px; background: var(--bg-overlay); border-radius: 4px;">
+                    <div style="font-size: 11px; color: var(--text-tertiary);">严重度</div>
+                    <div style="font-size: 13px; font-weight: 500;">${sev}</div>
+                  </div>
+                  <div style="flex: 1; padding: 8px 12px; background: var(--bg-overlay); border-radius: 4px;">
+                    <div style="font-size: 11px; color: var(--text-tertiary);">当前状态</div>
+                    <div style="font-size: 13px; font-weight: 500;">${status}</div>
+                  </div>
+                </div>
+              </div>
+            `,
+            size: 'md',
+            footer: `
+              <button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>
+              <button type="button" class="btn btn-primary" id="alert-handle">处理此异常</button>
+              <button type="button" class="btn btn-secondary" id="alert-recheck">复核模式</button>
+            `,
+          });
+          setTimeout(() => {
+            document.getElementById('alert-handle')?.addEventListener('click', () => openHandleModal(aid, title));
+            document.getElementById('alert-recheck')?.addEventListener('click', () => {
+              AdminUI.Modal.close();
+              window.location.href = 'risk-patterns.html';
+            });
+          }, 50);
+        });
+      });
+
+      // 处理此异常 — 4 个动作
+      function openHandleModal(aid, title) {
+        AdminUI.Modal.close();
+        const body = document.createElement('div');
+        body.innerHTML = `
+          <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">${aid} · ${title}</div>
+          <div style="display: grid; gap: 8px;">
+            <button type="button" class="btn btn-secondary" data-handle="notify" style="justify-content: flex-start; text-align: left; padding: 12px;">
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 500;">通知商家（不阻断）</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">发送站内信给商家，告知异常情况</div>
+              </div>
+            </button>
+            <button type="button" class="btn btn-secondary" data-handle="pause-game" style="justify-content: flex-start; text-align: left; padding: 12px;">
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 500;">暂停该游戏（临时）</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">暂停对应游戏的结算，等待人工复核</div>
+              </div>
+            </button>
+            <button type="button" class="btn btn-secondary" data-handle="freeze" style="justify-content: flex-start; text-align: left; padding: 12px;">
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 500;">冻结分账（24h）</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">冻结 24 小时分账，期间资金不结算</div>
+              </div>
+            </button>
+            <button type="button" class="btn btn-secondary" data-handle="resolve" style="justify-content: flex-start; text-align: left; padding: 12px;">
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 500;">标记已解决</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">确认为正常事件，关闭工单</div>
+              </div>
+            </button>
+          </div>
+        `;
+        AdminUI.Modal.open({
+          title: '处理异常 · ' + aid,
+          body,
+          size: 'sm',
+          footer: `<button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>`,
+        });
+        body.querySelectorAll('[data-handle]').forEach(b => {
+          b.addEventListener('click', () => {
+            const action = b.getAttribute('data-handle');
+            const messages = {
+              notify: { title: '已通知商家', body: '站内信已发送，商家将在 1 小时内收到。', type: 'success' },
+              'pause-game': { title: '已暂停游戏', body: '该游戏结算已暂停，等待人工复核。', type: 'success' },
+              freeze: { title: '已冻结分账', body: '分账已冻结 24 小时，次日 18:42 自动解冻。', type: 'warning' },
+              resolve: { title: '已标记解决', body: '异常已关闭，状态变更为「已处理」。', type: 'success' },
+            };
+            const m = messages[action];
+            AdminUI.Modal.close();
+            AdminUI.toast(m.body, m.type, 3000);
+          });
+        });
+      }
+
+      // 顶部按钮
+      document.querySelector('[data-action="batch"]')?.addEventListener('click', () => {
+        AdminUI.Modal.open({
+          title: '批量处理异常',
+          body: `
+            <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.7;">
+              <p>已选中 <strong>0</strong> 条记录（mock 演示）。</p>
+              <p style="margin-top: 12px;">支持以下批量操作：</p>
+              <ul style="margin: 12px 0; padding-left: 20px;">
+                <li>批量通知商家</li>
+                <li>批量标记已解决</li>
+                <li>批量升级处理</li>
+                <li>导出待处理列表</li>
+              </ul>
+            </div>
+          `,
+          size: 'sm',
+          footer: `<button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>`,
+        });
+      });
+
+      document.querySelector('[data-action="export"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '导出中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('已导出 7 条异常记录为 Excel', 'success');
+        }, 1000);
+      });
+
+      // 底部 A001 操作按钮
+      document.querySelector('[data-action="confirm-normal"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '处理中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('A001 已确认为正常，关闭工单', 'success');
+        }, 800);
+      });
+      document.querySelector('[data-action="escalate"]')?.addEventListener('click', function() {
+        AdminUI.toast('已升级 A001 至运营总监', 'info', 2000);
+      });
+      document.querySelector('[data-action="pause-merchant"]')?.addEventListener('click', function() {
+        AdminUI.confirm({
+          title: '暂停商家 M052 暗影潜行？',
+          message: '暂停后该商家所有游戏将停止结算，已开始的局可继续完成。',
+          confirmText: '确认暂停',
+          cancelText: '取消',
+          type: 'danger',
+          dangerText: '暂停',
+        }).then(ok => {
+          if (!ok) return;
+          const done = AdminUI.withLoading(this, '处理中...');
+          setTimeout(() => {
+            done();
+            AdminUI.toast('M052 暗影潜行 已暂停', 'success');
+          }, 1000);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>审核商家 M044 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .info-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+    }
+    .info-label {
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+    }
+    .info-value {
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .doc-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .doc-item:hover {
+      border-color: var(--border-default);
+      background: var(--bg-overlay);
+    }
+    .doc-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+      flex-shrink: 0;
+    }
+    .doc-icon.pdf { background: var(--accent-red-light); color: var(--accent-red-dark); }
+    .doc-icon.jpg { background: var(--accent-blue-light); color: #1E40AF; }
+    .doc-icon.mp4 { background: var(--accent-purple); color: white; background: rgba(139,92,246,0.1); color: #6D28D9; }
+    .doc-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-primary);
+    }
+    .doc-meta {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .doc-actions {
+      margin-left: auto;
+      display: flex;
+      gap: var(--space-2);
+    }
+    .form-group {
+      margin-bottom: var(--space-4);
+    }
+    .form-label {
+      display: block;
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-family: var(--font-mono);
+      margin-bottom: var(--space-2);
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      transition: all 0.15s;
+    }
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: var(--font-sans);
+    }
+    .form-textarea:focus, .form-input:focus, .form-select:focus {
+      border-color: var(--accent-red);
+      box-shadow: var(--shadow-glow-red);
+    }
+    .timeline {
+      position: relative;
+      padding-left: var(--space-5);
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--border-hairline);
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: var(--space-4);
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -19px;
+      top: 4px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-default);
+    }
+    .timeline-dot.green { background: var(--accent-green); border-color: var(--accent-green); }
+    .timeline-dot.yellow { background: var(--accent-yellow); border-color: var(--accent-yellow); }
+    .timeline-dot.red { background: var(--accent-red); border-color: var(--accent-red); }
+    .timeline-title {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .timeline-meta {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .timeline-desc {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .urgent-banner {
+      background: linear-gradient(90deg, var(--accent-red-light), transparent);
+      border-left: 3px solid var(--accent-red);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--accent-red-dark);
+      margin-bottom: var(--space-4);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="merchants-review.html">审核商家</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">M044 墨韵江湖</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索">
+        </div>
+        <div class="admin-topbar-actions">
+          <a href="merchants-review.html" class="btn btn-ghost btn-sm">← 返回列表</a>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">REVIEW DETAIL · M044 · MMO · 2026-07-19 09:23 提交</div>
+            <h1 class="page-header-title">审核商家 · M044 墨韵江湖</h1>
+            <div class="page-header-sub">待审核 · 提交 57 小时前 · 距 SLA 截止 15 小时</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="view-history">查看历史</button>
+            <button class="btn btn-secondary" data-action="transfer">转交</button>
+          </div>
+        </div>
+
+        <!-- 紧急提示 -->
+        <div class="urgent-banner">
+          ⏰ <strong>审核 SLA 提醒</strong>：本单已提交 57 小时，距 72h SLA 截止剩 15 小时。建议尽快处理或转交其他审核员。
+        </div>
+
+        <div class="grid-12" style="grid-template-columns: 1fr 380px;">
+          <!-- 左侧：商家信息 + 资料 -->
+          <div>
+            <!-- 商家基本信息 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon red">墨</div>
+                  <div>
+                    <div class="panel-title">商家基本信息</div>
+                    <div class="panel-sub">5 项核心信息 · 1 项含游戏资质</div>
+                  </div>
+                </div>
+                <span class="badge yellow"><span class="badge-dot"></span>待审核</span>
+              </div>
+
+              <div class="info-grid">
+                <div class="info-label">商家名称</div>
+                <div class="info-value">墨韵江湖</div>
+
+                <div class="info-label">商家 ID</div>
+                <div class="info-value text-mono">M044</div>
+
+                <div class="info-label">类目</div>
+                <div class="info-value">MMO · 大型多人在线</div>
+
+                <div class="info-label">联系人</div>
+                <div class="info-value">黄磊 · 商务总监</div>
+
+                <div class="info-label">联系电话</div>
+                <div class="info-value text-mono">132****1357</div>
+
+                <div class="info-label">联系邮箱</div>
+                <div class="info-value text-mono">huanglei@moyun-jianghu.com</div>
+
+                <div class="info-label">公司地址</div>
+                <div class="info-value">杭州市西湖区文三路 478 号华星时代广场 12F</div>
+
+                <div class="info-label">法人代表</div>
+                <div class="info-value">黄磊</div>
+
+                <div class="info-label">法人身份证</div>
+                <div class="info-value text-mono">3301****1979****5231</div>
+
+                <div class="info-label">申请时间</div>
+                <div class="info-value text-mono">2026-07-19 09:23:18</div>
+
+                <div class="info-label">预计合作</div>
+                <div class="info-value">上线即接入 · 含 1 款游戏</div>
+              </div>
+            </div>
+
+            <!-- 提交资料 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">📎</div>
+                  <div>
+                    <div class="panel-title">提交资料</div>
+                    <div class="panel-sub">5 项 · 全部已上传 · 总 148.4 MB</div>
+                  </div>
+                </div>
+                <a class="panel-link">全部下载 →</a>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="doc-item" data-doc-name="营业执照副本.pdf" data-doc-size="2.4 MB" data-doc-type="pdf">
+                  <div class="doc-icon pdf">PDF</div>
+                  <div>
+                    <div class="doc-name">营业执照副本</div>
+                    <div class="doc-meta">2.4 MB · 上传 2026-07-19 09:23</div>
+                  </div>
+                  <div class="doc-actions">
+                    <a class="text-red text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="preview">预览</a>
+                    <a class="text-secondary text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="download">下载</a>
+                  </div>
+                </div>
+
+                <div class="doc-item" data-doc-name="法人身份证.jpg" data-doc-size="1.8 MB" data-doc-type="jpg">
+                  <div class="doc-icon jpg">JPG</div>
+                  <div>
+                    <div class="doc-name">法人身份证（正反面）</div>
+                    <div class="doc-meta">1.8 MB · 上传 2026-07-19 09:24</div>
+                  </div>
+                  <div class="doc-actions">
+                    <a class="text-red text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="preview">预览</a>
+                    <a class="text-secondary text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="download">下载</a>
+                  </div>
+                </div>
+
+                <div class="doc-item" data-doc-name="游戏玩法说明 PPT.pdf" data-doc-size="12 MB" data-doc-type="pdf">
+                  <div class="doc-icon pdf">PDF</div>
+                  <div>
+                    <div class="doc-name">游戏玩法说明 PPT（24 页）</div>
+                    <div class="doc-meta">12 MB · 上传 2026-07-19 09:25 · 含核心机制、付费模型</div>
+                  </div>
+                  <div class="doc-actions">
+                    <a class="text-red text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="preview">预览</a>
+                    <a class="text-secondary text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="download">下载</a>
+                  </div>
+                </div>
+
+                <div class="doc-item" data-doc-name="演示视频.mp4" data-doc-size="128 MB" data-doc-type="mp4">
+                  <div class="doc-icon mp4">MP4</div>
+                  <div>
+                    <div class="doc-name">演示视频 · 12 分钟</div>
+                    <div class="doc-meta">128 MB · 上传 2026-07-19 09:30 · 1080P · 含 3 局对局实况</div>
+                  </div>
+                  <div class="doc-actions">
+                    <a class="text-red text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="preview">播放</a>
+                    <a class="text-secondary text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="download">下载</a>
+                  </div>
+                </div>
+
+                <div class="doc-item" data-doc-name="游戏备案证明.pdf" data-doc-size="4.2 MB" data-doc-type="pdf">
+                  <div class="doc-icon pdf">PDF</div>
+                  <div>
+                    <div class="doc-name">游戏备案证明（国新出审 [2026] 第 0842 号）</div>
+                    <div class="doc-meta">4.2 MB · 上传 2026-07-19 09:32 · 备案号可在国家新闻出版署核验</div>
+                  </div>
+                  <div class="doc-actions">
+                    <a class="text-red text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="preview">预览</a>
+                    <a class="text-secondary text-mono" style="font-size: 11px; cursor: pointer;" data-doc-action="download">下载</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 智能预审结果 -->
+            <div class="panel" style="border-left: 3px solid var(--accent-green); background: linear-gradient(90deg, var(--accent-green-light), var(--bg-elevated) 30%);">
+              <div class="panel-head" style="border-bottom-color: var(--border-hairline);">
+                <div class="panel-title-group">
+                  <div class="panel-icon green">AI</div>
+                  <div>
+                    <div class="panel-title">智能预审结果</div>
+                    <div class="panel-sub">OCR + 内容识别 · 通过率 92%</div>
+                  </div>
+                </div>
+                <span class="badge green"><span class="badge-dot"></span>通过</span>
+              </div>
+
+              <div class="grid-2 gap-2">
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">营业执照核验</div>
+                  <div style="font-size: var(--text-sm); color: var(--text-primary); margin-bottom: 4px;">
+                    <span class="text-green">✓</span> 杭州墨韵网络科技有限公司
+                  </div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">统一信用代码：91330106MA****K47P</div>
+                </div>
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">法人一致性</div>
+                  <div style="font-size: var(--text-sm); color: var(--text-primary); margin-bottom: 4px;">
+                    <span class="text-green">✓</span> 身份证号 = 营业执照法人
+                  </div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">OCR 匹配度 98.4%</div>
+                </div>
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">游戏备案</div>
+                  <div style="font-size: var(--text-sm); color: var(--text-primary); margin-bottom: 4px;">
+                    <span class="text-green">✓</span> 国新出审 [2026] 第 0842 号
+                  </div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">可在国家新闻出版署核验</div>
+                </div>
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">玩法合规性</div>
+                  <div style="font-size: var(--text-sm); color: var(--text-primary); margin-bottom: 4px;">
+                    <span class="text-yellow">⚠</span> PPT 含轻度赌博风险词
+                  </div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">"开箱" / "对战" / "PK" 出现 23 次</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧：审核操作 -->
+          <div>
+            <div class="panel" style="position: sticky; top: 80px;">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon yellow">✓</div>
+                  <div>
+                    <div class="panel-title">审核操作</div>
+                    <div class="panel-sub">当前状态：待审核</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">审核结论</label>
+                <select class="form-select" id="review-result">
+                  <option value="">— 请选择 —</option>
+                  <option value="approve">✓ 通过（允许上线）</option>
+                  <option value="reject">✕ 驳回（资料不符）</option>
+                  <option value="supplement">⚠ 需补资料</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="reject-reason-group" style="display: none;">
+                <label class="form-label">驳回原因（商家可见）</label>
+                <select class="form-select" id="reject-reason">
+                  <option>资料不全</option>
+                  <option>玩法违规</option>
+                  <option>法人不符</option>
+                  <option>其他</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">审核备注（商家可见）</label>
+                <textarea class="form-textarea" id="review-note" placeholder="例如：营业执照有效，游戏备案可查，演示视频完整展示 3 局对局，建议通过。"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">内部备注（仅运营可见）</label>
+                <textarea class="form-textarea" id="review-internal" placeholder="例如：PPT 玩法合规性中等，建议持续监控首月数据。" style="min-height: 60px;"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">生效时间</label>
+                <input class="form-input" type="text" value="立即生效" readonly style="background: var(--bg-overlay);">
+              </div>
+
+              <div class="flex flex-col gap-2 mt-4">
+                <button class="btn btn-success btn-lg" style="width: 100%;" data-action="approve">
+                  <span>✓</span> 通过
+                </button>
+                <button class="btn btn-primary" style="width: 100%; background: var(--accent-yellow); border-color: var(--accent-yellow);" data-action="supplement">
+                  <span>⚠</span> 需补资料
+                </button>
+                <button class="btn btn-danger" style="width: 100%;" data-action="reject">
+                  <span>✕</span> 驳回
+                </button>
+                <button class="btn btn-secondary btn-sm" style="width: 100%;" data-action="save-draft">
+                  保存草稿
+                </button>
+              </div>
+
+              <!-- 审核历史 -->
+              <div style="border-top: 1px solid var(--border-hairline); margin-top: var(--space-5); padding-top: var(--space-4);">
+                <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-3);">审核历史</div>
+
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-dot yellow"></div>
+                    <div class="timeline-title">提交审核</div>
+                    <div class="timeline-meta">2026-07-19 09:23</div>
+                    <div class="timeline-desc">商家黄磊提交了 5 项资料</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-dot green"></div>
+                    <div class="timeline-title">智能预审通过</div>
+                    <div class="timeline-meta">2026-07-19 09:24 · 自动</div>
+                    <div class="timeline-desc">OCR 核验 + 备案核验 · 通过率 92%</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-title">分派给 林琪</div>
+                    <div class="timeline-meta">2026-07-19 09:30 · 自动</div>
+                    <div class="timeline-desc">MMO 类目专属审核员</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 审核结论切换：驳回时显示驳回原因
+      const sel = document.getElementById('review-result');
+      const rejectGroup = document.getElementById('reject-reason-group');
+      sel?.addEventListener('change', () => {
+        rejectGroup.style.display = sel.value === 'reject' ? '' : 'none';
+      });
+
+      // 资料预览 / 下载
+      document.querySelectorAll('[data-doc-action]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          const item = a.closest('.doc-item');
+          const name = item.getAttribute('data-doc-name');
+          const size = item.getAttribute('data-doc-size');
+          const type = item.getAttribute('data-doc-type');
+          const action = a.getAttribute('data-doc-action');
+
+          if (action === 'preview') {
+            const icon = { pdf: '📄', jpg: '🖼', mp4: '🎬' }[type] || '📎';
+            const previewBody = type === 'mp4'
+              ? `<div style="aspect-ratio: 16/9; background: #18181B; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; flex-direction: column; gap: 8px;">
+                  <div style="font-size: 32px;">▶</div>
+                  <div style="font-size: 12px; color: #A1A1AA;">视频播放器（mock 演示）</div>
+                </div>
+                <div style="margin-top: 12px; font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono);">
+                  ${icon} ${name} · ${size} · ${type.toUpperCase()}
+                </div>`
+              : `<div style="aspect-ratio: 4/3; background: var(--bg-overlay); border: 1px dashed var(--border-default); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); flex-direction: column; gap: 8px;">
+                  <div style="font-size: 40px; opacity: 0.4;">${icon}</div>
+                  <div style="font-size: 12px;">这是一个 demo 预览</div>
+                </div>
+                <div style="margin-top: 12px; font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono);">
+                  ${icon} ${name} · ${size} · ${type.toUpperCase()}
+                </div>`;
+            AdminUI.Modal.open({
+              title: '资料预览 · ' + name,
+              body: previewBody,
+              size: 'md',
+            });
+          } else if (action === 'download') {
+            AdminUI.toast(`开始下载：${name}（${size}）`, 'success');
+          }
+        });
+      });
+
+      // 资料行本身点击也打开预览
+      document.querySelectorAll('.doc-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (e.target.closest('[data-doc-action]')) return;
+          item.querySelector('[data-doc-action="preview"]')?.click();
+        });
+      });
+
+      // 审核操作
+      document.querySelector('[data-action="approve"]')?.addEventListener('click', function() {
+        const btn = this;
+        AdminUI.confirm({
+          title: '确认通过审核？',
+          message: '通过后 M044 墨韵江湖 将被激活，可正常上架游戏并参与结算。',
+          confirmText: '确认通过',
+          cancelText: '取消',
+          type: 'success',
+        }).then(ok => {
+          if (!ok) return;
+          const done = AdminUI.withLoading(btn, '处理中...');
+          setTimeout(() => {
+            done();
+            AdminUI.toast('审核通过，商家 M044 已激活', 'success', 2000);
+            setTimeout(() => window.location.href = 'merchants.html', 1500);
+          }, 800);
+        });
+      });
+
+      document.querySelector('[data-action="reject"]')?.addEventListener('click', function() {
+        const reason = document.getElementById('reject-reason')?.value || '资料不全';
+        const btn = this;
+        AdminUI.confirm({
+          title: '确认驳回？',
+          message: `驳回原因：${reason}。驳回后 M044 墨韵江湖 将被通知补充资料或重新提交。`,
+          confirmText: '确认驳回',
+          cancelText: '取消',
+          type: 'danger',
+        }).then(ok => {
+          if (!ok) return;
+          const done = AdminUI.withLoading(btn, '处理中...');
+          setTimeout(() => {
+            done();
+            AdminUI.toast('审核已驳回，已通知商家', 'success', 2000);
+            setTimeout(() => window.location.href = 'merchants-review.html', 1500);
+          }, 800);
+        });
+      });
+
+      document.querySelector('[data-action="supplement"]')?.addEventListener('click', function() {
+        const body = document.createElement('div');
+        body.innerHTML = `
+          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">请填写需补充的资料说明，将发送给商家对接人。商家补充后可以继续审核流程。</div>
+          <div style="display: grid; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">补充类型</label>
+              <select id="supp-type" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+                <option>资料不清晰（需重新上传）</option>
+                <option>资料缺失（需补充上传）</option>
+                <option>资料过期（需更新）</option>
+                <option>其他说明</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">补充说明 <span style="color: var(--accent-red);">*</span></label>
+              <textarea id="supp-note" placeholder="详细说明需补充什么资料，截止时间等" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px; min-height: 80px; resize: vertical; font-family: inherit;"></textarea>
+            </div>
+          </div>
+        `;
+        AdminUI.Modal.open({
+          title: '需补资料 · 通知商家',
+          body,
+          size: 'sm',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+            <button type="button" class="btn btn-primary" id="supp-submit">发送通知</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('supp-submit')?.addEventListener('click', function() {
+            const note = document.getElementById('supp-note')?.value.trim();
+            if (!note || note.length < 5) {
+              AdminUI.toast('请填写补充说明（至少 5 字）', 'warning');
+              return;
+            }
+            const done = AdminUI.withLoading(this, '发送中...');
+            setTimeout(() => {
+              done();
+              AdminUI.Modal.close();
+              AdminUI.toast('已发送补资料通知给商家', 'success', 2000);
+              setTimeout(() => window.location.href = 'merchants-review.html', 1500);
+            }, 800);
+          });
+        }, 50);
+      });
+
+      document.querySelector('[data-action="save-draft"]')?.addEventListener('click', function() {
+        const btn = this;
+        const done = AdminUI.withLoading(btn, '保存中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('草稿已保存', 'success');
+        }, 600);
+      });
+
+      // 顶部按钮
+      document.querySelector('[data-action="view-history"]')?.addEventListener('click', () => {
+        AdminUI.toast('M044 墨韵江湖 · 提交于 2026-07-19 · 当前审核员：林琪', 'info', 4000);
+      });
+
+      document.querySelector('[data-action="transfer"]')?.addEventListener('click', () => {
+        const body = document.createElement('div');
+        body.innerHTML = `
+          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">将此审核单转交给其他审核员：</div>
+          <div style="display: grid; gap: 10px;">
+            <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--border-hairline); border-radius: 4px; cursor: pointer;">
+              <input type="radio" name="trf" checked>
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 500;">陈静 · 高级审核员</div>
+                <div style="font-size: 11px; color: var(--text-tertiary);">已分配 8 条 · MMO 类目经验丰富</div>
+              </div>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--border-hairline); border-radius: 4px; cursor: pointer;">
+              <input type="radio" name="trf">
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 500;">周晓 · 审核员</div>
+                <div style="font-size: 11px; color: var(--text-tertiary);">已分配 5 条</div>
+              </div>
+            </label>
+          </div>
+        `;
+        AdminUI.Modal.open({
+          title: '转交审核单',
+          body,
+          size: 'sm',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+            <button type="button" class="btn btn-primary" id="trf-confirm">确认转交</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('trf-confirm')?.addEventListener('click', function() {
+            const done = AdminUI.withLoading(this, '转交中...');
+            setTimeout(() => {
+              done();
+              AdminUI.Modal.close();
+              AdminUI.toast('审核单已转交给 陈静', 'success');
+            }, 800);
+          });
+        }, 50);
+      });
+    })();
+  </script>
+</body>
+</html>

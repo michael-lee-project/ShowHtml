@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>游戏列表 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .game-name { color: var(--text-primary); font-weight: var(--weight-medium); }
+    .game-name:hover { color: var(--accent-red); cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">游戏列表</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索游戏 / 商家 / 类目">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">GAMES · 2026-07-21 18:42 · 实时同步</div>
+            <h1 class="page-header-title">游戏列表</h1>
+            <div class="page-header-sub">386 款在营游戏 · 跨 1,206 家合作商家 · 8 款异常</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="export">导出报表</button>
+            <button class="btn btn-primary" data-action="new-game">上架新游戏</button>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">在营</span>
+              <span class="kpi-icon">●</span>
+            </div>
+            <div class="kpi-value">386</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 14</span>
+              占比 94.4% · 跨 1,206 商家
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">暂停</span>
+              <span class="kpi-icon">⏸</span>
+            </div>
+            <div class="kpi-value" style="color: var(--text-tertiary);">23</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend down">↓ 3</span>
+              异常处理中 · 7 日内
+            </div>
+          </div>
+          <div class="kpi-card accent-blue">
+            <div class="kpi-head">
+              <span class="kpi-label">本月新上线</span>
+              <span class="kpi-icon">+</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-blue);">14</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 4</span>
+              较上月 · 平均 3.5 / 周
+            </div>
+          </div>
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">异常游戏</span>
+              <span class="kpi-icon">!</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-red);">8</div>
+            <div class="kpi-meta">
+              <span style="color: var(--accent-red); font-weight: 600;">含严重 2</span> · 警告 6
+            </div>
+          </div>
+        </div>
+
+        <!-- 筛选条 -->
+        <div class="filter-bar" data-aui-filter>
+          <span class="filter-chip active" data-filter-value="all">全部 <span style="opacity: 0.6; margin-left: 2px;">409</span></span>
+          <span class="filter-chip" data-filter-value="online">在营 <span style="opacity: 0.6; margin-left: 2px;">386</span></span>
+          <span class="filter-chip" data-filter-value="suspended">暂停 <span style="opacity: 0.6; margin-left: 2px;">23</span></span>
+          <span class="filter-chip" data-filter-value="anomaly">异常 <span style="opacity: 0.6; margin-left: 2px;">8</span></span>
+          <div style="width: 1px; height: 16px; background: var(--border-hairline); margin: 0 4px;"></div>
+          <select style="padding: 4px 8px; font-size: var(--text-xs); background: var(--bg-base); border: 1px solid var(--border-hairline);">
+            <option>全部商家</option>
+            <option>仅 M001 音浪对决</option>
+            <option>仅 M003 风语启示录</option>
+            <option>仅 M019 银河拓荒者</option>
+          </select>
+          <select style="padding: 4px 8px; font-size: var(--text-xs); background: var(--bg-base); border: 1px solid var(--border-hairline);">
+            <option>全类目</option>
+            <option>互动竞技</option>
+            <option>卡牌策略</option>
+            <option>SLG</option>
+            <option>休闲</option>
+          </select>
+          <div class="filter-bar-search">
+            <input type="text" placeholder="搜索游戏 ID / 名称" data-aui-filter-search>
+          </div>
+        </div>
+
+        <!-- 游戏表格 -->
+        <div class="panel" style="padding: 0; overflow: hidden;">
+          <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+              显示 <strong style="color: var(--text-primary);">1 - 8</strong> / 共 386 款
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">
+              按月流水降序 · 含 8 款异常
+            </div>
+          </div>
+          <table class="tbl" id="games-table">
+            <thead>
+              <tr>
+                <th data-sort-type="string">ID</th>
+                <th data-sort-type="string">游戏名</th>
+                <th data-sort-type="string">所属商家</th>
+                <th data-sort-type="string">类目</th>
+                <th data-sort-type="number" style="text-align: right;">月活玩家</th>
+                <th data-sort-type="number" style="text-align: right;">月对局数</th>
+                <th data-sort-type="number" style="text-align: right;">月流水 (万)</th>
+                <th data-sort-type="number" style="text-align: right;">月客损 (万)</th>
+                <th data-sort-type="number" style="text-align: right;">异常数</th>
+                <th>状态</th>
+                <th class="no-sort">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-status="online" data-search="G003-1 风语启示录 M003 卡牌策略" data-gid="G003-1">
+                <td class="tbl-num text-tertiary">G003-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">风</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G003-1" class="game-name">风语启示录</a></div>
+                      <div class="tbl-name-sub">G003-1 · 卡牌策略</div>
+                    </div>
+                  </div>
+                </td>
+                <td>M003 风语启示录</td>
+                <td>卡牌策略</td>
+                <td class="tbl-num" style="text-align: right;">38,400</td>
+                <td class="tbl-num" style="text-align: right;">412,800</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">5,640</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">512</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                <td><span class="badge green"><span class="badge-dot"></span>在营</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G003-1" class="text-red" style="margin-right: 12px;">查看</a>
+                  <a href="games-battles.html" class="text-secondary">对局</a>
+                </td>
+              </tr>
+              <tr data-status="online" data-search="G019-1 银河拓荒者 M019 SLG" data-gid="G019-1">
+                <td class="tbl-num text-tertiary">G019-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">银</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G019-1" class="game-name">银河拓荒者</a></div>
+                      <div class="tbl-name-sub">G019-1 · SLG</div>
+                    </div>
+                  </div>
+                </td>
+                <td>M019 银河拓荒者</td>
+                <td>SLG</td>
+                <td class="tbl-num" style="text-align: right;">24,600</td>
+                <td class="tbl-num" style="text-align: right;">218,900</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">4,180</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">402</td>
+                <td class="tbl-num" style="text-align: right; color: var(--accent-yellow); font-weight: var(--weight-semibold);">1</td>
+                <td><span class="badge green"><span class="badge-dot"></span>在营</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G019-1" class="text-red" style="margin-right: 12px;">查看</a>
+                  <a href="risk-alerts.html" class="text-secondary">预警</a>
+                </td>
+              </tr>
+              <tr data-status="online" data-search="G007-1 萤火奇航 M007 休闲" data-gid="G007-1">
+                <td class="tbl-num text-tertiary">G007-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">萤</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G007-1" class="game-name">萤火奇航</a></div>
+                      <div class="tbl-name-sub">G007-1 · 休闲</div>
+                    </div>
+                  </div>
+                </td>
+                <td>M007 萤火奇航</td>
+                <td>休闲</td>
+                <td class="tbl-num" style="text-align: right;">31,200</td>
+                <td class="tbl-num" style="text-align: right;">184,200</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">3,120</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">298</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                <td><span class="badge green"><span class="badge-dot"></span>在营</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G007-1" class="text-red" style="margin-right: 12px;">查看</a>
+                  <a href="games-battles.html" class="text-secondary">对局</a>
+                </td>
+              </tr>
+              <tr data-status="online" data-search="G012-1 七海冒险家 K012 卡牌策略" data-gid="G012-1">
+                <td class="tbl-num text-tertiary">G012-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">七</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G012-1" class="game-name">七海冒险家</a></div>
+                      <div class="tbl-name-sub">G012-1 · 卡牌策略</div>
+                    </div>
+                  </div>
+                </td>
+                <td>K012 七海冒险家</td>
+                <td>卡牌策略</td>
+                <td class="tbl-num" style="text-align: right;">14,800</td>
+                <td class="tbl-num" style="text-align: right;">89,400</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">2,080</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">201</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                <td><span class="badge green"><span class="badge-dot"></span>在营</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G012-1" class="text-red" style="margin-right: 12px;">查看</a>
+                </td>
+              </tr>
+              <tr data-status="online" data-search="G001-1 音浪对决 M001 互动竞技" data-gid="G001-1">
+                <td class="tbl-num text-tertiary">G001-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">音</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G001-1" class="game-name">音浪对决</a></div>
+                      <div class="tbl-name-sub">G001-1 · 互动竞技</div>
+                    </div>
+                  </div>
+                </td>
+                <td>M001 音浪对决</td>
+                <td>互动竞技</td>
+                <td class="tbl-num" style="text-align: right;">18,200</td>
+                <td class="tbl-num" style="text-align: right;">268,400</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">1,280</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">124</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                <td><span class="badge green"><span class="badge-dot"></span>在营</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G001-1" class="text-red" style="margin-right: 12px;">查看</a>
+                </td>
+              </tr>
+              <tr data-status="online" data-search="G029-1 星河绘卷 M029 互动竞技" data-gid="G029-1">
+                <td class="tbl-num text-tertiary">G029-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">星</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G029-1" class="game-name">星河绘卷</a></div>
+                      <div class="tbl-name-sub">G029-1 · 互动竞技</div>
+                    </div>
+                  </div>
+                </td>
+                <td>M029 星河绘卷</td>
+                <td>互动竞技</td>
+                <td class="tbl-num" style="text-align: right;">12,200</td>
+                <td class="tbl-num" style="text-align: right;">78,600</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">1,180</td>
+                <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">102</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                <td><span class="badge green"><span class="badge-dot"></span>在营</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G029-1" class="text-red" style="margin-right: 12px;">查看</a>
+                </td>
+              </tr>
+              <tr data-status="anomaly" data-search="G052-1 暗影潜行 M052 潜行" data-gid="G052-1" style="background: rgba(220, 38, 38, 0.02);">
+                <td class="tbl-num text-tertiary">G052-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon" style="background: var(--accent-yellow-light); color: #92400E;">暗</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G052-1" class="game-name">暗影潜行</a></div>
+                      <div class="tbl-name-sub">G052-1 · 潜行</div>
+                    </div>
+                  </div>
+                </td>
+                <td>M052 暗影潜行</td>
+                <td>潜行</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: var(--weight-semibold);">5</td>
+                <td><span class="badge red"><span class="badge-dot"></span>暂停</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G052-1" class="text-red" style="margin-right: 12px;">查看</a>
+                  <a href="risk-alerts.html" class="text-red">5 预警</a>
+                </td>
+              </tr>
+              <tr data-status="anomaly" data-search="G058-1 战火重燃 M058 军事策略" data-gid="G058-1" style="background: rgba(220, 38, 38, 0.02);">
+                <td class="tbl-num text-tertiary">G058-1</td>
+                <td>
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon" style="background: var(--accent-yellow-light); color: #92400E;">战</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title"><a href="games-detail.html?gid=G058-1" class="game-name">战火重燃</a></div>
+                      <div class="tbl-name-sub">G058-1 · 军事策略</div>
+                    </div>
+                  </div>
+                </td>
+                <td>M058 战火重燃</td>
+                <td>军事策略</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: var(--weight-semibold);">8</td>
+                <td><span class="badge red"><span class="badge-dot"></span>暂停</span></td>
+                <td>
+                  <a href="games-detail.html?gid=G058-1" class="text-red" style="margin-right: 12px;">查看</a>
+                  <a href="risk-alerts.html" class="text-red">8 预警</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding: var(--space-3) var(--space-5); border-top: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: space-between; font-size: var(--text-xs); color: var(--text-tertiary);">
+            <div>第 1 页 / 共 49 页 · 含 2 款暂停异常</div>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary btn-sm">‹ 上一页</button>
+              <button class="btn btn-primary btn-sm">1</button>
+              <button class="btn btn-secondary btn-sm">2</button>
+              <button class="btn btn-secondary btn-sm">3</button>
+              <span style="padding: 4px 6px;">...</span>
+              <button class="btn btn-secondary btn-sm">49</button>
+              <button class="btn btn-secondary btn-sm">下一页 ›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      AdminUI.Filter.init(document.getElementById('games-table'), {
+        emptyMessage: '无匹配游戏，请调整筛选条件',
+      });
+      AdminUI.Sort.init(document.getElementById('games-table'));
+
+      // 行点击
+      document.querySelectorAll('#games-table tbody tr').forEach(row => {
+        row.classList.add('aui-row-clickable');
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('a, button')) return;
+          const gid = row.getAttribute('data-gid');
+          if (gid) window.location.href = `games-detail.html?gid=${gid}`;
+        });
+      });
+
+      // 顶部按钮
+      document.querySelector('[data-action="export"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '生成中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('报表已生成，开始下载 Excel', 'success');
+        }, 1000);
+      });
+
+      document.querySelector('[data-action="new-game"]')?.addEventListener('click', () => {
+        const body = document.createElement('div');
+        body.innerHTML = `
+          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">上架新游戏前需先关联已审核通过的商家。</div>
+          <div style="display: grid; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">所属商家</label>
+              <select style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+                <option>M001 音浪对决</option><option>M003 风语启示录</option><option>M007 萤火奇航</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">游戏名</label>
+              <input type="text" placeholder="例：音浪对决 S2" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">类目</label>
+              <select style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+                <option>互动竞技</option><option>卡牌策略</option><option>SLG</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">备案号</label>
+              <input type="text" placeholder="国新出审 [年份] 第 XXXX 号" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+          </div>
+        `;
+        AdminUI.Modal.open({
+          title: '上架新游戏',
+          body,
+          size: 'sm',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+            <button type="button" class="btn btn-primary" id="new-game-submit">提交审核</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('new-game-submit')?.addEventListener('click', function() {
+            const done = AdminUI.withLoading(this, '提交中...');
+            setTimeout(() => {
+              done();
+              AdminUI.Modal.close();
+              AdminUI.toast('已提交游戏审核，预计 24h 内完成', 'success', 2500);
+            }, 1000);
+          });
+        }, 50);
+      });
+
+      // 分页
+      document.querySelectorAll('.panel [class*="btn-sm"]').forEach(btn => {
+        const t = btn.textContent.trim();
+        if (t.match(/^[‹›]/) || /^\d+$/.test(t)) {
+          btn.addEventListener('click', () => {
+            AdminUI.toast(`已切换到第 ${t} 页（mock 演示）`, 'info', 1500);
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

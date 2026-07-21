@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>游戏详情 G001-1 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .echarts-box {
+      height: 280px;
+    }
+    .echarts-mini {
+      height: 60px;
+    }
+    .game-hero {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: linear-gradient(135deg, var(--accent-red-light), var(--bg-elevated) 70%);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+    }
+    .game-hero-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--accent-red);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .game-hero-name {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .game-hero-meta {
+      display: flex;
+      gap: var(--space-4);
+      margin-top: 4px;
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .distribution-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .distribution-row:last-child { border-bottom: 0; }
+    .dist-label {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      width: 80px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .dist-bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-overlay);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .dist-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--accent-red);
+      border-radius: 4px;
+    }
+    .dist-val {
+      font-size: var(--text-xs);
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+      min-width: 60px;
+      text-align: right;
+    }
+    .risk-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--bg-overlay);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent-yellow);
+    }
+    .risk-row.critical { border-left-color: var(--accent-red); }
+    .risk-row.info { border-left-color: var(--accent-blue); }
+    .risk-row.resolved { border-left-color: var(--accent-green); }
+
+    /* ===== 玩家 4 等级（NU / VIP / MN / MB） ===== */
+    .tier-card {
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      background: var(--bg-base);
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .tier-card:hover {
+      border-color: var(--border-default);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    .tier-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .tier-card.tier-nu::before { background: #94A3B8; }
+    .tier-card.tier-vip::before { background: #DC2626; }
+    .tier-card.tier-mn::before { background: #10B981; }
+    .tier-card.tier-mb::before { background: #3B82F6; }
+
+    .tier-card.tier-nu { background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 60%); }
+    .tier-card.tier-vip { background: linear-gradient(180deg, #FEF2F2 0%, #FFFFFF 60%); }
+    .tier-card.tier-mn { background: linear-gradient(180deg, #ECFDF5 0%, #FFFFFF 60%); }
+    .tier-card.tier-mb { background: linear-gradient(180deg, #EFF6FF 0%, #FFFFFF 60%); }
+
+    .tier-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-2);
+    }
+    .tier-card-rank {
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+    .tier-card.tier-nu .tier-card-rank { color: #475569; }
+    .tier-card.tier-vip .tier-card-rank { color: var(--accent-red); }
+    .tier-card.tier-mn .tier-card-rank { color: var(--accent-green); }
+    .tier-card.tier-mb .tier-card-rank { color: var(--accent-blue); }
+    .tier-card-tag {
+      font-size: 10px;
+      font-weight: var(--weight-semibold);
+      font-family: var(--font-mono);
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--bg-elevated);
+      color: var(--text-tertiary);
+    }
+    .tier-card-value {
+      font-size: 24px;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .tier-card-sub {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .tier-card-foot {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: var(--space-2);
+      padding-top: var(--space-2);
+      border-top: 1px solid var(--border-hairline);
+      letter-spacing: 0.04em;
+    }
+
+    /* 等级圆点（用于 distribution-row 内的等级标签） */
+    .tier-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .tier-dot.nu { background: #94A3B8; }
+    .tier-dot.vip { background: var(--accent-red); }
+    .tier-dot.mn { background: var(--accent-green); }
+    .tier-dot.mb { background: var(--accent-blue); }
+
+    /* 各等级 dist-bar 颜色变体 */
+    .dist-bar-fill.nu { background: #94A3B8; }
+    .dist-bar-fill.vip { background: var(--accent-red); }
+    .dist-bar-fill.mn { background: var(--accent-green); }
+    .dist-bar-fill.mb { background: var(--accent-blue); }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="games.html">游戏列表</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">G001-1 音浪对决</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索">
+        </div>
+        <div class="admin-topbar-actions">
+          <a href="games.html" class="btn btn-ghost btn-sm">← 返回列表</a>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">GAME DETAIL · G001-1 · 互动竞技</div>
+            <h1 class="page-header-title">游戏详情</h1>
+            <div class="page-header-sub">音浪对决 · 上线 22 天 · 18,200 月活 · 268,400 月对局</div>
+          </div>
+          <div class="page-header-actions">
+            <a href="games-battles.html" class="btn btn-secondary">查看对局</a>
+            <button class="btn btn-secondary" data-action="edit">编辑</button>
+            <button class="btn btn-secondary" data-action="suspend" id="btn-suspend-game">暂停游戏</button>
+            <button class="btn btn-primary" data-action="ops-config">运营配置</button>
+          </div>
+        </div>
+
+        <!-- 游戏信息 Hero -->
+        <div class="game-hero">
+          <div class="game-hero-icon">音</div>
+          <div class="game-hero-info" style="flex: 1;">
+            <div class="game-hero-name">音浪对决</div>
+            <div class="game-hero-meta">
+              <span>互动竞技</span>
+              <span>·</span>
+              <span><a href="merchants-detail.html" class="text-red">M001 音浪对决</a></span>
+              <span>·</span>
+              <span>上线 2026-06-30</span>
+              <span>·</span>
+              <span>备案号 [2026] 第 0642 号</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="badge green"><span class="badge-dot"></span>在营</span>
+            <span style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono);">合同 AGREEMENT-2026-M001-V3</span>
+          </div>
+        </div>
+
+        <!-- 异常记录 · 上下文提示条（Hero 之后 · KPI 之前） -->
+        <div style="display: flex; align-items: center; gap: 12px; padding: 11px 16px; background: var(--accent-yellow-light); border-left: 3px solid var(--accent-yellow); border-radius: 4px; margin-bottom: var(--space-4);">
+          <span style="flex-shrink: 0; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; background: var(--accent-yellow); color: #FFFFFF; border-radius: 3px; font-size: 14px; font-weight: 700; line-height: 1;">!</span>
+          <div style="flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; overflow: hidden;">
+            <span style="font-size: 13px; font-weight: var(--weight-medium); color: var(--text-primary); white-space: nowrap; flex-shrink: 0;">异常记录 · 近 30 天 1 起</span>
+            <span style="width: 1px; height: 14px; background: var(--border-default); flex-shrink: 0;"></span>
+            <span style="font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              <span class="badge yellow" style="margin-right: 6px; padding: 2px 6px;"><span class="badge-dot"></span>大额对局</span>
+              07-15 14:23 · 用户 A 单局对局流水 ¥8,500（历史峰值 5x）· 已自动暂停 · 经人工复核为正常 VIP 玩家大额对局
+            </span>
+          </div>
+          <span class="badge green" style="flex-shrink: 0;"><span class="badge-dot"></span>已解决</span>
+          <a href="risk-alerts.html" style="flex-shrink: 0; font-size: 12px; color: var(--accent-red); text-decoration: none; white-space: nowrap; font-family: var(--font-mono);">查看全部 →</a>
+        </div>
+
+        <!-- 业务 KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-blue">
+            <div class="kpi-head">
+              <span class="kpi-label">月活玩家</span>
+              <span class="kpi-icon">◉</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-blue);">18,200</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 8.2%</span>
+              较上月 · 7 日留存 42%
+            </div>
+          </div>
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">月对局数</span>
+              <span class="kpi-icon">▶</span>
+            </div>
+            <div class="kpi-value">268,400</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 12.4%</span>
+              较上月 · 18,420 局/日
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">月流水</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">¥1,280 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 4.2%</span>
+              客单价 ¥68
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">月客损</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">¥124 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 4.2%</span>
+              流水客损比 9.7%
+            </div>
+          </div>
+        </div>
+
+        <!-- 30 天趋势图 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">📈</div>
+              <div>
+                <div class="panel-title">30 天趋势 · 流水 / 客损 / 玩家</div>
+                <div class="panel-sub">每日数据 · 趋势稳定 · 较上线首日 +84%</div>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="filter-chip active">30 天</span>
+              <span class="filter-chip">90 天</span>
+            </div>
+          </div>
+          <div id="trend-chart" class="echarts-box"></div>
+        </div>
+
+        <div class="grid-12" style="display: flex; gap: var(--space-4); align-items: flex-start;">
+          <!-- 左侧：玩家等级分布 -->
+          <div style="flex: 1; min-width: 0;">
+            <!-- 玩家等级分布 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">◉</div>
+                  <div>
+                    <div class="panel-title">玩家等级分布</div>
+                    <div class="panel-sub">18,200 名月活玩家 · 按 4 等级分层（NU / VIP / MN / MB）</div>
+                  </div>
+                </div>
+                <span class="badge blue">4 等级</span>
+              </div>
+
+              <!-- 4 等级核心卡片 -->
+              <div class="grid-4 mb-4" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
+                <div class="tier-card tier-nu">
+                  <div class="tier-card-head">
+                    <span class="tier-card-rank">NU</span>
+                    <span class="tier-card-tag">Newbie</span>
+                  </div>
+                  <div class="tier-card-value">8,200</div>
+                  <div class="tier-card-sub">45% 月活占比</div>
+                  <div class="tier-card-foot">新手</div>
+                </div>
+                <div class="tier-card tier-vip">
+                  <div class="tier-card-head">
+                    <span class="tier-card-rank">VIP</span>
+                    <span class="tier-card-tag">VIP</span>
+                  </div>
+                  <div class="tier-card-value">3,640</div>
+                  <div class="tier-card-sub">20% 月活占比</div>
+                  <div class="tier-card-foot">付费高级</div>
+                </div>
+                <div class="tier-card tier-mn">
+                  <div class="tier-card-head">
+                    <span class="tier-card-rank">MN</span>
+                    <span class="tier-card-tag">Main</span>
+                  </div>
+                  <div class="tier-card-value">4,180</div>
+                  <div class="tier-card-sub">23% 月活占比</div>
+                  <div class="tier-card-foot">核心</div>
+                </div>
+                <div class="tier-card tier-mb">
+                  <div class="tier-card-head">
+                    <span class="tier-card-rank">MB</span>
+                    <span class="tier-card-tag">Member</span>
+                  </div>
+                  <div class="tier-card-value">2,180</div>
+                  <div class="tier-card-sub">12% 月活占比</div>
+                  <div class="tier-card-foot">基础会员</div>
+                </div>
+              </div>
+
+              <div class="grid-2 gap-4">
+                <!-- 各等级客损贡献 -->
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-2);">各等级月客损贡献</div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot nu"></span>NU · 新手</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill nu" style="width: 18%;"></div></div>
+                    <span class="dist-val">¥22.3 万</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mn"></span>MN · 核心</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill mn" style="width: 32%;"></div></div>
+                    <span class="dist-val">¥39.7 万</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot vip"></span>VIP · 高级</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill vip" style="width: 38%;"></div></div>
+                    <span class="dist-val">¥47.1 万</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mb"></span>MB · 基础</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill mb" style="width: 12%;"></div></div>
+                    <span class="dist-val">¥14.9 万</span>
+                  </div>
+                </div>
+
+                <!-- 各等级 7 日留存 -->
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-2);">各等级 7 日留存率</div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot nu"></span>NU · 新手</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill nu" style="width: 28%;"></div></div>
+                    <span class="dist-val">28%</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mn"></span>MN · 核心</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill mn" style="width: 58%;"></div></div>
+                    <span class="dist-val">58%</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot vip"></span>VIP · 高级</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill vip" style="width: 76%;"></div></div>
+                    <span class="dist-val">76%</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mb"></span>MB · 基础</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill mb" style="width: 42%;"></div></div>
+                    <span class="dist-val">42%</span>
+                  </div>
+                </div>
+
+                <!-- 各等级 ARPU -->
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-2);">各等级人均月客损（ARPU）</div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot nu"></span>NU · 新手</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill nu" style="width: 4%;"></div></div>
+                    <span class="dist-val">¥27</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mn"></span>MN · 核心</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill mn" style="width: 14%;"></div></div>
+                    <span class="dist-val">¥95</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot vip"></span>VIP · 高级</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill vip" style="width: 20%;"></div></div>
+                    <span class="dist-val">¥129</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mb"></span>MB · 基础</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill mb" style="width: 10%;"></div></div>
+                    <span class="dist-val">¥68</span>
+                  </div>
+                </div>
+
+                <!-- 等级跃迁 -->
+                <div>
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-2);">本月等级跃迁</div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot nu"></span>NU → MN</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill" style="width: 14%; background: var(--accent-green);"></div></div>
+                    <span class="dist-val">+820</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mn"></span>MN → VIP</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill" style="width: 8%; background: var(--accent-green);"></div></div>
+                    <span class="dist-val">+340</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot mb"></span>NU → MB</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill" style="width: 6%; background: var(--accent-green);"></div></div>
+                    <span class="dist-val">+260</span>
+                  </div>
+                  <div class="distribution-row">
+                    <span class="dist-label"><span class="tier-dot vip"></span>VIP → 流失</span>
+                    <div class="dist-bar-track"><div class="dist-bar-fill" style="width: 3%; background: var(--accent-red);"></div></div>
+                    <span class="dist-val">-110</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧：基本信息 -->
+          <div style="flex: 0 0 380px; max-width: 380px;">
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">i</div>
+                  <div>
+                    <div class="panel-title">基本信息</div>
+                  </div>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 80px 1fr; gap: 12px 16px; font-size: var(--text-sm);">
+                <div class="text-tertiary text-mono" style="font-size: 11px;">游戏 ID</div>
+                <div class="text-mono">G001-1</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">游戏名</div>
+                <div>音浪对决</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">所属商家</div>
+                <div><a href="merchants-detail.html" class="text-red">M001 音浪对决</a></div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">类目</div>
+                <div>互动竞技 · 1v1 实时对战</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">状态</div>
+                <div><span class="badge green"><span class="badge-dot"></span>在营</span></div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">上线时间</div>
+                <div class="text-mono">2026-06-30</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">备案号</div>
+                <div class="text-mono">[2026] 第 0642 号</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">开发商</div>
+                <div>音浪游戏工作室</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">支持平台</div>
+                <div>iOS · Android · H5</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">客单价</div>
+                <div class="text-mono">¥68</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">次留</div>
+                <div class="text-mono">68%</div>
+
+                <div class="text-tertiary text-mono" style="font-size: 11px;">7 留</div>
+                <div class="text-mono">42%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="shared/js/admin-mock-data.js"></script>
+  <script>
+    // 30 天趋势图
+    const chart = echarts.init(document.getElementById('trend-chart'));
+    const days = ADMIN_MOCK.revenueTrend.days;
+    chart.setOption({
+      grid: { top: 30, right: 20, bottom: 30, left: 50 },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#FFFFFF',
+        borderColor: '#E4E4E7',
+        textStyle: { color: '#18181B', fontSize: 12 },
+      },
+      legend: {
+        data: ['流水（万）', '客损（万）', '玩家（千）'],
+        top: 0,
+        right: 0,
+        textStyle: { color: '#52525B', fontSize: 11 },
+        itemWidth: 12,
+        itemHeight: 8,
+      },
+      xAxis: {
+        type: 'category',
+        data: days,
+        axisLine: { lineStyle: { color: '#E4E4E7' } },
+        axisLabel: { color: '#71717A', fontSize: 10, interval: 4 },
+        axisTick: { show: false },
+      },
+      yAxis: [
+        { type: 'value', axisLine: { show: false }, axisLabel: { color: '#71717A', fontSize: 10 }, splitLine: { lineStyle: { color: '#F4F4F5' } } },
+      ],
+      series: [
+        {
+          name: '流水（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.revenue.map(v => +(v * 0.1).toFixed(1)),
+          lineStyle: { color: '#DC2626', width: 2 },
+          areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(220, 38, 38, 0.15)' }, { offset: 1, color: 'rgba(220, 38, 38, 0)' }] } },
+        },
+        {
+          name: '客损（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.loss.map(v => +(v * 0.1).toFixed(1)),
+          lineStyle: { color: '#F59E0B', width: 2 },
+        },
+        {
+          name: '玩家（千）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: Array.from({ length: 30 }, (_, i) => +(15 + Math.sin(i / 4) * 2 + i * 0.1).toFixed(1)),
+          lineStyle: { color: '#10B981', width: 2 },
+        },
+      ],
+    });
+    window.addEventListener('resize', () => chart.resize());
+  </script>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 编辑游戏信息
+      document.querySelector('[data-action="edit"]')?.addEventListener('click', () => {
+        const body = document.createElement('div');
+        body.innerHTML = `
+          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">编辑 G001-1 音浪对决 的基础信息。</div>
+          <div style="display: grid; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">游戏名</label>
+              <input type="text" value="音浪对决" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">类目</label>
+              <select style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+                <option>互动竞技</option><option>卡牌策略</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">支持平台</label>
+              <div style="display: flex; gap: 12px; padding-top: 4px;">
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;"><input type="checkbox" checked> iOS</label>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;"><input type="checkbox" checked> Android</label>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;"><input type="checkbox" checked> H5</label>
+              </div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">客单价 (元)</label>
+              <input type="number" value="68" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+          </div>
+        `;
+        AdminUI.Modal.open({
+          title: '编辑游戏信息',
+          body,
+          size: 'sm',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+            <button type="button" class="btn btn-primary" id="edit-game-save">保存</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('edit-game-save')?.addEventListener('click', function() {
+            const done = AdminUI.withLoading(this, '保存中...');
+            setTimeout(() => {
+              done();
+              AdminUI.Modal.close();
+              AdminUI.toast('游戏信息已更新', 'success');
+            }, 800);
+          });
+        }, 50);
+      });
+
+      // 暂停游戏
+      function attachSuspend() {
+        const btn = document.querySelector('[data-action="suspend"]');
+        if (!btn) return;
+        btn.onclick = function() {
+          AdminUI.confirm({
+            title: '暂停游戏 G001-1？',
+            message: '暂停后该游戏从「在营」变为「暂停」状态，停止接收新对局，已开始的局可继续完成。商家可在 7 天内申请恢复。',
+            confirmText: '确认暂停',
+            cancelText: '取消',
+            type: 'danger',
+            dangerText: '暂停',
+          }).then(ok => {
+            if (!ok) return;
+            const done = AdminUI.withLoading(btn, '处理中...');
+            setTimeout(() => {
+              done();
+              btn.innerHTML = '<span>▶</span> 恢复游戏';
+              btn.setAttribute('data-action', 'resume-game');
+              attachResume();
+              AdminUI.toast('G001-1 音浪对决 已暂停', 'success');
+            }, 1000);
+          });
+        };
+      }
+      function attachResume() {
+        const btn = document.querySelector('[data-action="resume-game"]');
+        if (!btn) return;
+        btn.onclick = function() {
+          AdminUI.confirm({
+            title: '恢复游戏 G001-1？',
+            message: '恢复后该游戏重新进入「在营」状态，接收新对局。',
+            confirmText: '确认恢复',
+            cancelText: '取消',
+            type: 'success',
+          }).then(ok => {
+            if (!ok) return;
+            const done = AdminUI.withLoading(btn, '处理中...');
+            setTimeout(() => {
+              done();
+              btn.innerHTML = '<span>⏸</span> 暂停游戏';
+              btn.setAttribute('data-action', 'suspend');
+              attachSuspend();
+              AdminUI.toast('G001-1 已恢复在营', 'success');
+            }, 800);
+          });
+        };
+      }
+      attachSuspend();
+
+      // 运营配置
+      document.querySelector('[data-action="ops-config"]')?.addEventListener('click', () => {
+        AdminUI.Modal.open({
+          title: 'G001-1 运营配置',
+          body: `
+            <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.7;">
+              <div style="margin-bottom: 16px;">以下为游戏运营配置项（mock 演示）：</div>
+              <div style="display: grid; gap: 10px;">
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <span style="font-size: 13px;">新手引导</span>
+                  <input type="checkbox" checked>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <span style="font-size: 13px;">匹配机制（按段位）</span>
+                  <input type="checkbox" checked>
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <span style="font-size: 13px;">大额对局阈值 (元)</span>
+                  <input type="number" value="5000" style="width: 100px; padding: 4px 8px; border: 1px solid var(--border-default); border-radius: 4px; font-family: var(--font-mono); font-size: 12px;">
+                </label>
+                <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid var(--border-hairline); border-radius: 4px;">
+                  <span style="font-size: 13px;">每日最大对局数（玩家级）</span>
+                  <input type="number" value="100" style="width: 80px; padding: 4px 8px; border: 1px solid var(--border-default); border-radius: 4px; font-family: var(--font-mono); font-size: 12px;">
+                </label>
+              </div>
+            </div>
+          `,
+          size: 'md',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+            <button type="button" class="btn btn-primary" id="ops-save">保存配置</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('ops-save')?.addEventListener('click', function() {
+            const done = AdminUI.withLoading(this, '保存中...');
+            setTimeout(() => {
+              done();
+              AdminUI.Modal.close();
+              AdminUI.toast('运营配置已更新', 'success');
+            }, 800);
+          });
+        }, 50);
+      });
+    })();
+  </script>
+</body>
+</html>

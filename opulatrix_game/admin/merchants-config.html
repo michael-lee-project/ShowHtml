@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商家档位配置 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .tier-overview {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-3);
+    }
+    .tier-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .tier-card:hover {
+      border-color: var(--border-default);
+      box-shadow: var(--shadow-md);
+    }
+    .tier-card .tier-num {
+      font-size: 24px;
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      letter-spacing: -0.02em;
+    }
+    .tier-card .tier-suffix {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+    .tier-card .tier-ratio {
+      font-size: 18px;
+      font-weight: var(--weight-semibold);
+      color: var(--accent-red);
+      margin-top: 8px;
+    }
+    .tier-card .tier-pct {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .tier-card .tier-rebate {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      margin-top: 4px;
+    }
+    .merchant-picker {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .picker-search {
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--border-hairline);
+      position: sticky;
+      top: 0;
+      background: var(--bg-elevated);
+    }
+    .picker-item {
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--border-hairline);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .picker-item:hover { background: var(--bg-overlay); }
+    .picker-item.selected {
+      background: var(--accent-red-light);
+      border-left: 3px solid var(--accent-red);
+    }
+    .picker-item:last-child { border-bottom: 0; }
+    .picker-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: var(--weight-semibold);
+      flex-shrink: 0;
+    }
+    .picker-info { flex: 1; min-width: 0; }
+    .picker-name {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .picker-meta {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .override-marker {
+      font-size: 9px;
+      background: var(--accent-blue-light);
+      color: #1E40AF;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+    }
+    .config-table input {
+      width: 80px;
+      padding: 6px 8px;
+      text-align: right;
+      font-family: var(--font-mono);
+    }
+    .config-table .tier-num-cell {
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      color: var(--accent-red);
+      font-family: var(--font-mono);
+    }
+    .form-group {
+      margin-bottom: var(--space-4);
+    }
+    .form-label {
+      display: block;
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-family: var(--font-mono);
+      margin-bottom: var(--space-2);
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+    }
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--accent-red);
+      box-shadow: var(--shadow-glow-red);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="merchants.html">商家管理</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">档位配置</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">MERCHANT TIER CONFIG · v2.1 · 5 档阶梯</div>
+            <h1 class="page-header-title">商家档位配置</h1>
+            <div class="page-header-sub">5 档阶梯 · 全局默认 + 单商家可独立覆盖 · 当前 7 家商家已独立覆盖</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="history">调档历史</button>
+            <a href="rules-config.html" class="btn btn-primary">全局阶梯配置</a>
+          </div>
+        </div>
+
+        <!-- 5 档总览 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">▲</div>
+              <div>
+                <div class="panel-title">全局默认档位 · 5 档阶梯</div>
+                <div class="panel-sub">客损越高 · 提成比例越大 · 平台与商家双赢</div>
+              </div>
+            </div>
+            <a href="rules-config.html" class="panel-link">修改全局 →</a>
+          </div>
+
+          <div class="tier-overview">
+            <div class="tier-card">
+              <div class="tier-num">100<span class="tier-suffix"> 万</span></div>
+              <div class="tier-ratio">1:10</div>
+              <div class="tier-pct">10% 提成</div>
+              <div class="tier-rebate">月提成 ¥10 万</div>
+            </div>
+            <div class="tier-card" style="border-color: var(--accent-green);">
+              <div class="tier-num">200<span class="tier-suffix"> 万</span></div>
+              <div class="tier-ratio">1:8</div>
+              <div class="tier-pct">12.5% 提成</div>
+              <div class="tier-rebate">月提成 ¥25 万</div>
+            </div>
+            <div class="tier-card" style="border-color: var(--accent-yellow);">
+              <div class="tier-num">300<span class="tier-suffix"> 万</span></div>
+              <div class="tier-ratio">1:6</div>
+              <div class="tier-pct">16.7% 提成</div>
+              <div class="tier-rebate">月提成 ¥50 万</div>
+            </div>
+            <div class="tier-card" style="border-color: #F97316;">
+              <div class="tier-num">400<span class="tier-suffix"> 万</span></div>
+              <div class="tier-ratio">1:5</div>
+              <div class="tier-pct">20% 提成</div>
+              <div class="tier-rebate">月提成 ¥80 万</div>
+            </div>
+            <div class="tier-card" style="border-color: var(--accent-red); background: var(--accent-red-light);">
+              <div class="tier-num" style="color: var(--accent-red);">500<span class="tier-suffix"> 万</span></div>
+              <div class="tier-ratio">1:4</div>
+              <div class="tier-pct">25% 提成</div>
+              <div class="tier-rebate">月提成 ¥125 万</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 商家选择 + 档位配置 -->
+        <div class="grid-12" style="grid-template-columns: 320px 1fr;">
+          <!-- 商家选择器 -->
+          <div class="merchant-picker">
+            <div class="picker-search">
+              <input type="text" id="picker-search-input" placeholder="搜索商家" style="width: 100%;">
+              <div style="margin-top: 8px; display: flex; gap: 4px; font-size: 10px; font-family: var(--font-mono); color: var(--text-tertiary);">
+                <span>全部 1,284</span>·<span>覆盖 7</span>·<span>未覆盖 1,277</span>
+              </div>
+            </div>
+            <div id="picker-list">
+              <div class="picker-item" data-mid="M003" data-mname="M003 风语启示录" data-search="M003 风语启示录 第5档 独立覆盖">
+                <div class="picker-icon" style="background: var(--accent-red-light); color: var(--accent-red);">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M003 风语启示录</div>
+                  <div class="picker-meta">第 5 档 · 独立覆盖</div>
+                </div>
+                <span class="override-marker">独立</span>
+              </div>
+              <div class="picker-item selected" data-mid="M007" data-mname="M007 萤火奇航" data-search="M007 萤火奇航 第3档 独立覆盖">
+                <div class="picker-icon" style="background: var(--accent-red-light); color: var(--accent-red);">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M007 萤火奇航</div>
+                  <div class="picker-meta">第 3 档 · 独立覆盖</div>
+                </div>
+                <span class="override-marker">独立</span>
+              </div>
+              <div class="picker-item" data-mid="M019" data-mname="M019 银河拓荒者" data-search="M019 银河拓荒者 第4档 全局默认">
+                <div class="picker-icon" style="background: var(--accent-red-light); color: var(--accent-red);">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M019 银河拓荒者</div>
+                  <div class="picker-meta">第 4 档 · 全局默认</div>
+                </div>
+              </div>
+              <div class="picker-item" data-mid="M001" data-mname="M001 音浪对决" data-search="M001 音浪对决 第1档 全局默认">
+                <div class="picker-icon" style="background: var(--accent-red-light); color: var(--accent-red);">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M001 音浪对决</div>
+                  <div class="picker-meta">第 1 档 · 全局默认</div>
+                </div>
+              </div>
+              <div class="picker-item" data-mid="K012" data-mname="K012 七海冒险家" data-search="K012 七海冒险家 第2档 全局默认">
+                <div class="picker-icon" style="background: var(--accent-red-light); color: var(--accent-red);">K</div>
+                <div class="picker-info">
+                  <div class="picker-name">K012 七海冒险家</div>
+                  <div class="picker-meta">第 2 档 · 全局默认</div>
+                </div>
+              </div>
+              <div class="picker-item" data-mid="M029" data-mname="M029 星河绘卷" data-search="M029 星河绘卷 第1档 全局默认">
+                <div class="picker-icon" style="background: var(--accent-red-light); color: var(--accent-red);">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M029 星河绘卷</div>
+                  <div class="picker-meta">第 1 档 · 全局默认</div>
+                </div>
+              </div>
+              <div class="picker-item" data-mid="M044" data-mname="M044 墨韵江湖" data-search="M044 墨韵江湖 待审核 未达档">
+                <div class="picker-icon" style="background: var(--bg-overlay); color: var(--text-tertiary);">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M044 墨韵江湖</div>
+                  <div class="picker-meta">待审核 · 未达档</div>
+                </div>
+              </div>
+              <div class="picker-item" data-mid="M052" data-mname="M052 暗影潜行" data-search="M052 暗影潜行 第3档 已暂停">
+                <div class="picker-icon" style="background: var(--accent-yellow-light); color: #92400E;">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M052 暗影潜行</div>
+                  <div class="picker-meta">第 3 档 · 已暂停</div>
+                </div>
+              </div>
+              <div class="picker-item" data-mid="M058" data-mname="M058 战火重燃" data-search="M058 战火重燃 第4档 独立覆盖 已暂停">
+                <div class="picker-icon" style="background: var(--accent-yellow-light); color: #92400E;">M</div>
+                <div class="picker-info">
+                  <div class="picker-name">M058 战火重燃</div>
+                  <div class="picker-meta">第 4 档 · 独立覆盖 · 已暂停</div>
+                </div>
+                <span class="override-marker">独立</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 档位配置区 -->
+          <div>
+            <!-- 选中商家信息 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon" style="background: var(--accent-red-light); color: var(--accent-red);">萤</div>
+                  <div>
+                    <div class="panel-title">M007 萤火奇航</div>
+                    <div class="panel-sub">休闲 · 陈静 137****4567 · 加入 2026-03-08</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="badge green"><span class="badge-dot"></span>合作中</span>
+                  <span class="override-marker" style="padding: 3px 8px; font-size: 10px;">已独立覆盖</span>
+                </div>
+              </div>
+
+              <!-- 全局默认 vs 当前覆盖对比 -->
+              <div class="grid-2 gap-3">
+                <div style="padding: var(--space-3); background: var(--bg-overlay); border-radius: var(--radius-sm); border: 1px dashed var(--border-default);">
+                  <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">全局默认 · 第 3 档</div>
+                  <div style="display: flex; gap: 16px; align-items: baseline;">
+                    <div>
+                      <div style="font-size: 22px; font-weight: var(--weight-bold); color: var(--text-tertiary); font-family: var(--font-mono);">1:6</div>
+                      <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono);">提成比例</div>
+                    </div>
+                    <div>
+                      <div style="font-size: 14px; color: var(--text-tertiary); font-family: var(--font-mono);">16.7%</div>
+                      <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono);">提成占比</div>
+                    </div>
+                    <div>
+                      <div style="font-size: 14px; color: var(--text-tertiary); font-family: var(--font-mono);">¥50 万</div>
+                      <div style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono);">档位提成</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="padding: var(--space-3); background: var(--accent-red-light); border-radius: var(--radius-sm); border: 1px solid var(--accent-red);">
+                  <div style="font-size: var(--text-xs); color: var(--accent-red-dark); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">当前覆盖 · 独立配置</div>
+                  <div style="display: flex; gap: 16px; align-items: baseline;">
+                    <div>
+                      <div style="font-size: 22px; font-weight: var(--weight-bold); color: var(--accent-red); font-family: var(--font-mono);">1:5</div>
+                      <div style="font-size: 10px; color: var(--accent-red-dark); font-family: var(--font-mono);">提成比例</div>
+                    </div>
+                    <div>
+                      <div style="font-size: 14px; color: var(--accent-red); font-family: var(--font-mono);">20%</div>
+                      <div style="font-size: 10px; color: var(--accent-red-dark); font-family: var(--font-mono);">提成占比</div>
+                    </div>
+                    <div>
+                      <div style="font-size: 14px; color: var(--accent-red); font-family: var(--font-mono);">¥60 万</div>
+                      <div style="font-size: 10px; color: var(--accent-red-dark); font-family: var(--font-mono);">档位提成</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 独立覆盖配置表 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon yellow">⚙</div>
+                  <div>
+                    <div class="panel-title">独立覆盖配置 · 5 档可编辑</div>
+                    <div class="panel-sub">仅影响 M007 萤火奇航 · 其他商家不受影响</div>
+                  </div>
+                </div>
+                <button class="btn btn-ghost btn-sm" style="color: var(--accent-red);" id="reset-table-btn">重置为全局 →</button>
+              </div>
+
+              <table class="tbl config-table">
+                <thead>
+                  <tr>
+                    <th>档位</th>
+                    <th>客损 (万)</th>
+                    <th>提成比例</th>
+                    <th>提成占比</th>
+                    <th>档位提成 (万)</th>
+                    <th>启用</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="tier-num-cell">1</td>
+                    <td><input type="number" value="100"></td>
+                    <td><input type="text" value="1:10"></td>
+                    <td class="tbl-num">10%</td>
+                    <td class="tbl-num">10</td>
+                    <td><label style="display: inline-flex; align-items: center; gap: 4px;"><input type="checkbox" checked> 启用</label></td>
+                  </tr>
+                  <tr>
+                    <td class="tier-num-cell">2</td>
+                    <td><input type="number" value="200"></td>
+                    <td><input type="text" value="1:8"></td>
+                    <td class="tbl-num">12.5%</td>
+                    <td class="tbl-num">25</td>
+                    <td><label style="display: inline-flex; align-items: center; gap: 4px;"><input type="checkbox" checked> 启用</label></td>
+                  </tr>
+                  <tr style="background: var(--accent-red-light);">
+                    <td class="tier-num-cell">3</td>
+                    <td><input type="number" value="300"></td>
+                    <td><input type="text" value="1:5" style="border-color: var(--accent-red); color: var(--accent-red); font-weight: 600;"></td>
+                    <td class="tbl-num" style="color: var(--accent-red); font-weight: 600;">20%</td>
+                    <td class="tbl-num" style="color: var(--accent-red); font-weight: 600;">60</td>
+                    <td><label style="display: inline-flex; align-items: center; gap: 4px;"><input type="checkbox" checked style="accent-color: var(--accent-red);"> 当前档</label></td>
+                  </tr>
+                  <tr>
+                    <td class="tier-num-cell">4</td>
+                    <td><input type="number" value="400"></td>
+                    <td><input type="text" value="1:4"></td>
+                    <td class="tbl-num">25%</td>
+                    <td class="tbl-num">100</td>
+                    <td><label style="display: inline-flex; align-items: center; gap: 4px;"><input type="checkbox" checked> 启用</label></td>
+                  </tr>
+                  <tr>
+                    <td class="tier-num-cell">5</td>
+                    <td><input type="number" value="500"></td>
+                    <td><input type="text" value="1:3"></td>
+                    <td class="tbl-num">33.3%</td>
+                    <td class="tbl-num">167</td>
+                    <td><label style="display: inline-flex; align-items: center; gap: 4px;"><input type="checkbox" checked> 启用</label></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="margin-top: var(--space-4); padding: var(--space-3); background: var(--bg-overlay); border-radius: var(--radius-sm); font-size: var(--text-xs); color: var(--text-secondary);">
+                💡 <strong>提示：</strong>当前覆盖比全局第 3 档多给商家 ¥10 万 / 月（1:5 vs 1:6），因萤火奇航为平台战略合作商家。修改后只影响本商家，跨商家阶梯请到<a href="rules-config.html" class="text-red">全局阶梯配置</a>。
+              </div>
+            </div>
+
+            <!-- 生效设置 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">i</div>
+                  <div>
+                    <div class="panel-title">生效设置</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid-2 gap-3">
+                <div class="form-group">
+                  <label class="form-label">生效时间</label>
+                  <select class="form-select">
+                    <option>✓ 立即生效（次月结算时使用新档位）</option>
+                    <option>下月 1 日生效</option>
+                    <option>指定日期生效</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">影响范围</label>
+                  <input class="form-input" type="text" value="仅 M007 萤火奇航" readonly style="background: var(--bg-overlay);">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">调整原因（必填，至少 10 字）</label>
+                <textarea class="form-textarea" id="adjust-reason" placeholder="例：萤火奇航为本月战略合作商家，参与平台双 11 主推活动，给予 1:5 优惠档位以激励其加大投入。"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">通知对象</label>
+                <div class="flex flex-col gap-2">
+                  <label style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--text-secondary);">
+                    <input type="checkbox" checked style="accent-color: var(--accent-red);">
+                    <span>通知商家 <strong class="text-primary">陈静</strong>（商家对接人）</span>
+                  </label>
+                  <label style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--text-secondary);">
+                    <input type="checkbox" checked style="accent-color: var(--accent-red);">
+                    <span>通知财务 <strong class="text-primary">王芳</strong>（影响次月结算）</span>
+                  </label>
+                  <label style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--text-secondary);">
+                    <input type="checkbox" style="accent-color: var(--accent-red);">
+                    <span>抄送运营总监 <strong class="text-primary">林琪</strong></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex gap-2 mt-4">
+                <button class="btn btn-success btn-lg" id="save-config-btn" disabled>
+                  <span>✓</span> 保存配置
+                </button>
+                <button class="btn btn-secondary btn-lg" id="cancel-btn">取消</button>
+                <button class="btn btn-ghost" style="margin-left: auto; color: var(--accent-red);" id="reset-global-btn">重置为全局</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 商家选择器：搜索过滤
+      const searchInput = document.getElementById('picker-search-input');
+      const items = document.querySelectorAll('#picker-list .picker-item');
+      searchInput?.addEventListener('input', (e) => {
+        const v = e.target.value.trim().toLowerCase();
+        items.forEach(it => {
+          const s = it.getAttribute('data-search') || '';
+          it.style.display = !v || s.toLowerCase().indexOf(v) !== -1 ? '' : 'none';
+        });
+      });
+
+      // 选中商家（点击 → 选中态 + 加载配置 mock）
+      items.forEach(it => {
+        it.addEventListener('click', () => {
+          items.forEach(i => i.classList.remove('selected'));
+          it.classList.add('selected');
+          const mid = it.getAttribute('data-mid');
+          const mname = it.getAttribute('data-mname');
+          AdminUI.toast(`已切换到 ${mname} 的档位配置`, 'info', 1500);
+        });
+      });
+
+      // 调整原因输入监听 → 启用/禁用保存按钮
+      const reasonEl = document.getElementById('adjust-reason');
+      const saveBtn = document.getElementById('save-config-btn');
+      reasonEl?.addEventListener('input', () => {
+        const v = reasonEl.value.trim();
+        const ok = v.length >= 10;
+        saveBtn.disabled = !ok;
+        saveBtn.style.opacity = ok ? '1' : '0.5';
+        saveBtn.style.cursor = ok ? 'pointer' : 'not-allowed';
+      });
+
+      // 保存配置
+      saveBtn?.addEventListener('click', function() {
+        AdminUI.confirm({
+          title: '保存独立覆盖配置？',
+          message: '保存后立即生效，影响该商家本月所有结算。已通知商家对接人 + 财务。',
+          confirmText: '确认保存',
+          cancelText: '取消',
+          type: 'success',
+        }).then(ok => {
+          if (!ok) return;
+          const done = AdminUI.withLoading(this, '保存中...');
+          setTimeout(() => {
+            done();
+            AdminUI.toast('独立覆盖配置已保存，次日结算生效', 'success', 2500);
+          }, 1000);
+        });
+      });
+
+      // 取消 → 还原到全局默认
+      document.getElementById('cancel-btn')?.addEventListener('click', () => {
+        AdminUI.confirm({
+          title: '放弃修改？',
+          message: '取消后将还原所有未保存的修改到当前配置。',
+          confirmText: '放弃修改',
+          cancelText: '继续编辑',
+        }).then(ok => {
+          if (ok) AdminUI.toast('已取消修改', 'info');
+        });
+      });
+
+      // 重置为全局
+      function resetToGlobal() {
+        AdminUI.confirm({
+          title: '重置为全局默认？',
+          message: '将清空该商家的所有独立覆盖，恢复使用全局默认阶梯。操作不可撤销。',
+          confirmText: '确认重置',
+          cancelText: '取消',
+          type: 'danger',
+          dangerText: '重置',
+        }).then(ok => {
+          if (ok) AdminUI.toast('已重置为全局默认阶梯', 'success');
+        });
+      }
+      document.getElementById('reset-table-btn')?.addEventListener('click', resetToGlobal);
+      document.getElementById('reset-global-btn')?.addEventListener('click', resetToGlobal);
+
+      // 调档历史
+      document.querySelector('[data-action="history"]')?.addEventListener('click', () => {
+        AdminUI.Modal.open({
+          title: '调档历史 · M007 萤火奇航',
+          body: `
+            <div style="display: grid; gap: 12px;">
+              <div style="padding: 12px; border-left: 3px solid var(--accent-red); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">
+                  <span>2026-07-15 14:23</span><span>运营 · 林琪</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 500;">第 3 档 1:6 → 1:5（独立覆盖）</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">原因：战略合作商家 + 暑期活动激励</div>
+              </div>
+              <div style="padding: 12px; border-left: 3px solid var(--border-default); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">
+                  <span>2026-04-01 00:00</span><span>系统 · 调档</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 500;">v2.0 → v2.1 调档生效</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">使用全局默认阶梯</div>
+              </div>
+              <div style="padding: 12px; border-left: 3px solid var(--border-default); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">
+                  <span>2026-03-08 09:00</span><span>系统 · 首次</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 500;">商家激活，使用 v2.0 阶梯</div>
+              </div>
+            </div>
+          `,
+          size: 'md',
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

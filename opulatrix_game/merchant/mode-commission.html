@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>星火燎原 · 游戏商户中心</title>
+  <title>星火燎原（v3 启用）· 游戏商户中心</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -491,11 +491,11 @@
         </a>
         <a href="mode-consumption.html" class="app-sidebar-item">
           <span class="app-sidebar-item-icon">火</span>
-          <span>星火养成</span>
+          <span>星火养成（业绩提成）</span>
         </a>
         <a href="mode-commission.html" class="app-sidebar-item active">
           <span class="app-sidebar-item-icon">润</span>
-          <span>星火燎原</span>
+          <span>星火燎原<span style="color: var(--text-tertiary); font-size: 10px; margin-left: 4px;">v3</span></span>
         </a>
       </div>
       <div class="app-sidebar-section">
@@ -538,10 +538,10 @@
     <main class="app-main">
       <header class="app-topbar">
         <div class="app-topbar-left">
-          <h1 class="app-topbar-title">星火燎原</h1>
-          <span class="app-topbar-mode blaze">
+          <h1 class="app-topbar-title">星火燎原（v3 启用）</h1>
+          <span class="app-topbar-mode blaze" style="opacity: 0.6;">
             <span class="mode-dot"></span>
-            星火燎原期 · 段二 · 进行中
+            段二 · 流水抽佣 · v3 启用
           </span>
         </div>
         <div class="app-topbar-actions">
@@ -557,25 +557,40 @@
           <div style="flex: 1; line-height: 1.5;">
             <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">
               《Game Hub 合作协议》<span style="color: var(--green-700, #047857); font-weight: var(--weight-semibold);">已签署生效</span>
-              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 11px; margin-left: var(--space-2);">AGREEMENT-2026-M001-V3 · 当前模式：生态分润</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 11px; margin-left: var(--space-2);">AGREEMENT-2026-M001-V3 · 当前模式：星火燎原（v3 启用）</span>
             </div>
             <div style="font-size: 11px; color: var(--text-tertiary);">
-              签署日 2026-06-30 · 版本 v3.2 · 分润比例与结算方式均按协议约定比例执行
+              签署日 2026-06-30 · 版本 v3.2 · 流水分润比例与结算方式按协议约定比例执行
             </div>
           </div>
           <a href="javascript:void(0)" onclick="AgreementModal.open(); return false;" style="font-size: var(--text-sm); color: var(--text-link); white-space: nowrap; cursor: pointer;">查看协议 →</a>
         </div>
 
+        <!-- v3 占位 banner -->
+        <div style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-5); background: linear-gradient(135deg, #FEF3C7 0%, #FFFFFF 100%); border: 1px solid #F59E0B; border-radius: var(--radius-md); margin-bottom: var(--space-4);">
+          <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #F59E0B, #D97706); color: white; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; font-size: 18px; font-weight: var(--weight-bold);">v3</div>
+          <div style="flex: 1; line-height: 1.5;">
+            <div style="font-size: var(--text-base); color: var(--text-primary); font-weight: var(--weight-semibold);">
+              星火燎原期（流水抽佣）属于 v3 阶段
+            </div>
+            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px;">
+              v2 阶段仅启用段一（星火养成 · 业绩提成）模式。流水抽佣分成模式计划在 v3 阶段开放。<br>
+              本页面所有数字均为 v3 规划参考值，非当前生效数据。如有疑问，请联系您的运营对接人。
+            </div>
+          </div>
+          <a href="mode-consumption.html" class="btn btn-primary btn-sm" style="white-space: nowrap;">回到业绩提成 →</a>
+        </div>
+
         <!-- 模式 hero -->
-        <div class="mode-hero blaze">
+        <div class="mode-hero blaze" style="opacity: 0.6;">
           <div class="mode-hero-grid">
             <div>
-              <div class="mode-hero-eyebrow">CURRENT PHASE · 02 BLAZE</div>
-              <h2 class="mode-hero-title">星火燎原期</h2>
-              <p class="mode-hero-sub">基于流水的分润已启动,按规则每月底自动结算到平台钱包,可申请提现至对公账户。</p>
+              <div class="mode-hero-eyebrow">CURRENT PHASE · 02 BLAZE <span style="background: #F59E0B; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-family: var(--font-sans);">v3 启用</span></div>
+              <h2 class="mode-hero-title">星火燎原期（流水抽佣）</h2>
+              <p class="mode-hero-sub">v3 阶段开放。基于流水的分润，按规则每月底自动结算到平台钱包，可申请提现至对公账户。</p>
             </div>
             <div class="mode-hero-stat">
-              <div class="mode-hero-stat-label">本月已分润</div>
+              <div class="mode-hero-stat-label">本月已分润 <span style="font-size: 11px; color: #B45309;">v3 参考</span></div>
               <div class="mode-hero-stat-value">¥42,800</div>
               <div class="mode-hero-stat-meta">日均 ¥3,050 · 较上月同期 +12.4%</div>
             </div>
@@ -583,10 +598,10 @@
         </div>
 
         <!-- KPI 4 件套 -->
-        <div class="kpi-grid">
+        <div class="kpi-grid" style="opacity: 0.6;">
           <div class="kpi-card blaze">
             <div class="kpi-head">
-              <span class="kpi-label">本月已分润</span>
+              <span class="kpi-label">本月已分润 <span style="font-size: 9px; color: #B45309;">v3</span></span>
               <span class="kpi-icon">¥</span>
             </div>
             <div class="kpi-value">42,800</div>
@@ -594,7 +609,7 @@
           </div>
           <div class="kpi-card">
             <div class="kpi-head">
-              <span class="kpi-label">日均分润</span>
+              <span class="kpi-label">日均分润 <span style="font-size: 9px; color: #B45309;">v3</span></span>
               <span class="kpi-icon">↗</span>
             </div>
             <div class="kpi-value">3,050</div>
@@ -602,7 +617,7 @@
           </div>
           <div class="kpi-card">
             <div class="kpi-head">
-              <span class="kpi-label">协议分润比例</span>
+              <span class="kpi-label">协议分润比例 <span style="font-size: 9px; color: #B45309;">v3</span></span>
               <span class="kpi-icon">%</span>
             </div>
             <div class="kpi-value">8.5%</div>
@@ -610,7 +625,7 @@
           </div>
           <div class="kpi-card">
             <div class="kpi-head">
-              <span class="kpi-label">月底结算倒计时</span>
+              <span class="kpi-label">月底结算倒计时 <span style="font-size: 9px; color: #B45309;">v3</span></span>
               <span class="kpi-icon">○</span>
             </div>
             <div class="kpi-value">8 天</div>
@@ -619,13 +634,13 @@
         </div>
 
         <!-- 月度结算进度 -->
-        <div class="panel" style="margin-bottom: var(--space-6);">
+        <div class="panel" style="margin-bottom: var(--space-6); opacity: 0.6;">
           <div class="panel-head">
             <div>
-              <h3 class="panel-title">月度结算进度</h3>
-              <div class="panel-sub">6/30 月底自动结算,所有数据可在「结算单」查看明细</div>
+              <h3 class="panel-title">月度结算进度 <span style="font-size: 10px; color: #B45309; font-weight: var(--weight-normal); margin-left: 8px;">v3 参考</span></h3>
+              <div class="panel-sub">v3 阶段：6/30 月底自动结算,所有数据可在「结算单」查看明细</div>
             </div>
-            <span class="badge badge-mode-2"><span class="badge-dot"></span>段二 · 燎原期</span>
+            <span class="badge badge-mode-2"><span class="badge-dot"></span>段二 · 燎原期 <span style="font-size: 9px;">v3</span></span>
           </div>
 
           <div style="padding: var(--space-6) 0;">

@@ -286,6 +286,298 @@
     .kpi-card-link:hover .kpi-meta {
       color: var(--text-primary);
     }
+
+    /* ===== 业绩考核 · 5 档阶梯进度条 ===== */
+    .tier-headline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      padding: var(--space-4) 0 var(--space-3);
+      border-bottom: 1px solid var(--border-hairline);
+      margin-bottom: var(--space-4);
+    }
+    .tier-headline-left, .tier-headline-right {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .tier-headline-right {
+      text-align: right;
+      border-left: 1px solid var(--border-hairline);
+      padding-left: var(--space-4);
+    }
+    .tier-headline-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tier-headline-value {
+      font-size: 36px;
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      line-height: 1.1;
+    }
+    .tier-headline-tier {
+      font-size: 28px;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+      line-height: 1.1;
+    }
+    .tier-headline-meta {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+    }
+
+    /* 5 档阶梯横排 */
+    .tier-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+    .tier-segment {
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      background: var(--bg-secondary);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .tier-segment.achieved {
+      background: linear-gradient(180deg, #FEF2F2 0%, #FFFFFF 100%);
+      border-color: #FECACA;
+    }
+    .tier-segment.achieved.current {
+      background: linear-gradient(180deg, #FEE2E2 0%, #FEF2F2 100%);
+      border-color: #DC2626;
+      border-width: 2px;
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08);
+    }
+    .tier-segment.final {
+      background: linear-gradient(180deg, #FFF7ED 0%, #FFFFFF 100%);
+      border-color: #FED7AA;
+    }
+    .tier-segment-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2);
+    }
+    .tier-segment-num {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+    .tier-segment.achieved.current .tier-segment-num {
+      color: #DC2626;
+      font-weight: var(--weight-bold);
+    }
+    .tier-segment-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-tertiary);
+      font-weight: var(--weight-medium);
+    }
+    .tier-segment.achieved.current .tier-segment-tag {
+      background: #DC2626;
+      color: white;
+    }
+    .tier-segment-loss {
+      font-size: 18px;
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      margin-bottom: 4px;
+    }
+    .tier-segment.achieved.current .tier-segment-loss {
+      color: #DC2626;
+    }
+    .tier-segment-ratio {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      margin-bottom: 2px;
+    }
+    .tier-segment-pct {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+    .tier-segment-rebate {
+      font-size: 13px;
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+      font-family: var(--font-mono);
+      padding-top: 4px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    /* 5 档进阶轨道（紧凑进度条，无重叠） */
+    .tier-rail {
+      position: relative;
+      height: 32px;
+      margin: var(--space-4) 0 var(--space-2);
+    }
+    .tier-rail-line {
+      position: absolute;
+      top: 14px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border-hairline);
+    }
+    .tier-rail-fill {
+      position: absolute;
+      top: 14px;
+      left: 0;
+      width: 24.8%;
+      height: 2px;
+      background: linear-gradient(90deg, #DC2626 0%, #EF4444 100%);
+    }
+    .tier-rail-node {
+      position: absolute;
+      top: 11px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--text-tertiary);
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+    .tier-rail-node.done {
+      background: #DC2626;
+      border-color: #DC2626;
+    }
+    .tier-rail-cursor {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tier-rail-cursor-tag {
+      font-size: 10px;
+      color: white;
+      background: #DC2626;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: var(--weight-semibold);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
+      margin-bottom: 2px;
+    }
+    .tier-rail-cursor-dot {
+      width: 14px;
+      height: 14px;
+      background: white;
+      border: 3px solid #DC2626;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
+    }
+
+    /* 底部业绩三问 */
+    .tier-footer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      padding: var(--space-3) 0 0;
+      border-top: 1px solid var(--border-hairline);
+    }
+    .tier-footer-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .tier-footer-key {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    .tier-footer-val {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+      font-family: var(--font-mono);
+    }
+
+    /* 5 档跳档时间线 */
+    .tier-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-3) 0;
+      border-top: 1px solid var(--border-hairline);
+      margin-top: var(--space-3);
+    }
+    .tier-timeline-row {
+      display: grid;
+      grid-template-columns: 12px 50px 1fr auto;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      padding: var(--space-2) 0;
+    }
+    .tier-timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--text-tertiary);
+    }
+    .tier-timeline-row.done .tier-timeline-dot {
+      background: #DC2626;
+      border-color: #DC2626;
+    }
+    .tier-timeline-row.next .tier-timeline-dot {
+      background: white;
+      border-color: #DC2626;
+      border-width: 3px;
+    }
+    .tier-timeline-date {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+    .tier-timeline-row.done .tier-timeline-date {
+      color: #DC2626;
+      font-weight: var(--weight-semibold);
+    }
+    .tier-timeline-row.next .tier-timeline-date {
+      color: #DC2626;
+      font-weight: var(--weight-semibold);
+    }
+    .tier-timeline-text {
+      color: var(--text-primary);
+    }
+    .tier-timeline-row.done .tier-timeline-text,
+    .tier-timeline-row.next .tier-timeline-text {
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .tier-timeline-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-tertiary);
+      font-weight: var(--weight-medium);
+    }
+    .tier-timeline-row.done .tier-timeline-tag {
+      background: #FEE2E2;
+      color: #DC2626;
+    }
+    .tier-timeline-row.next .tier-timeline-tag {
+      background: #FEF3C7;
+      color: #B45309;
+    }
   </style>
 </head>
 <body>
@@ -322,11 +614,11 @@
         </a>
         <a href="mode-consumption.html" class="app-sidebar-item">
           <span class="app-sidebar-item-icon">火</span>
-          <span>星火养成</span>
+          <span>星火养成（业绩提成）</span>
         </a>
         <a href="mode-commission.html" class="app-sidebar-item">
           <span class="app-sidebar-item-icon">润</span>
-          <span>星火燎原</span>
+          <span>星火燎原<span style="color: var(--text-tertiary); font-size: 10px; margin-left: 4px;">v3</span></span>
         </a>
       </div>
 
@@ -374,7 +666,7 @@
           <h1 class="app-topbar-title">工作台</h1>
           <span class="app-topbar-mode ignite">
             <span class="mode-dot"></span>
-            星火养成期 · 进行中
+            段一 · 业绩提成 · 进行中
           </span>
         </div>
         <div class="app-topbar-actions">
@@ -388,180 +680,202 @@
         <div class="kpi-grid fade-on-scroll">
           <div class="kpi-card">
             <div class="kpi-head">
-              <span class="kpi-label">当前模式</span>
-              <span class="kpi-icon">◐</span>
+              <span class="kpi-label">当前档位</span>
+              <span class="kpi-icon">★</span>
             </div>
-            <div class="kpi-value">养成期</div>
-            <div class="kpi-meta">已运行 18 天 · 预计 6/23 切段</div>
+            <div class="kpi-value" style="color: #DC2626;">第 1 档</div>
+            <div class="kpi-meta">1:10 · 10% 提成 · v2 唯一</div>
           </div>
           <div class="kpi-card mode-ignite">
             <div class="kpi-head">
-              <span class="kpi-label">本月养成进度</span>
+              <span class="kpi-label">本月客损（业绩）</span>
               <span class="kpi-icon">火</span>
             </div>
-            <div class="kpi-value" data-count="62">0%</div>
-            <div class="kpi-meta">124 万 / 200 万 · 日均 6.2 万</div>
+            <div class="kpi-value">¥124 <span style="font-size: 20px; color: var(--text-tertiary);">万</span></div>
+            <div class="kpi-meta">日均 +6.2 万 · 较昨日 +2.1 万</div>
           </div>
-          <div class="kpi-card kpi-card-link" onclick="location.href='settlement.html'">
+          <div class="kpi-card">
             <div class="kpi-head">
-              <span class="kpi-label">待结算金额</span>
+              <span class="kpi-label">本月提成预估</span>
               <span class="kpi-icon">¥</span>
             </div>
-            <div class="kpi-value" data-count="26.84">0 万</div>
-            <div class="kpi-meta">预计 7/10 到账 · 距今 <strong style="color: var(--text-primary);">3 天</strong> · <span style="color: var(--text-link);">前往结算 →</span></div>
+            <div class="kpi-value" style="color: #047857;">¥12.4 <span style="font-size: 20px; color: var(--text-tertiary);">万</span></div>
+            <div class="kpi-meta">10% 提成 · 跳第 2 档升至 12.5%</div>
           </div>
-          <div class="kpi-card kpi-card-link mode-blaze" onclick="location.href='data-analytics.html'">
+          <div class="kpi-card kpi-card-link" onclick="document.querySelector('.tier-bar').scrollIntoView({behavior: 'smooth', block: 'center'});">
             <div class="kpi-head">
-              <span class="kpi-label">本月利润预估</span>
-              <span class="kpi-icon">▲</span>
+              <span class="kpi-label">距下一档</span>
+              <span class="kpi-icon">↗</span>
             </div>
-            <div class="kpi-value">172 万</div>
-            <div class="kpi-meta">
-              <span style="color: var(--green-700, #047857);">↑ 18.4%</span> 较上月 145.2 万 ·
-              月末预估 <strong style="color: var(--text-primary);">190 万</strong> · 置信度 87%
-            </div>
+            <div class="kpi-value">+76 <span style="font-size: 20px; color: var(--text-tertiary);">万</span></div>
+            <div class="kpi-meta">预计 6/23 跳第 2 档 · <span style="color: var(--text-link);">查看阶梯 →</span></div>
           </div>
         </div>
 
-        <!-- 主区两栏 -->
+        <!-- 主区两栏 · 业绩考核 + 阶梯跳档时间线 -->
         <div class="main-grid fade-on-scroll">
-          <!-- 全局水位 -->
+          <!-- 5 档阶梯进度条（替代原水位） -->
           <div class="panel">
-            <div class="water-pool" data-current="562" data-min="200" data-max="800" data-mode="ignite">
-              <div class="water-pool-head">
-                 <div>
-                   <h3 class="water-pool-title">
-                     平台积分池水位
-                     <span class="info-icon" data-tooltip="平台积分池水位是平台视角的总星火值余额（积分池里还剩多少积分没消纳），不是商户的养成进度。水位高低会自动触发段一/段二切换：水位高 → 段一（积分消纳）；水位低 → 段二（流水分润）。">ⓘ</span>
-                   </h3>
-                   <div class="water-pool-sub">平台总星火值 · 结算按《Game Hub 合作协议》约定执行</div>
-                 </div>
-            <div class="water-pool-status ignite">
-              <span class="status-dot"></span>
-              段一激活中
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">业绩考核 · 5 档阶梯进度</h3>
+                <div class="panel-sub">按月度客损阶梯定档 · 一次性打档 · 直接拿 RMB</div>
+              </div>
+              <span class="badge badge-mode-1"><span class="badge-dot"></span>段一 · v2 唯一</span>
             </div>
-              </div>
 
-              <div class="water-headline">
-                <div class="water-value" data-count="562">0</div>
-                 <div class="water-value-unit">万 积分池水位</div>
-                <div class="water-value-delta">+12.4% 本月</div>
+            <!-- 顶部数字 -->
+            <div class="tier-headline">
+              <div class="tier-headline-left">
+                <div class="tier-headline-label">本月客损（业绩）</div>
+                <div class="tier-headline-value">¥124 <span style="font-size: 22px; color: var(--text-tertiary); font-weight: var(--weight-medium);">万</span></div>
+                <div class="tier-headline-meta">日均 +6.2 万 · 较昨日 +2.1 万</div>
               </div>
-
-              <div class="water-bar-container">
-                <div class="water-bar">
-                  <div class="water-bar-segments">
-                    <div class="water-segment dry"></div>
-                    <div class="water-segment safe"></div>
-                  </div>
-                  <div class="water-bar-fill ignite" data-target-width="70.25"></div>
-                  <div class="water-wave">
-                    <svg viewBox="0 0 1200 72" preserveAspectRatio="none">
-                      <path class="wave-path-1" d="M0 36 Q150 16 300 36 T600 36 T900 36 T1200 36 V72 H0 Z" />
-                    </svg>
-                  </div>
-                  <div class="water-threshold min" style="left: 25%;">
-                    <span class="water-threshold-label">200 万</span>
-                  </div>
-                  <div class="water-threshold max" style="left: 100%;">
-                    <span class="water-threshold-label">800 万</span>
-                  </div>
-                  <div class="water-indicator" style="left: 70.25%;">
-                    <div class="water-indicator-label">562 万</div>
-                    <div class="water-indicator-dot"></div>
-                  </div>
-                </div>
-                <div class="water-axis">
-                  <span>0</span>
-                  <span>200 万</span>
-                  <span>400 万</span>
-                  <span>600 万</span>
-                  <span>800 万</span>
-                </div>
+              <div class="tier-headline-right">
+                <div class="tier-headline-label">当前档位</div>
+                <div class="tier-headline-tier" style="color: #DC2626;">第 1 档 · 1:10</div>
+                <div class="tier-headline-meta">10% 提成 · ¥12.4 万预估</div>
               </div>
+            </div>
 
-              <div class="water-metrics">
-                <div class="water-metric-row">
-                  <span class="water-metric-label">
-                    <span class="water-metric-marker curr"></span>
-                    当前积分池水位
-                  </span>
-                  <span class="water-metric-value">562 万</span>
+            <!-- 5 档阶梯横排 -->
+            <div class="tier-bar">
+              <div class="tier-segment achieved current" data-tier="1">
+                <div class="tier-segment-head">
+                  <span class="tier-segment-num">1</span>
+                  <span class="tier-segment-tag">当前</span>
                 </div>
-                <div class="water-metric-row">
-                  <span class="water-metric-label">
-                    <span class="water-metric-marker warn"></span>
-                    最高阈值（参考）
-                  </span>
-                  <span class="water-metric-value" style="color: var(--red-600);">800 万</span>
+                <div class="tier-segment-loss">100 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+                <div class="tier-segment-ratio">1:10</div>
+                <div class="tier-segment-pct">10%</div>
+                <div class="tier-segment-rebate">¥10 万</div>
+              </div>
+              <div class="tier-segment" data-tier="2">
+                <div class="tier-segment-head">
+                  <span class="tier-segment-num">2</span>
+                  <span class="tier-segment-tag">+76 万</span>
                 </div>
-                <div class="water-metric-row">
-                  <span class="water-metric-label">
-                    <span class="water-metric-marker safe"></span>
-                    最低阈值（参考）
-                  </span>
-                  <span class="water-metric-value" style="color: var(--green-600);">200 万</span>
+                <div class="tier-segment-loss">200 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+                <div class="tier-segment-ratio">1:8</div>
+                <div class="tier-segment-pct">12.5%</div>
+                <div class="tier-segment-rebate">¥25 万</div>
+              </div>
+              <div class="tier-segment" data-tier="3">
+                <div class="tier-segment-head">
+                  <span class="tier-segment-num">3</span>
+                  <span class="tier-segment-tag">+176 万</span>
                 </div>
-                <div class="water-metric-row">
-                  <span class="water-metric-label">
-                    <span class="water-metric-marker up"></span>
-                    距离上限余量
-                  </span>
-                  <span class="water-metric-value">238 万<span class="delta">+12.4%</span></span>
+                <div class="tier-segment-loss">300 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+                <div class="tier-segment-ratio">1:6</div>
+                <div class="tier-segment-pct">16.7%</div>
+                <div class="tier-segment-rebate">¥50 万</div>
+              </div>
+              <div class="tier-segment" data-tier="4">
+                <div class="tier-segment-head">
+                  <span class="tier-segment-num">4</span>
+                  <span class="tier-segment-tag">+276 万</span>
                 </div>
-                <div class="water-metric-row">
-                  <span class="water-metric-label">
-                    <span class="water-metric-marker down"></span>
-                    距离下限
-                  </span>
-                  <span class="water-metric-value">362 万</span>
+                <div class="tier-segment-loss">400 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+                <div class="tier-segment-ratio">1:5</div>
+                <div class="tier-segment-pct">20%</div>
+                <div class="tier-segment-rebate">¥80 万</div>
+              </div>
+              <div class="tier-segment final" data-tier="5">
+                <div class="tier-segment-head">
+                  <span class="tier-segment-num">5</span>
+                  <span class="tier-segment-tag">+376 万</span>
                 </div>
+                <div class="tier-segment-loss">500 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+                <div class="tier-segment-ratio">1:4</div>
+                <div class="tier-segment-pct">25%</div>
+                <div class="tier-segment-rebate">¥125 万</div>
+              </div>
+            </div>
+
+            <!-- 5 档进阶轨道（紧凑进度条，无重叠） -->
+            <div class="tier-rail">
+              <div class="tier-rail-line"></div>
+              <div class="tier-rail-fill"></div>
+              <div class="tier-rail-node done" style="left: 20%;"></div>
+              <div class="tier-rail-node future" style="left: 40%;"></div>
+              <div class="tier-rail-node future" style="left: 60%;"></div>
+              <div class="tier-rail-node future" style="left: 80%;"></div>
+              <div class="tier-rail-node future" style="left: 100%;"></div>
+              <div class="tier-rail-cursor" style="left: 24.8%;">
+                <div class="tier-rail-cursor-tag">¥124 万</div>
+                <div class="tier-rail-cursor-dot"></div>
+              </div>
+            </div>
+
+            <!-- 底部业绩三问 -->
+            <div class="tier-footer">
+              <div class="tier-footer-item">
+                <span class="tier-footer-key">距第 2 档还差</span>
+                <span class="tier-footer-val">+76 万客损</span>
+              </div>
+              <div class="tier-footer-item">
+                <span class="tier-footer-key">跳档后多拿</span>
+                <span class="tier-footer-val" style="color: #047857;">+¥14.6 万提成</span>
+              </div>
+              <div class="tier-footer-item">
+                <span class="tier-footer-key">预计跳档日</span>
+                <span class="tier-footer-val">6/23</span>
               </div>
             </div>
           </div>
 
-          <!-- 趋势图 -->
+          <!-- 阶梯跳档时间线（替代原趋势图） -->
           <div class="panel">
             <div class="panel-head">
               <div>
-                <h3 class="panel-title">近 30 天养成速率</h3>
-                <div class="panel-sub">每日养成量趋势 · 红色为星火养成期</div>
+                <h3 class="panel-title">阶梯跳档时间线</h3>
+                <div class="panel-sub">月度累计客损 · 5 档阶梯进度 · 30 天定档</div>
               </div>
               <button class="panel-link" onclick="TrendDetail.open()" style="background: transparent; border: 0; cursor: pointer; font-family: var(--font-sans);">查看明细 →</button>
             </div>
             <div id="trend-chart" class="trend-chart"></div>
 
-            <!-- 2x2 关键指标 -->
-            <div class="stat-grid-2x2">
-              <div class="stat-cell">
-                <div class="stat-cell-label">日均养成</div>
-                <div class="stat-cell-val">6.2 万</div>
-                <div class="stat-cell-sub">较上月 +12.4%</div>
+            <!-- 5 档跳档时间节点 -->
+            <div class="tier-timeline">
+              <div class="tier-timeline-row done">
+                <span class="tier-timeline-dot"></span>
+                <span class="tier-timeline-date">6/17</span>
+                <span class="tier-timeline-text">达第 1 档（100 万）</span>
+                <span class="tier-timeline-tag">已达成</span>
               </div>
-              <div class="stat-cell">
-                <div class="stat-cell-label">峰值</div>
-                <div class="stat-cell-val">6.8 万</div>
-                <div class="stat-cell-sub">06-15 周一</div>
+              <div class="tier-timeline-row next">
+                <span class="tier-timeline-dot"></span>
+                <span class="tier-timeline-date">6/23</span>
+                <span class="tier-timeline-text">预计跳第 2 档（200 万 · 12.5% 提成）</span>
+                <span class="tier-timeline-tag">下一跳</span>
               </div>
-              <div class="stat-cell">
-                <div class="stat-cell-label">最低</div>
-                <div class="stat-cell-val">5.1 万</div>
-                <div class="stat-cell-sub">06-22 周日</div>
+              <div class="tier-timeline-row">
+                <span class="tier-timeline-dot"></span>
+                <span class="tier-timeline-date">—</span>
+                <span class="tier-timeline-text">跳第 3 档（300 万 · 16.7%）</span>
+                <span class="tier-timeline-tag">待达成</span>
               </div>
-              <div class="stat-cell">
-                <div class="stat-cell-label">较上周</div>
-                <div class="stat-cell-val">↑ 12.4%</div>
-                <div class="stat-cell-sub">日均 5.5 → 6.2 万</div>
+              <div class="tier-timeline-row">
+                <span class="tier-timeline-dot"></span>
+                <span class="tier-timeline-date">—</span>
+                <span class="tier-timeline-text">跳第 4 档（400 万 · 20%）</span>
+                <span class="tier-timeline-tag">待达成</span>
+              </div>
+              <div class="tier-timeline-row">
+                <span class="tier-timeline-dot"></span>
+                <span class="tier-timeline-date">—</span>
+                <span class="tier-timeline-text">跳第 5 档封顶（500 万 · 25%）</span>
+                <span class="tier-timeline-tag">待达成</span>
               </div>
             </div>
 
-            <!-- 趋势解读 -->
+            <!-- 业绩洞察 banner -->
             <div class="trend-insight">
               <span class="trend-insight-icon">ⓘ</span>
               <div class="trend-insight-body">
-                <div class="trend-insight-title">节奏良好，预计 6/23 达标</div>
+                <div class="trend-insight-title">节奏良好，6/23 预计跳第 2 档</div>
                 <div class="trend-insight-desc">
-                  当前累计 124 万 / 目标 200 万（62%）。按当前日均 6.2 万节奏，剩余 12 天需达到 6.3 万 / 天即可按计划切段。
+                  当前累计客损 124 万 / 跳第 2 档需 200 万（已 62%）。按当前日均 6.2 万节奏，剩余 12 天需达 6.3 万 / 天即可跳档。跳档后提成从 10% 升至 12.5%，多拿 ¥14.6 万。
                 </div>
               </div>
             </div>
@@ -584,13 +898,13 @@
             </a>
             <a href="mode-consumption.html" class="quick-item">
               <div class="quick-icon ignite">火</div>
-              <div class="quick-name">星火养成</div>
-              <div class="quick-desc">段一进度</div>
+              <div class="quick-name">星火养成（业绩提成）</div>
+              <div class="quick-desc">段一 · v2 唯一</div>
             </a>
             <a href="mode-commission.html" class="quick-item">
-              <div class="quick-icon blaze">润</div>
-              <div class="quick-name">星火燎原</div>
-              <div class="quick-desc">段二分润</div>
+              <div class="quick-icon blaze" style="opacity: 0.5;">润</div>
+              <div class="quick-name">星火燎原<span style="font-size: 10px; color: #B45309; margin-left: 4px;">v3</span></div>
+              <div class="quick-desc">段二 · v3 启用</div>
             </a>
             <a href="settlement.html" class="quick-item">
               <div class="quick-icon">¥</div>
@@ -613,7 +927,7 @@
     <div class="modal" role="dialog" aria-modal="true">
       <div class="modal-head">
         <div>
-          <div class="modal-title">近 30 天养成速率明细</div>
+          <div class="modal-title">近 30 天客损速率明细</div>
           <div class="modal-sub">2026-06-08 至 2026-07-07 · 数据每日 00:00 更新</div>
         </div>
         <button class="modal-close" onclick="TrendDetail.close()" aria-label="关闭">×</button>
@@ -633,7 +947,7 @@
         <!-- 汇总 -->
         <div class="modal-summary">
           <div class="modal-summary-cell">
-            <div class="modal-summary-label">累计养成</div>
+            <div class="modal-summary-label">累计客损</div>
             <div class="modal-summary-val" style="color: var(--red-700);">124 万</div>
           </div>
           <div class="modal-summary-cell">
@@ -657,7 +971,7 @@
             <tr>
               <th>日期</th>
               <th>阶段</th>
-              <th class="num">养成量</th>
+              <th class="num">客损量</th>
               <th class="num">累计</th>
               <th class="num">距目标</th>
               <th>达标状态</th>
@@ -794,36 +1108,144 @@
         }
       });
 
-      // ============== ECharts 趋势图 ==============
+      // ============== ECharts 月度累计客损曲线（业绩考核） ==============
       const chart = echarts.init(document.getElementById('trend-chart'));
-      const data = [];
       const igniteColor = '#DC2626';
+      const igniteLight = 'rgba(254, 226, 226, 0.6)';
+      const tierAchieved = '#DC2626';
+      const tierCurrent = '#F59E0B';
+      const tierFuture = '#A1A1AA';
+
+      // 30 天累计客损（万）
+      // 1-18 日线性增长到 100 万（6/17 达第 1 档）
+      // 17-23 日：6/23 跳第 2 档达 200 万（7 天涨 76 万）
+      const cumulativeData = [];
       for (let i = 1; i <= 30; i++) {
-        const v = i <= 18 ? 35000 + Math.random() * 15000 : 0;
-        data.push([`${i}日`, Math.round(v), i <= 18 ? igniteColor : 'transparent']);
+        let v;
+        if (i <= 16) {
+          // 1-16 日：当前累计客损 124 万（实际）反推每天增长
+          v = Math.round((i * 7.75) * 10) / 10; // 1-16 日累计到 124 万
+        } else if (i <= 23) {
+          // 17-23 日：6/23 跳第 2 档，需涨到 200 万
+          v = Math.round((124 + (i - 16) * (76 / 7)) * 10) / 10; // 17-23 日线性到 200 万
+        } else {
+          // 24-30 日：200 万以上（已跳第 2 档）
+          v = Math.min(500, Math.round((200 + (i - 23) * (50 / 7)) * 10) / 10); // 24-30 日增长到 250 万
+        }
+        cumulativeData.push([`${i}日`, v]);
       }
+
       chart.setOption({
-        grid: { top: 20, right: 20, bottom: 30, left: 50 },
-        tooltip: { trigger: 'axis' },
+        grid: { top: 30, right: 60, bottom: 30, left: 50 },
+        tooltip: {
+          trigger: 'axis',
+          formatter: (params) => {
+            const p = params[0];
+            return `<div style="font-size: 11px; color: #52525B;">${p.axisValue}</div><div style="font-size: 13px; font-weight: 600; color: #DC2626; margin-top: 2px;">累计客损 ${p.value} 万</div><div style="font-size: 10px; color: #71717A; margin-top: 2px;">按月度阶梯定档</div>`;
+          }
+        },
         xAxis: {
           type: 'category',
-          data: data.map(d => d[0]),
+          data: cumulativeData.map(d => d[0]),
           axisLine: { lineStyle: { color: '#E4E4E7' } },
           axisLabel: { color: '#71717A', fontSize: 10, interval: 4 },
           axisTick: { show: false },
         },
         yAxis: {
           type: 'value',
+          max: 500,
+          interval: 100,
           axisLine: { show: false },
-          axisLabel: { color: '#71717A', fontSize: 10, formatter: v => (v/10000).toFixed(0) + '万' },
+          axisLabel: { color: '#71717A', fontSize: 10, formatter: v => v + '万' },
           splitLine: { lineStyle: { color: '#F4F4F5', type: 'dashed' } },
         },
-        series: [{
-          type: 'bar',
-          data: data.map(d => d[1]),
-          itemStyle: { color: igniteColor, borderRadius: [4, 4, 0, 0] },
-          barWidth: '60%',
-        }],
+        series: [
+          // 系列 1: 累计客损折线（带 areaStyle 浅红填充）
+          {
+            type: 'line',
+            data: cumulativeData.map(d => d[1]),
+            smooth: false,
+            symbol: 'none',
+            z: 3,
+            lineStyle: { color: igniteColor, width: 2.5 },
+            areaStyle: {
+              color: {
+                type: 'linear',
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [
+                  { offset: 0, color: igniteLight },
+                  { offset: 1, color: 'rgba(254, 226, 226, 0.05)' },
+                ]
+              }
+            },
+            // 5 档水平参考线
+            markLine: {
+              silent: true,
+              symbol: 'none',
+              label: {
+                show: true,
+                position: 'end',
+                color: '#71717A',
+                fontSize: 10,
+                backgroundColor: 'white',
+                padding: [2, 4],
+                borderRadius: 3,
+              },
+              data: [
+                { yAxis: 100, lineStyle: { color: tierAchieved, type: 'dashed', width: 1 }, name: '第 1 档 100 万' },
+                { yAxis: 200, lineStyle: { color: tierFuture, type: 'dashed', width: 1 }, name: '第 2 档 200 万' },
+                { yAxis: 300, lineStyle: { color: tierFuture, type: 'dashed', width: 1 }, name: '第 3 档 300 万' },
+                { yAxis: 400, lineStyle: { color: tierFuture, type: 'dashed', width: 1 }, name: '第 4 档 400 万' },
+                { yAxis: 500, lineStyle: { color: tierFuture, type: 'dashed', width: 1 }, name: '第 5 档 500 万 · 封顶' },
+              ]
+            },
+            // 跳档点 marker
+            markPoint: {
+              symbol: 'pin',
+              symbolSize: 48,
+              itemStyle: { color: igniteColor, borderColor: 'white', borderWidth: 2 },
+              label: { color: 'white', fontSize: 10, fontWeight: 'bold' },
+              data: [
+                {
+                  name: '6/17 达第 1 档',
+                  coord: ['16日', 100],
+                  value: '6/17 达第 1 档',
+                  label: {
+                    position: 'top',
+                    distance: 12,
+                    color: '#DC2626',
+                    fontSize: 11,
+                    fontWeight: 'bold',
+                    backgroundColor: 'white',
+                    padding: [4, 8],
+                    borderRadius: 4,
+                    borderColor: '#DC2626',
+                    borderWidth: 1,
+                    formatter: '6/17 达第 1 档'
+                  }
+                },
+                {
+                  name: '当前',
+                  coord: ['23日', 200],
+                  value: '当前 ¥124 万',
+                  label: {
+                    position: 'top',
+                    distance: 12,
+                    color: '#DC2626',
+                    fontSize: 11,
+                    fontWeight: 'bold',
+                    backgroundColor: 'white',
+                    padding: [4, 8],
+                    borderRadius: 4,
+                    borderColor: '#DC2626',
+                    borderWidth: 1,
+                    formatter: '当前 ¥124 万'
+                  }
+                },
+              ]
+            }
+          }
+        ],
       });
       window.addEventListener('resize', () => chart.resize());
     });

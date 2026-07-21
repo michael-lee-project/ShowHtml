@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全局流水 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .echarts-box {
+      height: 320px;
+    }
+    .category-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .category-row:last-child { border-bottom: 0; }
+    .cat-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+      flex-shrink: 0;
+    }
+    .cat-info { flex: 1; }
+    .cat-name {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .cat-meta {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .cat-bar-track {
+      flex: 0 0 120px;
+      height: 6px;
+      background: var(--bg-overlay);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .cat-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+    .cat-val {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      min-width: 70px;
+      text-align: right;
+      font-weight: var(--weight-medium);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">全局流水</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索商家 / 游戏">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">REVENUE OVERVIEW · 2026-07-21 18:42 · 本月数据</div>
+            <h1 class="page-header-title">全局流水</h1>
+            <div class="page-header-sub">本月 1.28 亿 · 客损 3,248 万 · 提成 718.2 万 · 较上月 +18.4%</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="export-pdf">导出 PDF</button>
+            <button class="btn btn-secondary" data-action="export-excel">导出 Excel</button>
+            <button class="btn btn-primary" data-action="finance-recon">财务对账</button>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">本月流水</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">¥1.28 <span class="kpi-value-sub">亿</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 18.4%</span>
+              较上月 ¥1.08 亿
+            </div>
+          </div>
+          <div class="kpi-card accent-yellow">
+            <div class="kpi-head">
+              <span class="kpi-label">本月客损</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-yellow);">¥3,248 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 22.6%</span>
+              较上月 · 流水客损比 25.3%
+            </div>
+          </div>
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">本月提成（业绩）</span>
+              <span class="kpi-icon">%</span>
+            </div>
+            <div class="kpi-value">¥718.2 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 22.6%</span>
+              5 档阶梯 1:10/8/6/5/4
+            </div>
+          </div>
+          <div class="kpi-card accent-blue">
+            <div class="kpi-head">
+              <span class="kpi-label">商家均流水</span>
+              <span class="kpi-icon">⌧</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-blue);">¥9.97 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 4.2%</span>
+              1,206 活跃商家
+            </div>
+          </div>
+        </div>
+
+        <!-- 30 天趋势图 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">📈</div>
+              <div>
+                <div class="panel-title">30 天流水 / 客损 / 提成趋势</div>
+                <div class="panel-sub">本月累计 1.28 亿 · 客损 3,248 万 · 提成 718.2 万 · 7 日均线持续上行</div>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="filter-chip active" data-range="month">本月</span>
+              <span class="filter-chip" data-range="last-month">上月</span>
+              <span class="filter-chip" data-range="90d">90 天</span>
+              <span class="filter-chip" data-range="year">本年</span>
+            </div>
+          </div>
+          <div id="trend-chart" class="echarts-box"></div>
+        </div>
+
+        <!-- 流水 Top 10 + 类目分布 -->
+        <div class="grid-2">
+          <!-- 商家流水 Top 10 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <div class="panel-icon red">★</div>
+                <div>
+                  <div class="panel-title">商家流水 Top 10</div>
+                  <div class="panel-sub">按本月客损降序 · 1,206 活跃商家</div>
+                </div>
+              </div>
+              <a href="merchants.html" class="panel-link">全部商家 →</a>
+            </div>
+
+            <table class="tbl" id="merchant-top-table">
+              <thead>
+                <tr>
+                  <th data-sort-type="number">排名</th>
+                  <th data-sort-type="string">商家</th>
+                  <th data-sort-type="number" style="text-align: right;">流水（万）</th>
+                  <th data-sort-type="number" style="text-align: right;">提成（万）</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-mid="M003" data-mname="M003 风语启示录">
+                  <td><span class="text-red text-bold">01</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">风</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M003 风语启示录</div>
+                        <div class="tbl-name-sub">第 5 档 · 1:4</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">5,640</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">128.0</td>
+                </tr>
+                <tr data-mid="M019" data-mname="M019 银河拓荒者">
+                  <td><span class="text-red text-bold">02</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">银</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M019 银河拓荒者</div>
+                        <div class="tbl-name-sub">第 4 档 · 1:5</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">4,180</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">80.4</td>
+                </tr>
+                <tr data-mid="M007" data-mname="M007 萤火奇航">
+                  <td><span class="text-red text-bold">03</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">萤</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M007 萤火奇航</div>
+                        <div class="tbl-name-sub">第 3 档 · 1:5 独立</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">3,120</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">60.0</td>
+                </tr>
+                <tr data-mid="K012" data-mname="K012 七海冒险家">
+                  <td><span class="text-tertiary">04</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">K</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">K012 七海冒险家</div>
+                        <div class="tbl-name-sub">第 2 档 · 1:8</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">2,080</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">25.1</td>
+                </tr>
+                <tr data-mid="M058" data-mname="M058 战火重燃">
+                  <td><span class="text-tertiary">05</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">M</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M058 战火重燃</div>
+                        <div class="tbl-name-sub">第 4 档 · 已暂停</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600; color: var(--text-tertiary);">1,820</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                </tr>
+                <tr data-mid="M052" data-mname="M052 暗影潜行">
+                  <td><span class="text-tertiary">06</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">M</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M052 暗影潜行</div>
+                        <div class="tbl-name-sub">第 3 档 · 已暂停</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600; color: var(--text-tertiary);">1,540</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">—</td>
+                </tr>
+                <tr data-mid="M001" data-mname="M001 音浪对决">
+                  <td><span class="text-tertiary">07</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">音</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M001 音浪对决</div>
+                        <div class="tbl-name-sub">第 1 档 · 1:10</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">1,280</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">12.4</td>
+                </tr>
+                <tr data-mid="M029" data-mname="M029 星河绘卷">
+                  <td><span class="text-tertiary">08</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">星</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M029 星河绘卷</div>
+                        <div class="tbl-name-sub">第 1 档 · 1:10</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">1,180</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">10.2</td>
+                </tr>
+                <tr data-mid="M114" data-mname="M114 幻域仙踪">
+                  <td><span class="text-tertiary">09</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">幻</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M114 幻域仙踪</div>
+                        <div class="tbl-name-sub">第 1 档 · 1:10</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">980</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">9.8</td>
+                </tr>
+                <tr data-mid="M087" data-mname="M087 剑影无双">
+                  <td><span class="text-tertiary">10</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon">剑</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M087 剑影无双</div>
+                        <div class="tbl-name-sub">第 1 档 · 1:10</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; font-weight: 600;">860</td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red);">8.6</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 流水来源分布 -->
+          <div>
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">▦</div>
+                  <div>
+                    <div class="panel-title">按游戏类目</div>
+                    <div class="panel-sub">6 大类目 · 流水占比</div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="category-row">
+                  <div class="cat-icon bg-red" style="color: var(--accent-red);">卡</div>
+                  <div class="cat-info">
+                    <div class="cat-name">卡牌策略</div>
+                    <div class="cat-meta">3 商家 · 4 款游戏</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 78%; background: var(--accent-red);"></div>
+                  </div>
+                  <div class="cat-val">¥4,260 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--accent-blue-light); color: var(--accent-blue);">S</div>
+                  <div class="cat-info">
+                    <div class="cat-name">SLG</div>
+                    <div class="cat-meta">5 商家 · 6 款游戏</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 62%; background: var(--accent-blue);"></div>
+                  </div>
+                  <div class="cat-val">¥3,420 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--accent-yellow-light); color: var(--accent-yellow);">休</div>
+                  <div class="cat-info">
+                    <div class="cat-name">休闲</div>
+                    <div class="cat-meta">8 商家 · 12 款游戏</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 46%; background: var(--accent-yellow);"></div>
+                  </div>
+                  <div class="cat-val">¥2,580 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--accent-green-light); color: var(--accent-green);">互</div>
+                  <div class="cat-info">
+                    <div class="cat-name">互动竞技</div>
+                    <div class="cat-meta">12 商家 · 18 款游戏</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 32%; background: var(--accent-green);"></div>
+                  </div>
+                  <div class="cat-val">¥1,680 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: rgba(139,92,246,0.1); color: #6D28D9;">MMO</div>
+                  <div class="cat-info">
+                    <div class="cat-name">MMO</div>
+                    <div class="cat-meta">3 商家 · 3 款游戏</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 22%; background: #8B5CF6;"></div>
+                  </div>
+                  <div class="cat-val">¥1,180 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: rgba(6,182,212,0.1); color: #0891B2;">F</div>
+                  <div class="cat-info">
+                    <div class="cat-name">FPS</div>
+                    <div class="cat-meta">2 商家 · 2 款游戏</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 12%; background: var(--accent-cyan);"></div>
+                  </div>
+                  <div class="cat-val">¥620 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--bg-overlay); color: var(--text-tertiary);">其</div>
+                  <div class="cat-info">
+                    <div class="cat-name">其他类目</div>
+                    <div class="cat-meta">RPG / ARPG / 潜行 / 沙盒</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 6%; background: var(--text-tertiary);"></div>
+                  </div>
+                  <div class="cat-val">¥320 万</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon purple">◐</div>
+                  <div>
+                    <div class="panel-title">按商家类型</div>
+                    <div class="panel-sub">活跃商家 1,206 家</div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--accent-red-light); color: var(--accent-red);">T1</div>
+                  <div class="cat-info">
+                    <div class="cat-name">头部商家 (月流水 &gt; 1000 万)</div>
+                    <div class="cat-meta">3 家 · 占比 0.25%</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 85%; background: var(--accent-red);"></div>
+                  </div>
+                  <div class="cat-val">¥10,940 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--accent-yellow-light); color: var(--accent-yellow);">T2</div>
+                  <div class="cat-info">
+                    <div class="cat-name">腰部商家 (500-1000 万)</div>
+                    <div class="cat-meta">12 家 · 占比 1.0%</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 38%; background: var(--accent-yellow);"></div>
+                  </div>
+                  <div class="cat-val">¥4,860 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--accent-blue-light); color: var(--accent-blue);">T3</div>
+                  <div class="cat-info">
+                    <div class="cat-name">中型商家 (100-500 万)</div>
+                    <div class="cat-meta">68 家 · 占比 5.6%</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 22%; background: var(--accent-blue);"></div>
+                  </div>
+                  <div class="cat-val">¥2,840 万</div>
+                </div>
+                <div class="category-row">
+                  <div class="cat-icon" style="background: var(--accent-green-light); color: var(--accent-green);">T4</div>
+                  <div class="cat-info">
+                    <div class="cat-name">长尾商家 (&lt; 100 万)</div>
+                    <div class="cat-meta">1,123 家 · 占比 93.1%</div>
+                  </div>
+                  <div class="cat-bar-track">
+                    <div class="cat-bar-fill" style="width: 8%; background: var(--accent-green);"></div>
+                  </div>
+                  <div class="cat-val">¥1,020 万</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="shared/js/admin-mock-data.js"></script>
+  <script>
+    // 30 天趋势图
+    const chart = echarts.init(document.getElementById('trend-chart'));
+    const days = ADMIN_MOCK.revenueTrend.days;
+    chart.setOption({
+      grid: { top: 30, right: 20, bottom: 30, left: 50 },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#FFFFFF',
+        borderColor: '#E4E4E7',
+        textStyle: { color: '#18181B', fontSize: 12 },
+      },
+      legend: {
+        data: ['流水（万）', '客损（万）', '提成（万）'],
+        top: 0,
+        right: 0,
+        textStyle: { color: '#52525B', fontSize: 11 },
+        itemWidth: 12,
+        itemHeight: 8,
+      },
+      xAxis: {
+        type: 'category',
+        data: days,
+        axisLine: { lineStyle: { color: '#E4E4E7' } },
+        axisLabel: { color: '#71717A', fontSize: 10, interval: 4 },
+        axisTick: { show: false },
+      },
+      yAxis: [
+        { type: 'value', axisLine: { show: false }, axisLabel: { color: '#71717A', fontSize: 10 }, splitLine: { lineStyle: { color: '#F4F4F5' } } },
+      ],
+      series: [
+        {
+          name: '流水（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.revenue,
+          lineStyle: { color: '#DC2626', width: 2 },
+          areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(220, 38, 38, 0.18)' }, { offset: 1, color: 'rgba(220, 38, 38, 0)' }] } },
+        },
+        {
+          name: '客损（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.loss,
+          lineStyle: { color: '#F59E0B', width: 2 },
+        },
+        {
+          name: '提成（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.rebate,
+          lineStyle: { color: '#10B981', width: 2 },
+        },
+      ],
+    });
+    window.addEventListener('resize', () => chart.resize());
+  </script>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 时间范围 chip 切换
+      document.querySelectorAll('[data-range]').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('[data-range]').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          const r = chip.getAttribute('data-range');
+          const map = { 'month': '本月', 'last-month': '上月', '90d': '90 天', 'year': '本年' };
+          AdminUI.toast(`已切换到「${map[r] || r}」视图（mock 演示）`, 'info', 1500);
+        });
+      });
+
+      // 商家 Top 10 排序 + 行点击
+      AdminUI.Sort.init(document.getElementById('merchant-top-table'));
+      document.querySelectorAll('#merchant-top-table tbody tr').forEach(row => {
+        row.classList.add('aui-row-clickable');
+        row.addEventListener('click', () => {
+          const mid = row.getAttribute('data-mid');
+          if (mid) window.location.href = `merchants-detail.html?mid=${mid}`;
+        });
+      });
+
+      // 顶部按钮
+      document.querySelector('[data-action="export-pdf"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '生成中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('正在生成 PDF 报表...', 'info', 1500);
+          setTimeout(() => AdminUI.toast('PDF 报表已下载', 'success'), 1500);
+        }, 800);
+      });
+      document.querySelector('[data-action="export-excel"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '导出中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('Excel 报表已下载', 'success');
+        }, 800);
+      });
+      document.querySelector('[data-action="finance-recon"]')?.addEventListener('click', () => {
+        AdminUI.Modal.open({
+          title: '财务对账',
+          body: `
+            <div style="font-size: 13px; line-height: 1.7;">
+              <div style="margin-bottom: 12px; padding: 10px; background: var(--accent-green-light); border-radius: 4px; color: var(--accent-green-dark); font-size: 12px;">
+                ✓ 本月 1,206 家商家已自动对账完成，无差异
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div style="padding: 10px; background: var(--bg-overlay); border-radius: 4px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary);">平台流水</div>
+                  <div style="font-size: 18px; font-weight: 700; color: var(--accent-red); font-family: var(--font-mono);">¥1.28 亿</div>
+                </div>
+                <div style="padding: 10px; background: var(--bg-overlay); border-radius: 4px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary);">商家流水合计</div>
+                  <div style="font-size: 18px; font-weight: 700; font-family: var(--font-mono);">¥1.27 亿</div>
+                </div>
+                <div style="padding: 10px; background: var(--bg-overlay); border-radius: 4px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary);">差异</div>
+                  <div style="font-size: 18px; font-weight: 700; color: var(--accent-green); font-family: var(--font-mono);">+¥84 万</div>
+                </div>
+                <div style="padding: 10px; background: var(--bg-overlay); border-radius: 4px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary);">差异率</div>
+                  <div style="font-size: 18px; font-weight: 700; color: var(--accent-green); font-family: var(--font-mono);">0.66%</div>
+                </div>
+              </div>
+              <div style="margin-top: 12px; padding: 10px; background: var(--bg-overlay); border-radius: 4px; font-size: 12px; color: var(--text-secondary);">
+                💡 差异率 &lt; 0.5% 容差范围，本次对账通过。
+              </div>
+            </div>
+          `,
+          size: 'md',
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -279,6 +279,287 @@
     .rule-text strong {
       font-weight: var(--weight-semibold);
     }
+
+    /* ===== 业绩考核 · 5 档阶梯进度（与 dashboard 同步） ===== */
+    .tier-headline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      padding: var(--space-4) 0 var(--space-3);
+      border-bottom: 1px solid var(--border-hairline);
+      margin-bottom: var(--space-4);
+    }
+    .tier-headline-left, .tier-headline-right {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .tier-headline-right {
+      text-align: right;
+      border-left: 1px solid var(--border-hairline);
+      padding-left: var(--space-4);
+    }
+    .tier-headline-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tier-headline-value {
+      font-size: 36px;
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      line-height: 1.1;
+    }
+    .tier-headline-tier {
+      font-size: 28px;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+      line-height: 1.1;
+    }
+    .tier-headline-meta {
+      font-size: var(--text-sm);
+      color: var(--text-tertiary);
+    }
+    .tier-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+    .tier-segment {
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      background: var(--bg-secondary);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .tier-segment.achieved {
+      background: linear-gradient(180deg, #FEF2F2 0%, #FFFFFF 100%);
+      border-color: #FECACA;
+    }
+    .tier-segment.achieved.current {
+      background: linear-gradient(180deg, #FEE2E2 0%, #FEF2F2 100%);
+      border-color: #DC2626;
+      border-width: 2px;
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08);
+    }
+    .tier-segment.final {
+      background: linear-gradient(180deg, #FFF7ED 0%, #FFFFFF 100%);
+      border-color: #FED7AA;
+    }
+    .tier-segment-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2);
+    }
+    .tier-segment-num {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+    .tier-segment.achieved.current .tier-segment-num {
+      color: #DC2626;
+      font-weight: var(--weight-bold);
+    }
+    .tier-segment-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-tertiary);
+      font-weight: var(--weight-medium);
+    }
+    .tier-segment.achieved.current .tier-segment-tag {
+      background: #DC2626;
+      color: white;
+    }
+    .tier-segment-loss {
+      font-size: 18px;
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      margin-bottom: 4px;
+    }
+    .tier-segment.achieved.current .tier-segment-loss {
+      color: #DC2626;
+    }
+    .tier-segment-ratio {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      margin-bottom: 2px;
+    }
+    .tier-segment-pct {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+    .tier-segment-rebate {
+      font-size: 13px;
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+      font-family: var(--font-mono);
+      padding-top: 4px;
+      border-top: 1px solid var(--border-hairline);
+    }
+    .tier-rail {
+      position: relative;
+      height: 32px;
+      margin: var(--space-4) 0 var(--space-2);
+    }
+    .tier-rail-line {
+      position: absolute;
+      top: 14px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border-hairline);
+    }
+    .tier-rail-fill {
+      position: absolute;
+      top: 14px;
+      left: 0;
+      width: 24.8%;
+      height: 2px;
+      background: linear-gradient(90deg, #DC2626 0%, #EF4444 100%);
+    }
+    .tier-rail-node {
+      position: absolute;
+      top: 11px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--text-tertiary);
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+    .tier-rail-node.done {
+      background: #DC2626;
+      border-color: #DC2626;
+    }
+    .tier-rail-cursor {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tier-rail-cursor-tag {
+      font-size: 10px;
+      color: white;
+      background: #DC2626;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: var(--weight-semibold);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(220, 38, 38, 0.3);
+      margin-bottom: 2px;
+    }
+    .tier-rail-cursor-dot {
+      width: 14px;
+      height: 14px;
+      background: white;
+      border: 3px solid #DC2626;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
+    }
+    .tier-footer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      padding: var(--space-3) 0 0;
+      border-top: 1px solid var(--border-hairline);
+    }
+    .tier-footer-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .tier-footer-key {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    .tier-footer-val {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+      font-family: var(--font-mono);
+    }
+
+    /* 5 档跳档时间线（复用 dashboard） */
+    .tier-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-3) 0;
+    }
+    .tier-timeline-row {
+      display: grid;
+      grid-template-columns: 12px 50px 1fr auto;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      padding: var(--space-2) 0;
+    }
+    .tier-timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--text-tertiary);
+    }
+    .tier-timeline-row.done .tier-timeline-dot {
+      background: #DC2626;
+      border-color: #DC2626;
+    }
+    .tier-timeline-row.next .tier-timeline-dot {
+      background: white;
+      border-color: #DC2626;
+      border-width: 3px;
+    }
+    .tier-timeline-date {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+    .tier-timeline-row.done .tier-timeline-date,
+    .tier-timeline-row.next .tier-timeline-date {
+      color: #DC2626;
+      font-weight: var(--weight-semibold);
+    }
+    .tier-timeline-text {
+      color: var(--text-primary);
+    }
+    .tier-timeline-row.done .tier-timeline-text,
+    .tier-timeline-row.next .tier-timeline-text {
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .tier-timeline-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-tertiary);
+      font-weight: var(--weight-medium);
+    }
+    .tier-timeline-row.done .tier-timeline-tag {
+      background: #FEE2E2;
+      color: #DC2626;
+    }
+    .tier-timeline-row.next .tier-timeline-tag {
+      background: #FEF3C7;
+      color: #B45309;
+    }
   </style>
 </head>
 <body>
@@ -313,11 +594,11 @@
         </a>
         <a href="mode-consumption.html" class="app-sidebar-item">
           <span class="app-sidebar-item-icon">火</span>
-          <span>星火养成</span>
+          <span>星火养成（业绩提成）</span>
         </a>
         <a href="mode-commission.html" class="app-sidebar-item">
           <span class="app-sidebar-item-icon">润</span>
-          <span>星火燎原</span>
+          <span>星火燎原<span style="color: var(--text-tertiary); font-size: 10px; margin-left: 4px;">v3</span></span>
         </a>
       </div>
       <div class="app-sidebar-section">
@@ -363,7 +644,7 @@
           <h1 class="app-topbar-title">模式状态</h1>
           <span class="app-topbar-mode ignite">
             <span class="mode-dot"></span>
-            星火养成期 · 进行中
+            段一 · 业绩提成 · 进行中
           </span>
         </div>
         <div class="app-topbar-actions">
@@ -392,208 +673,219 @@
           <div class="mode-hero-grid">
             <div>
               <div class="mode-hero-eyebrow">CURRENT PHASE · 01 IGNITE</div>
-              <h2 class="mode-hero-title">星火养成期</h2>
-              <p class="mode-hero-sub">按《合作协议》约定，月度目标达成后将按协议规则进入分润结算期。已运行 18 天，进度 62%。</p>
+              <h2 class="mode-hero-title">星火养成期（业绩提成）</h2>
+              <p class="mode-hero-sub">按月度客损阶梯提成，v2 阶段唯一模式。已运行 18 天，客损 124 万（当前第 1 档 10% 提成）。</p>
             </div>
             <div class="mode-hero-stat">
-              <div class="mode-hero-stat-label">本月养成进度</div>
-              <div class="mode-hero-stat-value" data-count="62">0%</div>
-              <div class="mode-hero-stat-meta">124 万 / 200 万 · 预计 6/23 达标</div>
+              <div class="mode-hero-stat-label">本月客损（业绩）</div>
+              <div class="mode-hero-stat-value">124 <span style="font-size: 24px; color: var(--text-tertiary);">万</span></div>
+              <div class="mode-hero-stat-meta">当前档位 1:10（10% 提成）· 预计 6/23 达 200 万跳第 2 档</div>
             </div>
           </div>
         </div>
 
-        <!-- 全局水位（taste-skill v1.1 水平水位条 + 模式色填充） -->
-        <div class="water-pool fade-on-scroll" data-current="562" data-min="200" data-max="800" data-mode="ignite">
-          <div class="water-pool-head">
+        <!-- 业绩考核 · 月度阶梯（替代原水位） -->
+        <div class="panel fade-on-scroll" style="margin-bottom: var(--space-6);">
+          <div class="panel-head">
             <div>
-              <h3 class="water-pool-title">
-                平台积分池水位
-                <span class="info-icon" data-tooltip="平台积分池水位是平台视角的总星火值余额（积分池里还剩多少积分没消纳），是协议结算的参考数据，不直接代表商户收益。具体的模式生效与结算按《Game Hub 合作协议》约定执行。">ⓘ</span>
-              </h3>
-              <div class="water-pool-sub">平台总星火值 · 结算按《合作协议》约定执行</div>
+              <h3 class="panel-title">业绩考核 · 5 档阶梯进度</h3>
+              <div class="panel-sub">按月度客损阶梯定档 · 一次性打档 · 直接拿 RMB</div>
             </div>
-            <div class="water-pool-status ignite">
-              <span class="status-dot"></span>
-              段一激活中
+            <span class="badge badge-mode-1"><span class="badge-dot"></span>段一 · v2 唯一</span>
+          </div>
+
+          <!-- 顶部数字 -->
+          <div class="tier-headline">
+            <div class="tier-headline-left">
+              <div class="tier-headline-label">本月客损（业绩）</div>
+              <div class="tier-headline-value">¥124 <span style="font-size: 22px; color: var(--text-tertiary); font-weight: var(--weight-medium);">万</span></div>
+              <div class="tier-headline-meta">日均 +6.2 万 · 较昨日 +2.1 万</div>
+            </div>
+            <div class="tier-headline-right">
+              <div class="tier-headline-label">当前档位</div>
+              <div class="tier-headline-tier" style="color: #DC2626;">第 1 档 · 1:10</div>
+              <div class="tier-headline-meta">10% 提成 · ¥12.4 万预估</div>
             </div>
           </div>
 
-          <!-- 关系说明 banner：水位 vs 段位 -->
-          <div class="water-relation-banner">
-            <span class="water-relation-icon">⇌</span>
-            <span class="water-relation-text">
-              <strong>水位</strong> = 平台总星火值（积分池余额） · <strong>段位</strong> = 商户当前业务模式
-              · 结算按《Game Hub 合作协议》约定执行
-            </span>
+          <!-- 5 档阶梯横排 -->
+          <div class="tier-bar">
+            <div class="tier-segment achieved current" data-tier="1">
+              <div class="tier-segment-head">
+                <span class="tier-segment-num">1</span>
+                <span class="tier-segment-tag">当前</span>
+              </div>
+              <div class="tier-segment-loss">100 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+              <div class="tier-segment-ratio">1:10</div>
+              <div class="tier-segment-pct">10%</div>
+              <div class="tier-segment-rebate">¥10 万</div>
+            </div>
+            <div class="tier-segment" data-tier="2">
+              <div class="tier-segment-head">
+                <span class="tier-segment-num">2</span>
+                <span class="tier-segment-tag">+76 万</span>
+              </div>
+              <div class="tier-segment-loss">200 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+              <div class="tier-segment-ratio">1:8</div>
+              <div class="tier-segment-pct">12.5%</div>
+              <div class="tier-segment-rebate">¥25 万</div>
+            </div>
+            <div class="tier-segment" data-tier="3">
+              <div class="tier-segment-head">
+                <span class="tier-segment-num">3</span>
+                <span class="tier-segment-tag">+176 万</span>
+              </div>
+              <div class="tier-segment-loss">300 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+              <div class="tier-segment-ratio">1:6</div>
+              <div class="tier-segment-pct">16.7%</div>
+              <div class="tier-segment-rebate">¥50 万</div>
+            </div>
+            <div class="tier-segment" data-tier="4">
+              <div class="tier-segment-head">
+                <span class="tier-segment-num">4</span>
+                <span class="tier-segment-tag">+276 万</span>
+              </div>
+              <div class="tier-segment-loss">400 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+              <div class="tier-segment-ratio">1:5</div>
+              <div class="tier-segment-pct">20%</div>
+              <div class="tier-segment-rebate">¥80 万</div>
+            </div>
+            <div class="tier-segment final" data-tier="5">
+              <div class="tier-segment-head">
+                <span class="tier-segment-num">5</span>
+                <span class="tier-segment-tag">+376 万</span>
+              </div>
+              <div class="tier-segment-loss">500 <span style="font-size: 11px; color: var(--text-tertiary);">万</span></div>
+              <div class="tier-segment-ratio">1:4</div>
+              <div class="tier-segment-pct">25%</div>
+              <div class="tier-segment-rebate">¥125 万</div>
+            </div>
           </div>
 
-          <div class="water-headline">
-            <div class="water-value" data-count="562">0</div>
-            <div class="water-value-unit">万 积分池水位</div>
-            <div class="water-value-delta">↑ 较月初 +12.4%</div>
-          </div>
-
-          <div class="water-bar-container">
-            <div class="water-bar">
-              <div class="water-bar-segments">
-                <div class="water-segment dry"></div>
-                <div class="water-segment safe"></div>
-              </div>
-              <div class="water-bar-fill ignite" data-target-width="70.25"></div>
-              <div class="water-wave">
-                <svg viewBox="0 0 1200 72" preserveAspectRatio="none">
-                  <path class="wave-path-1" d="M0 36 Q150 16 300 36 T600 36 T900 36 T1200 36 V72 H0 Z" />
-                </svg>
-              </div>
-              <div class="water-threshold min" style="left: 25%;">
-                <span class="water-threshold-label">200 万</span>
-              </div>
-              <div class="water-threshold max" style="left: 100%;">
-                <span class="water-threshold-label">800 万</span>
-              </div>
-              <div class="water-indicator" style="left: 70.25%;">
-                <div class="water-indicator-label">562 万</div>
-                <div class="water-indicator-dot"></div>
-              </div>
-            </div>
-            <div class="water-axis">
-              <span>0</span>
-              <span>200 万</span>
-              <span>400 万</span>
-              <span>600 万</span>
-              <span>800 万</span>
+          <!-- 5 档进阶轨道（紧凑进度条） -->
+          <div class="tier-rail">
+            <div class="tier-rail-line"></div>
+            <div class="tier-rail-fill"></div>
+            <div class="tier-rail-node done" style="left: 20%;"></div>
+            <div class="tier-rail-node future" style="left: 40%;"></div>
+            <div class="tier-rail-node future" style="left: 60%;"></div>
+            <div class="tier-rail-node future" style="left: 80%;"></div>
+            <div class="tier-rail-node future" style="left: 100%;"></div>
+            <div class="tier-rail-cursor" style="left: 24.8%;">
+              <div class="tier-rail-cursor-tag">¥124 万</div>
+              <div class="tier-rail-cursor-dot"></div>
             </div>
           </div>
 
-          <div class="water-metrics">
-            <div class="water-metric-row">
-              <span class="water-metric-label">
-                <span class="water-metric-marker curr"></span>
-                当前积分池水位
-              </span>
-              <span class="water-metric-value">562 万</span>
+          <!-- 业绩三问 -->
+          <div class="tier-footer">
+            <div class="tier-footer-item">
+              <span class="tier-footer-key">距第 2 档还差</span>
+              <span class="tier-footer-val">+76 万客损</span>
             </div>
-            <div class="water-metric-row">
-              <span class="water-metric-label">
-                <span class="water-metric-marker warn"></span>
-                最高阈值 · 高于此值触发协议重新评估
-              </span>
-              <span class="water-metric-value" style="color: var(--red-600);">800 万</span>
+            <div class="tier-footer-item">
+              <span class="tier-footer-key">跳档后多拿</span>
+              <span class="tier-footer-val" style="color: #047857;">+¥14.6 万提成</span>
             </div>
-            <div class="water-metric-row">
-              <span class="water-metric-label">
-                <span class="water-metric-marker safe"></span>
-                最低阈值 · 低于此值触发协议重新评估
-              </span>
-              <span class="water-metric-value" style="color: var(--green-600);">200 万</span>
-            </div>
-            <div class="water-metric-row">
-              <span class="water-metric-label">
-                <span class="water-metric-marker up"></span>
-                距离上限余量
-              </span>
-              <span class="water-metric-value">238 万<span class="delta">+12.4%</span></span>
-            </div>
-            <div class="water-metric-row">
-              <span class="water-metric-label">
-                <span class="water-metric-marker down"></span>
-                距离下限
-              </span>
-              <span class="water-metric-value">362 万</span>
-            </div>
-            <div class="water-metric-row">
-              <span class="water-metric-label">
-                <span class="water-metric-marker curr"></span>
-                水位覆盖率
-              </span>
-              <span class="water-metric-value">60.3%</span>
+            <div class="tier-footer-item">
+              <span class="tier-footer-key">预计跳档日</span>
+              <span class="tier-footer-val">6/23</span>
             </div>
           </div>
         </div>
 
-        <!-- 切换时间线 -->
+        <!-- 业绩跳档历史 -->
         <div class="timeline-card fade-on-scroll">
           <div class="panel-head">
             <div>
-              <h3 class="water-title">模式切换历史</h3>
-              <div class="water-sub">本月共发生 3 次模式切换 · 最近一次 2 小时前</div>
+              <h3 class="water-title">业绩跳档历史</h3>
+              <div class="water-sub">本月跳档节点 · 按时间倒序 · 段二 v3 启用</div>
             </div>
           </div>
-          <div class="timeline-list">
-            <div class="timeline-item">
-              <span class="timeline-time">06-23 14:00</span>
-              <div class="timeline-body">
-                <span class="timeline-dot ignite"></span>
-                <div class="timeline-content">
-                  <div class="timeline-title">
-                    切换到星火养成期
-                    <span class="timeline-mode ignite">回退 · 自动</span>
-                  </div>
-                  <div class="timeline-desc">检测到平台积分池水位反弹至 562 万，触发《Game Hub 合作协议》v3.2 第 6 条重新评估约定，对当前合作模式开展协商。</div>
-                </div>
-              </div>
+          <div class="tier-timeline">
+            <div class="tier-timeline-row done">
+              <span class="tier-timeline-dot"></span>
+              <span class="tier-timeline-date">5/24</span>
+              <span class="tier-timeline-text">达第 1 档（100 万 · 10% 提成）</span>
+              <span class="tier-timeline-tag">已达成</span>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-time">06-12 11:00</span>
-              <div class="timeline-body">
-                <span class="timeline-dot blaze"></span>
-                <div class="timeline-content">
-                  <div class="timeline-title">
-                    切换到星火燎原期
-                    <span class="timeline-mode blaze">达标 · 自动</span>
-                  </div>
-                  <div class="timeline-desc">累计养成量达到 200 万星火值（100%），触发段二启用条件。开始计算段二流水分润。</div>
-                </div>
-              </div>
+            <div class="tier-timeline-row next">
+              <span class="tier-timeline-dot"></span>
+              <span class="tier-timeline-date">6/23</span>
+              <span class="tier-timeline-text">预计跳第 2 档（200 万 · 12.5% 提成）</span>
+              <span class="tier-timeline-tag">下一跳</span>
             </div>
-            <div class="timeline-item">
-              <span class="timeline-time">06-01 00:00</span>
-              <div class="timeline-body">
-                <span class="timeline-dot ignite"></span>
-                <div class="timeline-content">
-                  <div class="timeline-title">
-                    月度重置 · 进入养成期
-                    <span class="timeline-mode ignite">月初 · 自动</span>
-                  </div>
-                  <div class="timeline-desc">平台为该商家分配新的月度养成目标 200 万星火值。本月养成期正式开始。</div>
-                </div>
-              </div>
+            <div class="tier-timeline-row">
+              <span class="tier-timeline-dot"></span>
+              <span class="tier-timeline-date">—</span>
+              <span class="tier-timeline-text">跳第 3 档（300 万 · 16.7% 提成）</span>
+              <span class="tier-timeline-tag">待达成</span>
+            </div>
+            <div class="tier-timeline-row">
+              <span class="tier-timeline-dot"></span>
+              <span class="tier-timeline-date">—</span>
+              <span class="tier-timeline-text">跳第 4 档（400 万 · 20% 提成）</span>
+              <span class="tier-timeline-tag">待达成</span>
+            </div>
+            <div class="tier-timeline-row">
+              <span class="tier-timeline-dot"></span>
+              <span class="tier-timeline-date">—</span>
+              <span class="tier-timeline-text">跳第 5 档封顶（500 万 · 25% 提成）</span>
+              <span class="tier-timeline-tag">待达成</span>
+            </div>
+          </div>
+          <div class="trend-insight" style="margin-top: var(--space-3);">
+            <span class="trend-insight-icon">ⓘ</span>
+            <div class="trend-insight-body">
+              <div class="trend-insight-title">v2 阶段仅段一生效</div>
+              <div class="trend-insight-desc">流水抽佣分成（段二）v3 阶段再开放。本月所有跳档均按月度客损阶梯（1:10/8/6/5/4）一次性打档。</div>
             </div>
           </div>
         </div>
 
-        <!-- 模式规则说明 -->
+        <!-- 业绩提成规则说明 -->
         <div class="rules-card fade-on-scroll">
           <div class="panel-head">
             <div>
-              <h3 class="water-title">模式启停规则</h3>
-              <div class="water-sub">模式结算按《合作协议》约定执行 · 平台按协议规则开展动态评估</div>
+              <h3 class="water-title">业绩提成规则</h3>
+              <div class="water-sub">5 档阶梯 · 一次性打档 · 直接拿 RMB · 禁止平台垫资</div>
             </div>
           </div>
           <div class="rules-list">
             <div class="rule-item">
               <span class="rule-num">1</span>
               <div class="rule-text">
-                <strong>水位 &gt; 最高阈值（800 万）</strong>：平台星火值超发，进入<strong style="color: var(--red-700);">星火养成期</strong>。商家帮平台消耗星火值。
+                <strong>业绩口径</strong>：商户月度<strong>客损总额</strong>（用户在游戏内对局净亏损，1 UMDT = 1 RMB 等价口径）。
               </div>
             </div>
             <div class="rule-item">
               <span class="rule-num">2</span>
               <div class="rule-text">
-                <strong>水位 ≤ 最低阈值（200 万）</strong>：星火值接近耗尽，进入<strong style="color: var(--green-700);">星火燎原期</strong>。商家按流水分润收获。
+                <strong>提成计价</strong>：商户<strong>直接拿 RMB</strong>（不绕 UMDT 兑换）。5 档阶梯：100/200/300/400/500 万 → 1:10/8/6/5/4 比例 → 提成 10/25/50/80/125 万 RMB。
               </div>
             </div>
             <div class="rule-item">
               <span class="rule-num">3</span>
               <div class="rule-text">
-                <strong>协议重新评估</strong>：当前合作模式期间，若出现显著状态变化，双方按《Game Hub 合作协议》第 6 条约定开展协商，重新确认合作条款。
+                <strong>打档规则</strong>：按月度客损<strong>一次性打档</strong>（非分段累进）。例：当月客损 300 万 RMB 全额按 1:6 算 = 提成 50 万 RMB。
               </div>
             </div>
             <div class="rule-item">
               <span class="rule-num">4</span>
               <div class="rule-text">
-                <strong>协议变更</strong>：合作期内任一方可提出协商修订合作模式，经双方同意后签署补充协议生效。
+                <strong>未达档处理</strong>：月度客损 &lt; 100 万 RMB，本月<strong>不进入阶梯结算</strong>（数据留痕，不发提成）。
+              </div>
+            </div>
+            <div class="rule-item">
+              <span class="rule-num">5</span>
+              <div class="rule-text">
+                <strong>提成周期</strong>：默认<strong>月结</strong>，禁止平台垫资。月度数据由平台后台自动锁定，不可人工修改。
+              </div>
+            </div>
+            <div class="rule-item">
+              <span class="rule-num">6</span>
+              <div class="rule-text">
+                <strong>v3 阶段预告</strong>：流水抽佣分成模式 v3 阶段再开放，本规则仅覆盖 v2 阶段。v2 阶段<strong>仅段一业绩提成</strong>生效。
               </div>
             </div>
           </div>

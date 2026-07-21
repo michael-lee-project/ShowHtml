@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>星火养成 · 游戏商户中心</title>
+  <title>星火养成（业绩提成）· 游戏商户中心</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -590,11 +590,11 @@
         </a>
         <a href="mode-consumption.html" class="app-sidebar-item active">
           <span class="app-sidebar-item-icon">火</span>
-          <span>星火养成</span>
+          <span>星火养成（业绩提成）</span>
         </a>
         <a href="mode-commission.html" class="app-sidebar-item">
           <span class="app-sidebar-item-icon">润</span>
-          <span>星火燎原</span>
+          <span>星火燎原<span style="color: var(--text-tertiary); font-size: 10px; margin-left: 4px;">v3</span></span>
         </a>
       </div>
       <div class="app-sidebar-section">
@@ -637,10 +637,10 @@
     <main class="app-main">
       <header class="app-topbar">
         <div class="app-topbar-left">
-          <h1 class="app-topbar-title">星火养成</h1>
+          <h1 class="app-topbar-title">星火养成（业绩提成）</h1>
           <span class="app-topbar-mode ignite">
             <span class="mode-dot"></span>
-            星火养成期 · 段一 · 进行中
+            段一 · 业绩提成 · 进行中
           </span>
         </div>
         <div class="app-topbar-actions">
@@ -670,13 +670,13 @@
           <div class="mode-hero-grid">
             <div>
               <div class="mode-hero-eyebrow">CURRENT PHASE · 01 IGNITE</div>
-              <h2 class="mode-hero-title">星火养成期</h2>
-              <p class="mode-hero-sub">商家帮平台养成星火值。达成月度目标后，自动切到星火燎原期，按流水分润收获。</p>
+              <h2 class="mode-hero-title">星火养成期（业绩提成）</h2>
+              <p class="mode-hero-sub">按月度客损阶梯提成。客损越高，提成比例越高，500 万封顶 25%。v2 阶段唯一模式。</p>
             </div>
             <div class="mode-hero-stat">
-              <div class="mode-hero-stat-label">本月养成进度</div>
-              <div class="mode-hero-stat-value">62%</div>
-              <div class="mode-hero-stat-meta">124 万 / 200 万 · 预计 6/23 达标</div>
+              <div class="mode-hero-stat-label">本月客损（业绩）</div>
+              <div class="mode-hero-stat-value">124 <span style="font-size: 24px; color: var(--text-tertiary);">万</span></div>
+              <div class="mode-hero-stat-meta">当前档位 1:10（10% 提成）· 预计 6/23 达 200 万跳第 2 档</div>
             </div>
           </div>
         </div>
@@ -685,15 +685,15 @@
         <div class="kpi-grid">
           <div class="kpi-card ignite">
             <div class="kpi-head">
-              <span class="kpi-label">本月已养成</span>
+              <span class="kpi-label">本月客损</span>
               <span class="kpi-icon">火</span>
             </div>
             <div class="kpi-value">124 万</div>
-            <div class="kpi-meta">累计 · 目标 200 万</div>
+            <div class="kpi-meta">客损 · 达 200 万跳第 2 档</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-head">
-              <span class="kpi-label">日均速率</span>
+              <span class="kpi-label">日均客损速率</span>
               <span class="kpi-icon">↗</span>
             </div>
             <div class="kpi-value">6.2 万</div>
@@ -721,8 +721,8 @@
         <div class="panel" style="margin-bottom: var(--space-6);">
           <div class="panel-head">
             <div>
-              <h3 class="panel-title">本月养成进度</h3>
-              <div class="panel-sub">达成 200 万星火值即切段到燎原期</div>
+              <h3 class="panel-title">本月客损进度</h3>
+              <div class="panel-sub">客损达 100 万跳第 1 档 · 200 万跳第 2 档 · 500 万封顶</div>
             </div>
             <span class="badge badge-mode-1"><span class="badge-dot"></span>段一 · 养成期</span>
           </div>
@@ -755,8 +755,8 @@
           <div class="panel">
             <div class="panel-head">
               <div>
-                <h3 class="panel-title">近 30 天养成速率</h3>
-                <div class="panel-sub">每日养成量趋势 · 红色为星火养成期</div>
+                <h3 class="panel-title">近 30 天客损速率</h3>
+                <div class="panel-sub">每日客损趋势 · 红色为星火养成期（业绩提成）</div>
               </div>
             </div>
             <div id="trend-chart" class="chart-container"></div>
@@ -765,8 +765,8 @@
           <div class="panel">
             <div class="panel-head">
               <div>
-                <h3 class="panel-title">消纳占比排行</h3>
-                <div class="panel-sub">我在 1,284 家入驻商家中的位置 · Top 5 + 当前</div>
+                <h3 class="panel-title">客损档位排行</h3>
+                <div class="panel-sub">1,284 家商家按月度客损排序 · Top 5 + 你的档位</div>
               </div>
             </div>
 
@@ -774,32 +774,37 @@
               <li class="top5-item">
                 <span class="top5-rank">01</span>
                 <span class="top5-name">K003 风语启示录</span>
-                <div class="ranking-bar-track"><div class="top5-bar" style="width: 95%;"></div></div>
-                <span class="top5-value">12.8%</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 100%;"></div></div>
+                <span class="top5-value">512 万</span>
+                <span class="top5-tier" style="font-size: 10px; color: var(--text-tertiary); margin-left: 6px;">第 5 档 25%</span>
               </li>
               <li class="top5-item">
                 <span class="top5-rank">02</span>
                 <span class="top5-name">M019 银河拓荒者</span>
-                <div class="ranking-bar-track"><div class="top5-bar" style="width: 86%;"></div></div>
-                <span class="top5-value">11.4%</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 78%;"></div></div>
+                <span class="top5-value">402 万</span>
+                <span class="top5-tier" style="font-size: 10px; color: var(--text-tertiary); margin-left: 6px;">第 4 档 20%</span>
               </li>
               <li class="top5-item">
                 <span class="top5-rank">03</span>
                 <span class="top5-name">M007 萤火奇航</span>
-                <div class="ranking-bar-track"><div class="top5-bar" style="width: 76%;"></div></div>
-                <span class="top5-value">10.2%</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 58%;"></div></div>
+                <span class="top5-value">298 万</span>
+                <span class="top5-tier" style="font-size: 10px; color: var(--text-tertiary); margin-left: 6px;">第 3 档 16.7%</span>
               </li>
               <li class="top5-item">
                 <span class="top5-rank">04</span>
                 <span class="top5-name">K012 七海冒险家</span>
-                <div class="ranking-bar-track"><div class="top5-bar" style="width: 66%;"></div></div>
-                <span class="top5-value">8.7%</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 39%;"></div></div>
+                <span class="top5-value">201 万</span>
+                <span class="top5-tier" style="font-size: 10px; color: var(--text-tertiary); margin-left: 6px;">第 2 档 12.5%</span>
               </li>
               <li class="top5-item">
                 <span class="top5-rank">05</span>
                 <span class="top5-name">M029 星河绘卷</span>
-                <div class="ranking-bar-track"><div class="top5-bar" style="width: 61%;"></div></div>
-                <span class="top5-value">8.1%</span>
+                <div class="ranking-bar-track"><div class="top5-bar" style="width: 20%;"></div></div>
+                <span class="top5-value">102 万</span>
+                <span class="top5-tier" style="font-size: 10px; color: var(--text-tertiary); margin-left: 6px;">第 1 档 10%</span>
               </li>
             </ol>
 
@@ -819,16 +824,16 @@
 
             <div class="ranking-meta">
               <div class="ranking-meta-row">
-                <span class="ranking-meta-key">当前排名</span>
-                <span class="ranking-meta-val">第 <strong>47</strong> 名 · 1,284 家</span>
+                <span class="ranking-meta-key">当前档位</span>
+                <span class="ranking-meta-val">第 1 档 · <strong>10% 提成</strong></span>
               </div>
               <div class="ranking-meta-row">
-                <span class="ranking-meta-key">距离 Top 10</span>
-                <span class="ranking-meta-val">还差 <strong>+2.3</strong> 个百分点</span>
+                <span class="ranking-meta-key">距离第 2 档（12.5%）</span>
+                <span class="ranking-meta-val">还差 <strong>76 万</strong> 客损</span>
               </div>
               <div class="ranking-meta-row">
-                <span class="ranking-meta-key">平台平均 / Top 10%</span>
-                <span class="ranking-meta-val">3.2% · <span style="color: #B45309;">6.9%</span></span>
+                <span class="ranking-meta-key">按当前速率预计</span>
+                <span class="ranking-meta-val"><span style="color: #B45309;">6/23</span> 跳第 2 档</span>
               </div>
             </div>
           </div>
@@ -838,7 +843,7 @@
         <div class="panel" style="margin-bottom: var(--space-6);">
           <div class="panel-head">
             <div>
-              <h3 class="panel-title">实时养成记录</h3>
+              <h3 class="panel-title">实时客损记录</h3>
               <div class="panel-sub">最近 8 条 · 每局用户对局后即时同步</div>
             </div>
             <a href="#" class="panel-link">查看全部 →</a>
@@ -891,9 +896,8 @@
         <div class="mode-rule-banner">
           <div class="mode-rule-banner-icon">!</div>
           <div class="mode-rule-banner-text">
-            <strong>养成期规则：</strong>本月养成进度达到 <strong>200 万星火值（100%）</strong> 时，按《合作协议》v3.2 第 6 条约定进入分润结算期。
-            养成期按积分消纳贡献比例结算，所有养成数据可在「数据对账」中下载明细。
-            当前月累计已养成 <strong>124 万</strong>，按当前速率预计 6/23 达标。
+            <strong>业绩提成规则：</strong>按商户月度客损阶梯定档，5 档一次性打档（不累进）。100 万 → 10% · 200 万 → 12.5% · 300 万 → 16.7% · 400 万 → 20% · 500 万 → 25% 提成。提成直接拿 RMB，默认月结。客损 < 100 万不进入阶梯（数据留痕，不发提成）。所有客损数据可在「数据对账」中下载明细。
+            当前月累计客损 <strong>124 万</strong>，当前档位第 1 档（10% 提成），按当前速率预计 6/23 跳第 2 档。
           </div>
         </div>
       </div>

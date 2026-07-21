@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>运营工作台 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .topbar-env {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--accent-green-dark);
+      background: var(--accent-green-light);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.04em;
+    }
+    .topbar-env-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .echarts-box {
+      height: 240px;
+    }
+    .todo-item {
+      display: grid;
+      grid-template-columns: 60px 1fr auto auto;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border-radius: var(--radius-sm);
+      transition: all 0.15s;
+    }
+    .todo-item:hover {
+      background: var(--bg-overlay);
+    }
+    .todo-type {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .todo-type.audit { background: var(--accent-yellow-light); color: #92400E; }
+    .todo-type.anomaly { background: var(--accent-red-light); color: var(--accent-red-dark); }
+    .todo-type.config { background: var(--accent-blue-light); color: #1E40AF; }
+    .todo-desc {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+    }
+    .todo-priority {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: var(--weight-semibold);
+    }
+    .todo-priority.critical { background: var(--accent-red); color: white; }
+    .todo-priority.high { background: var(--accent-yellow-light); color: #92400E; }
+    .todo-priority.medium { background: var(--accent-blue-light); color: #1E40AF; }
+    .todo-time {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+    .anomaly-row {
+      display: grid;
+      grid-template-columns: 80px 80px 1fr 100px 90px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border-radius: var(--radius-sm);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .anomaly-row:hover {
+      background: var(--bg-overlay);
+    }
+    .anomaly-severity {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      padding: 2px 6px;
+      border-radius: 3px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .anomaly-severity.critical { background: var(--accent-red); color: white; }
+    .anomaly-severity.warning { background: var(--accent-yellow-light); color: #92400E; }
+    .anomaly-severity.info { background: var(--accent-blue-light); color: #1E40AF; }
+    .anomaly-type {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .anomaly-desc {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .anomaly-time {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+    .anomaly-action {
+      font-size: var(--text-xs);
+      color: var(--accent-red);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">概览</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索商家 / 游戏 / 对局 ID">
+        </div>
+        <div class="admin-topbar-actions">
+          <span class="topbar-env">
+            <span class="topbar-env-dot"></span>
+            实时同步中
+          </span>
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+          <button class="admin-topbar-icon-btn" title="设置">
+            <span style="font-size: 14px;">⚙</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">DASHBOARD · 2026-07-21 18:42 · 已运行 18 天</div>
+            <h1 class="page-header-title">运营工作台</h1>
+            <div class="page-header-sub">本月整体经营状况 · 1,284 家合作游戏商户 · 386 款在营游戏</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary">导出报表</button>
+            <button class="btn btn-primary">数据看板</button>
+          </div>
+        </div>
+
+        <!-- 全局 KPI -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">合作商家</span>
+              <span class="kpi-icon">⬛</span>
+            </div>
+            <div class="kpi-value">1,284</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 42</span>
+              本月新增 · 待审 18
+            </div>
+          </div>
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">本月流水</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">¥1.28 <span class="kpi-value-sub">亿</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 18.4%</span>
+              较上月 ¥1.08 亿
+            </div>
+          </div>
+          <div class="kpi-card accent-yellow">
+            <div class="kpi-head">
+              <span class="kpi-label">本月提成（业绩）</span>
+              <span class="kpi-icon">%</span>
+            </div>
+            <div class="kpi-value">¥718 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 22.6%</span>
+              5 档阶梯 1:10/8/6/5/4
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">待处理异常</span>
+              <span class="kpi-icon">!</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-red);">7</div>
+            <div class="kpi-meta">
+              <span style="color: var(--accent-red); font-weight: 600;">严重 2</span>
+              · 警告 5 · 较昨日 +2
+            </div>
+          </div>
+        </div>
+
+        <!-- 主区两栏：左趋势图 + 右待办 -->
+        <div class="grid-12">
+          <!-- 左：30 天流水趋势 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <div class="panel-icon red">¥</div>
+                <div>
+                  <div class="panel-title">30 天流水 · 客损 · 提成趋势</div>
+                  <div class="panel-sub">本月累计 1.28 亿 · 客损 3,248 万 · 提成 718.2 万</div>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <span class="filter-chip active">本月</span>
+                <span class="filter-chip">上月</span>
+                <span class="filter-chip">90 天</span>
+              </div>
+            </div>
+            <div id="trend-chart" class="echarts-box"></div>
+
+            <!-- 30 天关键指标 mini 行 -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding-top: var(--space-3); margin-top: var(--space-3); border-top: 1px solid var(--border-hairline);">
+              <div style="padding: 0 14px; border-right: 1px solid var(--border-hairline);">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">客损率</div>
+                <div style="font-size: 18px; color: var(--text-primary); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">9.7%</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">较上月 <span class="text-red">+0.3pp</span></div>
+              </div>
+              <div style="padding: 0 14px; border-right: 1px solid var(--border-hairline);">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">日均流水</div>
+                <div style="font-size: 18px; color: var(--text-primary); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">¥580<span style="font-size: 11px; color: var(--text-tertiary); font-weight: normal; margin-left: 2px;">万</span></div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">30 日均值</div>
+              </div>
+              <div style="padding: 0 14px; border-right: 1px solid var(--border-hairline);">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">30 日峰值</div>
+                <div style="font-size: 18px; color: var(--accent-red); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">¥820<span style="font-size: 11px; color: var(--text-tertiary); font-weight: normal; margin-left: 2px;">万</span></div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">26 日 · 单日最大</div>
+              </div>
+              <div style="padding: 0 14px;">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">30 日谷值</div>
+                <div style="font-size: 18px; color: var(--text-primary); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">¥380<span style="font-size: 11px; color: var(--text-tertiary); font-weight: normal; margin-left: 2px;">万</span></div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">1 日 · 单日最小</div>
+              </div>
+            </div>
+
+            <!-- 30 天对比指标 mini 行 2 -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding-top: var(--space-3); margin-top: var(--space-3); border-top: 1px solid var(--border-hairline);">
+              <div style="padding: 0 14px; border-right: 1px solid var(--border-hairline);">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">流水月环比</div>
+                <div style="font-size: 18px; color: var(--accent-green-dark); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">+18.4%</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">较上月 流水 增长</div>
+              </div>
+              <div style="padding: 0 14px; border-right: 1px solid var(--border-hairline);">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">客损月环比</div>
+                <div style="font-size: 18px; color: var(--accent-red); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">+24.1%</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">较上月 客损 增长</div>
+              </div>
+              <div style="padding: 0 14px; border-right: 1px solid var(--border-hairline);">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">客损率波动</div>
+                <div style="font-size: 18px; color: var(--text-primary); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">±0.4<span style="font-size: 11px; color: var(--text-tertiary); font-weight: normal; margin-left: 2px;">pp</span></div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">30 日最高 - 最低</div>
+              </div>
+              <div style="padding: 0 14px;">
+                <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--font-mono);">客单价</div>
+                <div style="font-size: 18px; color: var(--text-primary); font-weight: var(--weight-semibold); margin-top: 2px; font-family: var(--font-mono);">¥68</div>
+                <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">30 日均价</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右：待办事项 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <div class="panel-icon yellow">⏱</div>
+                <div>
+                  <div class="panel-title">待办事项</div>
+                  <div class="panel-sub">7 项 · 含 2 项严重</div>
+                </div>
+              </div>
+              <a class="panel-link">全部 →</a>
+            </div>
+            <div class="flex flex-col gap-2">
+              <div class="todo-item">
+                <span class="todo-type anomaly">异常</span>
+                <span class="todo-desc">A001 暗影潜行 大额对局 ¥8,500</span>
+                <span class="todo-priority critical">严重</span>
+                <span class="todo-time">18 分钟前</span>
+              </div>
+              <div class="todo-item">
+                <span class="todo-type anomaly">异常</span>
+                <span class="todo-desc">A002 战火重燃 大额对局 ¥12,400</span>
+                <span class="todo-priority critical">严重</span>
+                <span class="todo-time">20 分钟前</span>
+              </div>
+              <div class="todo-item">
+                <span class="todo-type audit">审核</span>
+                <span class="todo-desc">M044 墨韵江湖 待审核</span>
+                <span class="todo-priority high">高</span>
+                <span class="todo-time">2 小时前</span>
+              </div>
+              <div class="todo-item">
+                <span class="todo-type audit">审核</span>
+                <span class="todo-desc">M045 云海仙途 待审核</span>
+                <span class="todo-priority high">高</span>
+                <span class="todo-time">5 小时前</span>
+              </div>
+              <div class="todo-item">
+                <span class="todo-type anomaly">异常</span>
+                <span class="todo-desc">A003 银河拓荒者 客损突增 +312%</span>
+                <span class="todo-priority high">高</span>
+                <span class="todo-time">2 小时前</span>
+              </div>
+              <div class="todo-item">
+                <span class="todo-type audit">审核</span>
+                <span class="todo-desc">M046 蓝星战场 待审核</span>
+                <span class="todo-priority medium">中</span>
+                <span class="todo-time">8 小时前</span>
+              </div>
+              <div class="todo-item">
+                <span class="todo-type config">配置</span>
+                <span class="todo-desc">全局阶梯档位调整申请待复核</span>
+                <span class="todo-priority medium">中</span>
+                <span class="todo-time">昨天</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 中区：异常事件流 -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">!</div>
+              <div>
+                <div class="panel-title">异常事件流</div>
+                <div class="panel-sub">今日 7 起 · 严重 2 · 警告 5 · 已处理 2</div>
+              </div>
+            </div>
+            <a href="risk-alerts.html" class="panel-link">全部预警 →</a>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <div class="anomaly-row">
+              <span class="anomaly-time">18:40:18</span>
+              <span class="anomaly-severity critical">严重</span>
+              <span class="anomaly-desc">A001 暗影潜行 <strong>大额对局</strong> · 玩家 x***1 单局流水 ¥8,500（超历史峰值 5x）</span>
+              <span class="anomaly-time">待处理</span>
+              <span class="anomaly-action">复核 →</span>
+            </div>
+            <div class="anomaly-row">
+              <span class="anomaly-time">18:38:32</span>
+              <span class="anomaly-severity critical">严重</span>
+              <span class="anomaly-desc">A002 战火重燃 <strong>大额对局</strong> · 玩家 d***2 单局流水 ¥12,400（超历史峰值 8x）</span>
+              <span class="anomaly-time">待处理</span>
+              <span class="anomaly-action">复核 →</span>
+            </div>
+            <div class="anomaly-row">
+              <span class="anomaly-time">16:23:48</span>
+              <span class="anomaly-severity warning">警告</span>
+              <span class="anomaly-desc">A003 银河拓荒者 <strong>客损突增</strong> · 单日客损 ¥18,400（较 7 日均值 +312%）</span>
+              <span class="anomaly-time">复核中</span>
+              <span class="anomaly-action">处理 →</span>
+            </div>
+            <div class="anomaly-row">
+              <span class="anomaly-time">14:12:15</span>
+              <span class="anomaly-severity warning">警告</span>
+              <span class="anomaly-desc">A004 暗影潜行 <strong>玩家投诉</strong> · "对局结果异常"累计 3 起</span>
+              <span class="anomaly-time">待处理</span>
+              <span class="anomaly-action">复核 →</span>
+            </div>
+            <div class="anomaly-row">
+              <span class="anomaly-time">11:45:30</span>
+              <span class="anomaly-severity warning">警告</span>
+              <span class="anomaly-desc">A005 萤火奇航 <strong>流水突降</strong> · 单日流水 ¥4,200（较 7 日均值 -68%）</span>
+              <span class="anomaly-time">已处理</span>
+              <span class="anomaly-action">查看 →</span>
+            </div>
+            <div class="anomaly-row">
+              <span class="anomaly-time">09:18:42</span>
+              <span class="anomaly-severity info">提示</span>
+              <span class="anomaly-desc">A006 银河拓荒者 <strong>数据一致性</strong> · 平台 vs 商家流水差 0.8%（容差内）</span>
+              <span class="anomaly-time">已处理</span>
+              <span class="anomaly-action">查看 →</span>
+            </div>
+            <div class="anomaly-row">
+              <span class="anomaly-time">昨日</span>
+              <span class="anomaly-severity critical">严重</span>
+              <span class="anomaly-desc">A007 战火重燃 <strong>可疑交易</strong> · 同一玩家 30 分钟内连续 5 局胜利（胜率 100%）</span>
+              <span class="anomaly-time">调查中</span>
+              <span class="anomaly-action">跟进 →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 下区：商家 Top 5 客损排行 + Top 5 高风险商家 -->
+        <div class="grid-2">
+          <!-- 商家 Top 5 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <div class="panel-icon red">★</div>
+                <div>
+                  <div class="panel-title">商家 Top 5 · 本月客损排行</div>
+                  <div class="panel-sub">活跃商家 1,206 家 · 按月度客损降序</div>
+                </div>
+              </div>
+              <a href="merchants.html" class="panel-link">全部 →</a>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <div class="list-stat-row">
+                <span class="list-stat-rank top">01</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">风</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M003 风语启示录</div>
+                      <div class="tbl-name-sub">第 5 档 · 25% 提成</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 100%;"></div>
+                </div>
+                <span class="list-stat-val">¥512 万</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank top">02</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">银</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M019 银河拓荒者</div>
+                      <div class="tbl-name-sub">第 4 档 · 20% 提成</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 78%;"></div>
+                </div>
+                <span class="list-stat-val">¥402 万</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank top">03</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">萤</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M007 萤火奇航</div>
+                      <div class="tbl-name-sub">第 3 档 · 16.7% 提成</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 58%;"></div>
+                </div>
+                <span class="list-stat-val">¥298 万</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank">04</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">七</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">K012 七海冒险家</div>
+                      <div class="tbl-name-sub">第 2 档 · 12.5% 提成</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 39%;"></div>
+                </div>
+                <span class="list-stat-val">¥201 万</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank">05</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon">音</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M001 音浪对决</div>
+                      <div class="tbl-name-sub">第 1 档 · 10% 提成</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 25%;"></div>
+                </div>
+                <span class="list-stat-val">¥124 万</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top 5 高风险商家 · 本月 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <div class="panel-icon red">◈</div>
+                <div>
+                  <div class="panel-title">Top 5 高风险商家 · 本月</div>
+                  <div class="panel-sub">1,206 家活跃商家 · 按风险评分降序</div>
+                </div>
+              </div>
+              <a href="risk-alerts.html" class="panel-link">全部 →</a>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <div class="list-stat-row">
+                <span class="list-stat-rank top">01</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon" style="background: var(--accent-red-light); color: var(--accent-red);">银</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M014 银翼风暴</div>
+                      <div class="tbl-name-sub"><span class="badge red" style="padding: 1px 6px; font-size: 10px; margin-right: 4px;">极高</span>近期 5 起大额对局 · 2 起客诉</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 100%;"></div>
+                </div>
+                <span class="list-stat-val" style="color: var(--accent-red); font-weight: var(--weight-semibold);">92 分</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank top">02</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon" style="background: var(--accent-red-light); color: var(--accent-red);">极</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M023 极光幻境</div>
+                      <div class="tbl-name-sub"><span class="badge red" style="padding: 1px 6px; font-size: 10px; margin-right: 4px;">极高</span>流水客损比异常 · 触发数据一致性</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 93%;"></div>
+                </div>
+                <span class="list-stat-val" style="color: var(--accent-red); font-weight: var(--weight-semibold);">86 分</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank top">03</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon" style="background: var(--accent-yellow-light); color: var(--accent-yellow);">暗</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M031 暗夜猎手</div>
+                      <div class="tbl-name-sub"><span class="badge yellow" style="padding: 1px 6px; font-size: 10px; margin-right: 4px;">高</span>玩家投诉月环比 +45%</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 77%;"></div>
+                </div>
+                <span class="list-stat-val">71 分</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank">04</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon" style="background: var(--accent-yellow-light); color: var(--accent-yellow);">星</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M045 星海旅人</div>
+                      <div class="tbl-name-sub"><span class="badge yellow" style="padding: 1px 6px; font-size: 10px; margin-right: 4px;">高</span>客损突增 38%</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 70%;"></div>
+                </div>
+                <span class="list-stat-val">64 分</span>
+              </div>
+              <div class="list-stat-row">
+                <span class="list-stat-rank">05</span>
+                <div class="list-stat-name">
+                  <div class="tbl-name">
+                    <div class="tbl-name-icon" style="background: var(--accent-blue-light); color: var(--accent-blue);">炽</div>
+                    <div class="tbl-name-info">
+                      <div class="tbl-name-title">M052 炽焰传说</div>
+                      <div class="tbl-name-sub"><span class="badge blue" style="padding: 1px 6px; font-size: 10px; margin-right: 4px;">中</span>大额对局次数偏高</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="list-stat-bar-track">
+                  <div class="list-stat-bar-fill" style="width: 57%;"></div>
+                </div>
+                <span class="list-stat-val">52 分</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="shared/js/admin-mock-data.js"></script>
+  <script>
+    // 30 天趋势图（红绿主色）
+    const chart = echarts.init(document.getElementById('trend-chart'));
+    const days = ADMIN_MOCK.revenueTrend.days;
+    chart.setOption({
+      grid: { top: 30, right: 20, bottom: 30, left: 50 },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#FFFFFF',
+        borderColor: '#E4E4E7',
+        textStyle: { color: '#18181B', fontSize: 12 },
+      },
+      legend: {
+        data: ['流水（万）', '客损（万）', '提成（万）'],
+        top: 0,
+        right: 0,
+        textStyle: { color: '#52525B', fontSize: 11 },
+        itemWidth: 12,
+        itemHeight: 8,
+      },
+      xAxis: {
+        type: 'category',
+        data: days,
+        axisLine: { lineStyle: { color: '#E4E4E7' } },
+        axisLabel: { color: '#71717A', fontSize: 10, interval: 4 },
+        axisTick: { show: false },
+      },
+      yAxis: [
+        {
+          type: 'value',
+          name: '流水（万）',
+          nameTextStyle: { color: '#71717A', fontSize: 10 },
+          axisLine: { show: false },
+          axisLabel: { color: '#71717A', fontSize: 10 },
+          splitLine: { lineStyle: { color: '#F4F4F5' } },
+        },
+      ],
+      series: [
+        {
+          name: '流水（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.revenue,
+          lineStyle: { color: '#DC2626', width: 2 },
+          areaStyle: {
+            color: {
+              type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+              colorStops: [
+                { offset: 0, color: 'rgba(220, 38, 38, 0.2)' },
+                { offset: 1, color: 'rgba(220, 38, 38, 0.0)' },
+              ],
+            },
+          },
+        },
+        {
+          name: '客损（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.loss,
+          lineStyle: { color: '#F59E0B', width: 2 },
+        },
+        {
+          name: '提成（万）',
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          data: ADMIN_MOCK.revenueTrend.rebate,
+          lineStyle: { color: '#10B981', width: 2 },
+        },
+      ],
+    });
+    window.addEventListener('resize', () => chart.resize());
+  </script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商家列表 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .merchant-name { color: var(--text-primary); font-weight: var(--weight-medium); }
+    .merchant-name:hover { color: var(--accent-red); cursor: pointer; }
+    .tier-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.04em;
+    }
+    .tier-pill.t1 { background: rgba(59,130,246,0.1); color: #1E40AF; }
+    .tier-pill.t2 { background: rgba(16,185,129,0.1); color: var(--accent-green-dark); }
+    .tier-pill.t3 { background: rgba(245,158,11,0.1); color: #92400E; }
+    .tier-pill.t4 { background: rgba(249,115,22,0.1); color: #C2410C; }
+    .tier-pill.t5 { background: var(--accent-red-light); color: var(--accent-red-dark); }
+    .tier-pill.t0 { background: var(--bg-overlay); color: var(--text-tertiary); }
+    .override-mark {
+      display: inline-block;
+      font-size: 9px;
+      font-family: var(--font-mono);
+      color: var(--accent-blue);
+      background: var(--accent-blue-light);
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-left: 4px;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="merchants.html">商家管理</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">商家列表</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索商家 ID / 名称 / 联系人">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+          <button class="admin-topbar-icon-btn" title="设置">
+            <span style="font-size: 14px;">⚙</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">MERCHANTS · 2026-07-21 18:42</div>
+            <h1 class="page-header-title">商家列表</h1>
+            <div class="page-header-sub">1,284 家合作游戏商户 · 跨 386 款在营游戏 · 本月总提成 ¥718.2 万</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="export-excel">导出 Excel</button>
+            <button class="btn btn-primary" data-action="invite-merchant">邀请新商家</button>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">合作中</span>
+              <span class="kpi-icon">●</span>
+            </div>
+            <div class="kpi-value">1,206</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 42</span>
+              占比 93.9% · 本月新增
+            </div>
+          </div>
+          <div class="kpi-card accent-yellow">
+            <div class="kpi-head">
+              <span class="kpi-label">待审核</span>
+              <span class="kpi-icon">⏱</span>
+            </div>
+            <div class="kpi-value">18</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 3</span>
+              较昨日 · 24h 反馈
+            </div>
+          </div>
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">已暂停</span>
+              <span class="kpi-icon">⏸</span>
+            </div>
+            <div class="kpi-value">23</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend down">↓ 2</span>
+              异常处理中 · 含 M052/M058
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">已下线</span>
+              <span class="kpi-icon">⊘</span>
+            </div>
+            <div class="kpi-value" style="color: var(--text-tertiary);">37</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend neutral">·</span>
+              含主动退出 + 违规清退
+            </div>
+          </div>
+        </div>
+
+        <!-- 筛选条 -->
+        <div class="filter-bar" data-aui-filter>
+          <span class="filter-chip active" data-filter-value="all">全部 <span style="opacity: 0.6; margin-left: 2px;">1,284</span></span>
+          <span class="filter-chip" data-filter-value="active">合作中 <span style="opacity: 0.6; margin-left: 2px;">1,206</span></span>
+          <span class="filter-chip" data-filter-value="pending">待审核 <span style="opacity: 0.6; margin-left: 2px;">18</span></span>
+          <span class="filter-chip" data-filter-value="suspended">已暂停 <span style="opacity: 0.6; margin-left: 2px;">23</span></span>
+          <span class="filter-chip" data-filter-value="offline">已下线 <span style="opacity: 0.6; margin-left: 2px;">37</span></span>
+          <div style="width: 1px; height: 16px; background: var(--border-hairline); margin: 0 4px;"></div>
+          <select style="padding: 4px 8px; font-size: var(--text-xs); background: var(--bg-base); border: 1px solid var(--border-hairline);">
+            <option>全类目</option>
+            <option>互动竞技</option>
+            <option>卡牌策略</option>
+            <option>SLG</option>
+            <option>休闲</option>
+            <option>MMO</option>
+            <option>RPG</option>
+            <option>FPS</option>
+            <option>潜行</option>
+            <option>军事策略</option>
+          </select>
+          <div class="filter-bar-search">
+            <input type="text" placeholder="搜索 ID / 商家名 / 联系人" data-aui-filter-search>
+          </div>
+        </div>
+
+        <!-- 商家表格 -->
+        <div class="panel" style="padding: 0; overflow: hidden;">
+          <div style="padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+              显示 <strong style="color: var(--text-primary);">1 - 12</strong> / 共 1,284 家
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono);">
+              按月度客损降序 · 含独立档位覆盖标识
+            </div>
+          </div>
+          <table class="tbl" id="merchants-table">
+            <thead>
+              <tr>
+                <th data-sort-type="string">ID</th>
+                <th data-sort-type="string">商家名</th>
+                <th data-sort-type="string">类目</th>
+                <th data-sort-type="string">联系人</th>
+                <th data-sort-type="number" style="text-align: right;">月度客损 (万)</th>
+                <th data-sort-type="number">当前档位</th>
+                <th data-sort-type="number" style="text-align: right;">提成 (万)</th>
+                <th data-sort-type="number" style="text-align: right;">异常数</th>
+                <th>状态</th>
+                <th class="no-sort">操作</th>
+              </tr>
+            </thead>
+            <tbody id="merchants-tbody">
+              <!-- JS render -->
+            </tbody>
+          </table>
+          <!-- Pagination -->
+          <div style="padding: var(--space-3) var(--space-5); border-top: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: space-between; font-size: var(--text-xs); color: var(--text-tertiary);">
+            <div>第 1 页 / 共 107 页</div>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary btn-sm">‹ 上一页</button>
+              <button class="btn btn-secondary btn-sm">1</button>
+              <button class="btn btn-primary btn-sm">2</button>
+              <button class="btn btn-secondary btn-sm">3</button>
+              <span style="padding: 4px 6px;">...</span>
+              <button class="btn btn-secondary btn-sm">107</button>
+              <button class="btn btn-secondary btn-sm">下一页 ›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-mock-data.js"></script>
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    // 渲染商家表格
+    (function() {
+      const tbody = document.getElementById('merchants-tbody');
+      const merchants = ADMIN_MOCK.merchants;
+      const iconMap = {
+        '音浪对决': '音', '风语启示录': '风', '银河拓荒者': '银',
+        '萤火奇航': '萤', '七海冒险家': '七', '星河绘卷': '星',
+        '墨韵江湖': '墨', '云海仙途': '云', '蓝星战场': '蓝',
+        '暗影潜行': '暗', '战火重燃': '战', '幻域之境': '幻'
+      };
+      const ratioMap = {
+        1: '1:10', 2: '1:8', 3: '1:6', 4: '1:5', 5: '1:4'
+      };
+      tbody.innerHTML = merchants.map(m => {
+        const status = MERCHANT_STATUS_MAP[m.status];
+        const tierClass = m.tier === null ? 't0' : 't' + m.tier;
+        const tierText = m.tier === null ? '未达档' : `第 ${m.tier} 档`;
+        const override = m.hasOverride ? '<span class="override-mark">独立</span>' : '';
+        const anomalyColor = m.anomalies === 0 ? 'var(--text-tertiary)' : (m.anomalies >= 5 ? 'var(--accent-red)' : 'var(--accent-yellow)');
+        const searchKey = `${m.id} ${m.name} ${m.contact} ${m.category}`.toLowerCase();
+        return `
+          <tr data-status="${m.status}" data-search="${searchKey}" data-mid="${m.id}" data-mname="${m.name}">
+            <td class="tbl-num text-tertiary">${m.id}</td>
+            <td>
+              <div class="tbl-name">
+                <div class="tbl-name-icon">${iconMap[m.name] || m.name[0]}</div>
+                <div class="tbl-name-info">
+                  <div class="tbl-name-title"><a href="merchants-detail.html?mid=${m.id}" class="merchant-name">${m.name}</a></div>
+                  <div class="tbl-name-sub">${m.id} · 加入 ${m.joinDate}</div>
+                </div>
+              </div>
+            </td>
+            <td>${m.category}</td>
+            <td>${m.contact}</td>
+            <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">${m.loss || '—'}</td>
+            <td>
+              <span class="tier-pill ${tierClass}">${tierText}</span>
+              ${override}
+            </td>
+            <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: var(--weight-semibold);">${m.rebate || '—'}</td>
+            <td class="tbl-num" style="text-align: right; color: ${anomalyColor}; font-weight: var(--weight-semibold);">${m.anomalies}</td>
+            <td><span class="badge ${status.badge}"><span class="badge-dot"></span>${status.label}</span></td>
+            <td>
+              <a href="merchants-detail.html?mid=${m.id}" class="text-red" style="margin-right: 12px;" data-action="view-merchant">查看</a>
+              <a href="merchants-config.html?mid=${m.id}" class="text-secondary" data-action="config-merchant">配置</a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    })();
+
+    // 初始化筛选 + 排序
+    AdminUI.Filter.init(document.getElementById('merchants-table'), {
+      emptyMessage: '无匹配商家，请调整筛选条件',
+    });
+    AdminUI.Sort.init(document.getElementById('merchants-table'));
+
+    // 行点击（不与「查看/配置」按钮冲突）
+    document.querySelectorAll('#merchants-tbody tr').forEach(row => {
+      row.classList.add('aui-row-clickable');
+      row.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const mid = row.getAttribute('data-mid');
+        if (mid) window.location.href = `merchants-detail.html?mid=${mid}`;
+      });
+    });
+
+    // 配置按钮：弹 Modal 确认再跳
+    document.querySelectorAll('[data-action="config-merchant"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tr = a.closest('tr');
+        const mid = tr.getAttribute('data-mid');
+        const mname = tr.getAttribute('data-mname');
+        AdminUI.confirm({
+          title: '跳转到档位配置？',
+          message: `即将打开 ${mid} ${mname} 的独立档位配置页，可为该商家单独覆盖全局阶梯。`,
+          confirmText: '前往配置',
+          cancelText: '取消',
+          type: 'default',
+        }).then(ok => {
+          if (ok) window.location.href = `merchants-config.html?mid=${mid}`;
+        });
+      });
+    });
+
+    // 顶部按钮
+    document.querySelector('[data-action="export-excel"]')?.addEventListener('click', function() {
+      const done = AdminUI.withLoading(this, '正在生成 Excel...');
+      setTimeout(() => {
+        done();
+        AdminUI.toast('已导出 1,284 家商家数据到 Excel', 'success');
+      }, 1200);
+    });
+    document.querySelector('[data-action="invite-merchant"]')?.addEventListener('click', function() {
+      const body = document.createElement('div');
+      body.innerHTML = `
+        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">输入新商家信息，提交后会生成邀请链接发送给对接人。</div>
+        <div style="display: grid; gap: 12px;">
+          <div>
+            <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">商家名称</label>
+            <input class="form-input" type="text" placeholder="例：新潮游戏工作室" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">联系人</label>
+            <input class="form-input" type="text" placeholder="姓名" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">联系邮箱</label>
+            <input class="form-input" type="email" placeholder="example@merchant.com" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+          </div>
+        </div>
+      `;
+      const m = AdminUI.Modal.open({
+        title: '邀请新商家',
+        body,
+        size: 'sm',
+        footer: `
+          <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+          <button type="button" class="btn btn-primary" id="aui-invite-submit">发送邀请</button>
+        `,
+      });
+      setTimeout(() => {
+        document.getElementById('aui-invite-submit')?.addEventListener('click', () => {
+          AdminUI.Modal.close();
+          AdminUI.toast('邀请链接已生成，3 小时内有效', 'success');
+        });
+      }, 50);
+    });
+
+    // 分页按钮（mock 演示）
+    document.querySelectorAll('.panel [class*="btn-sm"]').forEach(btn => {
+      if (btn.textContent.match(/^[‹›]/) || /^\d+$/.test(btn.textContent.trim())) {
+        btn.addEventListener('click', () => {
+          AdminUI.toast(`已切换到第 ${btn.textContent.trim()} 页（mock 演示）`, 'info', 1500);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

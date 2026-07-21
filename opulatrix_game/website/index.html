@@ -629,10 +629,10 @@
       <!-- Gauge 可视化（核心叙事） -->
       <div class="gauge-section fade-on-scroll">
         <div class="gauge-grid">
-          <!-- 主：星火养成 -->
+          <!-- 主：星火养成（业绩提成） -->
           <div class="gauge-cell gauge-cell-main gauge-cell-ignite">
-            <div class="gauge-eyebrow">PHASE 01 · IGNITE</div>
-            <div class="gauge-title">星火养成期 · 实时进度</div>
+            <div class="gauge-eyebrow">PHASE 01 · IGNITE <span style="background: #D1FAE5; color: #047857; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-family: var(--font-sans);">v2 唯一</span></div>
+            <div class="gauge-title">星火养成期（业绩提成）· 实时档位</div>
             <div class="gauge-dial">
               <svg viewBox="0 0 240 240">
                 <circle class="gauge-track" cx="120" cy="120" r="110" />
@@ -640,67 +640,67 @@
               </svg>
               <div class="gauge-center">
                 <div class="gauge-percent" data-count="62">0</div>
-                <div class="gauge-label">养成进度</div>
+                <div class="gauge-label">客损进度</div>
                 <div class="gauge-mode ignite">
                   <span class="mode-dot"></span>
-                  星火养成期
+                  段一 · 业绩提成
                 </div>
               </div>
             </div>
             <div class="gauge-meta">
               <div class="gauge-meta-row">
-                <span class="gauge-meta-label">本月目标</span>
-                <span class="gauge-meta-value">200 万星火值</span>
+                <span class="gauge-meta-label">首档目标</span>
+                <span class="gauge-meta-value">100 万客损</span>
               </div>
               <div class="gauge-meta-row">
-                <span class="gauge-meta-label">已养成</span>
-                <span class="gauge-meta-value">124 万</span>
+                <span class="gauge-meta-label">已客损</span>
+                <span class="gauge-meta-value">124 万（已跳第 2 档）</span>
               </div>
               <div class="gauge-meta-row">
-                <span class="gauge-meta-label">日均速率</span>
-                <span class="gauge-meta-value">6.2 万/天</span>
+                <span class="gauge-meta-label">当前档位</span>
+                <span class="gauge-meta-value" style="color: #047857;">1 : 8（12.5% 提成）</span>
               </div>
               <div class="gauge-meta-row">
-                <span class="gauge-meta-label">预计达标日</span>
-                <span class="gauge-meta-value">6 月 23 日</span>
+                <span class="gauge-meta-label">本月提成预估</span>
+                <span class="gauge-meta-value">15.5 万 RMB</span>
               </div>
             </div>
           </div>
 
-          <!-- 副：星火燎原 -->
-          <div class="gauge-cell gauge-cell-blaze">
-            <div class="gauge-eyebrow">PHASE 02 · BLAZE</div>
-            <div class="gauge-title">星火燎原期 · 实时分润</div>
+          <!-- 副：星火燎原（流水抽佣） v3 占位 -->
+          <div class="gauge-cell gauge-cell-blaze" style="opacity: 0.5;">
+            <div class="gauge-eyebrow">PHASE 02 · BLAZE <span style="background: #FEF3C7; color: #B45309; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-family: var(--font-sans);">v3 启用</span></div>
+            <div class="gauge-title">星火燎原期（流水抽佣）· v3 占位</div>
             <div class="gauge-dial">
               <svg viewBox="0 0 240 240">
                 <circle class="gauge-track" cx="120" cy="120" r="110" />
                 <circle class="gauge-fill-blaze" cx="120" cy="120" r="110" data-target="100" />
               </svg>
               <div class="gauge-center">
-                <div class="gauge-percent">48 万</div>
-                <div class="gauge-label">本月分润</div>
+                <div class="gauge-percent">—</div>
+                <div class="gauge-label">v3 阶段开放</div>
                 <div class="gauge-mode blaze">
                   <span class="mode-dot"></span>
-                  星火燎原期
+                  段二 · v3 启用
                 </div>
               </div>
             </div>
             <div class="gauge-meta">
               <div class="gauge-meta-row">
-                <span class="gauge-meta-label">本期流水</span>
-                <span class="gauge-meta-value">1850 万</span>
-              </div>
-              <div class="gauge-meta-row">
                 <span class="gauge-meta-label">分润比例</span>
-                <span class="gauge-meta-value">25%</span>
+                <span class="gauge-meta-value">8.5% <span style="font-size: 9px; color: #B45309;">v3</span></span>
               </div>
               <div class="gauge-meta-row">
-                <span class="gauge-meta-label">启动时间</span>
-                <span class="gauge-meta-value">6 月 12 日</span>
+                <span class="gauge-meta-label">结算周期</span>
+                <span class="gauge-meta-value">月度</span>
               </div>
               <div class="gauge-meta-row">
-                <span class="gauge-meta-label">月底结算</span>
-                <span class="gauge-meta-value">6 月 30 日</span>
+                <span class="gauge-meta-label">v2 阶段</span>
+                <span class="gauge-meta-value" style="color: #B45309;">不启用</span>
+              </div>
+              <div class="gauge-meta-row">
+                <span class="gauge-meta-label">上线时间</span>
+                <span class="gauge-meta-value">待 v3 阶段通知</span>
               </div>
             </div>
           </div>
@@ -708,7 +708,7 @@
           <!-- 趋势 sparkline -->
           <div class="gauge-cell">
             <div class="gauge-eyebrow">30-DAY TREND</div>
-            <div class="gauge-title">养成速率</div>
+            <div class="gauge-title">客损速率</div>
             <svg class="sparkline sparkline-ignite" viewBox="0 0 280 56" preserveAspectRatio="none">
               <path class="sparkline-fill" d="M0 50 L20 35 L40 40 L60 30 L80 38 L100 25 L120 32 L140 22 L160 28 L180 18 L200 25 L220 15 L240 22 L260 10 L280 16 L280 56 L0 56 Z" />
               <path class="sparkline-path" d="M0 50 L20 35 L40 40 L60 30 L80 38 L100 25 L120 32 L140 22 L160 28 L180 18 L200 25 L220 15 L240 22 L260 10 L280 16" />
@@ -754,7 +754,7 @@
             <li><span class="check">✓</span>按月配置，月初 1 号 00:00 生效</li>
             <li><span class="check">✓</span>目标达成 100% 自动切到燎原期</li>
             <li><span class="check">✓</span>养成期不分润现金</li>
-            <li><span class="check">✓</span>实时显示养成进度与日均速率</li>
+            <li><span class="check">✓</span>实时显示客损档位与日均客损速率</li>
           </ul>
         </div>
 
@@ -764,7 +764,7 @@
             <span class="badge badge-mode-2"><span class="badge-dot"></span>达标切换</span>
           </div>
           <h3 class="mode-card-title">流水分润收获期</h3>
-          <p class="mode-card-sub">养成目标达标后立即切段，商家按流水获得分润收益</p>
+          <p class="mode-card-sub">v2 阶段：客损 100 万起跳第 1 档（10% 提成），500 万封顶 25% 提成。v3 阶段：流水抽佣分成再开放</p>
           <p class="mode-card-desc">商家推真实充值，按游戏流水 × 分润比例结算，分润金额全部归商家，月底一次性打到对公账户。</p>
           <ul class="mode-card-list">
             <li><span class="check">✓</span>基础档 20%-25%，进阶档最高 30%</li>

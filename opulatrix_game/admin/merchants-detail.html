@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商家详情 M001 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .info-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+    }
+    .info-label {
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+    }
+    .info-value {
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .tier-stair {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-2);
+    }
+    .tier-step {
+      position: relative;
+      padding: var(--space-3);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .tier-step.current {
+      border-color: var(--accent-red);
+      background: var(--accent-red-light);
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+    }
+    .tier-step.current::before {
+      content: '当前档位';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+      background: var(--accent-red);
+      color: white;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .tier-step-num {
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      letter-spacing: -0.02em;
+    }
+    .tier-step.current .tier-step-num {
+      color: var(--accent-red);
+    }
+    .tier-step-loss {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .tier-step-ratio {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: var(--weight-medium);
+      margin-top: 4px;
+    }
+    .tier-step-rebate {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .doc-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .doc-item:last-child { border-bottom: 0; }
+    .doc-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: var(--weight-bold);
+      font-family: var(--font-mono);
+      flex-shrink: 0;
+    }
+    .doc-icon.pdf { background: var(--accent-red-light); color: var(--accent-red-dark); }
+    .doc-icon.jpg { background: var(--accent-blue-light); color: #1E40AF; }
+    .doc-icon.mp4 { background: rgba(139,92,246,0.1); color: #6D28D9; }
+    .doc-name {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-medium);
+    }
+    .doc-meta {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      margin-top: 1px;
+    }
+    .risk-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--bg-overlay);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent-yellow);
+    }
+    .risk-row.resolved { border-left-color: var(--accent-green); }
+    .merchant-hero {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: linear-gradient(135deg, var(--accent-red-light), var(--bg-elevated) 70%);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+    }
+    .merchant-hero-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--accent-red);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .merchant-hero-info { flex: 1; }
+    .merchant-hero-name {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .merchant-hero-meta {
+      display: flex;
+      gap: var(--space-4);
+      margin-top: 4px;
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="merchants.html">商家管理</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">M001 音浪对决</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索">
+        </div>
+        <div class="admin-topbar-actions">
+          <a href="merchants.html" class="btn btn-ghost btn-sm">← 返回列表</a>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">MERCHANT DETAIL · M001 · 加入 22 天</div>
+            <h1 class="page-header-title">商家详情</h1>
+            <div class="page-header-sub">本月整体经营状况 · 1 款在营游戏 · 18,200 月活玩家</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="download-pkg">下载资料包</button>
+            <button class="btn btn-secondary" data-action="edit-info">编辑</button>
+            <button class="btn btn-secondary" data-action="suspend" id="btn-suspend">暂停</button>
+            <a href="merchants-config.html" class="btn btn-primary">档位配置</a>
+          </div>
+        </div>
+
+        <!-- 商家信息 Hero -->
+        <div class="merchant-hero">
+          <div class="merchant-hero-icon">音</div>
+          <div class="merchant-hero-info">
+            <div class="merchant-hero-name">M001 音浪对决</div>
+            <div class="merchant-hero-meta">
+              <span>互动竞技</span>
+              <span>·</span>
+              <span>李伟 138****5678</span>
+              <span>·</span>
+              <span>liwei@musicbattle.com</span>
+              <span>·</span>
+              <span>合同 AGREEMENT-2026-M001-V3</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="badge green"><span class="badge-dot"></span>合作中</span>
+            <span style="font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono);">加入 2026-06-30</span>
+          </div>
+        </div>
+
+        <!-- 业务 KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">月对局数</span>
+              <span class="kpi-icon">▶</span>
+            </div>
+            <div class="kpi-value">268,400</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 12.4%</span>
+              较上月 · 18,420 局/日
+            </div>
+          </div>
+          <div class="kpi-card accent-blue">
+            <div class="kpi-head">
+              <span class="kpi-label">月活跃玩家</span>
+              <span class="kpi-icon">◉</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-blue);">18,200</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 8.2%</span>
+              次日留存 68% · 7 日留存 42%
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">月客损</span>
+              <span class="kpi-icon">¥</span>
+            </div>
+            <div class="kpi-value">¥124 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 4.2%</span>
+              客单价 ¥68
+            </div>
+          </div>
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">月提成（业绩）</span>
+              <span class="kpi-icon">%</span>
+            </div>
+            <div class="kpi-value">¥12.4 <span class="kpi-value-sub">万</span></div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 4.2%</span>
+              10% 提成 · 第 1 档
+            </div>
+          </div>
+        </div>
+
+        <!-- 当前档位（5 档阶梯） -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title-group">
+              <div class="panel-icon red">▲</div>
+              <div>
+                <div class="panel-title">当前档位 · 第 1 档</div>
+                <div class="panel-sub">月度客损 ¥124 万 · 提成比例 1:10（10%）· 月提成 ¥12.4 万</div>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <a href="merchants-config.html" class="btn btn-secondary btn-sm">配置</a>
+              <button class="btn btn-primary btn-sm">查看阶梯</button>
+            </div>
+          </div>
+
+          <div class="tier-stair">
+            <div class="tier-step current">
+              <div class="tier-step-num">100</div>
+              <div class="tier-step-loss">万客损</div>
+              <div class="tier-step-ratio">1:10</div>
+              <div class="tier-step-rebate">¥10 万提成</div>
+            </div>
+            <div class="tier-step">
+              <div class="tier-step-num">200</div>
+              <div class="tier-step-loss">万客损</div>
+              <div class="tier-step-ratio">1:8</div>
+              <div class="tier-step-rebate">¥25 万提成</div>
+            </div>
+            <div class="tier-step">
+              <div class="tier-step-num">300</div>
+              <div class="tier-step-loss">万客损</div>
+              <div class="tier-step-ratio">1:6</div>
+              <div class="tier-step-rebate">¥50 万提成</div>
+            </div>
+            <div class="tier-step">
+              <div class="tier-step-num">400</div>
+              <div class="tier-step-loss">万客损</div>
+              <div class="tier-step-ratio">1:5</div>
+              <div class="tier-step-rebate">¥80 万提成</div>
+            </div>
+            <div class="tier-step">
+              <div class="tier-step-num">500</div>
+              <div class="tier-step-loss">万客损</div>
+              <div class="tier-step-ratio">1:4</div>
+              <div class="tier-step-rebate">¥125 万提成</div>
+            </div>
+          </div>
+
+          <div style="margin-top: var(--space-4); padding: var(--space-3); background: var(--accent-blue-light); border-radius: var(--radius-sm); font-size: var(--text-xs); color: #1E40AF;">
+            💡 <strong>下一档提示：</strong>月客损达到 ¥200 万时，自动升级至第 2 档，提成比例 1:8（12.5%），预计月提成 ¥25 万。
+          </div>
+        </div>
+
+        <div class="grid-12" style="grid-template-columns: 1fr 360px;">
+          <!-- 左侧：阶梯记录 + 风险记录 -->
+          <div>
+            <!-- 阶梯历史 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">📈</div>
+                  <div>
+                    <div class="panel-title">档位变动历史 · 最近 6 个月</div>
+                    <div class="panel-sub">6 个月 · 4 个月达第 1 档 · 2 个月未达档</div>
+                  </div>
+                </div>
+                <a class="panel-link">导出 →</a>
+              </div>
+
+              <table class="tbl" id="tier-history-table">
+                <thead>
+                  <tr>
+                    <th data-sort-type="date">月份</th>
+                    <th data-sort-type="number" style="text-align: right;">月度客损 (万)</th>
+                    <th data-sort-type="number">档位</th>
+                    <th>提成比例</th>
+                    <th data-sort-type="number" style="text-align: right;">月提成 (万)</th>
+                    <th>备注</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="tbl-num">2026-06</td>
+                    <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">124</td>
+                    <td><span class="tier-pill t1" style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: rgba(59,130,246,0.1); color: #1E40AF;">第 1 档</span></td>
+                    <td class="tbl-num">1:10</td>
+                    <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: var(--weight-semibold);">12.4</td>
+                    <td class="text-tertiary">当前月</td>
+                  </tr>
+                  <tr>
+                    <td class="tbl-num">2026-05</td>
+                    <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">89</td>
+                    <td><span class="tier-pill t0" style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: var(--bg-overlay); color: var(--text-tertiary);">未达档</span></td>
+                    <td class="tbl-num">—</td>
+                    <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                    <td class="text-tertiary">客损 &lt; 100 万</td>
+                  </tr>
+                  <tr>
+                    <td class="tbl-num">2026-04</td>
+                    <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">145</td>
+                    <td><span class="tier-pill t1" style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: rgba(59,130,246,0.1); color: #1E40AF;">第 1 档</span></td>
+                    <td class="tbl-num">1:10</td>
+                    <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: var(--weight-semibold);">14.5</td>
+                    <td class="text-tertiary">正常</td>
+                  </tr>
+                  <tr>
+                    <td class="tbl-num">2026-03</td>
+                    <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">168</td>
+                    <td><span class="tier-pill t1" style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: rgba(59,130,246,0.1); color: #1E40AF;">第 1 档</span></td>
+                    <td class="tbl-num">1:10</td>
+                    <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: var(--weight-semibold);">16.8</td>
+                    <td class="text-tertiary">正常</td>
+                  </tr>
+                  <tr>
+                    <td class="tbl-num">2026-02</td>
+                    <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">102</td>
+                    <td><span class="tier-pill t1" style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: rgba(59,130,246,0.1); color: #1E40AF;">第 1 档</span></td>
+                    <td class="tbl-num">1:10</td>
+                    <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: var(--weight-semibold);">10.2</td>
+                    <td class="text-tertiary">首达档</td>
+                  </tr>
+                  <tr>
+                    <td class="tbl-num">2026-01</td>
+                    <td class="tbl-num" style="text-align: right; font-weight: var(--weight-medium);">78</td>
+                    <td><span class="tier-pill t0" style="font-size: 10px; padding: 2px 8px; border-radius: 9999px; background: var(--bg-overlay); color: var(--text-tertiary);">未达档</span></td>
+                    <td class="tbl-num">—</td>
+                    <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                    <td class="text-tertiary">客损 &lt; 100 万</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 风险记录 -->
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon yellow">⚠</div>
+                  <div>
+                    <div class="panel-title">风险记录</div>
+                    <div class="panel-sub">加入以来 1 起 · 已全部处理</div>
+                  </div>
+                </div>
+                <a href="risk-alerts.html" class="panel-link">全部预警 →</a>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <div class="risk-row resolved">
+                  <div style="font-size: 11px; color: var(--accent-green-dark); font-family: var(--font-mono); flex-shrink: 0;">07-15 14:23</div>
+                  <div style="flex: 1;">
+                    <div style="font-size: var(--text-sm); color: var(--text-primary); font-weight: var(--weight-medium);">
+                      <span class="badge yellow" style="margin-right: 6px;"><span class="badge-dot"></span>大额对局</span>
+                      用户 A 单局对局流水 ¥8,500（历史峰值 5x）
+                    </div>
+                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 4px;">处理：已自动暂停该游戏结算 · 经人工复核为正常 VIP 玩家大额对局</div>
+                  </div>
+                  <span class="badge green"><span class="badge-dot"></span>已解决</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧：联系信息 + 资料 -->
+          <div>
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">i</div>
+                  <div>
+                    <div class="panel-title">联系信息</div>
+                  </div>
+                </div>
+              </div>
+              <div class="info-grid">
+                <div class="info-label">公司地址</div>
+                <div class="info-value">上海市浦东新区张江高科</div>
+                <div class="info-label">法人代表</div>
+                <div class="info-value">李伟</div>
+                <div class="info-label">法人身份证</div>
+                <div class="info-value text-mono">3101****5678</div>
+                <div class="info-label">注册时间</div>
+                <div class="info-value text-mono">2026-06-30</div>
+                <div class="info-label">合同编号</div>
+                <div class="info-value text-mono">AGREEMENT-2026-M001-V3</div>
+                <div class="info-label">合同到期</div>
+                <div class="info-value text-mono">2027-06-30</div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title-group">
+                  <div class="panel-icon blue">📎</div>
+                  <div>
+                    <div class="panel-title">资料列表</div>
+                    <div class="panel-sub">5 项 · 全部已审核</div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="doc-item">
+                  <div class="doc-icon pdf">PDF</div>
+                  <div style="flex: 1;">
+                    <div class="doc-name">营业执照</div>
+                    <div class="doc-meta">2.4 MB · 2026-06-25</div>
+                  </div>
+                  <span class="badge green"><span class="badge-dot"></span>通过</span>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-icon jpg">JPG</div>
+                  <div style="flex: 1;">
+                    <div class="doc-name">法人身份证</div>
+                    <div class="doc-meta">1.8 MB · 2026-06-25</div>
+                  </div>
+                  <span class="badge green"><span class="badge-dot"></span>通过</span>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-icon pdf">PDF</div>
+                  <div style="flex: 1;">
+                    <div class="doc-name">玩法 PPT</div>
+                    <div class="doc-meta">12 MB · 2026-06-28</div>
+                  </div>
+                  <span class="badge green"><span class="badge-dot"></span>通过</span>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-icon mp4">MP4</div>
+                  <div style="flex: 1;">
+                    <div class="doc-name">演示视频</div>
+                    <div class="doc-meta">128 MB · 2026-06-28</div>
+                  </div>
+                  <span class="badge green"><span class="badge-dot"></span>通过</span>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-icon pdf">PDF</div>
+                  <div style="flex: 1;">
+                    <div class="doc-name">游戏备案</div>
+                    <div class="doc-meta">4.2 MB · 2026-06-29</div>
+                  </div>
+                  <span class="badge green"><span class="badge-dot"></span>通过</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 初始化阶梯历史表排序
+      AdminUI.Sort.init(document.getElementById('tier-history-table'));
+
+      // 5 档阶梯点击 → 显示详情
+      document.querySelectorAll('.tier-step').forEach(step => {
+        step.style.cursor = 'pointer';
+        step.addEventListener('click', () => {
+          const isCurrent = step.classList.contains('current');
+          const num = step.querySelector('.tier-step-num')?.textContent || '';
+          const loss = step.querySelector('.tier-step-loss')?.textContent || '';
+          const ratio = step.querySelector('.tier-step-ratio')?.textContent || '';
+          const rebate = step.querySelector('.tier-step-rebate')?.textContent || '';
+          const badge = isCurrent ? '<span class="badge red" style="margin-left: 6px;"><span class="badge-dot"></span>当前档位</span>' : '';
+          AdminUI.Modal.open({
+            title: `第 ${num} 档详情` + (isCurrent ? ' · 当前档位' : ''),
+            body: `
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; font-size: 13px;">
+                <div class="text-tertiary">客损起点</div>
+                <div class="text-mono" style="font-weight: 600;">${num} 万</div>
+                <div class="text-tertiary">提成比例</div>
+                <div class="text-mono" style="font-weight: 600; color: var(--accent-red);">${ratio}</div>
+                <div class="text-tertiary">档位提成</div>
+                <div class="text-mono" style="font-weight: 600;">${rebate}</div>
+                <div class="text-tertiary">状态</div>
+                <div>${isCurrent ? '<span class="badge red"><span class="badge-dot"></span>当前档位</span>' : '<span class="text-tertiary">未达到</span>'}</div>
+              </div>
+              <div style="margin-top: 16px; padding: 12px; background: var(--accent-blue-light); border-radius: 4px; font-size: 12px; color: #1E40AF;">
+                💡 ${isCurrent ? '该档位为当前生效档位，下月结算将按此比例计算提成。' : '该档位为阶梯档位之一，需达到客损起点才可触发。'}
+              </div>
+            `,
+            size: 'sm',
+          });
+        });
+      });
+
+      // 顶部按钮
+      document.querySelector('[data-action="download-pkg"]')?.addEventListener('click', function() {
+        const done = AdminUI.withLoading(this, '打包中...');
+        setTimeout(() => {
+          done();
+          AdminUI.toast('资料包已生成，开始下载', 'success');
+        }, 1000);
+      });
+
+      document.querySelector('[data-action="edit-info"]')?.addEventListener('click', function() {
+        const body = document.createElement('div');
+        body.innerHTML = `
+          <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">编辑 M001 音浪对决 的基础信息。修改后立即生效。</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">商家名称</label>
+              <input class="form-input" type="text" value="音浪对决" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">类目</label>
+              <select style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+                <option>互动竞技</option><option>卡牌策略</option><option>SLG</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">联系人</label>
+              <input class="form-input" type="text" value="李伟" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">联系电话</label>
+              <input class="form-input" type="text" value="138****5678" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+            <div style="grid-column: span 2;">
+              <label style="display: block; font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">公司地址</label>
+              <input class="form-input" type="text" value="上海市浦东新区张江高科" style="width: 100%; padding: 8px 10px; border: 1px solid var(--border-default); border-radius: 4px; font-size: 13px;">
+            </div>
+          </div>
+        `;
+        AdminUI.Modal.open({
+          title: '编辑商家信息',
+          body,
+          size: 'md',
+          footer: `
+            <button type="button" class="btn btn-secondary" data-aui-modal-close>取消</button>
+            <button type="button" class="btn btn-primary" id="edit-save">保存</button>
+          `,
+        });
+        setTimeout(() => {
+          document.getElementById('edit-save')?.addEventListener('click', function() {
+            const done = AdminUI.withLoading(this, '保存中...');
+            setTimeout(() => {
+              done();
+              AdminUI.Modal.close();
+              AdminUI.toast('商家信息已更新', 'success');
+            }, 800);
+          });
+        }, 50);
+      });
+
+      // 暂停按钮
+      document.querySelector('[data-action="suspend"]')?.addEventListener('click', function() {
+        const btn = this;
+        AdminUI.confirm({
+          title: '暂停商家',
+          message: '暂停后将停止该商家所有游戏结算，所有游戏从「在营」状态变为「暂停」状态。商家可在 7 天内申请恢复。',
+          confirmText: '确认暂停',
+          cancelText: '取消',
+          type: 'danger',
+          dangerText: '暂停',
+        }).then(ok => {
+          if (!ok) return;
+          const done = AdminUI.withLoading(btn, '处理中...');
+          setTimeout(() => {
+            done();
+            btn.innerHTML = '<span>▶</span> 恢复';
+            btn.setAttribute('data-action', 'resume');
+            // 切换到恢复逻辑
+            btn.removeEventListener('click', arguments.callee);
+            btn.onclick = null;
+            attachResume(btn);
+            AdminUI.toast('M001 音浪对决 已暂停', 'success');
+          }, 1000);
+        });
+      });
+
+      function attachResume(btn) {
+        btn.addEventListener('click', function() {
+          AdminUI.confirm({
+            title: '恢复商家',
+            message: '恢复后该商家所有游戏将重新进入「在营」状态，恢复正常结算。',
+            confirmText: '确认恢复',
+            cancelText: '取消',
+            type: 'success',
+          }).then(ok => {
+            if (!ok) return;
+            const done = AdminUI.withLoading(btn, '处理中...');
+            setTimeout(() => {
+              done();
+              btn.innerHTML = '<span>⏸</span> 暂停';
+              btn.setAttribute('data-action', 'suspend');
+              btn.onclick = null;
+              attachSuspend(btn);
+              AdminUI.toast('M001 音浪对决 已恢复', 'success');
+            }, 1000);
+          });
+        });
+      }
+      function attachSuspend(btn) {
+        btn.addEventListener('click', function() {
+          // 重新进入暂停流程
+          document.querySelector('[data-action="suspend"]')?.click();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

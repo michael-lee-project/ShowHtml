@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>流水异常分析 · 平台管理后台</title>
+  <link rel="stylesheet" href="shared/css/admin.css">
+  <style>
+    .anomaly-pattern-row {
+      display: grid;
+      grid-template-columns: 140px 80px 80px 1fr 100px 100px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-hairline);
+      transition: all 0.15s;
+    }
+    .anomaly-pattern-row:last-child { border-bottom: 0; }
+    .anomaly-pattern-row:hover { background: var(--bg-overlay); }
+    .pattern-name {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      font-weight: var(--weight-semibold);
+    }
+    .pattern-count {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: var(--weight-bold);
+      color: var(--text-primary);
+    }
+    .pattern-delta {
+      font-size: var(--text-xs);
+      font-family: var(--font-mono);
+      font-weight: var(--weight-semibold);
+    }
+    .pattern-merchants {
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+    }
+    .heat-cell {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-sidebar-brand-mark">G</div>
+        <div class="admin-sidebar-brand-text">
+          <div class="admin-sidebar-brand-name">Game Hub</div>
+          <div class="admin-sidebar-brand-sub">ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">主菜单</div>
+        <a href="dashboard.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◐</span>
+          <span>运营工作台</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">商家管理</div>
+        <a href="merchants.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⬛</span>
+          <span>商家列表</span>
+        </a>
+        <a href="merchants-review.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✓</span>
+          <span>审核商家</span>
+          <span class="admin-sidebar-badge">18</span>
+        </a>
+        <a href="merchants-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">⚙</span>
+          <span>档位配置</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">游戏 · 流水</div>
+        <a href="games.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▦</span>
+          <span>游戏列表</span>
+        </a>
+        <a href="games-battles.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">▶</span>
+          <span>实时对局</span>
+        </a>
+        <a href="revenue-overview.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">¥</span>
+          <span>全局流水</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">风控</div>
+        <a href="risk-alerts.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">!</span>
+          <span>预警中心</span>
+          <span class="admin-sidebar-badge">2</span>
+        </a>
+        <a href="risk-patterns.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">◈</span>
+          <span>异常AI识别</span>
+        </a>
+        <a href="revenue-anomaly.html" class="admin-sidebar-item active">
+          <span class="admin-sidebar-item-icon">⌬</span>
+          <span>流水异常</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-label">配置</div>
+        <a href="rules-config.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">≡</span>
+          <span>全局阶梯</span>
+        </a>
+        <a href="messages.html" class="admin-sidebar-item">
+          <span class="admin-sidebar-item-icon">✉</span>
+          <span>运营消息</span>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-foot">
+        <div class="admin-user-card">
+          <div class="admin-user-avatar">林</div>
+          <div class="admin-user-info">
+            <div class="admin-user-name">林琪</div>
+            <div class="admin-user-role">运营总监 · 超级权限</div>
+          </div>
+        </div>
+        <a href="login.html" class="admin-sidebar-item" style="color: var(--text-tertiary);">
+          <span class="admin-sidebar-item-icon">↗</span>
+          <span>退出登录</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <div class="admin-topbar-breadcrumb">
+            <a href="dashboard.html">运营工作台</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <a href="risk-patterns.html">风控</a>
+            <span class="admin-topbar-breadcrumb-sep">/</span>
+            <span class="admin-topbar-breadcrumb-current">流水异常分析</span>
+          </div>
+        </div>
+        <div class="admin-topbar-search">
+          <span class="admin-topbar-search-icon">⌕</span>
+          <input type="text" placeholder="搜索">
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="admin-topbar-icon-btn" title="通知">
+            <span style="font-size: 14px;">🔔</span>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <div class="page-header-eyebrow">REVENUE ANOMALY · 2026-07-21 18:42 · 本月数据</div>
+            <h1 class="page-header-title">流水异常分析</h1>
+            <div class="page-header-sub">智能识别 6 大异常模式 · 本月共 65 起 · 较上月 +8.3%</div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary" data-action="history">调档历史</button>
+            <a href="rules-config.html" class="btn btn-primary">异常规则配置</a>
+          </div>
+        </div>
+
+        <!-- KPI 4 件套 -->
+        <div class="kpi-grid">
+          <div class="kpi-card accent-red">
+            <div class="kpi-head">
+              <span class="kpi-label">异常总数</span>
+              <span class="kpi-icon">⌬</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-red);">65</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 8.3%</span>
+              较上月 60 · 6 类模式
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span class="kpi-label">严重</span>
+              <span class="kpi-icon">●</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-red);">15</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 12%</span>
+              占比 23.1% · 大额 / 可疑
+            </div>
+          </div>
+          <div class="kpi-card accent-green">
+            <div class="kpi-head">
+              <span class="kpi-label">已处理</span>
+              <span class="kpi-icon">✓</span>
+            </div>
+            <div class="kpi-value">38</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 5</span>
+              处理率 58.5%
+            </div>
+          </div>
+          <div class="kpi-card accent-blue">
+            <div class="kpi-head">
+              <span class="kpi-label">自动拦截率</span>
+              <span class="kpi-icon">⏸</span>
+            </div>
+            <div class="kpi-value" style="color: var(--accent-blue);">82%</div>
+            <div class="kpi-meta">
+              <span class="kpi-trend up">↑ 3%</span>
+              系统自动拦截 53 起
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 大异常模式 -->
+        <div class="panel" style="padding: 0; overflow: hidden;">
+          <div class="panel-head" style="padding: var(--space-4) var(--space-5); margin: 0;">
+            <div class="panel-title-group">
+              <div class="panel-icon red">⌬</div>
+              <div>
+                <div class="panel-title">6 大异常模式 · 本月统计</div>
+                <div class="panel-sub">按发生次数降序 · 智能识别 + 人工复核</div>
+              </div>
+            </div>
+            <a href="risk-patterns.html" class="panel-link">查看模式详情 →</a>
+          </div>
+
+          <div>
+            <div class="anomaly-pattern-row" style="background: var(--bg-base); font-size: 10px; font-family: var(--font-mono); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em;">
+              <span>异常类型</span>
+              <span>次数</span>
+              <span>较上月</span>
+              <span>涉及商家</span>
+              <span>严重度</span>
+              <span style="text-align: right;">操作</span>
+            </div>
+
+            <div class="anomaly-pattern-row" data-pattern="数据一致性" style="cursor: pointer;">
+              <span class="pattern-name">数据一致性</span>
+              <span class="pattern-count">23</span>
+              <span class="pattern-delta text-green">↓ -15%</span>
+              <span class="pattern-merchants">M019 银河拓荒者 · M003 风语启示录 · 共 8 家</span>
+              <span><span class="badge blue"><span class="badge-dot"></span>提示</span></span>
+              <span style="text-align: right;"><a href="risk-alerts.html" class="text-red">查看 →</a></span>
+            </div>
+
+            <div class="anomaly-pattern-row" data-pattern="玩家投诉" style="cursor: pointer;">
+              <span class="pattern-name">玩家投诉</span>
+              <span class="pattern-count">14</span>
+              <span class="pattern-delta text-red">↑ +8%</span>
+              <span class="pattern-merchants">M052 暗影潜行 · M058 战火重燃 · M019 银河拓荒者 · 共 6 家</span>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span style="text-align: right;"><a href="risk-alerts.html" class="text-red">查看 →</a></span>
+            </div>
+
+            <div class="anomaly-pattern-row" data-pattern="大额对局" style="cursor: pointer;">
+              <span class="pattern-name">大额对局</span>
+              <span class="pattern-count">12</span>
+              <span class="pattern-delta text-red">↑ +45%</span>
+              <span class="pattern-merchants">M052 暗影潜行 · M058 战火重燃</span>
+              <span><span class="badge red"><span class="badge-dot"></span>严重</span></span>
+              <span style="text-align: right;"><a href="risk-alerts.html" class="text-red">查看 →</a></span>
+            </div>
+
+            <div class="anomaly-pattern-row" data-pattern="客损突增" style="cursor: pointer;">
+              <span class="pattern-name">客损突增</span>
+              <span class="pattern-count">8</span>
+              <span class="pattern-delta text-red">↑ +23%</span>
+              <span class="pattern-merchants">M019 银河拓荒者 · M044 墨韵江湖</span>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span style="text-align: right;"><a href="risk-alerts.html" class="text-red">查看 →</a></span>
+            </div>
+
+            <div class="anomaly-pattern-row" data-pattern="流水突降" style="cursor: pointer;">
+              <span class="pattern-name">流水突降</span>
+              <span class="pattern-count">5</span>
+              <span class="pattern-delta text-green">↓ -12%</span>
+              <span class="pattern-merchants">M007 萤火奇航 · M019 银河拓荒者</span>
+              <span><span class="badge yellow"><span class="badge-dot"></span>警告</span></span>
+              <span style="text-align: right;"><a href="risk-alerts.html" class="text-red">查看 →</a></span>
+            </div>
+
+            <div class="anomaly-pattern-row" data-pattern="可疑交易" style="cursor: pointer;">
+              <span class="pattern-name">可疑交易</span>
+              <span class="pattern-count">3</span>
+              <span class="pattern-delta text-tertiary">· 0%</span>
+              <span class="pattern-merchants">M058 战火重燃</span>
+              <span><span class="badge red"><span class="badge-dot"></span>严重</span></span>
+              <span style="text-align: right;"><a href="risk-alerts.html" class="text-red">查看 →</a></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- 异常商家 Top 5 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <div class="panel-icon red">!</div>
+                <div>
+                  <div class="panel-title">异常商家 Top 5</div>
+                  <div class="panel-sub">按本月异常数降序</div>
+                </div>
+              </div>
+              <a href="merchants.html" class="panel-link">全部 →</a>
+            </div>
+
+            <table class="tbl" id="anomaly-merchants-table">
+              <thead>
+                <tr>
+                  <th>排名</th>
+                  <th>商家</th>
+                  <th style="text-align: right;">异常数</th>
+                  <th style="text-align: right;">客损（万）</th>
+                  <th>状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-mid="M058">
+                  <td><span class="text-red text-bold">01</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon" style="background: var(--accent-red-light); color: var(--accent-red);">战</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M058 战火重燃</div>
+                        <div class="tbl-name-sub">军事策略</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: 600;">8</td>
+                  <td class="tbl-num" style="text-align: right;">380</td>
+                  <td><span class="badge red"><span class="badge-dot"></span>已暂停</span></td>
+                </tr>
+                <tr data-mid="M052">
+                  <td><span class="text-red text-bold">02</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon" style="background: var(--accent-red-light); color: var(--accent-red);">暗</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M052 暗影潜行</div>
+                        <div class="tbl-name-sub">潜行</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-red); font-weight: 600;">5</td>
+                  <td class="tbl-num" style="text-align: right;">245</td>
+                  <td><span class="badge red"><span class="badge-dot"></span>已暂停</span></td>
+                </tr>
+                <tr data-mid="M019">
+                  <td><span class="text-red text-bold">03</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon" style="background: var(--accent-red-light); color: var(--accent-red);">银</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M019 银河拓荒者</div>
+                        <div class="tbl-name-sub">SLG</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; color: var(--accent-yellow); font-weight: 600;">1</td>
+                  <td class="tbl-num" style="text-align: right;">402</td>
+                  <td><span class="badge green"><span class="badge-dot"></span>合作中</span></td>
+                </tr>
+                <tr data-mid="M007">
+                  <td><span class="text-tertiary">04</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon" style="background: var(--accent-red-light); color: var(--accent-red);">萤</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M007 萤火奇航</div>
+                        <div class="tbl-name-sub">休闲</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                  <td class="tbl-num" style="text-align: right;">298</td>
+                  <td><span class="badge green"><span class="badge-dot"></span>合作中</span></td>
+                </tr>
+                <tr data-mid="M003">
+                  <td><span class="text-tertiary">05</span></td>
+                  <td>
+                    <div class="tbl-name">
+                      <div class="tbl-name-icon" style="background: var(--accent-red-light); color: var(--accent-red);">风</div>
+                      <div class="tbl-name-info">
+                        <div class="tbl-name-title">M003 风语启示录</div>
+                        <div class="tbl-name-sub">卡牌策略</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbl-num" style="text-align: right; color: var(--text-tertiary);">0</td>
+                  <td class="tbl-num" style="text-align: right;">512</td>
+                  <td><span class="badge green"><span class="badge-dot"></span>合作中</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 异常时段热力图 -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <div class="panel-icon yellow">⏰</div>
+                <div>
+                  <div class="panel-title">异常时段热力图 · 近 7 日</div>
+                  <div class="panel-sub">按时段分布 · 红色为高发时段</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: separate; border-spacing: 3px; font-size: 10px; font-family: var(--font-mono);">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold); padding: 4px;">时段</th>
+                    <th style="font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold);">07-15</th>
+                    <th style="font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold);">07-16</th>
+                    <th style="font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold);">07-17</th>
+                    <th style="font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold);">07-18</th>
+                    <th style="font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold);">07-19</th>
+                    <th style="font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold);">07-20</th>
+                    <th style="font-size: 10px; color: var(--text-tertiary); font-weight: var(--weight-semibold);">07-21</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="text-align: left; padding: 4px; color: var(--text-tertiary);">00-04</td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.15);"></span></td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.15);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.25);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.20);"></span></td></tr>
+                  <tr><td style="text-align: left; padding: 4px; color: var(--text-tertiary);">04-08</td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.10);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.10);"></span></td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td><td><span class="heat-cell" style="background: var(--bg-overlay);"></span></td></tr>
+                  <tr><td style="text-align: left; padding: 4px; color: var(--text-tertiary);">08-12</td><td><span class="heat-cell" style="background: rgba(220,38,38,0.15);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.20);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.15);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.25);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.30);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.25);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.35);"></span></td></tr>
+                  <tr><td style="text-align: left; padding: 4px; color: var(--text-tertiary);">12-16</td><td><span class="heat-cell" style="background: rgba(220,38,38,0.25);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.30);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.20);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.35);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.40);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.50);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.55);"></span></td></tr>
+                  <tr><td style="text-align: left; padding: 4px; color: var(--text-tertiary);">16-20</td><td><span class="heat-cell" style="background: rgba(220,38,38,0.45);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.50);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.60);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.70);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.75);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.85);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.95);"></span></td></tr>
+                  <tr><td style="text-align: left; padding: 4px; color: var(--text-tertiary);">20-24</td><td><span class="heat-cell" style="background: rgba(220,38,38,0.35);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.30);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.45);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.40);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.50);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.60);"></span></td><td><span class="heat-cell" style="background: rgba(220,38,38,0.55);"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top: var(--space-3); display: flex; align-items: center; gap: var(--space-3); font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono);">
+              <span>低</span>
+              <span class="heat-cell" style="background: var(--bg-overlay);"></span>
+              <span class="heat-cell" style="background: rgba(220,38,38,0.20);"></span>
+              <span class="heat-cell" style="background: rgba(220,38,38,0.40);"></span>
+              <span class="heat-cell" style="background: rgba(220,38,38,0.60);"></span>
+              <span class="heat-cell" style="background: rgba(220,38,38,0.80);"></span>
+              <span class="heat-cell" style="background: rgba(220,38,38,1.0);"></span>
+              <span>高</span>
+              <span style="margin-left: auto;">峰值：07-21 16-20 晚高峰</span>
+            </div>
+
+            <div style="margin-top: var(--space-3); padding: var(--space-3); background: var(--accent-yellow-light); border-radius: var(--radius-sm); font-size: var(--text-xs); color: #92400E;">
+              ⚠ <strong>高峰告警：</strong>近 7 日异常集中在 <strong>16-20 晚高峰</strong>，与对局量峰值高度相关，建议提升该时段风控算力。
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="shared/js/admin-interactions.js"></script>
+  <script>
+    (function() {
+      // 6 大异常模式 → 点击弹 modal，跳到 risk-patterns 对应模式
+      const patternDetails = {
+        '数据一致性': { severity: '提示', desc: '平台流水与商家流水偏差 > 0.5%，自动对账。容差内自动通过。' },
+        '玩家投诉': { severity: '警告', desc: '同一游戏 / 商家累计玩家投诉 ≥ 3 起，自动升级为警告。' },
+        '大额对局': { severity: '严重', desc: '单局对局流水超过该玩家历史峰值 N 倍，自动暂停游戏结算并通知人工复核。' },
+        '客损突增': { severity: '警告', desc: '单日 / 单局客损较 7 日均值突增 ≥ 200%，自动通知运营 + 商家。' },
+        '流水突降': { severity: '警告', desc: '单日流水较 7 日均值下降 ≥ 50%，自动通知商家核实。' },
+        '可疑交易': { severity: '严重', desc: '同一玩家短时间内胜率异常（如 100%），自动冻结分账 + 通知法务。' },
+      };
+      document.querySelectorAll('.anomaly-pattern-row[data-pattern]').forEach(row => {
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('a')) return;
+          const p = row.getAttribute('data-pattern');
+          const detail = patternDetails[p] || { severity: '提示', desc: '' };
+          const count = row.querySelector('.pattern-count')?.textContent || '0';
+          const merchants = row.querySelector('.pattern-merchants')?.textContent || '';
+          const severityMap = { '严重': 'red', '警告': 'yellow', '提示': 'blue' };
+          AdminUI.Modal.open({
+            title: p + ' · 模式详情',
+            body: `
+              <div style="font-size: 13px; line-height: 1.7;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                  <span class="badge ${severityMap[detail.severity] || 'blue'}"><span class="badge-dot"></span>${detail.severity}</span>
+                  <span style="font-size: 22px; font-weight: 700; color: var(--accent-red); font-family: var(--font-mono);">${count}</span>
+                  <span style="font-size: 12px; color: var(--text-tertiary);">本月触发次数</span>
+                </div>
+                <div style="padding: 12px; background: var(--bg-overlay); border-radius: 4px; margin-bottom: 12px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px;">模式说明</div>
+                  <div style="font-size: 13px;">${detail.desc}</div>
+                </div>
+                <div style="padding: 12px; background: var(--bg-overlay); border-radius: 4px;">
+                  <div style="font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px;">涉及商家</div>
+                  <div style="font-size: 13px;">${merchants}</div>
+                </div>
+              </div>
+            `,
+            size: 'sm',
+            footer: `
+              <button type="button" class="btn btn-secondary" data-aui-modal-close>关闭</button>
+              <button type="button" class="btn btn-primary" id="goto-patterns">查看模式识别详情</button>
+            `,
+          });
+          setTimeout(() => {
+            document.getElementById('goto-patterns')?.addEventListener('click', () => {
+              window.location.href = 'risk-patterns.html';
+            });
+          }, 50);
+        });
+      });
+
+      // 异常商家 Top 5 排序 + 行点击
+      AdminUI.Sort.init(document.getElementById('anomaly-merchants-table'));
+      document.querySelectorAll('#anomaly-merchants-table tbody tr').forEach(row => {
+        row.classList.add('aui-row-clickable');
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('a, button')) return;
+          const mid = row.getAttribute('data-mid');
+          if (mid) window.location.href = `merchants-detail.html?mid=${mid}`;
+        });
+      });
+
+      // 调档历史
+      document.querySelector('[data-action="history"]')?.addEventListener('click', () => {
+        AdminUI.Modal.open({
+          title: '调档历史 · 异常规则',
+          body: `
+            <div style="display: grid; gap: 10px;">
+              <div style="padding: 10px; border-left: 3px solid var(--accent-red); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">2026-07-15 14:23 · 林琪</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">大额对局阈值 3x → 5x</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">降低误报率</div>
+              </div>
+              <div style="padding: 10px; border-left: 3px solid var(--border-default); background: var(--bg-overlay); border-radius: 4px;">
+                <div style="font-size: 11px; color: var(--text-tertiary);">2026-07-01 00:00 · 系统</div>
+                <div style="font-size: 13px; font-weight: 500; margin-top: 4px;">v2.1 异常规则生效</div>
+              </div>
+            </div>
+          `,
+          size: 'sm',
+        });
+      });
+
+      // 热力图：cell click → 弹 modal 显示该时段详情
+      document.querySelectorAll('.heat-cell').forEach(cell => {
+        cell.style.cursor = 'pointer';
+        cell.addEventListener('click', () => {
+          const tr = cell.closest('tr');
+          const slot = tr?.querySelector('td')?.textContent || '';
+          const th = cell.closest('table')?.querySelector('thead tr');
+          const day = th?.querySelectorAll('th')[Array.from(cell.parentNode.children).indexOf(cell)]?.textContent || '';
+          AdminUI.toast(`${day} ${slot} 时段异常详情：建议查看实时对局 feed`, 'info', 2500);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
