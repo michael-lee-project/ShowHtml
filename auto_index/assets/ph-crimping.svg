@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse">
+<path d="M24 0 L0 0 0 24" stroke="#3d5570" stroke-width="0.6" opacity=".5"/></pattern></defs>
+<rect width="400" height="300" fill="#243447"/>
+<rect width="400" height="300" fill="url(#g)"/>
+<circle cx="200" cy="140" r="52" stroke="#7c93ab" stroke-width="2.5" fill="none"/><circle cx="200" cy="140" r="30" stroke="#e8590c" stroke-width="2.5" fill="none"/><line x1="200" y1="60" x2="200" y2="88" stroke="#7c93ab" stroke-width="2.5"/><line x1="200" y1="192" x2="200" y2="220" stroke="#7c93ab" stroke-width="2.5"/><line x1="120" y1="140" x2="148" y2="140" stroke="#7c93ab" stroke-width="2.5"/><line x1="252" y1="140" x2="280" y2="140" stroke="#7c93ab" stroke-width="2.5"/>
+<text x="200" y="272" text-anchor="middle" font-family="Arial" font-size="15" fill="#9fb0c0" letter-spacing="2">CRIMPING</text>
+</svg>

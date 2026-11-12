@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoolForge · C UI Pro Max · Motion Drive</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e13'/%3E%3Cpath d='M16 6v20M8 10l16 12M24 10L8 22' stroke='%234cc2ff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="c-style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="c-uipro.html"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+    <nav class="navlinks" id="navlinks">
+      <a href="c-uipro.html" class="active" data-i18n="nav.home">Home</a>
+      <a href="c-product.html" data-i18n="nav.catalog">Catalog</a>
+      <a href="c-custom.html" data-i18n="nav.custom">Custom</a>
+      <a href="c-factory.html" data-i18n="nav.factory">Factory</a>
+      <a href="#rfq" data-i18n="nav.quote">Quote</a>
+    </nav>
+    <div class="nav-cta">
+      <span data-lang-slot></span>
+      <a class="btn btn-red btn-sm" href="#rfq" data-i18n="nav.getquote">Get a quote</a>
+      <button class="navtoggle" data-navtoggle="#navlinks" aria-label="Menu" data-i18n-aria="nav.menu" aria-expanded="false"><i data-icon="list"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-video" id="heroVideo">
+      <div class="poster"></div>
+      <video id="factoryVid" muted loop playsinline preload="metadata" poster="assets/video/factory-poster.jpg" tabindex="-1">
+        <source src="assets/video/factory.webm" type="video/webm">
+        <source src="assets/video/factory.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="vignette"></div>
+    <div class="ember" data-parallax="0.06"></div>
+    <div class="layer l1" data-parallax="0.15"></div>
+    <div class="grid"></div>
+    <div class="scan"></div>
+  </div>
+  <div class="wrap">
+    <div class="stagger">
+      <div class="hero-kicker" data-i18n="hero.kicker">A/C parts factory</div>
+      <h1><span data-i18n="hero.h1a">Engineered cold.</span><br><span class="red" data-i18n="hero.h1b">Built to fit.</span></h1>
+      <p class="sub" data-i18n="hero.sub">&gt; Factory-direct evaporators, condensers, valves, driers and custom hose assemblies. Every era of refrigerant. Every part leak-tested before it ships.</p>
+      <div class="ctas">
+        <a class="btn btn-red" href="#rfq"><span data-i18n="hero.cta1">Get a quote</span> <i data-icon="arrow-right"></i></a>
+        <a class="btn btn-ghost" href="c-product.html" data-i18n="hero.cta2">Browse parts</a>
+      </div>
+      <div class="hero-stats">
+        <div><b data-count="5">0</b><span data-i18n="hero.stat1">Categories</span></div>
+        <div><b data-count="24" data-suffix="h">0</b><span data-i18n="hero.stat2">Quote reply</span></div>
+        <div><b data-count="4">0</b><span data-i18n="hero.stat3">Custom services</span></div>
+      </div>
+    </div>
+    <div class="hv-slot">
+      <div class="hero-vis" id="heroCarousel" aria-roledescription="carousel" aria-label="Factory products">
+        <div class="hv-progress" id="hvProgress" aria-hidden="true"></div>
+        <div class="hv-stage" id="hvStage">
+          <div class="hv-slides" id="hvSlides"></div>
+        </div>
+        <div class="hud tl"><span data-i18n="hero.hud1a">SYS</span> <b class="ltr" id="hvCat">A/C-HOSE</b><br><span class="ltr" id="hvSpec">BORE #6-#12</span></div>
+        <div class="hud tr"><span data-i18n="hero.hud2a">REF</span> <b class="ltr" id="hvOem">CF-HOSE-001</b><br><span data-i18n="hero.hud2b">TEST 100% PASS</span></div>
+        <div class="hv-name" id="hvName" aria-live="polite"><span class="txt" id="hvNameTxt">A/C Hose Assembly · Universal</span></div>
+      </div>
+      <div class="hv-bar">
+        <button class="hv-nav" id="hvPrev" type="button" aria-label="Previous product"><span class="ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.5 4.5v15a1 1 0 0 1-1.6.8l-9-7.5a1 1 0 0 1 0-1.6l9-7.5a1 1 0 0 1 1.6.8z"/></svg></span></button>
+        <button class="hv-nav" id="hvToggle" type="button" aria-label="Pause carousel" aria-pressed="false">
+          <span class="ico i-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></span>
+          <span class="ico i-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.53.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5z"/></svg></span>
+        </button>
+        <div class="hv-dots" id="hvDots" role="tablist" aria-label="Select product"></div>
+        <span class="hv-count ltr" id="hvCount">01 / 07</span>
+        <a class="hv-part" id="hvPart" href="c-product.html"><span data-i18n="hero.viewpart">View part</span> <i data-icon="arrow-up-right"></i></a>
+        <button class="hv-nav" id="hvNext" type="button" aria-label="Next product"><span class="ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.5 4.5v15a1 1 0 0 0 1.6.8l9-7.5a1 1 0 0 0 0-1.6l-9-7.5a1 1 0 0 0-1.6.8z"/></svg></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="hero-ctl">
+    <button id="vidToggle" type="button" aria-label="Pause factory video" data-i18n-aria="vid.pause" aria-pressed="false">
+      <span class="ico i-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></span>
+      <span class="ico i-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.53.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5z"/></svg></span>
+    </button>
+    <span class="vlabel" id="vidLabel" data-i18n="vid.live">Factory floor · live</span>
+  </div>
+</section>
+
+<!-- value strip -->
+<div class="strip" aria-hidden="true">
+  <div class="strip-track">
+    <span>A/C HOSE ✦ EVAPORATOR ✦ CONDENSER ✦ EXPANSION VALVE ✦ RECEIVER DRIER ✦ CUSTOM FITTINGS ✦ PRIVATE LABEL  OEM / ODM </span>
+    <span>A/C HOSE ✦ EVAPORATOR ✦ CONDENSER ✦ EXPANSION VALVE ✦ RECEIVER DRIER ✦ CUSTOM FITTINGS ✦ PRIVATE LABEL  OEM / ODM ✦</span>
+  </div>
+</div>
+
+<!-- CATALOG -->
+<section id="catalog">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="cat.kicker">Catalog</div>
+      <h2 class="sec-h" data-i18n="cat.h">Five core categories</h2>
+      <p class="sec-sub" data-i18n="cat.sub">&gt; Hundreds of SKUs across the A/C system. Search by OEM number or browse a category. Reference prices shown, final price confirmed by quote.</p>
+    </div>
+    <div class="cats" data-reveal>
+      <a class="cat" href="c-product.html?p=hose-universal"><span class="idx">01</span><div class="img"><img src="assets/ac-hose.png" alt="A/C hose"></div><h3 data-i18n="cat.hose">A/C Hose</h3><div class="cnt" data-i18n="cat.hose.cnt">Custom specialist</div></a>
+      <a class="cat" href="c-product.html?p=evap-mazda"><span class="idx">02</span><div class="img"><img src="assets/evap-mazda-cx5.png" alt="Evaporator"></div><h3 data-i18n="cat.evap">Evaporator</h3><div class="cnt"><span class="ltr">120+ SKUs · $38-70</span> <span data-i18n="cat.ref">ref</span></div></a>
+      <a class="cat" href="c-product.html?p=cond-parallel"><span class="idx">03</span><div class="img"><img src="assets/cat-condenser.c.svg" alt="Condenser"></div><h3 data-i18n="cat.cond">Condenser</h3><div class="cnt"><span class="ltr">90+ SKUs · $30-65</span> <span data-i18n="cat.ref">ref</span></div></a>
+      <a class="cat" href="c-product.html?p=exv-block"><span class="idx">04</span><div class="img"><img src="assets/cat-expansion-valve.c.svg" alt="Expansion valve"></div><h3 data-i18n="cat.exv">Expansion Valve</h3><div class="cnt"><span class="ltr">60+ SKUs · $10-28</span> <span data-i18n="cat.ref">ref</span></div></a>
+      <a class="cat" href="c-product.html?p=drier-can"><span class="idx">05</span><div class="img"><img src="assets/cat-receiver-drier.c.svg" alt="Receiver drier"></div><h3 data-i18n="cat.drier">Receiver Drier</h3><div class="cnt"><span class="ltr">70+ SKUs · $8-20</span> <span data-i18n="cat.ref">ref</span></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ERAS -->
+<section id="eras" class="eras">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="eras.kicker">Coverage</div>
+      <h2 class="sec-h" data-i18n="eras.h">Every refrigerant era</h2>
+      <p class="sec-sub" data-i18n="eras.sub">&gt; Refrigerant generations changed the parts. We tool for all three, so the vehicle on your lift is never too old or too new.</p>
+    </div>
+    <div class="era-grid" data-reveal>
+      <div class="era-card"><div class="glow"></div><div class="big">R-12</div><div class="yrs ltr">1980s - 1993</div><p data-i18n="eras.r12">Classic systems. Hard-to-find hoses and driers for vintage vehicles, still in our catalog.</p></div>
+      <div class="era-card"><div class="glow"></div><div class="big">R-134a</div><div class="yrs ltr">1994 - 2012</div><p data-i18n="eras.r134">The volume era. Barrier hoses, evaporators and condensers for the largest parc on the road.</p></div>
+      <div class="era-card"><div class="glow"></div><div class="big">R-1234yf</div><div class="yrs ltr">2013 - today</div><p data-i18n="eras.r1234">Modern low-GWP systems. Correct fittings and materials, not interchangeable with R-134a.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOM -->
+<section id="custom">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="custom.kicker">Custom</div>
+      <h2 class="sec-h" data-i18n="custom.h">Four ways to make it yours</h2>
+      <p class="sec-sub" data-i18n="custom.sub">&gt; Send a drawing, a sample, or just the vehicle. We model, prototype and produce under one roof.</p>
+    </div>
+    <div class="custom-wrap">
+      <div class="svc-list" data-reveal>
+        <div class="svc-item"><i data-icon="car"></i><div><h3 data-i18n="svc1.h">Vehicle fitment</h3><p data-i18n="svc1.p">Match by year, make, model or OEM number. We confirm fitment before you order.</p></div></div>
+        <div class="svc-item"><i data-icon="ruler"></i><div><h3 data-i18n="svc2.h">Size &amp; fittings</h3><p data-i18n="svc2.p">Custom length, fitting type and bend angles to your drawing or sample.</p></div></div>
+        <div class="svc-item"><i data-icon="tag"></i><div><h3 data-i18n="svc3.h">Private label</h3><p data-i18n="svc3.p">Your brand, your packaging, your part numbers on our production line.</p></div></div>
+        <div class="svc-item"><i data-icon="blueprint"></i><div><h3 data-i18n="svc4.h">OEM / ODM</h3><p data-i18n="svc4.p">Build to print or sample. In-house modeling takes you from drawing to sample fast.</p></div></div>
+      </div>
+      <div class="custom-vis" data-reveal>
+        <img src="assets/ac-hose.png" alt="Custom hose assembly">
+        <div class="cap">SPEC <b class="ltr">CF-HOSE-CUSTOM</b> · <span data-i18n="pd.chip.custom">Custom available</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FACTORY -->
+<section id="factory" class="factory">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="fac.kicker">Factory</div>
+      <h2 class="sec-h" data-i18n="fac.h">We don't resell. We forge.</h2>
+      <p class="sec-sub" data-i18n="fac.sub">&gt; Every hose cut, crimped, tested and packed under our own roof. No middlemen, no guesswork.</p>
+    </div>
+    <div class="fac-wrap">
+      <div class="fac-media" data-reveal>
+        <img src="assets/ph-workshop.svg" alt="CoolForge workshop">
+        <span class="badge" data-i18n="fac.badge">Factory floor</span>
+      </div>
+      <div class="process" data-reveal>
+        <div class="proc"><div class="n">01</div><h3 data-i18n="fac.p1h">Cut &amp; form</h3><p data-i18n="fac.p1p">Tube cut to length, bent to your angles.</p></div>
+        <div class="proc"><div class="n">02</div><h3 data-i18n="fac.p2h">Crimp</h3><p data-i18n="fac.p2p">Fittings crimped to spec, seal verified.</p></div>
+        <div class="proc"><div class="n">03</div><h3 data-i18n="fac.p3h">Leak test</h3><p data-i18n="fac.p3p">Every assembly pressure-tested.</p></div>
+        <div class="proc"><div class="n">04</div><h3 data-i18n="fac.p4h">Pack &amp; ship</h3><p data-i18n="fac.p4p">Labeled, protected, shipped to you.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RFQ -->
+<section id="rfq">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="rfq.kicker">Contact</div>
+      <h2 class="sec-h" data-i18n="rfq.h">Get a quote</h2>
+      <p class="sec-sub" data-i18n="rfq.sub">&gt; We reply within 24 hours. Form, WhatsApp or email, whichever is fastest for you.</p>
+    </div>
+    <div class="rfq-wrap">
+      <form data-rfq data-reveal>
+        <div class="f-row">
+          <div class="field"><label for="c-qty" data-i18n="f.qty">Quantity *</label><input id="c-qty" name="quantity" type="number" min="1" placeholder="50" required></div>
+          <div class="field"><label for="c-oem" data-i18n="f.oem">Part / OEM number</label><input id="c-oem" name="oem" placeholder="GHP961J10"></div>
+        </div>
+        <div class="field"><label for="c-veh" data-i18n="f.veh">Vehicle (year / make / model)</label><input id="c-veh" name="vehicle" placeholder="2016 Toyota Camry"></div>
+        <div class="f-row">
+          <div class="field"><label for="c-name" data-i18n="f.name">Name *</label><input id="c-name" name="name" required></div>
+          <div class="field"><label for="c-email" data-i18n="f.email">Email *</label><input id="c-email" name="email" type="email" required></div>
+        </div>
+        <div class="field"><label for="c-msg" data-i18n="f.msg">Notes</label><textarea id="c-msg" name="message" placeholder="Fitting details, target price, delivery..."></textarea></div>
+        <button class="btn btn-red" type="submit" style="width:100%"><span data-i18n="rfq.submit">Send RFQ · reply in 24h</span> <i data-icon="arrow-right"></i></button>
+        <div class="rfq-ok" hidden>
+          <b data-i18n="rfq.ok">✓ RFQ_RECEIVED</b>
+          <p data-i18n="rfq.okp">Our team will reply within 24h. For a faster response, continue on WhatsApp:</p>
+          <a class="btn btn-red btn-sm" data-wa href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i> WhatsApp</a>
+        </div>
+      </form>
+      <div class="channels" data-reveal>
+        <a class="channel" href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i><div><b data-i18n="ch.wa">WhatsApp</b><span data-i18n="ch.wa.p">Fastest reply · send photos and drawings</span></div></a>
+        <a class="channel" href="mailto:sales@coolforge.example"><i data-icon="envelope-simple"></i><div><b class="ltr">sales@coolforge.example</b><span data-i18n="ch.mail.p">For formal RFQs and documentation</span></div></a>
+        <div class="channel"><i data-icon="clock"></i><div><b data-i18n="ch.24">24-hour response</b><span data-i18n="ch.24.p">Quotes confirmed within one business day</span></div></div>
+        <div class="channel"><i data-icon="globe"></i><div><b data-i18n="ch.geo">North America &amp; Middle East</b><span data-i18n="ch.geo.p">English · Español · العربية</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="c-uipro.html" style="margin-bottom:16px"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+        <p style="font-family:var(--mono);font-size:12.5px;color:#94a3b8;max-width:32ch;line-height:1.8" data-i18n="foot.tag">Factory-direct automotive A/C parts. Custom hoses our specialty.</p>
+      </div>
+      <div><h4 data-i18n="foot.products">Products</h4><a href="c-product.html?p=hose-universal" data-i18n="cat.hose">A/C Hose</a><a href="c-product.html?p=evap-mazda" data-i18n="cat.evap">Evaporator</a><a href="c-product.html?p=cond-parallel" data-i18n="cat.cond">Condenser</a><a href="c-product.html?p=exv-block" data-i18n="cat.exv">Expansion Valve</a><a href="c-product.html?p=drier-can" data-i18n="cat.drier">Receiver Drier</a></div>
+      <div><h4 data-i18n="foot.services">Services</h4><a href="c-custom.html" data-i18n="nav.custom">Custom</a><a href="c-custom.html" data-i18n="svc3.h">Private label</a><a href="c-custom.html" data-i18n="svc4.h">OEM / ODM</a><a href="c-factory.html" data-i18n="nav.factory">Factory</a></div>
+      <div><h4 data-i18n="foot.contact">Contact</h4><a href="https://wa.me/8613800000000" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:sales@coolforge.example">Email</a><a href="#rfq" data-i18n="nav.getquote">Get a quote</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span data-i18n="foot.copy">© 2026 COOLFORGE</span>
+      <span>PROTOTYPE C · UI-UX-PRO-MAX</span>
+      <span data-i18n="foot.proto">REFERENCE PRICES ARE PLACEHOLDERS</span>
+    </div>
+  </div>
+</footer>
+
+<script src="kit.js"></script>
+<script src="i18n.js"></script>
+<script src="products.js"></script>
+<script>
+/* factory hero video: autoplay policy + offscreen pause + reduced-motion/save-data poster fallback */
+(function(){
+  const wrap = document.getElementById('heroVideo');
+  const vid = document.getElementById('factoryVid');
+  const btn = document.getElementById('vidToggle');
+  const label = document.getElementById('vidLabel');
+  if (!wrap || !vid || !btn) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  let userPaused = false, inView = true, failed = false;
+
+  const setUI = playing => {
+    btn.classList.toggle('paused', !playing);
+    btn.setAttribute('aria-pressed', String(!playing));
+    btn.setAttribute('aria-label', window.CF ? window.CF.t(playing ? 'vid.pause' : 'vid.play') : (playing ? 'Pause factory video' : 'Play factory video'));
+    label.textContent = window.CF ? window.CF.t(failed ? 'vid.still' : (playing ? 'vid.live' : 'vid.paused')) : (failed ? 'Factory floor · still' : (playing ? 'Factory floor · live' : 'Factory floor · paused'));
+  };
+  const tryPlay = () => {
+    if (failed || userPaused || reduce || saveData || !inView || document.hidden) return;
+    const p = vid.play();
+    if (p) p.then(() => { wrap.classList.add('ready'); setUI(true); }).catch(() => setUI(false));
+  };
+  const pause = () => { vid.pause(); setUI(false); };
+
+  const markFailed = () => { failed = true; wrap.classList.remove('ready'); vid.pause(); setUI(false); label.textContent = window.CF ? window.CF.t('vid.still') : 'Factory floor · still'; };
+  vid.addEventListener('canplay', tryPlay);
+  vid.addEventListener('playing', () => { wrap.classList.add('ready'); setUI(true); });
+  vid.addEventListener('error', markFailed);
+  document.addEventListener('cf:lang', () => setUI(!vid.paused && !failed));
+  /* source-level failures (all <source> exhausted) don't bubble to <video>; watch them too */
+  vid.querySelectorAll('source').forEach(src => src.addEventListener('error', () => {
+    if (src === vid.querySelector('source:last-of-type')) markFailed();
+  }));
+  /* if nothing becomes playable shortly, fall back to poster honestly */
+  setTimeout(() => { if (!failed && vid.readyState < 2 && vid.paused && !userPaused) markFailed(); }, 5000);
+  btn.addEventListener('click', () => {
+    if (vid.paused) { userPaused = false; failed = false; tryPlay(); }
+    else { userPaused = true; pause(); }
+  });
+  /* offscreen / hidden tab: stop decoding, resume on return (unless user paused) */
+  new IntersectionObserver(es => es.forEach(en => {
+    inView = en.isIntersecting;
+    if (inView) tryPlay(); else if (!vid.paused) vid.pause();
+  }), { threshold: 0.05 }).observe(wrap);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { if (!vid.paused) vid.pause(); } else tryPlay(); });
+
+  if (reduce || saveData) { setUI(false); label.textContent = window.CF ? window.CF.t('vid.still') : 'Factory floor · still'; }
+  else tryPlay();
+})();
+/* clamp stray horizontal scroll (transitions can momentarily widen layout) */
+(function(){
+  const fix=()=>{ if(window.scrollX!==0 && document.documentElement.scrollWidth<=window.innerWidth+1) window.scrollTo(0,window.scrollY); };
+  addEventListener('scroll',fix,{passive:true});
+  addEventListener('resize',fix);
+  fix();
+})();
+/* parallax layers (transform-only, rAF-batched, reduced-motion aware) */
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layers = document.querySelectorAll('[data-parallax]');
+  if (!layers.length) return;
+  let ticking = false;
+  const update = () => {
+    const y = window.scrollY;
+    layers.forEach(l => { l.style.transform = 'translate3d(0,' + (y * parseFloat(l.dataset.parallax)) + 'px,0)'; });
+    ticking = false;
+  };
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  window.addEventListener('scroll', onScroll, { passive:true });
+  update();
+})();
+
+/* hero product carousel: autoplay + progress + arrows/dots/toggle + swipe + keyboard + deep-link */
+(function(){
+  const P = (window.CF_PRODUCTS || []).filter(p => ['hose-universal','evap-pajero','evap-chevy','evap-passat','evap-mazda','evap-explorer','evap-ford'].includes(p.id));
+  const order = ['hose-universal','evap-pajero','evap-chevy','evap-passat','evap-mazda','evap-explorer','evap-ford'];
+  P.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
+  const root=document.getElementById('heroCarousel');
+  if(!root||!P.length) return;
+  const slidesEl=document.getElementById('hvSlides'), dotsEl=document.getElementById('hvDots');
+  const nameEl=document.getElementById('hvName'), catEl=document.getElementById('hvCat'), specEl=document.getElementById('hvSpec'), oemEl=document.getElementById('hvOem');
+  const countEl=document.getElementById('hvCount'), partEl=document.getElementById('hvPart'), progEl=document.getElementById('hvProgress');
+  const prevBtn=document.getElementById('hvPrev'), nextBtn=document.getElementById('hvNext'), togBtn=document.getElementById('hvToggle');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const L=()=>document.documentElement.lang||'en';
+  const tv=v=>(v&&typeof v==='object')?(v[L()]||v.en):v;
+  const DUR=4200;
+  let idx=0, playing=!reduce, hovering=false, inView=true, elapsed=0, last=performance.now(), raf=null;
+
+  slidesEl.innerHTML=P.map((p,i)=>`<div class="hv-slide${i===0?' on':''}" role="group" aria-roledescription="slide" aria-label="${i+1} / ${P.length}"><img src="${p.img}" alt="${tv(p.name)}" ${i===0?'':'loading="lazy"'}></div>`).join('');
+  dotsEl.innerHTML=P.map((p,i)=>`<button type="button" role="tab" aria-selected="${i===0}" aria-label="${i+1}" class="${i===0?'on':''}"></button>`).join('');
+  const slides=[...slidesEl.children], dots=[...dotsEl.children];
+  dots.forEach((d,i)=>d.addEventListener('click',()=>{go(i);restart();}));
+
+  function meta(){
+    const p=P[idx];
+    nameEl.querySelector('.txt').textContent=tv(p.name);
+    catEl.textContent=(window.CF_CAT[p.cat][L()]||window.CF_CAT[p.cat].en).toUpperCase();
+    specEl.textContent=p.specs.bore||p.specs.core||'';
+    oemEl.textContent=p.oem;
+    countEl.textContent=String(idx+1).padStart(2,'0')+' / '+String(P.length).padStart(2,'0');
+    partEl.href='c-product.html?p='+p.id;
+    slides.forEach((s,i)=>{const im=s.querySelector('img');if(im)im.alt=tv(P[i].name);});
+  }
+  function go(n){
+    const old=idx; idx=(n+P.length)%P.length;
+    slides.forEach((s,i)=>{
+      s.classList.toggle('on',i===idx);
+      s.classList.toggle('off-left',i===old&&i!==idx);
+    });
+    dots.forEach((d,i)=>{d.classList.toggle('on',i===idx);d.setAttribute('aria-selected',i===idx);});
+    elapsed=0; meta();
+    document.dispatchEvent(new CustomEvent('hv:change',{detail:{idx:idx}}));
+  }
+  function restart(){ elapsed=0; }
+  function setPlaying(v){
+    playing=v;
+    togBtn.classList.toggle('paused',!v);
+    togBtn.setAttribute('aria-pressed',String(!v));
+    togBtn.setAttribute('aria-label',window.CF?window.CF.t(v?'car.pause':'car.play'):(v?'Pause carousel':'Play carousel'));
+  }
+  prevBtn.addEventListener('click',()=>{go(idx-1);restart();});
+  nextBtn.addEventListener('click',()=>{go(idx+1);restart();});
+  togBtn.addEventListener('click',()=>setPlaying(!playing));
+  root.addEventListener('mouseenter',()=>hovering=true);
+  root.addEventListener('mouseleave',()=>hovering=false);
+  root.addEventListener('focusin',()=>hovering=true);
+  root.addEventListener('focusout',e=>{if(!root.contains(e.relatedTarget))hovering=false;});
+  root.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){e.preventDefault();go(idx+(document.documentElement.dir==='rtl'?1:-1));restart();}
+    if(e.key==='ArrowRight'){e.preventDefault();go(idx+(document.documentElement.dir==='rtl'?-1:1));restart();}
+  });
+  /* swipe */
+  let sx=null;
+  const stage=document.getElementById('hvStage');
+  stage.addEventListener('pointerdown',e=>{sx=e.clientX;});
+  stage.addEventListener('pointerup',e=>{
+    if(sx==null)return; const dx=e.clientX-sx; sx=null;
+    if(Math.abs(dx)>42){ const fwd=dx<0; go(idx+(fwd!== (document.documentElement.dir==='rtl')?1:-1)); restart(); }
+  });
+  new IntersectionObserver(es=>es.forEach(en=>{inView=en.isIntersecting;}),{threshold:.1}).observe(root);
+  document.addEventListener('cf:lang',()=>{meta();setPlaying(playing);
+    prevBtn.setAttribute('aria-label',window.CF.t('car.prev'));
+    nextBtn.setAttribute('aria-label',window.CF.t('car.next'));});
+  function tick(now){
+    const dt=now-last; last=now;
+    if(playing&&!hovering&&inView&&!document.hidden){
+      elapsed+=dt;
+      if(elapsed>=DUR){go(idx+1);}
+    }
+    progEl.style.transform='scaleX('+Math.min(1,elapsed/DUR)+')';
+    raf=requestAnimationFrame(tick);
+  }
+  meta(); setPlaying(playing);
+  prevBtn.setAttribute('aria-label',window.CF?window.CF.t('car.prev'):'Previous product');
+  nextBtn.setAttribute('aria-label',window.CF?window.CF.t('car.next'):'Next product');
+  raf=requestAnimationFrame(tick);
+})();
+
+</script>
+</body>
+</html>

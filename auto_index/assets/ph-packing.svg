@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse">
+<path d="M24 0 L0 0 0 24" stroke="#3d5570" stroke-width="0.6" opacity=".5"/></pattern></defs>
+<rect width="400" height="300" fill="#243447"/>
+<rect width="400" height="300" fill="url(#g)"/>
+<rect x="130" y="130" width="70" height="60" stroke="#7c93ab" stroke-width="2.5" fill="none"/><path d="M130 130 L165 112 L235 112 L200 130" stroke="#7c93ab" stroke-width="2.5" fill="none"/><line x1="200" y1="130" x2="235" y2="112" stroke="#7c93ab" stroke-width="2.5"/><line x1="235" y1="112" x2="235" y2="172" stroke="#7c93ab" stroke-width="2.5"/><line x1="200" y1="190" x2="235" y2="172" stroke="#7c93ab" stroke-width="2.5"/><path d="M250 160 L290 160 M282 152 L290 160 L282 168" stroke="#e8590c" stroke-width="2.5" fill="none"/>
+<text x="200" y="272" text-anchor="middle" font-family="Arial" font-size="15" fill="#9fb0c0" letter-spacing="2">PACKING</text>
+</svg>

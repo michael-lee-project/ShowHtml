@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse">
+<path d="M24 0 L0 0 0 24" stroke="#3d5570" stroke-width="0.6" opacity=".5"/></pattern></defs>
+<rect width="400" height="300" fill="#243447"/>
+<rect width="400" height="300" fill="url(#g)"/>
+<rect x="110" y="90" width="180" height="120" stroke="#7c93ab" stroke-width="2.5" fill="none"/><line x1="110" y1="130" x2="290" y2="130" stroke="#7c93ab" stroke-width="2"/><line x1="110" y1="170" x2="290" y2="170" stroke="#7c93ab" stroke-width="2"/><rect x="125" y="102" width="34" height="22" stroke="#e8590c" stroke-width="2" fill="none"/><rect x="170" y="102" width="34" height="22" stroke="#7c93ab" stroke-width="2" fill="none"/><rect x="215" y="142" width="34" height="22" stroke="#7c93ab" stroke-width="2" fill="none"/><rect x="130" y="182" width="34" height="22" stroke="#7c93ab" stroke-width="2" fill="none"/>
+<text x="200" y="272" text-anchor="middle" font-family="Arial" font-size="15" fill="#9fb0c0" letter-spacing="2">WAREHOUSE</text>
+</svg>

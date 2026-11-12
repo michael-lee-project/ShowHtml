@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoolForge · 风格原型 · project_10</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e13'/%3E%3Cpath d='M16 6v20M8 10l16 12M24 10L8 22' stroke='%234cc2ff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--bg:#0a0c10;--s1:#12151c;--s2:#181d27;--line:rgba(148,163,184,.15);--ink:#eef2f8;--mut:#8b95a7;--dim:#5b6577;
+  --blue:#4cc2ff;--ultra:#3452d9;--red:#dc2626;--display:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scrollbar-color:var(--s2) var(--bg);scrollbar-width:thin}
+::-webkit-scrollbar{width:11px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--s2);border-radius:8px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--blue)}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(800px 420px at 15% -5%,rgba(76,194,255,.08),transparent 60%),
+             radial-gradient(700px 420px at 55% 0%,rgba(52,82,217,.09),transparent 60%),
+             radial-gradient(800px 420px at 90% -5%,rgba(220,38,38,.07),transparent 60%)}
+.hero{padding:84px 0 56px;position:relative}
+.badge{display:inline-flex;gap:10px;align-items:center;font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line);padding:8px 16px;border-radius:999px}
+.badge i{width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg,var(--blue),var(--red));display:inline-block}
+.hero h1{font-family:var(--display);font-size:clamp(38px,5.6vw,66px);font-weight:700;letter-spacing:-.03em;line-height:1.04;margin:26px 0 16px}
+.hero h1 .tri{background:linear-gradient(92deg,var(--blue) 0%,#7d97e8 45%,var(--red) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);font-size:16.5px;max-width:70ch}
+.hero .meta{display:flex;gap:34px;margin-top:30px;flex-wrap:wrap}
+.hero .meta div{font-size:12.5px;color:var(--dim)}
+.hero .meta b{display:block;font-family:var(--mono);font-size:17px;color:var(--ink);font-weight:500}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;padding-bottom:26px}
+.card{position:relative;background:var(--s1);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s cubic-bezier(.16,1,.3,1),border-color .25s,box-shadow .25s}
+.card:hover{transform:translateY(-8px)}
+.card.a:hover{border-color:var(--blue);box-shadow:0 26px 60px -22px rgba(76,194,255,.35)}
+.card.b:hover{border-color:#6f86ff;box-shadow:0 26px 60px -22px rgba(52,82,217,.45)}
+.card.c:hover{border-color:var(--red);box-shadow:0 26px 60px -22px rgba(220,38,38,.4)}
+.thumblink{display:block}.thumb{position:relative;aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
+.thumb img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.card:hover .thumb img{transform:scale(1.045)}
+.key{position:absolute;top:14px;left:14px;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:19px;color:#fff}
+.a .key{background:var(--blue);color:#04121c}.b .key{background:var(--ultra)}.c .key{background:var(--red)}
+.skill{position:absolute;top:16px;right:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;background:rgba(10,12,16,.82);backdrop-filter:blur(6px);border:1px solid var(--line);color:#c6cdd9;padding:5px 11px;border-radius:999px}
+.body{padding:24px;display:flex;flex-direction:column;flex:1}
+.body h2{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:-.01em}
+.body .en{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:3px;letter-spacing:.06em}
+.body p{font-size:13.5px;color:var(--mut);margin:13px 0 16px;flex:1}
+.traits{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.traits span{font-family:var(--mono);font-size:10.5px;color:#aeb7c6;border:1px solid var(--line);background:var(--s2);padding:4px 9px;border-radius:6px}
+.open{display:flex;text-decoration:none;align-items:center;justify-content:center;gap:9px;padding:14px;border-radius:11px;font-family:var(--display);font-weight:600;font-size:14.5px;color:#fff;transition:filter .2s,transform .2s}
+.open:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.a .open{background:linear-gradient(180deg,#6fd0ff,var(--blue));color:#04121c}
+.b .open{background:linear-gradient(180deg,#4a66e8,var(--ultra))}
+.c .open{background:linear-gradient(180deg,#f0433f,var(--red))}
+.compare{margin:34px 0 26px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.compare table{width:100%;border-collapse:collapse;font-size:13.5px}
+.compare th,.compare td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line)}
+.compare th{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);background:var(--s1)}
+.compare td{color:var(--mut)}
+.compare td:first-child{font-family:var(--display);font-weight:600;color:var(--ink)}
+.compare tr:last-child td{border-bottom:0}
+.compare .dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:9px;vertical-align:1px}
+.note{margin:0 0 60px;border:1px solid rgba(76,194,255,.25);background:rgba(76,194,255,.06);border-radius:14px;padding:18px 22px;color:var(--mut);font-size:13.5px}
+.note b{color:var(--ink)}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--dim);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:960px){.cards{grid-template-columns:1fr}.compare{overflow-x:auto}.compare table{min-width:640px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="badge"><i></i>project_10 · 阶段 3 · 风格方向选择</span>
+    <h1>同一个品牌，<br><span class="tri">两套风格方向。</span></h1>
+    <p>CoolForge 汽车空调配件工厂站 · 两套风格首页（均已含汽车装配线视频首屏与完整转化链路），选定方向后铺全站。原三套中的 B 套（瑞士网格）已按反馈移除。</p>
+    <div class="meta">
+      <div><b>2</b>套完整首页</div>
+      <div><b>2</b>个设计 skill</div>
+      <div><b>视频</b>首屏已接入</div>
+      <div><b>EN</b>文案（三语在正式开发接入）</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="cards">
+    <a class="card a" href="a-taste.html">
+      <div class="thumb"><img src="assets/previews/a-taste.jpg" alt="A 深色工程风预览"><span class="key">A</span><span class="skill">design-taste-frontend</span></div>
+      <div class="body">
+        <h2>暗夜工程 · Cold Chrome</h2>
+        <div class="en">DARK ENGINEERING / GLACIER BLUE</div>
+        <p>深色铬金底 + 冰川蓝单强调色。非对称 split Hero、产品悬浮标注、5 格 Bento 目录、跑马灯、sticky 定制栏。Space Grotesk × Outfit，克制的高级感。</p>
+        <div class="traits"><span>非对称 Hero</span><span>Bento 目录</span><span>悬浮 HUD 标注</span><span>入场编排</span></div>
+        <span class="open">进入 A 套 →</span>
+      </div>
+    </a>
+    <div class="card c">
+      <div class="thumb"><a href="c-uipro.html" class="thumblink"><img src="assets/previews/c-uipro.jpg" alt="C 动能汽车风预览"></a><span class="key">C</span><span class="skill">ui-ux-pro-max</span></div>
+      <div class="body">
+        <h2>动能车间 · Motion Drive</h2>
+        <div class="en">KINETIC AUTOMOTIVE / ACTION RED</div>
+        <p>数据驱动设计系统：深板岩 + 动作红。汽车装配线视频首屏 + 不透明产品仪表面板。已铺满全站：产品详情 / 工厂 / 定制，EN·ES·AR 三语 + 阿语 RTL。</p>
+        <div class="traits"><span>工厂视频 Hero</span><span>三语 RTL</span><span>产品详情</span><span>工厂页</span><span>定制页</span></div>
+        <a class="open" href="c-uipro.html">进入 C 套 →</a>
+        <span style="display:flex;gap:8px;margin-top:10px;font-size:12px">
+          <a href="c-product.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">产品详情</a>
+          <a href="c-factory.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">工厂</a>
+          <a href="c-custom.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">定制</a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="compare">
+    <table>
+      <tr><th>维度</th><th><span class="dot" style="background:var(--blue)"></span>A · Taste</th><th><span class="dot" style="background:var(--red)"></span>C · UI Pro Max</th></tr>
+      <tr><td>底色</td><td>深色铬金（暗）</td><td>深板岩（暗）</td></tr>
+      <tr><td>强调色</td><td>冰川蓝</td><td>动作红</td></tr>
+      <tr><td>字体</td><td>Space Grotesk + Outfit</td><td>Syncopate + Space Mono</td></tr>
+      <tr><td>Hero 结构</td><td>视频底 + 非对称 split + 悬浮标注</td><td>工厂视频全幅 + HUD 取景框</td></tr>
+      <tr><td>目录形态</td><td>Bento 不等格</td><td>等宽卡片 + 顶部红线</td></tr>
+      <tr><td>动效</td><td>入场编排 + marquee</td><td>视差 + 扫描线 + 数字滚动</td></tr>
+      <tr><td>气质</td><td>高级 / 精密 / 冷静</td><td>速度 / 能量 / 仪表感</td></tr>
+    </table>
+  </div>
+
+  <div class="note">
+    <b>怎么选：</b>两套都包含完整首页（导航 / 视频 Hero / 年代覆盖 / 5 品类 / 4 定制 / 工厂 / RFQ 表单 / 页脚），RFQ 表单都可真实提交演示（成功态 + WhatsApp 预填 + 再发一单）。选定方向后：该套风格铺全站（详情 / 工厂 / 定制页），接入三语（EN/ES/AR + RTL）与真实数据，进入 Next.js 正式开发。参考价与工厂媒体均为占位。
+  </div>
+
+  <footer>
+    <span>© 2026 CoolForge · project_10 汽车配件独立站</span>
+    <span>2 skills · 2 directions · 1 brand</span>
+  </footer>
+</div>
+
+</body>
+</html>

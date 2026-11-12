@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoolForge · Custom Services</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e13'/%3E%3Cpath d='M16 6v20M8 10l16 12M24 10L8 22' stroke='%234cc2ff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="c-style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="c-uipro.html"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+    <nav class="navlinks" id="navlinks">
+      <a href="c-uipro.html" data-i18n="nav.home">Home</a>
+      <a href="c-product.html" data-i18n="nav.catalog">Catalog</a>
+      <a href="c-custom.html" class="active" data-i18n="nav.custom">Custom</a>
+      <a href="c-factory.html" data-i18n="nav.factory">Factory</a>
+      <a href="c-uipro.html#rfq" data-i18n="nav.quote">Quote</a>
+    </nav>
+    <div class="nav-cta">
+      <span data-lang-slot></span>
+      <a class="btn btn-red btn-sm" href="#cp-rfq" data-i18n="nav.getquote">Get a quote</a>
+      <button class="navtoggle" data-navtoggle="#navlinks" aria-label="Menu" data-i18n-aria="nav.menu" aria-expanded="false"><i data-icon="list"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="page-hero">
+  <div class="ph-bg"></div><div class="ph-grid"></div>
+  <div class="wrap">
+    <div class="crumb"><a href="c-uipro.html" data-i18n="pd.crumb.home">Home</a><span class="sep">/</span><span data-i18n="cp.crumb">Custom</span></div>
+    <div class="sec-kicker" data-i18n="cp.kicker">Custom services</div>
+    <h1><span data-i18n="cp.h1a">Your drawing.</span><br><span class="red" data-i18n="cp.h1b">Our line.</span></h1>
+    <p class="ph-sub" data-i18n="cp.sub">&gt; Four ways to make a part yours. Send a drawing, a sample or just the vehicle, and we model, prototype and produce it.</p>
+  </div>
+</section>
+
+<section style="padding-top:56px">
+  <div class="wrap">
+    <div class="svc-grid">
+      <div class="svc-card" data-reveal><i data-icon="car"></i><h3 data-i18n="svc1.h">Vehicle fitment</h3><p data-i18n="svc1.p">Match by year, make, model or OEM number. We confirm fitment before you order.</p><div class="svc-tags"><span>OEM</span><span>YMM</span><span data-i18n="spec.years">Years</span></div></div>
+      <div class="svc-card" data-reveal><i data-icon="ruler"></i><h3 data-i18n="svc2.h">Size &amp; fittings</h3><p data-i18n="svc2.p">Custom length, fitting type and bend angles to your drawing or sample.</p><div class="svc-tags"><span>#6-#12</span><span>O-ring</span><span>Flange</span></div></div>
+      <div class="svc-card" data-reveal><i data-icon="tag"></i><h3 data-i18n="svc3.h">Private label</h3><p data-i18n="svc3.p">Your brand, your packaging, your part numbers on our production line.</p><div class="svc-tags"><span>Logo</span><span>Box</span><span>Part no.</span></div></div>
+      <div class="svc-card" data-reveal><i data-icon="blueprint"></i><h3 data-i18n="svc4.h">OEM / ODM</h3><p data-i18n="svc4.p">Build to print or sample. In-house modeling takes you from drawing to sample fast.</p><div class="svc-tags"><span>CAD</span><span>Sample</span><span>NDA</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="eras">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="cp.flow.kicker">How it works</div>
+      <h2 class="sec-h" data-i18n="cp.flow.h">From request to production</h2>
+    </div>
+    <div class="flow-strip">
+      <div class="flow-step" data-reveal><div class="fn">01</div><h3 data-i18n="cp.fl1h">Send request</h3><p data-i18n="cp.fl1p">Drawing, sample or vehicle details.</p></div>
+      <div class="flow-step" data-reveal><div class="fn">02</div><h3 data-i18n="cp.fl2h">Feasibility &amp; quote</h3><p data-i18n="cp.fl2p">Engineering review within 24h.</p></div>
+      <div class="flow-step" data-reveal><div class="fn">03</div><h3 data-i18n="cp.fl3h">Sample</h3><p data-i18n="cp.fl3p">Prototype built and confirmed.</p></div>
+      <div class="flow-step" data-reveal><div class="fn">04</div><h3 data-i18n="cp.fl4h">Production</h3><p data-i18n="cp.fl4p">Batch run, tested and shipped.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cp-rfq">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="rfq.kicker">Contact</div>
+      <h2 class="sec-h" data-i18n="cp.form.h">Start a custom project</h2>
+      <p class="sec-sub" data-i18n="cp.form.sub">&gt; Tell us what you need. Attach a drawing or sample photo and we reply within 24h.</p>
+    </div>
+    <div class="rfq-wrap">
+      <form data-rfq data-reveal>
+        <div class="f-row">
+          <div class="field"><label for="cp-type" data-i18n="cp.type">Custom type *</label>
+            <select id="cp-type" name="custom_type" required>
+              <option value="fitment" data-i18n="cp.type1">Vehicle fitment</option>
+              <option value="size" data-i18n="cp.type2">Size &amp; fittings</option>
+              <option value="label" data-i18n="cp.type3">Private label</option>
+              <option value="oem" data-i18n="cp.type4">OEM / ODM (to print)</option>
+            </select>
+          </div>
+          <div class="field"><label for="cp-qty" data-i18n="f.qty">Quantity *</label><input id="cp-qty" name="quantity" type="number" min="1" placeholder="50" data-i18n-ph="f.qty.ph" required></div>
+        </div>
+        <div class="field"><label for="cp-spec" data-i18n="cp.spec">Specifications</label><textarea id="cp-spec" name="specs" placeholder="e.g. #8 barrier hose, 1200mm, O-ring both ends, R-134a" data-i18n-ph="cp.spec.ph"></textarea></div>
+        <div class="upload-zone" id="cpUpload" tabindex="0" role="button" aria-label="Attach drawing">
+          <i data-icon="upload-simple"></i>
+          <p data-i18n="cp.upload">Attach drawing / sample photo</p>
+          <div class="types" data-i18n="cp.upload.types">PDF · PNG · JPG · DWG · STEP · up to 10MB</div>
+        </div>
+        <div class="f-row">
+          <div class="field"><label for="cp-name" data-i18n="f.name">Name *</label><input id="cp-name" name="name" required></div>
+          <div class="field"><label for="cp-email" data-i18n="f.email">Email *</label><input id="cp-email" name="email" type="email" required></div>
+        </div>
+        <div class="f-row">
+          <div class="field"><label for="cp-co" data-i18n="f.company">Company</label><input id="cp-co" name="company"></div>
+          <div class="field"><label for="cp-wa" data-i18n="f.wa">WhatsApp</label><input id="cp-wa" name="whatsapp" class="ltr" placeholder="+1 ..."></div>
+        </div>
+        <button class="btn btn-red" type="submit" style="width:100%"><span data-i18n="cp.submit">Send custom RFQ · reply in 24h</span> <i data-icon="arrow-right"></i></button>
+        <div class="rfq-ok" hidden>
+          <b data-i18n="rfq.ok">✓ RFQ_RECEIVED</b>
+          <p data-i18n="rfq.okp">Our team will reply within 24h. For a faster response, continue on WhatsApp:</p>
+          <a class="btn btn-red btn-sm" data-wa href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i> WhatsApp</a>
+        </div>
+      </form>
+      <div data-reveal>
+        <div class="custom-vis" style="position:relative;min-height:300px">
+          <img src="assets/ac-hose.png" alt="Custom hose assembly">
+          <div class="cap">SPEC <b class="ltr">CF-HOSE-CUSTOM</b> · <span data-i18n="pd.chip.custom">Custom available</span></div>
+        </div>
+        <div class="channels" style="margin-top:14px">
+          <a class="channel" href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i><div><b data-i18n="ch.wa">WhatsApp</b><span data-i18n="ch.wa.p">Fastest reply · send photos and drawings</span></div></a>
+          <div class="channel"><i data-icon="clock"></i><div><b data-i18n="ch.24">24-hour response</b><span data-i18n="ch.24.p">Quotes confirmed within one business day</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="eras">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="cp.faq.kicker">Questions</div>
+      <h2 class="sec-h" data-i18n="cp.faq.h">Before you send</h2>
+    </div>
+    <div class="faq" data-reveal>
+      <div class="faq-item"><button class="faq-q" type="button"><span data-i18n="cp.faq1q">What is the minimum order?</span><i data-icon="caret-down"></i></button><div class="faq-a"><p data-i18n="cp.faq1a"></p></div></div>
+      <div class="faq-item"><button class="faq-q" type="button"><span data-i18n="cp.faq2q">How fast is a sample?</span><i data-icon="caret-down"></i></button><div class="faq-a"><p data-i18n="cp.faq2a"></p></div></div>
+      <div class="faq-item"><button class="faq-q" type="button"><span data-i18n="cp.faq3q">Can you match my existing part?</span><i data-icon="caret-down"></i></button><div class="faq-a"><p data-i18n="cp.faq3a"></p></div></div>
+      <div class="faq-item"><button class="faq-q" type="button"><span data-i18n="cp.faq4q">Do you keep my design confidential?</span><i data-icon="caret-down"></i></button><div class="faq-a"><p data-i18n="cp.faq4a"></p></div></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="c-uipro.html" style="margin-bottom:16px"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+        <p style="font-family:var(--mono);font-size:12.5px;color:#94a3b8;max-width:32ch;line-height:1.8" data-i18n="foot.tag">Factory-direct automotive A/C parts. Custom hoses our specialty.</p>
+      </div>
+      <div><h4 data-i18n="foot.products">Products</h4><a href="c-product.html" data-i18n="cat.hose">A/C Hose</a><a href="c-product.html" data-i18n="cat.evap">Evaporator</a><a href="c-product.html" data-i18n="cat.cond">Condenser</a><a href="c-product.html" data-i18n="cat.exv">Expansion Valve</a><a href="c-product.html" data-i18n="cat.drier">Receiver Drier</a></div>
+      <div><h4 data-i18n="foot.services">Services</h4><a href="c-custom.html" data-i18n="nav.custom">Custom</a><a href="c-custom.html" data-i18n="svc3.h">Private label</a><a href="c-custom.html" data-i18n="svc4.h">OEM / ODM</a><a href="c-factory.html" data-i18n="nav.factory">Factory</a></div>
+      <div><h4 data-i18n="foot.contact">Contact</h4><a href="https://wa.me/8613800000000" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:sales@coolforge.example">Email</a><a href="c-uipro.html#rfq" data-i18n="nav.getquote">Get a quote</a></div>
+    </div>
+    <div class="foot-bottom"><span data-i18n="foot.copy">© 2026 COOLFORGE</span><span>PROTOTYPE C · UI-UX-PRO-MAX</span><span data-i18n="foot.proto">REFERENCE PRICES ARE PLACEHOLDERS</span></div>
+  </div>
+</footer>
+
+<script src="kit.js"></script>
+<script src="i18n.js"></script>
+<script>
+(function(){
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    const q=item.querySelector('.faq-q'), a=item.querySelector('.faq-a');
+    q.addEventListener('click',()=>{
+      const open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(o=>{o.classList.remove('open');o.querySelector('.faq-a').style.maxHeight='0';});
+      if(!open){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+    });
+  });
+  /* upload zone */
+  const zone=document.getElementById('cpUpload');
+  if(zone){
+    const input=document.createElement('input');input.type='file';input.accept='.pdf,.png,.jpg,.jpeg,.dwg,.dxf,.step,.stp';input.style.display='none';
+    zone.appendChild(input);
+    const open=()=>input.click();
+    zone.addEventListener('click',open);
+    zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+    ['dragover','dragenter'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('drag');}));
+    ['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('drag');}));
+    zone.addEventListener('drop',e=>{if(e.dataTransfer.files.length){input.files=e.dataTransfer.files;show();}});
+    input.addEventListener('change',show);
+    function show(){
+      zone.querySelectorAll('.up-chip').forEach(c=>c.remove());
+      const f=input.files[0]; if(!f)return;
+      const mb=f.size/1048576, chip=document.createElement('span');
+      if(mb>10){chip.className='up-chip err';chip.textContent='✕ '+f.name+' · '+mb.toFixed(1)+'MB > 10MB';input.value='';}
+      else{chip.className='up-chip';chip.innerHTML='📎 '+f.name+' · '+(mb<1?Math.round(f.size/1024)+'KB':mb.toFixed(1)+'MB')+' <button type="button" class="rm" aria-label="remove">✕</button>';
+        chip.querySelector('.rm').addEventListener('click',e=>{e.stopPropagation();input.value='';chip.remove();});}
+      zone.appendChild(chip);
+    }
+  }
+})();
+</script>
+</body>
+</html>

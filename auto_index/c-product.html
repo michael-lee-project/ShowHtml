@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoolForge · Product Detail</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e13'/%3E%3Cpath d='M16 6v20M8 10l16 12M24 10L8 22' stroke='%234cc2ff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="c-style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="c-uipro.html"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+    <nav class="navlinks" id="navlinks">
+      <a href="c-uipro.html" data-i18n="nav.home">Home</a>
+      <a href="c-product.html" class="active" data-i18n="nav.catalog">Catalog</a>
+      <a href="c-custom.html" data-i18n="nav.custom">Custom</a>
+      <a href="c-factory.html" data-i18n="nav.factory">Factory</a>
+      <a href="c-uipro.html#rfq" data-i18n="nav.quote">Quote</a>
+    </nav>
+    <div class="nav-cta">
+      <span data-lang-slot></span>
+      <a class="btn btn-red btn-sm" href="#pd-rfq" data-i18n="nav.getquote">Get a quote</a>
+      <button class="navtoggle" data-navtoggle="#navlinks" aria-label="Menu" data-i18n-aria="nav.menu" aria-expanded="false"><i data-icon="list"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="page-hero">
+  <div class="ph-bg"></div><div class="ph-grid"></div>
+  <div class="wrap">
+    <div class="crumb"><a href="c-uipro.html" data-i18n="pd.crumb.home">Home</a><span class="sep">/</span><a href="c-product.html" data-i18n="pd.crumb.cat">Catalog</a><span class="sep">/</span><span id="crumbName">A/C Hose</span></div>
+    <div class="sec-kicker" data-i18n="pd.kicker">Product detail</div>
+    <h1><span data-i18n="pd.h1a">Find the part.</span><br><span class="red" data-i18n="pd.h1b">Confirm the fit.</span></h1>
+    <p class="ph-sub" data-i18n="pd.sub">&gt; Real OEM references, vehicle fitment and factory specs. Switch between our hose assemblies and evaporator cores below.</p>
+    <div class="pd-switch" id="pdSwitch" role="tablist" aria-label="Products"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="pd-grid">
+      <div>
+        <div class="pd-stage" id="pdStage">
+          <div class="frame"></div>
+          <img class="main" id="pdImg" src="assets/ac-hose.png" alt="Product">
+          <div class="hud tl"><span data-i18n="hero.hud1a">SYS</span> <b id="hudCat">A/C-HOSE</b><br><span id="hudSpec">BORE #6-#12</span></div>
+          <div class="hud br"><span data-i18n="pd.chip.tested">100% leak-tested</span><br><b id="hudOem">CF-HOSE-001</b></div>
+          <div class="zoom-hint"><i data-icon="magnifying-glass"></i><span data-i18n="pd.zoom">Click image to zoom</span></div>
+        </div>
+        <div class="pd-thumbs" id="pdThumbs"></div>
+      </div>
+
+      <div class="pd-info">
+        <div class="tag-row">
+          <span class="chip ok" data-i18n="pd.chip.tested">100% leak-tested</span>
+          <span class="chip red" id="chipCustom" data-i18n="pd.chip.custom">Custom available</span>
+          <span class="chip" data-i18n="pd.chip.stock">Factory direct</span>
+        </div>
+        <h2 id="pdName">A/C Hose Assembly · Universal</h2>
+        <div class="pd-oem"><span data-i18n="spec.oem">OEM reference</span>: <b class="ltr" id="pdOem">CF-HOSE-001</b>
+          <button class="copy-btn" id="copyOem" aria-label="Copy OEM" data-i18n-aria="pd.copy"><i data-icon="copy"></i></button>
+        </div>
+
+        <div class="fitbar"><i data-icon="car"></i><span data-i18n="pd.fitbar">Not sure it fits? Send your OEM number or vehicle and we confirm fitment within 24h.</span></div>
+
+        <div class="price-box">
+          <div class="p"><span class="ltr" id="pdPrice">$18 - $42</span><small><span data-i18n="pd.refprice">Reference price</span> · <span data-i18n="pd.refnote">Final price confirmed by quote</span></small></div>
+          <a class="btn btn-red btn-sm" href="#pd-rfq" data-i18n="pd.request">Request quote</a>
+        </div>
+
+        <div class="sec-kicker" style="margin-top:26px" data-i18n="pd.specs">Factory specifications</div>
+        <table class="spec-table" id="specTable"></table>
+
+        <div class="sec-kicker" style="margin-top:26px" data-i18n="pd.fitment">Vehicle fitment</div>
+        <table class="spec-table" id="fitTable"></table>
+
+        <div class="pd-actions">
+          <a class="btn btn-red" href="#pd-rfq" data-i18n="pd.request">Request quote</a>
+          <a class="btn btn-ghost" href="c-custom.html" data-i18n="pd.customize">Customize this part</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="related" data-reveal>
+      <div class="sec-kicker" data-i18n="pd.related">Related parts</div>
+      <div class="rel-grid" id="relGrid"></div>
+    </div>
+  </div>
+</section>
+
+<section id="pd-rfq" class="eras">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="sec-kicker" data-i18n="rfq.kicker">Contact</div>
+      <h2 class="sec-h" data-i18n="rfq.h">Get a quote</h2>
+      <p class="sec-sub" data-i18n="rfq.sub">&gt; We reply within 24 hours. Form, WhatsApp or email, whichever is fastest for you.</p>
+    </div>
+    <div class="rfq-wrap">
+      <form data-rfq data-reveal>
+        <input type="hidden" name="part" id="rfqPart" value="CF-HOSE-001">
+        <div class="f-row">
+          <div class="field"><label for="p-qty" data-i18n="f.qty">Quantity *</label><input id="p-qty" name="quantity" type="number" min="1" placeholder="50" data-i18n-ph="f.qty.ph" required></div>
+          <div class="field"><label for="p-oem" data-i18n="f.oem">Part / OEM number</label><input id="p-oem" name="oem" class="ltr" value="CF-HOSE-001"></div>
+        </div>
+        <div class="field"><label for="p-veh" data-i18n="f.veh">Vehicle (year / make / model)</label><input id="p-veh" name="vehicle" placeholder="2016 Toyota Camry" data-i18n-ph="f.veh.ph"></div>
+        <div class="f-row">
+          <div class="field"><label for="p-name" data-i18n="f.name">Name *</label><input id="p-name" name="name" required></div>
+          <div class="field"><label for="p-email" data-i18n="f.email">Email *</label><input id="p-email" name="email" type="email" required></div>
+        </div>
+        <div class="field"><label for="p-msg" data-i18n="f.msg">Notes</label><textarea id="p-msg" name="message" placeholder="Fitting details, target price, delivery..." data-i18n-ph="f.msg.ph"></textarea></div>
+        <button class="btn btn-red" type="submit" style="width:100%"><span data-i18n="rfq.submit">Send RFQ · reply in 24h</span> <i data-icon="arrow-right"></i></button>
+        <div class="rfq-ok" hidden>
+          <b data-i18n="rfq.ok">✓ RFQ_RECEIVED</b>
+          <p data-i18n="rfq.okp">Our team will reply within 24h. For a faster response, continue on WhatsApp:</p>
+          <a class="btn btn-red btn-sm" data-wa href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i> WhatsApp</a>
+        </div>
+      </form>
+      <div class="channels" data-reveal>
+        <a class="channel" href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i><div><b data-i18n="ch.wa">WhatsApp</b><span data-i18n="ch.wa.p">Fastest reply · send photos and drawings</span></div></a>
+        <a class="channel" href="mailto:sales@coolforge.example"><i data-icon="envelope-simple"></i><div><b class="ltr">sales@coolforge.example</b><span data-i18n="ch.mail.p">For formal RFQs and documentation</span></div></a>
+        <div class="channel"><i data-icon="clock"></i><div><b data-i18n="ch.24">24-hour response</b><span data-i18n="ch.24.p">Quotes confirmed within one business day</span></div></div>
+        <div class="channel"><i data-icon="globe"></i><div><b data-i18n="ch.geo">North America &amp; Middle East</b><span data-i18n="ch.geo.p">English · Español · العربية</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="c-uipro.html" style="margin-bottom:16px"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+        <p style="font-family:var(--mono);font-size:12.5px;color:#94a3b8;max-width:32ch;line-height:1.8" data-i18n="foot.tag">Factory-direct automotive A/C parts. Custom hoses our specialty.</p>
+      </div>
+      <div><h4 data-i18n="foot.products">Products</h4><a href="c-product.html" data-i18n="cat.hose">A/C Hose</a><a href="c-product.html" data-i18n="cat.evap">Evaporator</a><a href="c-product.html" data-i18n="cat.cond">Condenser</a><a href="c-product.html" data-i18n="cat.exv">Expansion Valve</a><a href="c-product.html" data-i18n="cat.drier">Receiver Drier</a></div>
+      <div><h4 data-i18n="foot.services">Services</h4><a href="c-custom.html" data-i18n="nav.custom">Custom</a><a href="c-custom.html" data-i18n="svc3.h">Private label</a><a href="c-custom.html" data-i18n="svc4.h">OEM / ODM</a><a href="c-factory.html" data-i18n="nav.factory">Factory</a></div>
+      <div><h4 data-i18n="foot.contact">Contact</h4><a href="https://wa.me/8613800000000" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:sales@coolforge.example">Email</a><a href="#pd-rfq" data-i18n="nav.getquote">Get a quote</a></div>
+    </div>
+    <div class="foot-bottom"><span data-i18n="foot.copy">© 2026 COOLFORGE</span><span>PROTOTYPE C · UI-UX-PRO-MAX</span><span data-i18n="foot.proto">REFERENCE PRICES ARE PLACEHOLDERS</span></div>
+  </div>
+</footer>
+
+<script src="kit.js"></script>
+<script src="i18n.js"></script>
+<script src="products.js"></script>
+<script>
+(function(){
+  const P = window.CF_PRODUCTS;
+  const qp = new URLSearchParams(location.search).get('p');
+  let cur = P.find(x => x.id === qp) || P[0];
+  const L = () => document.documentElement.lang || 'en';
+  const tv = v => (v && typeof v === 'object') ? (v[L()] || v.en) : v;
+
+  function buildSwitch(){
+    const sw = document.getElementById('pdSwitch');
+    sw.innerHTML = P.map(p => {
+      const main = tv(p.name).split('·')[0].trim();
+      const sub = (p.id==='hose-universal') ? 'A/C Hose' : (typeof p.fit.make==='string' ? p.fit.make : main);
+      return `<button role="tab" data-id="${p.id}" aria-selected="${p.id===cur.id}" title="${tv(p.name)}"><img src="${p.img}" alt=""><span class="ltr">${sub}</span></button>`;
+    }).join('');
+    sw.querySelectorAll('button').forEach(b => b.addEventListener('click', () => select(P.find(x=>x.id===b.dataset.id))));
+  }
+  function specRows(p){
+    const rows = [];
+    const add = (k, v) => { if(v) rows.push([k, tv(v)]); };
+    add('spec.type', p.specs.type); add('spec.ref', p.specs.ref); add('spec.core', p.specs.core);
+    add('spec.bore', p.specs.bore); add('spec.fitting', p.specs.fitting); add('spec.material', p.specs.material); add('spec.length', p.specs.length);
+    return rows;
+  }
+  function render(){
+    const lang = L();
+    document.getElementById('pdImg').src = cur.img;
+    document.getElementById('pdImg').alt = tv(cur.name);
+    document.getElementById('pdName').textContent = tv(cur.name);
+    document.getElementById('pdOem').textContent = cur.oem;
+    document.getElementById('hudOem').textContent = cur.oem;
+    document.getElementById('hudCat').textContent = (window.CF_CAT[cur.cat][lang]||window.CF_CAT[cur.cat].en).toUpperCase();
+    document.getElementById('hudSpec').textContent = cur.specs.bore || cur.specs.core || '';
+    document.getElementById('pdPrice').textContent = '$' + cur.price[0] + ' - $' + cur.price[1];
+    document.getElementById('crumbName').textContent = tv(cur.name);
+    document.getElementById('chipCustom').style.display = cur.custom ? '' : 'none';
+    document.getElementById('rfqPart').value = cur.oem;
+    document.getElementById('p-oem').value = cur.oem;
+    // spec table
+    document.getElementById('specTable').innerHTML = specRows(cur).map(([k,v]) =>
+      `<tr><th>${window.CF.t(k)}</th><td class="${/^[A-Z0-9# ×.\-\/]+$/i.test(String(v))?'ltr':''}">${v}</td></tr>`).join('');
+    // fitment
+    document.getElementById('fitTable').innerHTML =
+      `<tr><th>${window.CF.t('spec.make')}</th><td>${tv(cur.fit.make)}</td></tr>` +
+      `<tr><th>${window.CF.t('spec.years')}</th><td class="ltr">${cur.fit.years}</td></tr>` +
+      `<tr><th>${window.CF.t('spec.oem')}</th><td class="ltr">${cur.oem}</td></tr>`;
+    // thumbs (main + photo if present)
+    const thumbs = [{src:cur.img,alt:tv(cur.name)}];
+    if(cur.photo) thumbs.push({src:cur.photo,alt:'Factory photo'});
+    document.getElementById('pdThumbs').innerHTML = thumbs.map((t,i)=>`<button class="${i===0?'on':''}" data-src="${t.src}"><img src="${t.src}" alt="${t.alt}"></button>`).join('');
+    document.querySelectorAll('#pdThumbs button').forEach(b=>b.addEventListener('click',()=>{
+      document.getElementById('pdImg').src=b.dataset.src;
+      document.querySelectorAll('#pdThumbs button').forEach(x=>x.classList.toggle('on',x===b));
+    }));
+    // related (other cats first)
+    const rel = P.filter(x=>x.id!==cur.id).sort((a,b)=>(a.cat===cur.cat)-(b.cat===cur.cat)).slice(0,4);
+    document.getElementById('relGrid').innerHTML = rel.map(r=>`<button class="rel-card" data-id="${r.id}"><div class="img"><img src="${r.img}" alt=""></div><h4>${tv(r.name)}</h4><div class="oem ltr">${r.oem}</div></button>`).join('');
+    document.querySelectorAll('#relGrid .rel-card').forEach(c=>c.addEventListener('click',()=>{select(P.find(x=>x.id===c.dataset.id));window.scrollTo({top:0,behavior:'smooth'});}));
+    // switch active
+    document.querySelectorAll('#pdSwitch button').forEach(b=>{const on=b.dataset.id===cur.id;b.classList.toggle('on',on);b.setAttribute('aria-selected',on);});
+  }
+  function select(p){ cur = p; render();
+    const on = document.querySelector('#pdSwitch button.on');
+    if (on && on.scrollIntoView) on.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'smooth' });
+  }
+
+  // zoom
+  document.getElementById('pdStage').addEventListener('click', e => {
+    if(e.target.closest('.hud')) return;
+    document.getElementById('pdStage').classList.toggle('zoom');
+  });
+  // copy OEM
+  document.getElementById('copyOem').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(cur.oem); } catch(e){}
+    const b = document.getElementById('copyOem');
+    b.innerHTML = '<i data-icon="check"></i>';
+    setTimeout(()=>{ b.innerHTML='<i data-icon="copy"></i>'; }, 1400);
+  });
+
+  document.addEventListener('cf:lang', render);
+  document.addEventListener('DOMContentLoaded', () => { buildSwitch(); render(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoolForge · A/C Parts Factory · Taste</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e13'/%3E%3Cpath d='M16 6v20M8 10l16 12M24 10L8 22' stroke='%234cc2ff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Reading this as: B2B industrial manufacturer landing for technical buyers, cold-luxury engineering language.
+   Dials: DESIGN_VARIANCE 7 · MOTION_INTENSITY 6 · VISUAL_DENSITY 4. Theme locked dark. One accent: glacier blue.
+   Radius rule: buttons pill, cards 16px, inputs 10px. Icons: Phosphor. No em-dashes. */
+:root{
+  --bg:#0b0e13; --bg-2:#10141c; --surface:#151a24; --surface-2:#1b2230;
+  --line:rgba(148,163,184,.14); --line-2:rgba(148,163,184,.24);
+  --ink:#eef2f8; --mut:#93a0b4; --dim:#5d6b80;
+  --accent:#4cc2ff; --accent-2:#7dd6ff; --accent-ink:#04121c;
+  --ok:#34d399; --warn:#fbbf24;
+  --display:'Space Grotesk',sans-serif; --body:'Outfit',sans-serif; --mono:'JetBrains Mono',monospace;
+  --r-card:16px; --r-input:10px; --maxw:1240px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scrollbar-color:var(--surface-2) var(--bg);scrollbar-width:thin}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+::-webkit-scrollbar{width:11px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:8px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;line-height:1.05}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.ico{display:inline-flex;width:1.15em;height:1.15em;flex:none}
+.ico svg{width:100%;height:100%}
+.mono{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* grain + aurora background */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background:radial-gradient(900px 500px at 85% -5%,rgba(76,194,255,.10),transparent 60%),
+             radial-gradient(700px 500px at -5% 30%,rgba(76,194,255,.05),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+main,header,footer{position:relative;z-index:1}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:100;height:68px;display:flex;align-items:center;
+  background:rgba(11,14,19,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:28px;width:100%}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em}
+.brand .mk{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#2a7fb8);display:grid;place-items:center;color:var(--accent-ink)}
+.brand .mk .ico{width:17px;height:17px}
+.navlinks{display:flex;gap:26px;font-size:14px;font-weight:500;color:var(--mut);margin-left:8px}
+.navlinks a{position:relative;padding:4px 0;transition:color .2s}
+.navlinks a:hover{color:var(--ink)}
+.navlinks a.active{color:var(--accent)}
+.navlinks a.active::after{width:100%}
+.navlinks a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--accent);transition:width .25s var(--ease)}
+.navlinks a:hover::after{width:100%}
+.nav-cta{margin-left:auto;display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-weight:600;font-size:14.5px;
+  padding:12px 24px;border-radius:999px;border:1px solid transparent;cursor:pointer;transition:transform .18s var(--ease),box-shadow .18s,background .18s,border-color .18s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-p{background:var(--accent);color:var(--accent-ink);box-shadow:0 8px 24px -8px rgba(76,194,255,.55)}
+.btn-p:hover{background:var(--accent-2);transform:translateY(-2px);box-shadow:0 14px 30px -8px rgba(76,194,255,.6)}
+.btn-g{border-color:var(--line-2);color:var(--ink);background:transparent}
+.btn-g:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:9px 18px;font-size:13.5px}
+.navtoggle{display:none;background:none;border:1px solid var(--line-2);border-radius:9px;color:var(--ink);width:42px;height:42px;place-items:center;cursor:pointer}
+
+/* hero */
+.hero{min-height:100dvh;display:flex;align-items:center;padding:64px 0 48px;position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;width:100%}
+.hero h1{font-size:clamp(40px,5.4vw,68px);font-weight:700;letter-spacing:-.03em}
+.hero h1 .gl{color:var(--accent)}
+.hero .sub{color:var(--mut);font-size:17px;max-width:46ch;margin:22px 0 30px}
+.hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-meta{display:flex;gap:26px;margin-top:38px;flex-wrap:wrap}
+.hero-meta div{font-size:12.5px;color:var(--dim)}
+.hero-meta b{display:block;font-family:var(--mono);font-size:15px;color:var(--ink);font-weight:500;margin-bottom:2px}
+.hero-vis{position:relative;display:grid;place-items:center;min-height:420px}
+.hero-vis .ring{position:absolute;border-radius:50%;border:1px solid var(--line)}
+.hero-vis .r1{width:420px;height:420px;border-color:rgba(76,194,255,.18)}
+.hero-vis .r2{width:320px;height:320px;border-style:dashed;animation:spin 40s linear infinite}
+.hero-vis .glow{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(76,194,255,.22),transparent 65%);filter:blur(10px)}
+.hero-vis img{position:relative;z-index:2;width:min(340px,80%);filter:drop-shadow(0 30px 50px rgba(0,0,0,.6))}
+.chip{position:absolute;z-index:3;font-family:var(--mono);font-size:11.5px;color:var(--ink);background:rgba(21,26,36,.85);
+  border:1px solid var(--line-2);border-radius:999px;padding:7px 14px;backdrop-filter:blur(8px);display:flex;gap:7px;align-items:center}
+.chip .ico{color:var(--accent);width:14px;height:14px}
+.chip.c1{top:12%;right:4%}.chip.c2{bottom:16%;left:2%}.chip.c3{bottom:4%;right:12%}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.hero .stagger>*{animation:rise .7s var(--ease) both}
+.hero .stagger>*:nth-child(2){animation-delay:.1s}.hero .stagger>*:nth-child(3){animation-delay:.2s}.hero .stagger>*:nth-child(4){animation-delay:.3s}
+.hero-vis{animation:rise .9s .25s var(--ease) both}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);padding:16px 0;overflow:hidden;background:var(--bg-2)}
+.mq-track{display:flex;width:max-content;animation:mq 32s linear infinite;font-family:var(--mono);font-size:13px;color:var(--dim);letter-spacing:.5px}
+.mq-track span{display:flex;gap:48px;align-items:center;padding-right:48px}
+.mq-track b{color:var(--mut);font-weight:500}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* sections */
+section{padding:96px 0}
+section[id]{scroll-margin-top:84px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.sec-h{font-size:clamp(28px,3.4vw,42px);font-weight:700;max-width:20ch}
+.sec-sub{color:var(--mut);max-width:60ch;margin-top:14px;font-size:15.5px}
+[data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* era rail */
+.era-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.era{padding:34px 30px;position:relative;border-right:1px solid var(--line);transition:background .3s}
+.era:last-child{border-right:0}
+.era:hover{background:var(--surface)}
+.era .ref{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:1px}
+.era .yrs{font-family:var(--display);font-size:30px;font-weight:700;margin:10px 0 8px}
+.era p{color:var(--mut);font-size:14px}
+.era .bar{position:absolute;top:0;left:0;height:3px;width:100%;background:linear-gradient(90deg,var(--accent),transparent)}
+.era:nth-child(2) .bar{background:linear-gradient(90deg,#7dd6ff,transparent)}
+.era:nth-child(3) .bar{background:linear-gradient(90deg,var(--ok),transparent)}
+
+/* catalog bento */
+.bento{display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-auto-rows:220px;gap:16px;margin-top:48px}
+.tile{position:relative;border:1px solid var(--line);border-radius:var(--r-card);background:var(--surface);overflow:hidden;
+  padding:24px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .3s var(--ease),border-color .3s}
+.tile:hover{transform:translateY(-5px);border-color:var(--accent)}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:26px;opacity:.92;transition:transform .4s var(--ease)}
+.tile:hover img{transform:scale(1.05)}
+.tile .scrim{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(11,14,19,.88))}
+.tile .t-body{position:relative;z-index:2}
+.tile h3{font-size:19px;font-weight:600}
+.tile .cnt{font-family:var(--mono);font-size:11.5px;color:var(--accent);margin-top:4px}
+.tile.feat{grid-row:span 2;background:linear-gradient(160deg,var(--surface-2),var(--surface))}
+.tile.feat img{object-fit:contain;padding:40px}
+.tile.feat h3{font-size:26px}
+.tile .tagx{position:absolute;top:18px;left:18px;z-index:2;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent);padding:4px 10px;border-radius:999px}
+
+/* custom split */
+.custom-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start;margin-top:20px}
+.custom-left{position:sticky;top:100px}
+.svc{display:flex;gap:20px;padding:26px 0;border-bottom:1px solid var(--line)}
+.svc:first-child{border-top:1px solid var(--line)}
+.svc .n{font-family:var(--mono);color:var(--accent);font-size:13px;padding-top:4px}
+.svc h3{font-size:18px;font-weight:600;margin-bottom:6px}
+.svc p{color:var(--mut);font-size:14px}
+.svc .ico{color:var(--accent);width:22px;height:22px;margin-top:3px}
+
+/* factory */
+.factory{background:var(--bg-2);border-block:1px solid var(--line)}
+.fac-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:44px}
+.fac-vis{border-radius:var(--r-card);overflow:hidden;border:1px solid var(--line);position:relative}
+.fac-vis img{width:100%;height:340px;object-fit:cover}
+.fac-vis .play{position:absolute;inset:0;display:grid;place-items:center}
+.fac-vis .play span{width:64px;height:64px;border-radius:50%;background:rgba(76,194,255,.92);display:grid;place-items:center;color:var(--accent-ink)}
+.steps{display:grid;gap:0}
+.step{display:flex;gap:18px;padding:20px 0;border-bottom:1px solid var(--line)}
+.step .sn{font-family:var(--mono);color:var(--accent);font-size:13px;width:30px}
+.step h3{font-size:16px;font-weight:600}
+.step p{color:var(--mut);font-size:13.5px;margin-top:3px}
+
+/* rfq */
+.rfq-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:44px;align-items:start}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-input);
+  padding:13px 15px;color:var(--ink);font-family:var(--body);font-size:14.5px;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
+.field input::placeholder,.field textarea::placeholder{color:var(--dim)}
+.field textarea{min-height:96px;resize:vertical}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rfq-ok{margin-top:18px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.35);border-radius:var(--r-input);padding:18px}
+.rfq-ok b{color:var(--ok)}
+.rfq-ok p{font-size:13.5px;color:var(--mut);margin:6px 0 12px}
+.rfq-again{background:none;border:1px solid var(--line-2);color:var(--ink);border-radius:999px;padding:8px 16px;font-size:13px;cursor:pointer;margin-left:10px}
+.channels{display:grid;gap:14px;margin-top:24px}
+.channel{display:flex;gap:14px;align-items:center;padding:18px;border:1px solid var(--line);border-radius:var(--r-card);background:var(--surface);transition:border-color .2s}
+.channel:hover{border-color:var(--accent)}
+.channel .ico{width:24px;height:24px;color:var(--accent)}
+.channel b{display:block;font-size:15px}
+.channel span{font-size:13px;color:var(--mut)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:56px 0 32px;background:var(--bg-2)}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px}
+footer h4{font-family:var(--display);font-size:14px;margin-bottom:16px;color:var(--ink)}
+footer a{display:block;font-size:13.5px;color:var(--mut);padding:4px 0;transition:color .2s}
+footer a:hover{color:var(--accent)}
+.foot-bottom{border-top:1px solid var(--line);margin-top:40px;padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--dim)}
+
+@media(max-width:960px){
+  .hero .wrap,.custom-grid,.fac-grid,.rfq-grid{grid-template-columns:1fr}
+  .hero{min-height:auto;padding:48px 0}
+  .hero-vis{min-height:340px;order:-1}
+  .bento{grid-template-columns:1fr 1fr;grid-auto-rows:200px}
+  .tile.feat{grid-column:span 2;grid-row:span 1}
+  .era-rail{grid-template-columns:1fr}
+  .era{border-right:0;border-bottom:1px solid var(--line)}
+  .custom-left{position:static}
+  .navlinks{display:none;position:fixed;top:68px;left:0;right:0;background:var(--bg-2);flex-direction:column;padding:24px;gap:18px;border-bottom:1px solid var(--line)}
+  .navlinks.open{display:flex}
+  .navtoggle{display:grid}
+  .nav-cta .btn-g{display:none}.nav-cta .btn-p{white-space:nowrap;padding:9px 14px;font-size:12.5px}.nav .wrap{gap:12px}.brand{font-size:17px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){.bento{grid-template-columns:1fr}.tile.feat{grid-column:span 1}.f-row{grid-template-columns:1fr}.hero-meta{gap:18px}
+  .hero-vis{overflow:clip;min-height:300px}
+  .hero-vis .r1{width:290px;height:290px}.hero-vis .r2{width:220px;height:220px}.hero-vis .glow{width:240px;height:240px}
+  .chip.c1{top:6%;right:2%}.chip.c2{bottom:10%;left:2%}.chip.c3{bottom:2%;right:6%}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-reveal]{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+
+/* factory video bed (car assembly line, same footage as C) */
+.hero-video{position:absolute;inset:0;overflow:hidden;z-index:0}
+.hero-video video,.hero-video .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-video .poster{background:url('assets/video/factory-poster.jpg') center/cover no-repeat}
+.hero-video video{opacity:0;transition:opacity 1.2s ease .1s;filter:saturate(.72) contrast(1.05) brightness(.82)}
+.hero-video.ready video{opacity:1}
+.hero-vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(90deg,rgba(11,14,19,.95) 0%,rgba(11,14,19,.88) 36%,rgba(11,14,19,.52) 64%,rgba(11,14,19,.72) 100%),
+  linear-gradient(180deg,rgba(11,14,19,.7) 0%,rgba(11,14,19,.25) 36%,rgba(11,14,19,.45) 70%,var(--bg) 100%)}
+.hero-ctl{position:absolute;z-index:5;bottom:26px;right:24px;display:flex;align-items:center;gap:12px}
+.hero-ctl .vlabel{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px}
+.hero-ctl .vlabel::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);animation:vpulse 2.2s ease-in-out infinite}
+@keyframes vpulse{0%,100%{opacity:1}50%{opacity:.25}}
+.hero-ctl button{width:44px;height:44px;display:grid;place-items:center;background:rgba(11,14,19,.72);border:1px solid var(--line-2);color:var(--ink);cursor:pointer;backdrop-filter:blur(8px);transition:border-color .2s,background .2s;border-radius:999px}
+.hero-ctl button:hover{border-color:var(--accent);background:rgba(76,194,255,.14)}
+.hero-ctl button .ico{width:16px;height:16px}
+.hero-ctl button .i-play{display:none}
+.hero-ctl button.paused .i-pause{display:none}
+.hero-ctl button.paused .i-play{display:inline-flex}
+.hero-ctl button.paused+.vlabel::before{animation:none;opacity:.35}
+.hero .wrap{position:relative;z-index:2}
+@media(max-width:640px){.hero-ctl{bottom:14px;right:14px}.hero-ctl .vlabel{display:none}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="a-taste.html"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+    <nav class="navlinks" id="navlinks">
+      <a href="#catalog">Catalog</a><a href="#eras">Eras</a><a href="#custom">Custom</a><a href="#factory">Factory</a><a href="#rfq">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-g btn-sm" href="#catalog">Browse parts</a>
+      <a class="btn btn-p btn-sm" href="#rfq">Request a quote</a>
+      <button class="navtoggle" data-navtoggle="#navlinks" aria-label="Menu" aria-expanded="false"><i data-icon="list"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-video" id="heroVideo" aria-hidden="true">
+    <div class="poster"></div>
+    <video muted loop playsinline preload="metadata" poster="assets/video/factory-poster.jpg" tabindex="-1">
+      <source src="assets/video/factory.webm" type="video/webm">
+      <source src="assets/video/factory.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-vignette" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="stagger">
+      <h1>Cold air,<br><span class="gl">forged to fit.</span></h1>
+      <p class="sub">Factory-direct A/C hoses and components for every vehicle era, built to your drawing and leak-tested before they ship.</p>
+      <div class="ctas">
+        <a class="btn btn-p" href="#rfq">Request a quote <i data-icon="arrow-right"></i></a>
+        <a class="btn btn-g" href="#catalog">Browse catalog</a>
+      </div>
+      <div class="hero-meta">
+        <div><b>5</b>core categories</div>
+        <div><b>24h</b>quote response</div>
+        <div><b>4</b>custom services</div>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="glow"></div><div class="ring r1"></div><div class="ring r2"></div>
+      <img src="assets/ac-hose.png" alt="Custom A/C hose assembly">
+      <span class="chip c1"><i data-icon="ruler"></i>#6 - #12 bore</span>
+      <span class="chip c2"><i data-icon="thermometer-cold"></i>R-134a / R-1234yf</span>
+      <span class="chip c3"><i data-icon="shield-check"></i>100% leak-tested</span>
+    </div>
+  </div>
+  <div class="hero-ctl">
+    <button id="vidToggleA" type="button" aria-label="Pause factory video">
+      <span class="ico i-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></span>
+      <span class="ico i-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.53.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5z"/></svg></span>
+    </button>
+    <span class="vlabel" id="vidLabelA">Factory floor · live</span>
+  </div>
+</section>
+
+<!-- marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="mq-track">
+    <span><b>A/C HOSE</b> EVAPORATOR <b>CONDENSER</b> EXPANSION VALVE <b>RECEIVER DRIER</b> CUSTOM FITTINGS <b>PRIVATE LABEL</b> OEM / ODM <b>BARRIER HOSE</b> CRIMPED ASSEMBLIES</span>
+    <span><b>A/C HOSE</b> EVAPORATOR <b>CONDENSER</b> EXPANSION VALVE <b>RECEIVER DRIER</b> CUSTOM FITTINGS <b>PRIVATE LABEL</b> OEM / ODM <b>BARRIER HOSE</b> CRIMPED ASSEMBLIES</span>
+  </div>
+</div>
+
+<!-- ERAS -->
+<section id="eras">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="eyebrow">Coverage</div>
+      <h2 class="sec-h">Every refrigerant era, one supplier.</h2>
+      <p class="sec-sub">Refrigerant generations changed the parts. We tool for all three, so the vehicle on your lift is never too old or too new.</p>
+    </div>
+    <div class="era-rail" data-reveal>
+      <div class="era"><span class="bar"></span><div class="ref">R-12</div><div class="yrs">1980s - 1993</div><p>Classic systems. Hard-to-find hoses and driers for vintage vehicles, still in our catalog.</p></div>
+      <div class="era"><span class="bar"></span><div class="ref">R-134a</div><div class="yrs">1994 - 2012</div><p>The volume era. Barrier hoses, evaporators and condensers for the largest parc on the road.</p></div>
+      <div class="era"><span class="bar"></span><div class="ref">R-1234yf</div><div class="yrs">2013 - today</div><p>Modern low-GWP systems. Correct fittings and materials, not interchangeable with R-134a.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<section id="catalog" style="padding-top:0">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="eyebrow">Catalog</div>
+      <h2 class="sec-h">Five core categories.</h2>
+      <p class="sec-sub">Hundreds of SKUs across the A/C system. Search by OEM number or browse a category. Reference prices shown, final price confirmed by quote.</p>
+    </div>
+    <div class="bento" data-reveal>
+      <a class="tile feat" href="#rfq">
+        <span class="tagx">Custom specialist</span>
+        <img src="assets/ac-hose.png" alt="A/C hose">
+        <span class="scrim"></span>
+        <div class="t-body"><h3>A/C Hose</h3><div class="cnt">Made to order · length / fittings / angles</div></div>
+      </a>
+      <a class="tile" href="#rfq"><img src="assets/evap-mazda-cx5.png" alt="Evaporator"><span class="scrim"></span><div class="t-body"><h3>Evaporator</h3><div class="cnt">120+ SKUs · $38-70 ref</div></div></a>
+      <a class="tile" href="#rfq"><img src="assets/cat-condenser.a.svg" alt="Condenser"><span class="scrim"></span><div class="t-body"><h3>Condenser</h3><div class="cnt">90+ SKUs · $30-65 ref</div></div></a>
+      <a class="tile" href="#rfq"><img src="assets/cat-expansion-valve.a.svg" alt="Expansion valve"><span class="scrim"></span><div class="t-body"><h3>Expansion Valve</h3><div class="cnt">60+ SKUs · $10-28 ref</div></div></a>
+      <a class="tile" href="#rfq"><img src="assets/cat-receiver-drier.a.svg" alt="Receiver drier"><span class="scrim"></span><div class="t-body"><h3>Receiver Drier</h3><div class="cnt">70+ SKUs · $8-20 ref</div></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOM -->
+<section id="custom">
+  <div class="wrap">
+    <div class="custom-grid">
+      <div class="custom-left" data-reveal>
+        <div class="eyebrow">Custom</div>
+        <h2 class="sec-h">Four ways we make it yours.</h2>
+        <p class="sec-sub">Send a drawing, a sample, or just the vehicle. We model, prototype and produce under one roof.</p>
+        <a class="btn btn-p" style="margin-top:28px" href="#rfq">Start a custom project <i data-icon="arrow-right"></i></a>
+      </div>
+      <div data-reveal>
+        <div class="svc"><span class="n">01</span><i data-icon="car"></i><div><h3>Vehicle fitment</h3><p>Match by year, make, model or OEM number. We confirm fitment before you order.</p></div></div>
+        <div class="svc"><span class="n">02</span><i data-icon="ruler"></i><div><h3>Size &amp; fittings</h3><p>Custom length, fitting type and bend angles to your drawing or sample.</p></div></div>
+        <div class="svc"><span class="n">03</span><i data-icon="tag"></i><div><h3>Private label</h3><p>Your brand, your packaging, your part numbers on our production line.</p></div></div>
+        <div class="svc"><span class="n">04</span><i data-icon="blueprint"></i><div><h3>OEM / ODM</h3><p>Build to print or sample. In-house modeling takes you from drawing to sample fast.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FACTORY -->
+<section id="factory" class="factory">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="eyebrow">Factory</div>
+      <h2 class="sec-h">We don't resell. We forge.</h2>
+      <p class="sec-sub">Every hose cut, crimped, tested and packed under our own roof. No middlemen, no guesswork.</p>
+    </div>
+    <div class="fac-grid">
+      <div class="fac-vis" data-reveal>
+        <img src="assets/ph-workshop.svg" alt="CoolForge workshop">
+        <div class="play"><span><i data-icon="factory" style="width:26px;height:26px"></i></span></div>
+      </div>
+      <div class="steps" data-reveal>
+        <div class="step"><span class="sn">01</span><div><h3>Cut &amp; form</h3><p>Tube cut to length and bent to your specified angles.</p></div></div>
+        <div class="step"><span class="sn">02</span><div><h3>Crimp</h3><p>Fittings crimped to spec, ferrule seal verified.</p></div></div>
+        <div class="step"><span class="sn">03</span><div><h3>Leak test</h3><p>Every assembly pressure-tested before packing.</p></div></div>
+        <div class="step"><span class="sn">04</span><div><h3>Pack &amp; ship</h3><p>Labeled, protected and shipped to your door.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RFQ -->
+<section id="rfq">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="eyebrow">Contact</div>
+      <h2 class="sec-h">Request a quote.</h2>
+      <p class="sec-sub">We reply within 24 hours. Use the form, WhatsApp or email, whichever is fastest for you.</p>
+    </div>
+    <div class="rfq-grid">
+      <form data-rfq data-reveal>
+        <div class="f-row">
+          <div class="field"><label for="q-qty">Quantity *</label><input id="q-qty" name="quantity" type="number" min="1" placeholder="e.g. 50" required></div>
+          <div class="field"><label for="q-part">Part / OEM number</label><input id="q-part" name="oem" placeholder="e.g. GHP961J10"></div>
+        </div>
+        <div class="field"><label for="q-veh">Vehicle (year / make / model)</label><input id="q-veh" name="vehicle" placeholder="e.g. 2016 Toyota Camry"></div>
+        <div class="f-row">
+          <div class="field"><label for="q-name">Name *</label><input id="q-name" name="name" required></div>
+          <div class="field"><label for="q-co">Company</label><input id="q-co" name="company"></div>
+        </div>
+        <div class="f-row">
+          <div class="field"><label for="q-email">Email *</label><input id="q-email" name="email" type="email" required></div>
+          <div class="field"><label for="q-wa">WhatsApp</label><input id="q-wa" name="whatsapp" placeholder="+1 ..."></div>
+        </div>
+        <div class="field"><label for="q-msg">Notes</label><textarea id="q-msg" name="message" placeholder="Fitting details, target price, delivery..."></textarea></div>
+        <button class="btn btn-p" type="submit" style="width:100%">Send RFQ · reply in 24h <i data-icon="arrow-right"></i></button>
+        <div class="rfq-ok" hidden>
+          <b>✓ RFQ received</b>
+          <p>Our team will reply within 24h. For a faster response, continue on WhatsApp:</p>
+          <a class="btn btn-p btn-sm" data-wa href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i> WhatsApp</a>
+        </div>
+      </form>
+      <div data-reveal>
+        <div class="channels">
+          <a class="channel" href="https://wa.me/8613800000000" target="_blank" rel="noopener"><i data-icon="whatsapp-logo"></i><div><b>WhatsApp</b><span>Fastest reply · send photos and drawings</span></div></a>
+          <a class="channel" href="mailto:sales@coolforge.example"><i data-icon="envelope-simple"></i><div><b>sales@coolforge.example</b><span>For formal RFQs and documentation</span></div></a>
+          <div class="channel"><i data-icon="clock"></i><div><b>24-hour response</b><span>Quotes confirmed within one business day</span></div></div>
+          <div class="channel"><i data-icon="globe"></i><div><b>North America &amp; Middle East</b><span>English · Español · العربية</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="a-taste.html" style="margin-bottom:14px"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
+        <p style="font-size:13.5px;color:var(--mut);max-width:30ch">Factory-direct automotive A/C parts. Custom hoses our specialty.</p>
+      </div>
+      <div><h4>Products</h4><a href="#catalog">A/C Hose</a><a href="#catalog">Evaporator</a><a href="#catalog">Condenser</a><a href="#catalog">Expansion Valve</a><a href="#catalog">Receiver Drier</a></div>
+      <div><h4>Services</h4><a href="#custom">Custom</a><a href="#custom">Private label</a><a href="#custom">OEM / ODM</a><a href="#factory">Factory</a></div>
+      <div><h4>Contact</h4><a href="https://wa.me/8613800000000" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:sales@coolforge.example">Email</a><a href="#rfq">Request a quote</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 CoolForge · Prototype A · design-taste-frontend</span>
+      <span>Reference prices and factory media are placeholders.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="kit.js"></script>
+<script>
+
+/* factory hero video: autoplay + offscreen pause + reduced-motion/save-data fallback */
+(function(){
+  const wrap = document.getElementById('heroVideo');
+  const vid = wrap ? wrap.querySelector('video') : null;
+  const btn = document.getElementById('vidToggleA');
+  const label = document.getElementById('vidLabelA');
+  if (!wrap || !vid || !btn) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  let userPaused = false, inView = true, failed = false;
+  const setUI = playing => {
+    btn.classList.toggle('paused', !playing);
+    btn.setAttribute('aria-pressed', String(!playing));
+    label.textContent = failed ? 'Factory floor · still' : (playing ? 'Factory floor · live' : 'Factory floor · paused');
+  };
+  const tryPlay = () => {
+    if (failed || userPaused || reduce || saveData || !inView || document.hidden) return;
+    const p = vid.play();
+    if (p) p.then(() => { wrap.classList.add('ready'); setUI(true); }).catch(() => setUI(false));
+  };
+  const markFailed = () => { failed = true; wrap.classList.remove('ready'); vid.pause(); setUI(false); };
+  vid.addEventListener('canplay', tryPlay);
+  vid.addEventListener('playing', () => { wrap.classList.add('ready'); setUI(true); });
+  vid.addEventListener('error', markFailed);
+  vid.querySelectorAll('source').forEach(src => src.addEventListener('error', () => {
+    if (src === vid.querySelector('source:last-of-type')) markFailed();
+  }));
+  setTimeout(() => { if (!failed && vid.readyState < 2 && vid.paused && !userPaused) markFailed(); }, 5000);
+  btn.addEventListener('click', () => {
+    if (vid.paused) { userPaused = false; failed = false; tryPlay(); }
+    else { userPaused = true; vid.pause(); setUI(false); }
+  });
+  new IntersectionObserver(es => es.forEach(en => {
+    inView = en.isIntersecting;
+    if (inView) tryPlay(); else if (!vid.paused) vid.pause();
+  }), { threshold: 0.05 }).observe(wrap);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { if (!vid.paused) vid.pause(); } else tryPlay(); });
+  if (reduce || saveData) { setUI(false); }
+  else tryPlay();
+})();
+
+</script></script>
+</body>
+</html>

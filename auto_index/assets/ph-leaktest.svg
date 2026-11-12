@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse">
+<path d="M24 0 L0 0 0 24" stroke="#3d5570" stroke-width="0.6" opacity=".5"/></pattern></defs>
+<rect width="400" height="300" fill="#243447"/>
+<rect width="400" height="300" fill="url(#g)"/>
+<rect x="120" y="100" width="160" height="100" rx="8" stroke="#7c93ab" stroke-width="2.5" fill="none"/><circle cx="165" cy="150" r="24" stroke="#e8590c" stroke-width="2.5" fill="none"/><line x1="165" y1="150" x2="178" y2="136" stroke="#e8590c" stroke-width="2.5"/><rect x="210" y="125" width="50" height="10" stroke="#7c93ab" stroke-width="2" fill="none"/><rect x="210" y="145" width="50" height="10" stroke="#7c93ab" stroke-width="2" fill="none"/><rect x="210" y="165" width="34" height="10" stroke="#7c93ab" stroke-width="2" fill="none"/>
+<text x="200" y="272" text-anchor="middle" font-family="Arial" font-size="15" fill="#9fb0c0" letter-spacing="2">LEAK TEST</text>
+</svg>
