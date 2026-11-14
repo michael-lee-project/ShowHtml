@@ -7,6 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e13'/%3E%3Cpath d='M16 6v20M8 10l16 12M24 10L8 22' stroke='%234cc2ff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
+.sel{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:#f0433f;border:1px solid rgba(220,38,38,.5);background:rgba(220,38,38,.1);padding:3px 7px;border-radius:4px;margin-left:6px}
 :root{--bg:#0a0c10;--s1:#12151c;--s2:#181d27;--line:rgba(148,163,184,.15);--ink:#eef2f8;--mut:#8b95a7;--dim:#5b6577;
   --blue:#4cc2ff;--ultra:#3452d9;--red:#dc2626;--display:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -73,13 +74,13 @@ footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--dim);fon
 
 <div class="hero">
   <div class="wrap">
-    <span class="badge"><i></i>project_10 · 阶段 3 · 风格方向选择</span>
-    <h1>同一个品牌，<br><span class="tri">两套风格方向。</span></h1>
-    <p>CoolForge 汽车空调配件工厂站 · 两套风格首页（均已含汽车装配线视频首屏与完整转化链路），选定方向后铺全站。原三套中的 B 套（瑞士网格）已按反馈移除。</p>
+    <span class="badge"><i></i>project_10 · 阶段 3 · C 方向已选定 · 全站铺满</span>
+    <h1>方向已定，<br><span class="tri">C · 动能车间。</span></h1>
+    <p>CoolForge 汽车空调配件工厂站 · C 方向已铺满全站 6 页（首页 / 产品目录 / 产品详情 / 工厂 / 定制 / 联系），三语 EN·ES·AR + 阿语 RTL。A 套（暗夜工程）保留作风格参考，不再扩展。</p>
     <div class="meta">
-      <div><b>2</b>套完整首页</div>
-      <div><b>2</b>个设计 skill</div>
-      <div><b>视频</b>首屏已接入</div>
+      <div><b>6</b>页 C 全站</div>
+      <div><b>3</b>语 EN·ES·AR</div>
+      <div><b>RTL</b>阿语适配</div>
       <div><b>EN</b>文案（三语在正式开发接入）</div>
     </div>
   </div>
@@ -94,21 +95,23 @@ footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--dim);fon
         <div class="en">DARK ENGINEERING / GLACIER BLUE</div>
         <p>深色铬金底 + 冰川蓝单强调色。非对称 split Hero、产品悬浮标注、5 格 Bento 目录、跑马灯、sticky 定制栏。Space Grotesk × Outfit，克制的高级感。</p>
         <div class="traits"><span>非对称 Hero</span><span>Bento 目录</span><span>悬浮 HUD 标注</span><span>入场编排</span></div>
-        <span class="open">进入 A 套 →</span>
+        <span class="open">查看 A 套（参考）→</span>
       </div>
     </a>
     <div class="card c">
-      <div class="thumb"><a href="c-uipro.html" class="thumblink"><img src="assets/previews/c-uipro.jpg" alt="C 动能汽车风预览"></a><span class="key">C</span><span class="skill">ui-ux-pro-max</span></div>
+      <div class="thumb"><a href="c-uipro.html" class="thumblink"><img src="assets/previews/c-uipro.jpg" alt="C 动能汽车风预览"></a><span class="key">C</span><span class="sel">SELECTED</span><span class="skill">ui-ux-pro-max</span></div>
       <div class="body">
         <h2>动能车间 · Motion Drive</h2>
         <div class="en">KINETIC AUTOMOTIVE / ACTION RED</div>
-        <p>数据驱动设计系统：深板岩 + 动作红。汽车装配线视频首屏 + 不透明产品仪表面板。已铺满全站：产品详情 / 工厂 / 定制，EN·ES·AR 三语 + 阿语 RTL。</p>
-        <div class="traits"><span>工厂视频 Hero</span><span>三语 RTL</span><span>产品详情</span><span>工厂页</span><span>定制页</span></div>
+        <p>数据驱动设计系统：深板岩 + 动作红。汽车装配线视频首屏 + 玻璃产品仪表面板。已铺满全站 6 页：目录 / 详情 / 工厂 / 定制 / 联系，EN·ES·AR 三语 + 阿语 RTL。</p>
+        <div class="traits"><span>视频 Hero</span><span>三语 RTL</span><span>6 页全站</span><span>真实 OEM</span><span>RFQ 全链路</span></div>
         <a class="open" href="c-uipro.html">进入 C 套 →</a>
-        <span style="display:flex;gap:8px;margin-top:10px;font-size:12px">
-          <a href="c-product.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">产品详情</a>
+        <span style="display:flex;gap:8px;margin-top:10px;font-size:12px;flex-wrap:wrap">
+          <a href="c-catalog.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">目录</a>
+          <a href="c-product.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">详情</a>
           <a href="c-factory.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">工厂</a>
           <a href="c-custom.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">定制</a>
+          <a href="c-contact.html" style="flex:1;text-align:center;border:1px solid var(--line);border-radius:8px;padding:8px;color:#aeb7c6">联系</a>
         </span>
       </div>
     </div>
@@ -128,7 +131,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--dim);fon
   </div>
 
   <div class="note">
-    <b>怎么选：</b>两套都包含完整首页（导航 / 视频 Hero / 年代覆盖 / 5 品类 / 4 定制 / 工厂 / RFQ 表单 / 页脚），RFQ 表单都可真实提交演示（成功态 + WhatsApp 预填 + 再发一单）。选定方向后：该套风格铺全站（详情 / 工厂 / 定制页），接入三语（EN/ES/AR + RTL）与真实数据，进入 Next.js 正式开发。参考价与工厂媒体均为占位。
+    <b>当前状态：</b>C 全站 6 页就绪——首页（视频 Hero + 玻璃轮播 7 SKU）/ 产品目录（5 品类分组）/ 产品详情（真实 OEM）/ 工厂 / 定制 / 联系，全部三语可切（EN/ES/AR + RTL）。RFQ 表单全链路可演示（成功态 + WhatsApp 预填 + 再发一单）。参考价与工厂媒体均为占位，等真实数据接入后进 Next.js 正式开发。
   </div>
 
   <footer>

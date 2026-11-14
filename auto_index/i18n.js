@@ -61,7 +61,23 @@
       'cp.faq1q': 'What is the minimum order?', 'cp.faq1a': 'Custom hose assemblies start at a practical batch quantity. Tell us your target volume in the RFQ and we quote MOQ with the price. Standard catalog parts have no minimum.',
       'cp.faq2q': 'How fast is a sample?', 'cp.faq2a': 'Once the drawing is confirmed, a prototype is typically built within days. Lead time is quoted with feasibility so you can plan.',
       'cp.faq3q': 'Can you match my existing part?', 'cp.faq3a': 'Yes. Send the OEM number, a photo or the physical sample. We cross-reference and confirm fitment before production.',
-      'cp.faq4q': 'Do you keep my design confidential?', 'cp.faq4a': 'Your drawings and samples are used only to build your part. NDA available on request for OEM programs.'
+      'cp.faq4q': 'Do you keep my design confidential?', 'cp.faq4a': 'Your drawings and samples are used only to build your part. NDA available on request for OEM programs.',
+      /* catalog page */
+      'nav.contact': 'Contact',
+      'cc.crumb': 'Catalog', 'cc.kicker': 'Full catalog', 'cc.h1a': 'Five lines.', 'cc.h1b': 'Hundreds of SKUs.',
+      'cc.sub': '> Browse by category, or send your OEM number and we match the part within 24h. Reference prices shown; final price confirmed by quote.',
+      'cc.por': 'Price on request',
+      'cc.hose.p': 'Custom assemblies are our specialty — any length, fitting and bend angle, built to your drawing or sample and 100% leak-tested before they ship.',
+      'cc.evap.p': 'Brazed aluminum cores for the cabin side — evaporators and heater cores. We tool new cores from your sample or core dimensions.',
+      'cc.cond.p': 'Parallel-flow condensers for R-134a and R-1234yf systems, with integrated or separate receiver drier.',
+      'cc.exv.p': 'Thermostatic expansion valves that meter refrigerant into the evaporator — block and flange types to application.',
+      'cc.drier.p': 'Receiver driers for TXV systems: they filter debris, separate moisture and hold refrigerant reserve.',
+      'cc.more.k': 'First batch in digitization',
+      'cc.more.p': 'The first batch is several hundred SKUs. Fitment data (year / make / model / OEM) is imported from your list — send it over and we confirm coverage and reference prices.',
+      /* contact page */
+      'ct.crumb': 'Contact', 'ct.kicker': 'Contact', 'ct.h1a': 'Talk to the factory.', 'ct.h1b': 'Replies in 24h.',
+      'ct.sub': '> Send the RFQ form, WhatsApp or email — whichever is fastest. Quotes confirmed within one business day.',
+      'ct.promise.h': 'Response promise', 'ct.promise.p': 'Every RFQ receives an engineering reply within one business day — including fitment confirmation.'
     },
     es: {
       'fit.portrait': 'Vertical', 'fit.square': 'Cuadrado', 'fit.wide': 'Ancho', 'car.prev': 'Producto anterior', 'car.next': 'Producto siguiente', 'car.pause': 'Pausar carrusel', 'car.play': 'Reproducir carrusel', 'hero.viewpart': 'Ver parte',
@@ -119,7 +135,23 @@
       'cp.faq1q': '¿Cuál es el pedido mínimo?', 'cp.faq1a': 'Los ensamblajes a medida parten de un lote práctico. Indique su volumen en la RFQ y cotizamos el MOQ con el precio. Las partes de catálogo no tienen mínimo.',
       'cp.faq2q': '¿Qué tan rápida es una muestra?', 'cp.faq2a': 'Confirmado el plano, el prototipo se construye en días. El plazo se cotiza con la factibilidad.',
       'cp.faq3q': '¿Pueden igualar mi parte existente?', 'cp.faq3a': 'Sí. Envíe el número OEM, una foto o la muestra física. Cruzamos la referencia y confirmamos antes de producir.',
-      'cp.faq4q': '¿Mi diseño es confidencial?', 'cp.faq4a': 'Sus planos y muestras se usan solo para fabricar su parte. NDA disponible para programas OEM.'
+      'cp.faq4q': '¿Mi diseño es confidencial?', 'cp.faq4a': 'Sus planos y muestras se usan solo para fabricar su parte. NDA disponible para programas OEM.',
+      /* catalog page */
+      'nav.contact': 'Contacto',
+      'cc.crumb': 'Catálogo', 'cc.kicker': 'Catálogo completo', 'cc.h1a': 'Cinco líneas.', 'cc.h1b': 'Cientos de SKUs.',
+      'cc.sub': '> Explore por categoría o envíe su número OEM y hacemos la correspondencia en 24h. Precios de referencia; el final se confirma por cotización.',
+      'cc.por': 'Precio a solicitar',
+      'cc.hose.p': 'Los ensamblajes a medida son nuestra especialidad: cualquier largo, conexión y ángulo, fabricados por su plano o muestra y probados 100% antes de enviar.',
+      'cc.evap.p': 'Núcleos de aluminio soldado para el lado de la cabina: evaporadores y núcleos de calefacción. Herramentamos núcleos nuevos desde su muestra o dimensiones.',
+      'cc.cond.p': 'Condensadores de flujo paralelo para sistemas R-134a y R-1234yf, con secador integrado o separado.',
+      'cc.exv.p': 'Válvulas de expansión termostáticas que dosifican el refrigerante hacia el evaporador: tipo bloque y brida según aplicación.',
+      'cc.drier.p': 'Secadores receptores para sistemas TXV: filtran residuos, separan humedad y guardan reserva de refrigerante.',
+      'cc.more.k': 'Primera tanda en digitalización',
+      'cc.more.p': 'La primera tanda son varios cientos de SKUs. Los datos de adaptación (año / marca / modelo / OEM) se importan de su lista — envíela y confirmamos cobertura y precios de referencia.',
+      /* contact page */
+      'ct.crumb': 'Contacto', 'ct.kicker': 'Contacto', 'ct.h1a': 'Hable con la fábrica.', 'ct.h1b': 'Respuesta en 24h.',
+      'ct.sub': '> Envíe el formulario, WhatsApp o correo, lo que sea más rápido. Cotizaciones confirmadas en un día hábil.',
+      'ct.promise.h': 'Compromiso de respuesta', 'ct.promise.p': 'Cada RFQ recibe respuesta de ingeniería en un día hábil, con confirmación de adaptación.'
     },
     ar: {
       'fit.portrait': 'طولي', 'fit.square': 'مربع', 'fit.wide': 'عرضي', 'car.prev': 'المنتج السابق', 'car.next': 'المنتج التالي', 'car.pause': 'إيقاف العرض', 'car.play': 'تشغيل العرض', 'hero.viewpart': 'عرض القطعة',
@@ -177,7 +209,23 @@
       'cp.faq1q': 'ما الحد الأدنى للطلب؟', 'cp.faq1a': 'تبدأ الخراطيم المخصصة بكمية دفعة عملية. أخبرنا بحجمك المستهدف في الطلب ونعرض الحد الأدنى مع السعر. قطع الكتالوج بلا حد أدنى.',
       'cp.faq2q': 'ما سرعة العينة؟', 'cp.faq2a': 'بعد تأكيد الرسم يُبنى النموذج عادة خلال أيام. تُعرض المهلة مع الجدوى لتخطط.',
       'cp.faq3q': 'هل يمكن مطابقة قطعتي الحالية؟', 'cp.faq3a': 'نعم. أرسل رقم OEM أو صورة أو العينة الفعلية. نقارن المرجع ونؤكد الملاءمة قبل الإنتاج.',
-      'cp.faq4q': 'هل تصميمي سري؟', 'cp.faq4a': 'رسوماتك وعيناتك تُستخدم فقط لصنع قطعتك. اتفاقية سرية متاحة لبرامج OEM.'
+      'cp.faq4q': 'هل تصميمي سري؟', 'cp.faq4a': 'رسوماتك وعيناتك تُستخدم فقط لصنع قطعتك. اتفاقية سرية متاحة لبرامج OEM.',
+      /* catalog page */
+      'nav.contact': 'تواصل',
+      'cc.crumb': 'الكتالوج', 'cc.kicker': 'الكتالوج الكامل', 'cc.h1a': 'خمس خطوط إنتاج.', 'cc.h1b': 'مئات المنتجات.',
+      'cc.sub': '> تصفح حسب الفئة أو أرسل رقم OEM ونطابق القطعة خلال 24 ساعة. الأسعار مرجعية ويُؤكد النهائي عبر عرض السعر.',
+      'cc.por': 'السعر عند الطلب',
+      'cc.hose.p': 'التجميعات المخصصة تخصصنا — أي طول وأي وصلة وأي زاوية ثني، تُصنع حسب رسمك أو عينتك وتُختبر 100% قبل الشحن.',
+      'cc.evap.p': 'قلوب ألمنيوم ملحومة لجهة المقصورة — مبخرات وقلوب تدفئة. نصنع قلوباً جديدة من عينتك أو مقاساتك.',
+      'cc.cond.p': 'مكثفات تدفق متوازٍ لأنظمة R-134a و R-1234yf، مع مجفف مدمج أو منفصل.',
+      'cc.exv.p': 'صمامات تمدد حرارية تضبط تدفق وسيط التبريد إلى المبخر — نوع كتلة ونوع شفة حسب التطبيق.',
+      'cc.drier.p': 'مجففات مستقبِلة لأنظمة TXV: تُرشّح الشوائب وتفصل الرطوبة وتحتفظ باحتياطي وسيط التبريد.',
+      'cc.more.k': 'الدفعة الأولى قيد الرقمنة',
+      'cc.more.p': 'الدفعة الأولى عدة مئات من المنتجات. بيانات الملاءمة (سنة / صنع / طراز / OEM) تُستورد من قائمتك — أرسلها ونؤكد التغطية والأسعار المرجعية.',
+      /* contact page */
+      'ct.crumb': 'تواصل', 'ct.kicker': 'تواصل', 'ct.h1a': 'تحدث مع المصنع.', 'ct.h1b': 'رد خلال 24 ساعة.',
+      'ct.sub': '> أرسل النموذج أو واتساب أو البريد، الأسرع لك. تُؤكد العروض خلال يوم عمل.',
+      'ct.promise.h': 'وعد الاستجابة', 'ct.promise.p': 'كل طلب يصل إليه رد هندسي خلال يوم عمل، مع تأكيد الملاءمة.'
     }
   };
 

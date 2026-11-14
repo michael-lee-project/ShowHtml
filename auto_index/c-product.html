@@ -15,10 +15,10 @@
     <a class="brand" href="c-uipro.html"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
     <nav class="navlinks" id="navlinks">
       <a href="c-uipro.html" data-i18n="nav.home">Home</a>
-      <a href="c-product.html" class="active" data-i18n="nav.catalog">Catalog</a>
+      <a href="c-catalog.html" class="active" data-i18n="nav.catalog">Catalog</a>
       <a href="c-custom.html" data-i18n="nav.custom">Custom</a>
       <a href="c-factory.html" data-i18n="nav.factory">Factory</a>
-      <a href="c-uipro.html#rfq" data-i18n="nav.quote">Quote</a>
+      <a href="c-contact.html" data-i18n="nav.contact">Contact</a>
     </nav>
     <div class="nav-cta">
       <span data-lang-slot></span>
@@ -32,7 +32,7 @@
 <section class="page-hero">
   <div class="ph-bg"></div><div class="ph-grid"></div>
   <div class="wrap">
-    <div class="crumb"><a href="c-uipro.html" data-i18n="pd.crumb.home">Home</a><span class="sep">/</span><a href="c-product.html" data-i18n="pd.crumb.cat">Catalog</a><span class="sep">/</span><span id="crumbName">A/C Hose</span></div>
+    <div class="crumb"><a href="c-uipro.html" data-i18n="pd.crumb.home">Home</a><span class="sep">/</span><a href="c-catalog.html" data-i18n="pd.crumb.cat">Catalog</a><span class="sep">/</span><span id="crumbName">A/C Hose</span></div>
     <div class="sec-kicker" data-i18n="pd.kicker">Product detail</div>
     <h1><span data-i18n="pd.h1a">Find the part.</span><br><span class="red" data-i18n="pd.h1b">Confirm the fit.</span></h1>
     <p class="ph-sub" data-i18n="pd.sub">&gt; Real OEM references, vehicle fitment and factory specs. Switch between our hose assemblies and evaporator cores below.</p>
@@ -137,7 +137,7 @@
         <a class="brand" href="c-uipro.html" style="margin-bottom:16px"><span class="mk"><i data-icon="snowflake"></i></span>CoolForge</a>
         <p style="font-family:var(--mono);font-size:12.5px;color:#94a3b8;max-width:32ch;line-height:1.8" data-i18n="foot.tag">Factory-direct automotive A/C parts. Custom hoses our specialty.</p>
       </div>
-      <div><h4 data-i18n="foot.products">Products</h4><a href="c-product.html" data-i18n="cat.hose">A/C Hose</a><a href="c-product.html" data-i18n="cat.evap">Evaporator</a><a href="c-product.html" data-i18n="cat.cond">Condenser</a><a href="c-product.html" data-i18n="cat.exv">Expansion Valve</a><a href="c-product.html" data-i18n="cat.drier">Receiver Drier</a></div>
+      <div><h4 data-i18n="foot.products">Products</h4><a href="c-catalog.html#cat-hose" data-i18n="cat.hose">A/C Hose</a><a href="c-catalog.html#cat-evap" data-i18n="cat.evap">Evaporator</a><a href="c-catalog.html#cat-cond" data-i18n="cat.cond">Condenser</a><a href="c-catalog.html#cat-exv" data-i18n="cat.exv">Expansion Valve</a><a href="c-catalog.html#cat-drier" data-i18n="cat.drier">Receiver Drier</a></div>
       <div><h4 data-i18n="foot.services">Services</h4><a href="c-custom.html" data-i18n="nav.custom">Custom</a><a href="c-custom.html" data-i18n="svc3.h">Private label</a><a href="c-custom.html" data-i18n="svc4.h">OEM / ODM</a><a href="c-factory.html" data-i18n="nav.factory">Factory</a></div>
       <div><h4 data-i18n="foot.contact">Contact</h4><a href="https://wa.me/8613800000000" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:sales@coolforge.example">Email</a><a href="#pd-rfq" data-i18n="nav.getquote">Get a quote</a></div>
     </div>
@@ -147,7 +147,7 @@
 
 <script src="kit.js"></script>
 <script src="i18n.js"></script>
-<script src="products.js"></script>
+<script src="products.js?v=15"></script>
 <script>
 (function(){
   const P = window.CF_PRODUCTS;
@@ -158,7 +158,8 @@
 
   function buildSwitch(){
     const sw = document.getElementById('pdSwitch');
-    sw.innerHTML = P.map(p => {
+    const SW = P.filter(x => !x.pending);
+    sw.innerHTML = SW.map(p => {
       const main = tv(p.name).split('·')[0].trim();
       const sub = (p.id==='hose-universal') ? 'A/C Hose' : (typeof p.fit.make==='string' ? p.fit.make : main);
       return `<button role="tab" data-id="${p.id}" aria-selected="${p.id===cur.id}" title="${tv(p.name)}"><img src="${p.img}" alt=""><span class="ltr">${sub}</span></button>`;
@@ -181,7 +182,7 @@
     document.getElementById('hudOem').textContent = cur.oem;
     document.getElementById('hudCat').textContent = (window.CF_CAT[cur.cat][lang]||window.CF_CAT[cur.cat].en).toUpperCase();
     document.getElementById('hudSpec').textContent = cur.specs.bore || cur.specs.core || '';
-    document.getElementById('pdPrice').textContent = '$' + cur.price[0] + ' - $' + cur.price[1];
+    document.getElementById('pdPrice').textContent = cur.price ? ('$' + cur.price[0] + ' - $' + cur.price[1]) : window.CF.t('cc.por');
     document.getElementById('crumbName').textContent = tv(cur.name);
     document.getElementById('chipCustom').style.display = cur.custom ? '' : 'none';
     document.getElementById('rfqPart').value = cur.oem;
